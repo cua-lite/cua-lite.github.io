@@ -170,11 +170,13 @@
     at(420, runActive);
   }
 
-  /* ---------- editable desktop cells ---------- */
+  /* ---------- editable desktop cells: edit the numbers, the agent sums YOURS ---------- */
+  const editing = () => document.activeElement && document.activeElement.classList && document.activeElement.classList.contains("editable");
   cells.forEach((el) => {
+    el.addEventListener("focus", () => { paused = true; });   // don't cycle away mid-edit
     el.addEventListener("input", () => { if (mode === "desktop" && !running) { total.textContent = ""; total.classList.remove("filled", "sel"); fbar.innerHTML = '<span class="mk-ph"></span>'; fbar.className = "sh-formula"; } });
-    el.addEventListener("blur", () => { el.textContent = fmt(numOf(el)); });
-    el.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); el.blur(); switchTo("desktop"); } });
+    el.addEventListener("blur", () => { el.textContent = fmt(numOf(el)); at(700, () => { if (!editing()) paused = false; }); });
+    el.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); el.blur(); paused = false; switchTo("desktop"); } });
   });
 
   /* ---------- the lead words steer the demo ---------- */
