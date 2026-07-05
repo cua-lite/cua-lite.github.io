@@ -215,6 +215,11 @@
     });
     heroRight.addEventListener("pointerleave", () => { stage.style.setProperty("--ty", "0deg"); stage.style.setProperty("--tx", "0deg"); });
   }
+  // hover the device to hold the current platform (read it, edit it); leaving resumes the cycle
+  if (!reduce) {
+    stage.addEventListener("pointerenter", () => { if (started) paused = true; });
+    stage.addEventListener("pointerleave", () => { if (!editing()) paused = false; });
+  }
 
   /* ---------- scroll reveal ---------- */
   const reveals = document.querySelectorAll(".reveal");
