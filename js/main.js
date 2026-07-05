@@ -17,7 +17,7 @@
   const rlLog = document.getElementById("rl-log");
   const plats = [...document.querySelectorAll(".plat")];   // the lead words = the control
   const demoHint = document.getElementById("demo-hint");
-  let hintDone = false;   // once you've edited a cost, stop inviting
+  let hintDone = false;   // once you've edited a score, stop inviting
   const showHint = () => { if (!hintDone && mode === "desktop") demoHint.classList.add("show"); };
   const hideHint = () => demoHint.classList.remove("show");
 
@@ -233,7 +233,7 @@
     activate(m); parkCursor();
     at(immediate ? 210 : 420, runActive);
   }
-  // you changed a cost → the agent re-runs on YOUR number. A short focused
+  // you changed a score → the agent re-runs on YOUR numbers. A short focused
   // response (~1s), not the whole select/type/enter ceremony — crisp feedback.
   function recompute() {
     clearAll(); running = true;
@@ -249,7 +249,7 @@
 
   /* ---------- editable desktop cells: edit the numbers, the agent sums YOURS ---------- */
   const editing = () => document.activeElement && document.activeElement.classList && document.activeElement.classList.contains("editable");
-  let sheetDirty = false;   // did you actually change a cost? only then does the agent re-run
+  let sheetDirty = false;   // did you actually change a score? only then does the agent re-run
   cells.forEach((el) => {
     el.addEventListener("focus", () => { paused = true; hintDone = true; hideHint(); });   // engaged → stop inviting
     el.addEventListener("input", () => { sheetDirty = true; if (mode === "desktop" && !running) { total.textContent = ""; total.classList.remove("filled", "sel"); fbar.innerHTML = '<span class="mk-ph"></span>'; fbar.className = "sh-formula"; } });
