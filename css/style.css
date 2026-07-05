@@ -111,10 +111,15 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hero-demo { position: relative; display: grid; grid-template-columns: 1.22fr 1fr; gap: 44px; align-items: center; margin-top: 38px; }
 .hero-demo > * { min-width: 0; }
 .hero-side { display: flex; flex-direction: column; justify-content: center; }
-/* one quiet entrance — the page settles in, then the agent gets to work */
-@keyframes heroIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-.hero-head { animation: heroIn .62s var(--ease) both; }
-.hero-demo { animation: heroIn .62s var(--ease) .14s both; }
+/* an orchestrated entrance — the pitch settles in line by line, then the
+   demo rises and the agent gets to work. A crafted load, not a flat fade. */
+@keyframes heroIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.hero-head > * { animation: heroIn .6s var(--ease) both; }
+.hero-head > *:nth-child(1) { animation-delay: .02s; }
+.hero-head > *:nth-child(2) { animation-delay: .12s; }
+.hero-head > *:nth-child(3) { animation-delay: .24s; }
+.hero-head > *:nth-child(4) { animation-delay: .34s; }
+.hero-demo { animation: heroIn .68s var(--ease) .46s both; }
 .stage { position: relative; min-height: 470px; }
 /* three platforms, one focal device — a true two-way crossfade.
    visibility is delayed to the end of the fade so the outgoing device
@@ -593,7 +598,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 }
 @media (prefers-reduced-motion: reduce) {
   .typed.caret::after, .fly-plane, .crt-led, .spark,
-  .think i, .hero-head, .hero-demo, .rl-line, .rl-line .caret { animation: none; }
+  .think i, .hero-head > *, .hero-demo, .rl-line, .rl-line .caret { animation: none; }
   .rl-line { opacity: 1; transform: none; }
   .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }

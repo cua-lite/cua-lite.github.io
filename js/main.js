@@ -280,7 +280,9 @@
       // persistent: start on first view, and pause the cycle whenever off-screen
       const io = new IntersectionObserver((es) => { es.forEach((e) => {
         visible = e.isIntersecting;
-        if (visible && !started) { started = true; runActive(); }
+        // first view: let the orchestrated entrance land, THEN the agent boots
+        // up and types its first command — a deliberate beat, not a race.
+        if (visible && !started) { started = true; at(900, runActive); }
       }); }, { threshold: 0.25 });
       io.observe(stage);
     } else { visible = true; started = true; runActive(); }
