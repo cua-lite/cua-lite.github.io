@@ -465,7 +465,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 @keyframes breath { 0%, 100% { transform: translateY(-3px) rotate(-1deg); } 50% { transform: translateY(3px) rotate(1deg); } }
 
 /* scroll reveal — content settles up as you reach it (only when JS is on) */
-.js-reveal .reveal { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.7,.3,1); }
+.js-reveal .reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .58s var(--ease); }
 .js-reveal .reveal.in { opacity: 1; transform: none; }
 .js-reveal .cards .card:nth-child(2) { transition-delay: .08s; }
 .js-reveal .cards .card:nth-child(3) { transition-delay: .16s; }
