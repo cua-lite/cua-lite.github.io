@@ -113,15 +113,28 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* three platforms, one focal device — a true two-way crossfade.
    visibility is delayed to the end of the fade so the outgoing device
    actually fades out (instead of vanishing instantly). */
-.stage .device { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-  opacity: 0; visibility: hidden; transform: scale(.985);
-  transition: opacity .42s ease, transform .42s cubic-bezier(.2,.7,.3,1), visibility 0s .42s; }
-/* a shared lit surface so all three devices sit on the same "desk", not floating */
-.stage::after { content: ""; position: absolute; left: 50%; bottom: -6px; width: 62%; height: 40px;
-  transform: translateX(-50%); z-index: -1; pointer-events: none; filter: blur(18px);
-  background: radial-gradient(50% 50% at 50% 50%, rgba(154,212,110,.10), transparent 72%); }
+/* handoff, not cross-dissolve: the outgoing device fades + sinks away first,
+   then the incoming one rises onto the desk. Two dissimilar silhouettes never
+   overlap as ghosts — it reads as the agent turning to the next machine. */
+.stage .device { position: absolute; inset: 0; isolation: isolate; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  opacity: 0; visibility: hidden; transform: translateY(18px) scale(.988);
+  transition: opacity .2s ease, transform .34s cubic-bezier(.4,.6,.4,1), visibility 0s .2s; }
+/* a shared lit tabletop: the three devices all stand on the same surface, so
+   the narrow phone reads as an object resting on a desk, not floating in a void */
+.stage::after { content: ""; position: absolute; left: 50%; bottom: -16px; width: 108%; height: 70px;
+  transform: translateX(-50%); z-index: -2; pointer-events: none; filter: blur(21px);
+  background:
+    radial-gradient(56% 62% at 50% 38%, rgba(154,212,110,.13), transparent 70%),
+    radial-gradient(82% 96% at 50% 30%, rgba(120,150,200,.05), transparent 72%); }
+/* each device casts its own soft contact shadow onto that surface — grounded, real */
+.stage .device::after { content: ""; position: absolute; left: 50%; bottom: -11px; transform: translateX(-50%);
+  z-index: -1; pointer-events: none; filter: blur(11px);
+  background: radial-gradient(50% 50% at 50% 50%, rgba(0,0,0,.82), rgba(0,0,0,.4) 44%, transparent 74%); }
+.dev-desktop::after { width: 250px; height: 30px; }
+.dev-web::after     { width: 440px; height: 30px; }
+.dev-mobile::after  { width: 232px; height: 30px; }
 .stage .device.active { opacity: 1; visibility: visible; transform: none;
-  transition: opacity .42s ease, transform .42s cubic-bezier(.2,.7,.3,1), visibility 0s 0s; }
+  transition: opacity .42s ease .2s, transform .55s cubic-bezier(.2,.85,.3,1) .1s, visibility 0s 0s; }
 .dev-desktop > .crt, .dev-web > .browser { width: 100%; }
 .hero-right::before { content: ""; position: absolute; left: 50%; top: 40%; width: 128%; height: 92%;
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
