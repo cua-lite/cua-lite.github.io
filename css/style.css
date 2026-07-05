@@ -271,7 +271,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .bw-arrows { font-family: var(--mono); font-size: 14px; color: #5f6875; letter-spacing: 3px; }
 .bw-reload { font-family: var(--mono); font-size: 13px; color: #8a93a2; }
 .bw-url { flex: 1; font-family: var(--mono); font-size: 11px; color: #aeb4bd; background: #05070b; box-shadow: inset 0 0 0 2px #1b1f26; padding: 6px 11px; }
-.bw-view { position: relative; aspect-ratio: 16/10.4; overflow: hidden; background: #f4f5f0; box-shadow: inset 0 0 0 2px #000; }
+.bw-view { position: relative; aspect-ratio: 16/9.6; overflow: hidden; background: #f4f5f0; box-shadow: inset 0 0 0 2px #000; }
 .wp-head { display: flex; justify-content: space-between; align-items: center; font-family: var(--sans); font-weight: 800; font-size: 14px; color: #2a2e27; padding: 11px 15px; box-shadow: inset 0 -2px 0 #e2e5dd; }
 .wp-cart { font-family: var(--mono); font-size: 11px; color: #6a706a; font-weight: 400; }
 .wp-cart b { color: #0d5f2a; }
