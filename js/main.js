@@ -82,15 +82,18 @@
   const numOf = (el) => parseInt((el.textContent || "").replace(/[^0-9]/g, ""), 10) || 0;
   const fmt = (n) => n.toLocaleString("en-US");
   const sum = () => cells.reduce((a, e) => a + numOf(e), 0);
+  const avg = () => sum() / cells.length;
   // web
-  const wq = $("#wq"), wfield = $(".dev-web [data-t='search']"), wgrid = $("#wgrid");
-  const wadd = $(".dev-web [data-t='add']"), cart = $("#cart");
+  const wq = $("#wq"), wfield = $(".dev-web [data-t='search']");
+  const ggHome = $("#gg-home"), ggResults = $("#gg-results"), ggSite = $("#gg-site"), bwHost = $("#bw-host");
   // mobile
   const mname = $("#mname"), minput = $(".dev-mobile [data-t='name']"), msave = $(".dev-mobile [data-t='save']");
+  const msent = $("#msent");
 
   /* ---------- the three platforms ---------- */
   const MODES = {
     desktop: {
+      // a spreadsheet of CUA-Lite benchmark scores; the agent averages them
       env: "osworld",
       device: $(".dev-desktop"),
       reset() {
@@ -99,40 +102,46 @@
       },
       steps: [
         { t: "cell", cap: "select cell B5", onAct: () => total.classList.add("sel") },
-        { t: "cell", cap: "type =SUM(B2:B4)", typeLen: 11, onAct: () => typeInto(fbar, "sh-formula", "=SUM(B2:B4)") },
-        { t: "cell", cap: "press Enter", onAct: () => at(120, () => { total.textContent = fmt(sum()); total.classList.add("filled"); }) },
-        { done: true, cap: () => `Total = ${fmt(sum())}` },
+        { t: "cell", cap: "type =AVERAGE(B2:B4)", typeLen: 15, onAct: () => typeInto(fbar, "sh-formula", "=AVERAGE(B2:B4)") },
+        { t: "cell", cap: "press Enter", onAct: () => at(120, () => { total.textContent = avg().toFixed(1); total.classList.add("filled"); }) },
+        { done: true, cap: () => `Average = ${avg().toFixed(1)}` },
       ],
-      finished() { fbar.className = "sh-formula typed"; fbar.textContent = "=SUM(B2:B4)"; total.textContent = fmt(sum()); total.classList.add("filled", "sel"); },
+      finished() { fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B4)"; total.textContent = avg().toFixed(1); total.classList.add("filled", "sel"); },
     },
     web: {
-      env: "webarena",
+      // Google → search "cua-lite" → open this very homepage
+      env: "webvoyager",
       device: $(".dev-web"),
       reset() {
-        wq.textContent = "search products…"; wq.className = "mk-ph";
-        wfield.classList.remove("hot"); wgrid.classList.remove("pending");
-        wadd.textContent = "Add"; wadd.classList.remove("added"); cart.textContent = "0";
+        wq.textContent = "Search Google or type a URL"; wq.className = "mk-ph";
+        wfield.classList.remove("hot");
+        ggHome.style.display = ""; ggResults.classList.remove("show"); ggSite.classList.remove("show");
+        bwHost.textContent = "google.com";
       },
       steps: [
-        { t: "search", cap: "click the search box", onAct: () => wfield.classList.add("hot") },
-        { t: "search", cap: 'type "wireless earbuds"', typeLen: 16, onAct: () => typeInto(wq, "", "wireless earbuds") },
-        { t: "go", cap: "click Search", onAct: () => { wgrid.classList.add("pending"); at(150, () => wgrid.classList.remove("pending")); } },
-        { t: "add", cap: "add to cart", onAct: () => at(140, () => { wadd.textContent = "✓ Added"; wadd.classList.add("added"); cart.textContent = "1"; }) },
-        { done: true, cap: "added to cart" },
+        { t: "search", cap: "click the search bar", onAct: () => wfield.classList.add("hot") },
+        { t: "search", cap: 'type "cua-lite"', typeLen: 8, onAct: () => typeInto(wq, "", "cua-lite") },
+        { t: "go", cap: "press Search", onAct: () => { ggHome.style.display = "none"; ggResults.classList.add("show"); bwHost.textContent = "google.com/search?q=cua-lite"; } },
+        { t: "open", cap: "open cua-lite.github.io", onAct: () => { ggResults.classList.remove("show"); ggSite.classList.add("show"); bwHost.textContent = "cua-lite.github.io"; } },
+        { done: true, cap: "cua-lite.github.io" },
       ],
-      finished() { wq.textContent = "wireless earbuds"; wq.className = "typed"; wfield.classList.add("hot"); wgrid.classList.remove("pending"); wadd.textContent = "✓ Added"; wadd.classList.add("added"); cart.textContent = "1"; },
+      finished() { wq.textContent = "cua-lite"; wq.className = "typed"; ggHome.style.display = "none"; ggResults.classList.remove("show"); ggSite.classList.add("show"); bwHost.textContent = "cua-lite.github.io"; },
     },
     mobile: {
+      // texting ZHZisZZ about why CUA-Lite is good
       env: "androidworld",
       device: $(".dev-mobile"),
-      reset() { mname.textContent = "Full name"; mname.className = "mk-ph"; minput.classList.remove("hot"); msave.textContent = "Save"; msave.classList.remove("saved"); },
+      reset() {
+        mname.textContent = "iMessage"; mname.className = "mk-ph"; minput.classList.remove("hot");
+        msent.classList.remove("show"); msave.classList.remove("sent");
+      },
       steps: [
-        { t: "name", cap: "tap the name field", onAct: () => minput.classList.add("hot") },
-        { t: "name", cap: 'type "Ada Lovelace"', typeLen: 12, onAct: () => typeInto(mname, "", "Ada Lovelace") },
-        { t: "save", cap: "tap Save", onAct: () => at(150, () => { msave.textContent = "✓ Saved"; msave.classList.add("saved"); }) },
-        { done: true, cap: "contact saved" },
+        { t: "name", cap: "tap the message field", onAct: () => minput.classList.add("hot") },
+        { t: "name", cap: 'type "any agent, any computer"', typeLen: 24, onAct: () => typeInto(mname, "", "any agent, any computer 🚀") },
+        { t: "save", cap: "tap Send", onAct: () => at(120, () => { msent.classList.add("show"); msave.classList.add("sent"); mname.textContent = "iMessage"; mname.className = "mk-ph"; minput.classList.remove("hot"); }) },
+        { done: true, cap: "message sent" },
       ],
-      finished() { mname.textContent = "Ada Lovelace"; mname.className = "typed"; minput.classList.add("hot"); msave.textContent = "✓ Saved"; msave.classList.add("saved"); },
+      finished() { msent.classList.add("show"); msave.classList.add("sent"); mname.textContent = "iMessage"; mname.className = "mk-ph"; },
     },
   };
   const ORDER = ["desktop", "web", "mobile"];
@@ -167,8 +176,13 @@
     requestAnimationFrame(() => { ctx.cursor.style.transition = ""; });
   }
   function activate(m, skipReset) {
+    const prev = mode;
     mode = m; ctx = ctxFor(MODES[m].device);
-    document.querySelectorAll(".stage .device").forEach((d) => d.classList.toggle("active", d.dataset.mode === m));
+    document.querySelectorAll(".stage .device").forEach((d) => {
+      const on = d.dataset.mode === m;
+      d.classList.toggle("active", on);
+      d.classList.toggle("exit", !on && d.dataset.mode === prev && prev !== m);   // outgoing slides out
+    });
     syncPlats();
     capRun.innerHTML = `<span class="c-p">$</span> rollout.py <span class="c-flag">--model-id</span> <span class="c-val">gpt-5.5</span> <span class="c-flag">--env-id</span> <span class="c-env">${MODES[m].env}</span>`;
     if (!skipReset) { MODES[m].reset(); logClear(); }
@@ -178,8 +192,8 @@
     MODES.desktop.finished();
     logClear();
     logLine("thinking", "think", "0.2s");
-    [["select cell B5", "0.6s"], ["type =SUM(B2:B4)", "1.1s"], ["press Enter", "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
-    logLine(`Total = ${fmt(sum())}`, "done", "2.0s");
+    [["select cell B5", "0.6s"], ["type =AVERAGE(B2:B4)", "1.1s"], ["press Enter", "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
+    logLine(`Average = ${avg().toFixed(1)}`, "done", "2.0s");
     requestAnimationFrame(() => { ctx.cursor.style.transition = "none"; const c = centerOf(ctx, "cell"); if (c) place(ctx, c.x, c.y); });
     showHint();
   }
@@ -221,12 +235,12 @@
   function recompute() {
     clearAll(); running = true;
     logClear();
-    fbar.className = "sh-formula typed"; fbar.textContent = "=SUM(B2:B4)";
+    fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B4)";
     total.textContent = ""; total.classList.remove("filled"); total.classList.add("sel");
     at(60, () => logLine("read cells B2:B4", "live", "0.1s"));
-    at(360, () => { moveTo(ctx, "cell"); logLine("recompute =SUM(B2:B4)", "live", "0.4s"); });
-    at(820, () => { click(ctx, "cell"); total.textContent = fmt(sum()); total.classList.add("filled"); });
-    at(1080, () => logLine(`Total = ${fmt(sum())}`, "done", "0.9s"));
+    at(360, () => { moveTo(ctx, "cell"); logLine("recompute =AVERAGE(B2:B4)", "live", "0.4s"); });
+    at(820, () => { click(ctx, "cell"); total.textContent = avg().toFixed(1); total.classList.add("filled"); });
+    at(1080, () => logLine(`Average = ${avg().toFixed(1)}`, "done", "0.9s"));
     at(1240, () => { running = false; });
   }
 

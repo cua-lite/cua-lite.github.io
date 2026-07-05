@@ -78,16 +78,16 @@
             <div class="screen">
               <div class="wall"></div>
               <div class="win">
-                <div class="win-bar"><span class="win-dot"></span><span class="win-name">budget.ods — LibreOffice Calc</span></div>
+                <div class="win-bar"><span class="win-dot"></span><span class="win-name">results.ods — LibreOffice Calc</span></div>
                 <div class="win-body sheet">
                   <div class="sh-fbar"><span class="sh-ref">B5</span><span class="sh-fx">ƒₓ</span><span class="sh-formula" id="fbar"><span class="mk-ph"></span></span></div>
                   <div class="sh-grid">
                     <span class="sh-hc"></span><span class="sh-hc">A</span><span class="sh-hc">B</span>
-                    <span class="sh-hr">1</span><span class="sh-cell">Item</span><span class="sh-cell num dim">Cost</span>
-                    <span class="sh-hr">2</span><span class="sh-cell">GPU hours</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b2">1,250</span>
-                    <span class="sh-hr">3</span><span class="sh-cell">Storage</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b3">340</span>
-                    <span class="sh-hr">4</span><span class="sh-cell">Bandwidth</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b4">812</span>
-                    <span class="sh-hr">5</span><span class="sh-cell strong">Total</span><span class="sh-cell num total" data-t="cell" id="total"></span>
+                    <span class="sh-hr">1</span><span class="sh-cell">Benchmark</span><span class="sh-cell num dim">Score</span>
+                    <span class="sh-hr">2</span><span class="sh-cell">OSWorld</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b2">38</span>
+                    <span class="sh-hr">3</span><span class="sh-cell">WebArena</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b3">43</span>
+                    <span class="sh-hr">4</span><span class="sh-cell">AndroidWorld</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b4">51</span>
+                    <span class="sh-hr">5</span><span class="sh-cell strong">Average</span><span class="sh-cell num total" data-t="cell" id="total"></span>
                   </div>
                 </div>
               </div>
@@ -103,15 +103,32 @@
 
         <!-- WEB · webarena — a pixel browser shopping -->
         <div class="device dev-web" data-mode="web">
-          <div class="browser" aria-label="a web agent in a browser">
-            <div class="bw-tabs"><span class="bw-tab"><span class="bw-fav"></span>pixelnet<span class="bw-x">×</span></span><span class="bw-newtab">+</span></div>
-            <div class="bw-nav"><span class="bw-arrows">‹&nbsp;›</span><span class="bw-reload">⟳</span><span class="bw-url">🔒 shop.pixelnet.io</span></div>
+          <div class="browser" aria-label="a web agent browsing in a browser">
+            <div class="bw-tabs">
+              <span class="bw-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="bw-tab"><span class="bw-fav"></span>Google<span class="bw-x">×</span></span>
+              <span class="bw-newtab">+</span>
+            </div>
+            <div class="bw-nav"><span class="bw-arrows">‹&nbsp;›</span><span class="bw-reload">⟳</span><span class="bw-url"><span class="bw-lock">🔒</span> <span id="bw-host">google.com</span></span></div>
             <div class="bw-view">
-              <div class="wp-head">pixelnet<span class="wp-cart">cart · <b id="cart">0</b></span></div>
-              <div class="wp-row"><span class="wp-field" data-t="search"><span class="mk-ph" id="wq">search products…</span></span><span class="wp-go" data-t="go">Search</span></div>
-              <div class="wp-grid" id="wgrid">
-                <div class="wp-card"><span class="wp-thumb a"></span><span class="wp-name">Wireless Buds</span><span class="wp-price">$29</span><span class="wp-add" data-t="add">Add</span></div>
-                <div class="wp-card"><span class="wp-thumb b"></span><span class="wp-name">Buds Pro</span><span class="wp-price">$34</span><span class="wp-add">Add</span></div>
+              <div class="gg-home" id="gg-home">
+                <div class="gg-logo" aria-hidden="true"><b>G</b><b>o</b><b>o</b><b>g</b><b>l</b><b>e</b></div>
+                <div class="gg-search" data-t="search"><span class="gg-mag" aria-hidden="true">⌕</span><span class="mk-ph" id="wq">Search Google or type a URL</span></div>
+                <div class="gg-btns"><span class="gg-btn go" data-t="go">Google Search</span><span class="gg-btn">I'm Feeling Lucky</span></div>
+              </div>
+              <div class="gg-results" id="gg-results" aria-hidden="true">
+                <div class="gg-rbar"><span class="gg-rlogo" aria-hidden="true"><b>G</b><b>o</b><b>o</b><b>g</b><b>l</b><b>e</b></span><span class="gg-rq">cua-lite</span><span class="gg-rmag" aria-hidden="true">⌕</span></div>
+                <a class="gg-item" data-t="open"><span class="gg-url">cua-lite.github.io</span><span class="gg-title">CUA-Lite — Simple Computer Use Agents</span><span class="gg-snip">One lightweight framework to evaluate, fine-tune, and RL computer-use agents across desktop, web, and mobile.</span></a>
+                <a class="gg-item"><span class="gg-url">github.com › cua-lite</span><span class="gg-title">cua-lite/cua-lite: any agent, any computer</span><span class="gg-snip">Unified action space and data format — OSWorld, WebArena, AndroidWorld and more.</span></a>
+                <a class="gg-item"><span class="gg-url">huggingface.co › cua-lite</span><span class="gg-title">CUA-Lite rollout datasets</span><span class="gg-snip">Preprocessed corpora, ready to fine-tune from on the Hub.</span></a>
+              </div>
+              <div class="gg-site" id="gg-site" aria-hidden="true">
+                <div class="gs-nav"><span class="gs-brand"><span class="gs-plane" aria-hidden="true"></span>CUA-Lite</span><span class="gs-links" aria-hidden="true"><i></i><i></i><i></i></span></div>
+                <div class="gs-hero">
+                  <div class="gs-eyebrow">Simple computer use agents</div>
+                  <div class="gs-h1">Any agent operates <em>any computer.</em></div>
+                  <div class="gs-cta"><span class="gs-btn">Star on GitHub</span><span class="gs-btn2">Get started</span></div>
+                </div>
               </div>
               <div class="spark"></div>
               <div class="mouse-cur"></div>
@@ -125,11 +142,23 @@
             <div class="ph-screen">
               <span class="ph-island" aria-hidden="true"></span>
               <div class="ph-status"><span data-clock>9:41</span><span class="ph-sig"></span></div>
-              <div class="ph-app">
-                <div class="ph-appbar"><span>New contact</span><span class="ph-save" data-t="save">Save</span></div>
-                <div class="ph-field"><span class="ph-lbl">Name</span><span class="ph-input" data-t="name"><span class="mk-ph" id="mname">Full name</span></span></div>
-                <div class="ph-field"><span class="ph-lbl">Phone</span><span class="ph-val">+1 415 …</span></div>
-                <div class="ph-field"><span class="ph-lbl">Email</span><span class="ph-val">—</span></div>
+              <div class="ph-app ph-chat">
+                <div class="ph-chead">
+                  <span class="ph-back" aria-hidden="true">‹</span>
+                  <img class="ph-av" src="https://github.com/ZHZisZZ.png?size=72" alt="" onerror="this.classList.add('noimg')">
+                  <span class="ph-who">ZHZisZZ</span>
+                </div>
+                <div class="ph-thread">
+                  <div class="ph-day">Today 9:41</div>
+                  <div class="ph-bub them">saw the cua-lite demo 👀</div>
+                  <div class="ph-bub me show">yeah! just open-sourced it</div>
+                  <div class="ph-bub them">wait — how's it so good??</div>
+                  <div class="ph-bub me" id="msent" aria-hidden="true">any agent, any computer 🚀</div>
+                </div>
+                <div class="ph-composer">
+                  <span class="ph-input" data-t="name"><span class="mk-ph" id="mname">iMessage</span></span>
+                  <span class="ph-send" data-t="save" aria-label="Send">↑</span>
+                </div>
               </div>
               <span class="ph-home" aria-hidden="true"></span>
               <div class="spark"></div>
