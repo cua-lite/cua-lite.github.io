@@ -442,7 +442,9 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* ---------- shared agent status line ---------- */
 /* the rollout streams as a live log — the agent's run, line by line */
-.rollout { font-family: var(--mono); font-size: 14.5px; }
+/* reserve the tallest mode's height so cycling desktop/web/mobile never nudges
+   the page below (web's 6-line trace is the max) — zero layout drift */
+.rollout { font-family: var(--mono); font-size: 14.5px; min-height: 238px; }
 .rl-cmd { font-size: 12.5px; line-height: 1.55; color: #9aa2ae; padding-bottom: 12px; border-bottom: 1px solid var(--line); word-break: break-word; }
 .rl-cmd .c-p { color: var(--accent); } .rl-cmd .c-flag { color: #7f8896; } .rl-cmd .c-val { color: #c8cfda; } .rl-cmd .c-env { color: var(--accent); }
 .rl-log { margin-top: 12px; min-height: 120px; display: flex; flex-direction: column; gap: 9px; }
