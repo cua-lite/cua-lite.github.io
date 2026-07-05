@@ -137,9 +137,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .dev-mobile::after  { width: 196px; height: 28px; }
 .stage .device.active { opacity: 1; visibility: visible; transform: none; z-index: 2;
   transition: opacity .42s ease, transform .52s var(--ease), visibility 0s 0s; }
-/* the outgoing device — slides out to the left as the incoming slides in */
-.stage .device.exit { opacity: 0; visibility: visible; transform: translateX(-34px) scale(.982); z-index: 1;
-  transition: opacity .4s ease, transform .5s var(--ease), visibility 0s .5s; }
+/* the outgoing device — slides out to the left, fading a touch faster than
+   the incoming arrives so the two never sit at full strength together */
+.stage .device.exit { opacity: 0; visibility: visible; transform: translateX(-38px) scale(.978); z-index: 1;
+  transition: opacity .3s ease, transform .5s var(--ease), visibility 0s .5s; }
 /* when YOU drive the switch, the same motion — just quicker */
 .stage.snappy .device { transition: opacity .26s ease, transform .34s var(--ease), visibility 0s .34s; }
 .stage.snappy .device.active { transition: opacity .28s ease, transform .36s var(--ease), visibility 0s 0s; }
