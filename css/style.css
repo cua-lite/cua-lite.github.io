@@ -247,9 +247,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .tb-start { display: flex; align-items: center; gap: 5px; color: var(--pgreen-ink); background: var(--pgreen); font-weight: 800;
   box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi); padding: 3px 9px; }
 .tb-logo { width: 10px; height: 8px; background: url('../assets/pixel/airplane.png') center/contain no-repeat; image-rendering: pixelated; }
-.cap-act { color: #cdd3dd; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.cap-act .ca-dim { color: #6b7480; }
-.cap-act b { color: var(--pgreen); font-weight: 700; }
 .think { color: #8a93a2; }
 .think i { font-style: normal; animation: dot 1.15s ease-in-out infinite; }
 .think i:nth-child(2) { animation-delay: .18s; } .think i:nth-child(3) { animation-delay: .36s; }
@@ -324,11 +321,18 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .ph-val { display: flex; align-items: center; font-size: 13px; color: #9aa096; background: #eceee7; box-shadow: 0 0 0 2px #d5d8cf; padding: 8px 11px; }
 
 /* ---------- shared agent status line ---------- */
-.agent-line { display: flex; align-items: center; gap: 9px; margin: 13px 0 0; font-family: var(--mono); font-size: 11.5px; color: #cdd3dd; min-height: 16px; }
-.agent-dot { width: 7px; height: 7px; flex-shrink: 0; background: var(--accent); box-shadow: 0 0 6px var(--accent); opacity: .3; transition: opacity .2s ease; }
-.agent-line.busy .agent-dot { opacity: 1; animation: blink 1.1s ease-in-out infinite; }
-.screen-cap { display: flex; align-items: center; gap: 12px; margin-top: 20px; font-family: var(--mono); font-size: 11.5px; }
-.cap-run { color: var(--dim); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* the rollout streams as a live log — the agent's run, line by line */
+.rollout { margin-top: 20px; font-family: var(--mono); font-size: 11.5px; }
+.rl-cmd { color: var(--dim); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.rl-log { margin-top: 9px; min-height: 92px; display: flex; flex-direction: column; gap: 4px; }
+.rl-line { display: flex; color: #b6bdc9; opacity: 0; transform: translateY(3px); animation: rlIn .22s ease forwards; }
+.rl-mark { color: #5f6875; margin-right: 9px; flex-shrink: 0; }
+.rl-line.think { color: #8a93a2; }
+.rl-line.done { color: var(--accent); font-weight: 500; }
+.rl-line.done .rl-mark { color: var(--accent); }
+.rl-line.live .rl-mark::after { content: ""; }
+.rl-line.live .caret { display: inline-block; width: 6px; height: 1.05em; margin-left: 3px; background: var(--accent); vertical-align: -0.15em; animation: blink 1s steps(1) infinite; }
+@keyframes rlIn { to { opacity: 1; transform: none; } }
 
 /* ---------- divider: the pixel paper airplane, breathing (the teaser) ---------- */
 .divider { position: relative; display: flex; align-items: center; justify-content: center; padding: 28px 0; }
@@ -405,7 +409,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 }
 @media (prefers-reduced-motion: reduce) {
   .typed.caret::after, .fly-plane, .crt-led, .spark,
-  .wall, .think i, .hero-left, .hero-right { animation: none; }
+  .wall, .think i, .hero-left, .hero-right, .rl-line, .rl-line .caret { animation: none; }
+  .rl-line { opacity: 1; transform: none; }
   .wall { background-position: 50% 50%; }
   .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }

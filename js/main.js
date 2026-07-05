@@ -13,17 +13,27 @@
   if (!stage) return;
 
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const capAct = document.getElementById("cap-act");
   const capRun = document.getElementById("cap-run");
-  const agentLine = document.querySelector(".agent-line");
+  const rlLog = document.getElementById("rl-log");
   const plats = [...document.querySelectorAll(".plat")];   // the lead words = the control
 
   let timers = [];
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
   const clearAll = () => { timers.forEach(clearTimeout); timers = []; };
-  const setCap = (html) => { capAct.innerHTML = html; };
-  const THINK = '<span class="ca-dim">agent</span> <span class="think">thinking<i>.</i><i>.</i><i>.</i></span>';
-  const setBtn = (label, dis) => { if (runBtn) { runBtn.innerHTML = label; runBtn.disabled = dis; } };
+
+  // the rollout streams line by line, like a live log
+  const logClear = () => { rlLog.innerHTML = ""; };
+  function logLine(text, cls) {
+    const prev = rlLog.querySelector(".rl-line.live");
+    if (prev) prev.classList.remove("live");
+    const el = document.createElement("div");
+    el.className = "rl-line " + (cls || "live");
+    const mark = /done/.test(cls || "") ? "✓" : /think/.test(cls || "") ? "⋯" : "›";
+    el.innerHTML = `<span class="rl-mark">${mark}</span><span class="rl-text">${text}</span>`;
+    if ((cls || "").includes("live")) el.querySelector(".rl-text").insertAdjacentHTML("beforeend", '<span class="caret"></span>');
+    rlLog.appendChild(el);
+    return el;
+  }
 
   /* ---------- shared engine (operates on a per-device ctx) ---------- */
   function ctxFor(deviceEl) {
@@ -86,7 +96,7 @@
         { t: "cell", cap: "select cell B5", onAct: () => total.classList.add("sel") },
         { t: "cell", cap: "type =SUM(B2:B4)", typeLen: 11, onAct: () => typeInto(fbar, "sh-formula", "=SUM(B2:B4)") },
         { t: "cell", cap: "press Enter", onAct: () => at(120, () => { total.textContent = fmt(sum()); total.classList.add("filled"); }) },
-        { done: true, cap: () => `✓ Total = ${fmt(sum())}` },
+        { done: true, cap: () => `Total = ${fmt(sum())}` },
       ],
       finished() { fbar.className = "sh-formula typed"; fbar.textContent = "=SUM(B2:B4)"; total.textContent = fmt(sum()); total.classList.add("filled", "sel"); },
     },
@@ -103,7 +113,7 @@
         { t: "search", cap: 'type "wireless earbuds"', typeLen: 16, onAct: () => typeInto(wq, "", "wireless earbuds") },
         { t: "go", cap: "click Search", onAct: () => { wgrid.classList.add("pending"); at(150, () => wgrid.classList.remove("pending")); } },
         { t: "add", cap: "add to cart", onAct: () => at(140, () => { wadd.textContent = "✓ Added"; wadd.classList.add("added"); cart.textContent = "1"; }) },
-        { done: true, cap: "✓ added to cart" },
+        { done: true, cap: "added to cart" },
       ],
       finished() { wq.textContent = "wireless earbuds"; wq.className = "typed"; wfield.classList.add("hot"); wgrid.classList.remove("pending"); wadd.textContent = "✓ Added"; wadd.classList.add("added"); cart.textContent = "1"; },
     },
@@ -115,7 +125,7 @@
         { t: "name", cap: "tap the name field", onAct: () => minput.classList.add("hot") },
         { t: "name", cap: 'type "Ada Lovelace"', typeLen: 12, onAct: () => typeInto(mname, "", "Ada Lovelace") },
         { t: "save", cap: "tap Save", onAct: () => at(150, () => { msave.textContent = "✓ Saved"; msave.classList.add("saved"); }) },
-        { done: true, cap: "✓ contact saved" },
+        { done: true, cap: "contact saved" },
       ],
       finished() { mname.textContent = "Ada Lovelace"; mname.className = "typed"; minput.classList.add("hot"); msave.textContent = "✓ Saved"; msave.classList.add("saved"); },
     },
@@ -124,13 +134,13 @@
 
   /* ---------- run one platform's task ---------- */
   function runSeq(ctx, steps, onFinish) {
-    clearAll();
+    clearAll(); logClear();
     let t = 360;
-    at(t, () => setCap(THINK));   // plan once, then act decisively — no dithering before every click
+    at(t, () => logLine("thinking", "think live"));   // plan once, then act — each step streams into the log
     t += 780;
     steps.forEach((s) => {
-      if (s.done) { at(t, () => setCap(`<b>${typeof s.cap === "function" ? s.cap() : s.cap}</b>`)); t += 620; return; }
-      at(t, () => { moveTo(ctx, s.t); setCap(`<span class="ca-dim">agent</span> ${s.cap}`); });
+      if (s.done) { at(t, () => logLine(typeof s.cap === "function" ? s.cap() : s.cap, "done")); t += 620; return; }
+      at(t, () => { moveTo(ctx, s.t); logLine(s.cap, "live"); });
       at(t + 520, () => { click(ctx, s.t); s.onAct && s.onAct(); });
       t += 520 + (s.typeLen ? s.typeLen * 42 + 240 : 210) + 230;
     });
@@ -154,16 +164,16 @@
     document.querySelectorAll(".stage .device").forEach((d) => d.classList.toggle("active", d.dataset.mode === m));
     syncPlats();
     capRun.textContent = `$ rollout.py --model-id gpt-5.5 --env-id ${MODES[m].env}`;
-    MODES[m].reset(); setCap("");
+    MODES[m].reset(); logClear();
   }
   function advance() { const i = ORDER.indexOf(mode); switchTo(ORDER[(i + 1) % ORDER.length]); }
   const held = () => paused || !visible;   // don't advance while hovered or off-screen
   function holdThenAdvance() { at(held() ? 500 : 1100, () => { if (held()) holdThenAdvance(); else advance(); }); }
 
   function runActive() {
-    running = true; agentLine.classList.add("busy");
+    running = true;
     MODES[mode].reset();
-    runSeq(ctx, MODES[mode].steps, () => { running = false; agentLine.classList.remove("busy"); holdThenAdvance(); });
+    runSeq(ctx, MODES[mode].steps, () => { running = false; holdThenAdvance(); });
   }
   function switchTo(m) {
     clearAll(); running = false;
@@ -193,6 +203,9 @@
   if (reduce) {
     ORDER.forEach((m) => MODES[m].reset());
     activate("desktop"); MODES.desktop.finished();
+    logClear();
+    ["select cell B5", "type =SUM(B2:B4)", "press Enter"].forEach((l) => logLine(l, "past"));
+    logLine("Total = 2,402", "done");
   } else {
     activate("desktop"); parkCursor();
     if ("IntersectionObserver" in window) {
