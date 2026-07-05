@@ -53,8 +53,23 @@
 
     <div class="hero-right">
       <div class="term" aria-label="live rollout demo">
-        <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">cua-lite — rollout</span></div>
+        <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title" id="term-title">cua-lite — rollout</span></div>
         <pre class="term-body" id="term"></pre>
+      </div>
+      <div class="picker" id="picker">
+        <div class="pick-row" id="agent-row">
+          <span class="pick-label">agent</span>
+          <button class="chip active" data-agent="gpt-5.5">gpt-5.5</button>
+          <button class="chip" data-agent="claude-opus-4-8">claude</button>
+          <button class="chip" data-agent="Qwen/Qwen3-VL-8B">qwen3-vl</button>
+          <button class="chip" data-agent="ui-tars">ui-tars</button>
+        </div>
+        <div class="pick-row" id="env-row">
+          <span class="pick-label">env</span>
+          <button class="chip active" data-env="desktop">desktop</button>
+          <button class="chip" data-env="web">web</button>
+          <button class="chip" data-env="mobile">mobile</button>
+        </div>
       </div>
     </div>
   </div>

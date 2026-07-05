@@ -115,6 +115,18 @@ h1 em, h2 em { font-style: italic; color: var(--accent); }
 .t-cur { display: inline-block; width: 8px; height: 1.05em; background: var(--accent); vertical-align: -0.18em; animation: blink 1s steps(1) infinite; }
 .hero .term { margin-top: 10px; }
 
+/* ---------- picker: compose agent × env, terminal runs it ---------- */
+.picker { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+.pick-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pick-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); width: 46px; flex-shrink: 0; }
+.chip {
+  font-family: var(--mono); font-size: 12.5px; color: var(--muted);
+  background: transparent; border: 1px solid var(--line); border-radius: 999px;
+  padding: 5px 14px; cursor: pointer; transition: color .12s ease, border-color .12s ease, background .12s ease;
+}
+.chip:hover { color: var(--text); border-color: var(--line-2); }
+.chip.active { color: var(--accent); border-color: var(--accent-dim); background: rgba(126,231,135,.07); }
+
 /* ---------- ascii divider ---------- */
 .divider { display: flex; justify-content: center; padding: 26px 0 10px; }
 .ascii { margin: 0; font-family: var(--mono); font-size: 8.5px; line-height: 1.25; color: rgba(126,231,135,.34); user-select: none; }

@@ -1,8 +1,9 @@
 /* ============================================================
-   CUA-Lite — one living element.
-   The hero terminal types a real rollout (command -> agent steps ->
-   reward -> LiteSample), cycling desktop / web / mobile. Everything
-   else on the page is still.
+   CUA-Lite — the terminal is interactive.
+   Compose an agent × an environment; the terminal runs THAT
+   real rollout: command → observe → click/type → reward 1.0 →
+   LiteSample. Before you touch it, it auto-demos (attract loop).
+   The moment you pick, it responds to you — like a real REPL.
    Reduced motion: static transcript, no typing.
    ============================================================ */
 (function () {
@@ -10,6 +11,7 @@
 
   const term = document.getElementById("term");
   if (!term) return;
+  const title = document.getElementById("term-title");
 
   const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
   const D = (s) => `<span class="t-dim">${s}</span>`;
@@ -17,9 +19,15 @@
   const G = (s) => `<span class="t-acc">${s}</span>`;
   const S = (s) => `<span class="t-str">${s}</span>`;
 
-  const EPISODES = [
+  const AGENTS = [
+    { id: "gpt-5.5", flag: "gpt-5.5" },
+    { id: "claude-opus-4-8", flag: "claude-opus-4-8", label: "claude" },
+    { id: "Qwen/Qwen3-VL-8B", flag: "Qwen/Qwen3-VL-8B", label: "qwen3-vl" },
+    { id: "ui-tars", flag: "ui-tars" },
+  ];
+  const ENVS = [
     {
-      cmd: "python rollout.py --model-id gpt-5.5 --env-id lite.osworld",
+      id: "desktop", env: "lite.osworld",
       lines: [
         T("[env]   ") + " boot lite.osworld " + D("… ready in 2.1s"),
         T("[agent] ") + " observe   " + D("screenshot 1920×1080"),
@@ -31,7 +39,7 @@
       ],
     },
     {
-      cmd: "python rollout.py --model-id gpt-5.5 --env-id webarena",
+      id: "web", env: "webarena",
       lines: [
         T("[env]   ") + " boot webarena " + D("… ready in 1.4s"),
         T("[agent] ") + " observe   " + D("screenshot 1280×720"),
@@ -43,7 +51,7 @@
       ],
     },
     {
-      cmd: "python rollout.py --model-id gpt-5.5 --env-id mobilegym",
+      id: "mobile", env: "mobilegym",
       lines: [
         T("[env]   ") + " boot mobilegym " + D("… ready in 1.7s"),
         T("[agent] ") + " observe   " + D("screenshot 1080×2400"),
@@ -56,27 +64,35 @@
     },
   ];
 
+  const state = { ai: 0, ei: 0, interacted: false };
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function cmdOf() {
+    return `python rollout.py --model-id ${AGENTS[state.ai].flag} --env-id ${ENVS[state.ei].env}`;
+  }
+  function setTitle() {
+    if (title) title.textContent = `cua-lite — ${ENVS[state.ei].env}`;
+  }
+
   if (reduce) {
-    const ep = EPISODES[0];
-    term.innerHTML = D("$ ") + esc(ep.cmd) + "\n\n" + ep.lines.join("\n");
+    setTitle();
+    term.innerHTML = D("$ ") + esc(cmdOf()) + "\n\n" + ENVS[state.ei].lines.join("\n");
+    wireChips(true);
     return;
   }
 
-  let epi = 0, timers = [];
+  let timers = [];
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
   const clearTimers = () => { timers.forEach(clearTimeout); timers = []; };
 
   function typeCommand(cmd, done) {
     let i = 0;
-    term.innerHTML = D("$ ") + '<span class="t-cur"></span>';
     (function tick() {
       if (i <= cmd.length) {
         term.innerHTML = D("$ ") + esc(cmd.slice(0, i)) + '<span class="t-cur"></span>';
         i++;
-        timers.push(setTimeout(tick, 22 + Math.random() * 26));
+        timers.push(setTimeout(tick, 16 + Math.random() * 24));
       } else {
-        term.innerHTML = D("$ ") + esc(cmd) + "\n\n";
         done();
       }
     })();
@@ -84,24 +100,52 @@
 
   function playEpisode() {
     clearTimers();
-    const ep = EPISODES[epi];
-    typeCommand(ep.cmd, () => {
-      const base = D("$ ") + esc(ep.cmd) + "\n\n";
-      let shown = [];
+    setTitle();
+    const ep = ENVS[state.ei];
+    const cmd = cmdOf();
+    typeCommand(cmd, () => {
+      const base = D("$ ") + esc(cmd) + "\n\n";
+      const shown = [];
       ep.lines.forEach((line, i) => {
-        at(360 * (i + 1) + (i > 0 ? 90 * i : 0), () => {
+        at(420 * (i + 1), () => {
           shown.push(line);
           const last = i === ep.lines.length - 1;
           term.innerHTML = base + shown.join("\n") + (last ? "" : '\n<span class="t-cur"></span>');
         });
       });
-      // hold the finished transcript, then next episode
-      at(360 * ep.lines.length + 90 * ep.lines.length + 3400, () => {
-        epi = (epi + 1) % EPISODES.length;
-        playEpisode();
+      // attract loop: only auto-advance the env until the user takes control
+      if (!state.interacted) {
+        at(420 * ep.lines.length + 3400, () => {
+          state.ei = (state.ei + 1) % ENVS.length;
+          syncActive();
+          playEpisode();
+        });
+      }
+    });
+  }
+
+  function syncActive() {
+    document.querySelectorAll("#env-row .chip").forEach((c, i) => c.classList.toggle("active", i === state.ei));
+    document.querySelectorAll("#agent-row .chip").forEach((c, i) => c.classList.toggle("active", i === state.ai));
+  }
+
+  function wireChips(staticMode) {
+    document.querySelectorAll("#agent-row .chip").forEach((c, i) => {
+      c.addEventListener("click", () => {
+        state.ai = i; state.interacted = true; syncActive();
+        if (staticMode) term.innerHTML = D("$ ") + esc(cmdOf()) + "\n\n" + ENVS[state.ei].lines.join("\n");
+        else playEpisode();
+      });
+    });
+    document.querySelectorAll("#env-row .chip").forEach((c, i) => {
+      c.addEventListener("click", () => {
+        state.ei = i; state.interacted = true; syncActive();
+        if (staticMode) { setTitle(); term.innerHTML = D("$ ") + esc(cmdOf()) + "\n\n" + ENVS[state.ei].lines.join("\n"); }
+        else playEpisode();
       });
     });
   }
 
+  wireChips(false);
   playEpisode();
 })();
