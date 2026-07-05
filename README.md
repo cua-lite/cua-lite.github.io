@@ -3,10 +3,13 @@
 Landing page for **[CUA-Lite](https://github.com/cua-lite/cua-lite)** — *Simple Computer Use Agents*.
 Live at **https://cua-lite.github.io/**.
 
-Design language: **refined retro computing** — warm paper canvas, ink, monospace type, hard
-pixel-edged surfaces (2px borders, offset shadows, no blur), pixel cursor + pixel icons as accents.
-The centerpiece is an interactive console: pick an **agent** × an **environment** and the same
-`rollout.py` command + a live rollout preview update — the interaction *is* the pitch.
+Design thesis: **an agent looks at a screen and acts on it.** The hero signature is a synthetic
+**agent's-eye view** — a UI overlaid with Set-of-Marks numbered tags, a cursor that walks the
+targets, and a live action trace (`observe → think → click [n] → type…`). Pick an **agent** or an
+**environment** and the same loop replays. Type: Space Grotesk (display) · IBM Plex Sans (body) ·
+IBM Plex Mono (data/trace). One bold accent (signal coral) for the agent's action; everything else
+quiet. The agent-view is drawn entirely in HTML/CSS — no bundled rollout footage — so it's crisp at
+any size and easy to restyle.
 
 ## Layout
 
