@@ -98,7 +98,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .nav-links .btn-solid { color: var(--pgreen-ink); }
 
 /* ---------- hero ---------- */
-.hero { padding: 78px 0 64px; position: relative; overflow: hidden; }
+.hero { padding: 60px 0 64px; position: relative; overflow: hidden; }
 .hero::before {  /* faint green aurora, top-left — the only glow on the page */
   content: ""; position: absolute; top: -220px; left: -160px; width: 720px; height: 560px;
   background: radial-gradient(ellipse at center, rgba(126,231,135,.045), transparent 65%);
@@ -108,7 +108,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
    the CRT beside its streaming trace, so the demo is the dominant object
    and the trace reads as a real, prominent output column. */
 .hero-head { max-width: 900px; }
-.hero-demo { position: relative; display: grid; grid-template-columns: 1.5fr 1fr; gap: 48px; align-items: center; margin-top: 50px; }
+.hero-demo { position: relative; display: grid; grid-template-columns: 1.5fr 1fr; gap: 48px; align-items: center; margin-top: 38px; }
 .hero-demo > * { min-width: 0; }
 .hero-side { display: flex; flex-direction: column; justify-content: center; }
 /* one quiet entrance — the page settles in, then the agent gets to work */
@@ -157,7 +157,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
   background: radial-gradient(46% 48% at 50% 50%, rgba(126,231,135,.07), rgba(90,150,230,.035) 55%, transparent 72%);
   filter: blur(28px); }
-.hero .lead { font-size: 17.5px; color: var(--muted); max-width: 500px; margin: 0 0 34px; }
+.hero .lead { font-size: 17.5px; color: var(--muted); max-width: 500px; margin: 0 0 28px; }
 .hero .lead b { color: var(--text); font-weight: 650; }
 /* stats — concise by default, the full list on hover */
 .stats { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 30px; padding: 0; margin: 40px 0 0;
