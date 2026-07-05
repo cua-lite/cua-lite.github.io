@@ -130,7 +130,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   background: radial-gradient(50% 50% at 50% 50%, rgba(0,0,0,.82), rgba(0,0,0,.4) 44%, transparent 74%); }
 .dev-desktop::after { width: 250px; height: 30px; }
 .dev-web::after     { width: 440px; height: 30px; }
-.dev-mobile::after  { width: 232px; height: 30px; }
+.dev-mobile::after  { width: 196px; height: 28px; }
 .stage .device.active { opacity: 1; visibility: visible; transform: none;
   transition: opacity .42s ease .2s, transform .55s cubic-bezier(.2,.85,.3,1) .1s, visibility 0s 0s; }
 /* when YOU drive the switch, respond crisply — the calm handoff is for the auto-tour */
@@ -185,7 +185,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
    wallpaper + a pixel window; the paper airplane operates it.
    ============================================================ */
 :root {
-  --crt:   #262b33; --crt-hi: #3b414b; --crt-lo: #14171c; --ink: #07080a;
+  --crt:   #2d343f; --crt-hi: #47515e; --crt-lo: #191e26; --ink: #07080a;
+  /* a rim of light catching the casing edge so the device reads as a solid
+     object on pure black instead of dissolving into it */
+  --crt-rim: 0 0 0 1px #0c0f14, 0 0 0 2.5px rgba(150,170,200,.10);
   --win:   #f5f6f2; --win-bar: #dde1d7; --win-ink: #2a2e27; --win-sub: #8a8f86;
   --grass: #6db24b; --pgreen: #7ee787; --pgreen-lo: #3f9e57; --pgreen-hi: #b8f5bd; --pgreen-ink: #08240f;
 }
@@ -194,7 +197,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
    glass is the only bright thing, the stand is the same material. */
 .crt { position: relative; background: var(--crt); padding: 15px 15px 17px; box-shadow:
     inset 3px 3px 0 0 var(--crt-hi), inset -4px -4px 0 0 var(--crt-lo),
-    0 0 0 2px #000, 0 34px 70px -38px rgba(0,0,0,.95); }
+    var(--crt-rim), 0 34px 70px -38px rgba(0,0,0,.95); }
 
 .screen { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #05070b;
   box-shadow: inset 0 0 0 3px #000, inset 0 0 0 6px #1b1f26; }
@@ -272,7 +275,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .crt-neck { width: 66px; height: 20px; margin: 0 auto; background: var(--crt);
   box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo); }
 .crt-base { width: 172px; height: 15px; margin: 5px auto 0; background: var(--crt);
-  box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo), 0 0 0 2px #000; }
+  box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo), var(--crt-rim); }
 
 /* the platform words in the lead ARE the control — hover to switch the device.
    Distinct from the bold keywords: an underline that lights up, never bold. */
@@ -281,7 +284,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .plat:hover, .plat.on { color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); }
 
 /* ---------- WEB: a pixel browser (tab strip + nav bar) ---------- */
-.browser { background: var(--crt); box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo), 0 0 0 2px #000, 0 30px 62px -38px rgba(0,0,0,.92); }
+.browser { background: var(--crt); box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo), var(--crt-rim), 0 30px 62px -38px rgba(0,0,0,.92); }
 .bw-tabs { display: flex; align-items: center; gap: 5px; padding: 8px 10px 0; }
 .bw-tab { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10.5px; color: #d4dae3;
   background: #0d1117; box-shadow: inset 2px 2px 0 #171b22, inset -2px 0 0 #05070b; padding: 6px 11px; }
@@ -313,19 +316,24 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   box-shadow: inset -3px -3px 0 var(--pgreen-lo), inset 3px 3px 0 var(--pgreen-hi), 0 0 0 2px #14161a, 3px 3px 0 rgba(18,20,24,.26); padding: 5px 0; }
 .wp-add.added { background: var(--pgreen-lo); color: #eafff0; box-shadow: inset -2px -2px 0 #2c7540, inset 2px 2px 0 #62c079, 0 0 0 2px #14161a; }
 
-/* ---------- MOBILE: a pixel phone ---------- */
-/* a pixel handset: chunky bezel, earpiece slit + camera, home indicator, a power key */
-.phone { position: relative; width: 232px; padding: 27px 14px 24px; background: var(--crt);
-  box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo), 0 0 0 2px #000, 0 34px 62px -38px rgba(0,0,0,.92); }
-/* a power key on the right rail */
-.phone::before { content: ""; position: absolute; right: -3px; top: 92px; width: 3px; height: 30px; background: var(--crt-lo); box-shadow: 2px 0 0 #000; }
-.ph-cam { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 40px; height: 5px; background: #05070b; }
-.ph-cam::after { content: ""; position: absolute; top: -1px; left: 46px; width: 7px; height: 7px; background: #0b1017; box-shadow: inset 0 0 0 2px #05070b; }
-.ph-home { position: absolute; bottom: 9px; left: 50%; transform: translateX(-50%); width: 60px; height: 5px; background: #3b414b; }
-.ph-screen { position: relative; aspect-ratio: 9/15.4; overflow: hidden; background: #f4f5f0; box-shadow: inset 0 0 0 2px #000; }
-.ph-status { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 9px; color: #55605a; padding: 7px 13px 5px; }
-.ph-sig { width: 15px; height: 8px; background: #2a2e27; }
-.ph-app { padding: 6px 13px; }
+/* ---------- MOBILE: a phone — rounded like a real handset, not a slab ---------- */
+/* thin uniform bezels, big soft corners, a Dynamic Island: unmistakably a phone.
+   It shares the casing material (colour, bevel, rim) with the other devices,
+   but its silhouette is its own — a CRT is boxy, a phone is not. */
+.phone { position: relative; width: 214px; padding: 11px; border-radius: 42px; background: var(--crt);
+  box-shadow: inset 2px 2px 0 var(--crt-hi), inset -3px -3px 0 var(--crt-lo), var(--crt-rim), 0 34px 62px -38px rgba(0,0,0,.92); }
+/* side buttons — volume rocker on the left rail, power on the right */
+.phone::before { content: ""; position: absolute; right: -2px; top: 112px; width: 2px; height: 46px; border-radius: 2px; background: var(--crt-lo); box-shadow: 1px 0 0 rgba(0,0,0,.55); }
+.phone::after  { content: ""; position: absolute; left: -2px; top: 86px; width: 2px; height: 48px; border-radius: 2px; background: var(--crt-lo); box-shadow: -1px 0 0 rgba(0,0,0,.55); }
+.ph-screen { position: relative; aspect-ratio: 9/19; overflow: hidden; border-radius: 31px; background: #f4f5f0; box-shadow: inset 0 0 0 1.5px #05070b; }
+/* the Dynamic Island — the tell that says "iPhone" at a glance */
+.ph-island { position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 70px; height: 18px; border-radius: 10px; background: #05070b; z-index: 13; }
+.ph-island::after { content: ""; position: absolute; right: 9px; top: 50%; transform: translateY(-50%); width: 6px; height: 6px; border-radius: 50%; background: #17252f; box-shadow: inset 0 0 0 1px #05070b; }
+/* the home indicator — dark pill on the bright screen */
+.ph-home { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 98px; height: 5px; border-radius: 3px; background: #2a2e27; opacity: .8; z-index: 13; }
+.ph-status { display: flex; justify-content: space-between; align-items: center; font-family: var(--sans); font-weight: 700; font-size: 10.5px; color: #2a2e27; padding: 10px 21px 5px; }
+.ph-sig { width: 16px; height: 9px; border-radius: 2px; background: #2a2e27; }
+.ph-app { padding: 7px 16px 26px; }
 .ph-appbar { display: flex; justify-content: space-between; align-items: center; font-family: var(--sans); font-weight: 800; font-size: 14px; color: #2a2e27; padding: 6px 0 14px; }
 .ph-save { font-family: var(--sans); font-weight: 800; font-size: 12px; color: var(--pgreen-ink); background: var(--accent); box-shadow: inset -3px -3px 0 var(--pgreen-lo), inset 3px 3px 0 var(--pgreen-hi), 0 0 0 2px #14161a, 3px 3px 0 rgba(18,20,24,.26); padding: 4px 13px; }
 .ph-save.saved { background: var(--pgreen-lo); color: #eafff0; box-shadow: inset -2px -2px 0 #2c7540, inset 2px 2px 0 #62c079, 0 0 0 2px #14161a; }
