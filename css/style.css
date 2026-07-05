@@ -121,7 +121,20 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   filter: blur(26px); }
 .hero .lead { font-size: 17.5px; color: var(--muted); max-width: 460px; margin: 0 0 34px; }
 .hero .lead b { color: var(--text); font-weight: 650; }
-.stats { font-family: var(--mono); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin: 34px 0 0; }
+/* stats — concise by default, the full list on hover */
+.stats { list-style: none; display: flex; flex-wrap: wrap; gap: 7px 22px; padding: 0; margin: 32px 0 0;
+  font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.stat { position: relative; cursor: default; }
+.stat:not(:last-child)::after { content: "·"; position: absolute; right: -13px; color: var(--dim); }
+.stat-n { color: var(--accent); font-weight: 700; }
+.stat-pop { position: absolute; bottom: calc(100% + 12px); left: -12px; z-index: 30; width: max-content; max-width: 300px;
+  background: var(--panel-fill); border: 2px solid var(--panel-edge);
+  box-shadow: inset 2px 2px 0 var(--panel-hi), inset -3px -3px 0 var(--panel-lo), 8px 10px 0 rgba(0,0,0,.4);
+  padding: 10px 13px; font-size: 11px; letter-spacing: .2px; text-transform: none; color: var(--text); line-height: 1.65;
+  opacity: 0; transform: translateY(6px); pointer-events: none; transition: opacity .18s ease, transform .18s ease; }
+.stat-pop b { display: block; color: var(--accent); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+.stat:hover .stat-pop, .stat:focus-within .stat-pop { opacity: 1; transform: none; }
+.stat-pop::after { content: ""; position: absolute; top: 100%; left: 18px; border: 6px solid transparent; border-top-color: var(--panel-edge); }
 
 /* ---------- terminal — a pixel-panel too ---------- */
 .term { position: relative; background: var(--panel-fill); border: 2px solid var(--panel-edge); border-radius: 0; overflow: hidden;
