@@ -101,10 +101,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hero { padding: 100px 0 64px; position: relative; overflow: hidden; }
 .hero::before {  /* faint green aurora, top-left — the only glow on the page */
   content: ""; position: absolute; top: -220px; left: -160px; width: 720px; height: 560px;
-  background: radial-gradient(ellipse at center, rgba(126,231,135,.07), transparent 65%);
+  background: radial-gradient(ellipse at center, rgba(126,231,135,.045), transparent 65%);
   pointer-events: none;
 }
-.hero-grid { display: grid; grid-template-columns: 1fr 1.14fr; gap: 56px; align-items: center; }
+.hero-grid { display: grid; grid-template-columns: 1fr 1.24fr; gap: 54px; align-items: center; }
 .hero-grid > * { min-width: 0; }
 /* one quiet entrance — the page settles in, then the agent gets to work */
 @keyframes heroIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
@@ -112,7 +112,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hero-right { animation: heroIn .62s cubic-bezier(.2,.7,.3,1) .14s both; }
 /* seat the monitor: a soft glow, like a screen lit in a dark room */
 .hero-right { position: relative; }
-.stage { position: relative; min-height: 442px; }
+.stage { position: relative; min-height: 470px; }
 /* three platforms, one focal device — a true two-way crossfade.
    visibility is delayed to the end of the fade so the outgoing device
    actually fades out (instead of vanishing instantly). */
@@ -156,11 +156,11 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hero .lead { font-size: 17.5px; color: var(--muted); max-width: 460px; margin: 0 0 34px; }
 .hero .lead b { color: var(--text); font-weight: 650; }
 /* stats — concise by default, the full list on hover */
-.stats { list-style: none; display: flex; flex-wrap: wrap; gap: 7px 22px; padding: 0; margin: 32px 0 0;
+.stats { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 30px; padding: 0; margin: 40px 0 0;
   font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
-.stat { position: relative; cursor: default; }
-.stat:not(:last-child)::after { content: "·"; position: absolute; right: -13px; color: var(--dim); }
-.stat-n { color: var(--accent); font-weight: 700; }
+.stat { position: relative; cursor: default; display: inline-flex; align-items: baseline; gap: 6px; }
+.stat:not(:last-child)::after { content: "·"; position: absolute; right: -17px; color: var(--dim); }
+.stat-n { color: var(--accent); font-weight: 700; font-size: 16px; letter-spacing: 0; }
 .stat-pop { position: absolute; bottom: calc(100% + 12px); left: -12px; z-index: 30; width: max-content; max-width: 300px;
   background: var(--panel-fill); border: 2px solid var(--panel-edge);
   box-shadow: inset 2px 2px 0 var(--panel-hi), inset -3px -3px 0 var(--panel-lo), 8px 10px 0 rgba(0,0,0,.4);
@@ -430,10 +430,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* ---------- shared agent status line ---------- */
 /* the rollout streams as a live log — the agent's run, line by line */
-.rollout { margin-top: 22px; font-family: var(--mono); font-size: 12.5px; }
-.rl-cmd { font-size: 11.5px; color: #9aa2ae; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-bottom: 11px; border-bottom: 1px solid var(--line); }
+.rollout { margin-top: 24px; font-family: var(--mono); font-size: 13.5px; }
+.rl-cmd { font-size: 12.5px; color: #9aa2ae; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
 .rl-cmd .c-p { color: var(--accent); } .rl-cmd .c-flag { color: #7f8896; } .rl-cmd .c-val { color: #c8cfda; } .rl-cmd .c-env { color: var(--accent); }
-.rl-log { margin-top: 11px; min-height: 102px; display: flex; flex-direction: column; gap: 5px; }
+.rl-log { margin-top: 12px; min-height: 118px; display: flex; flex-direction: column; gap: 7px; }
 .rl-line { display: flex; color: #cbd2dd; opacity: 0; transform: translateY(3px); animation: rlIn .22s ease forwards; }
 .rl-mark { color: #6b7480; margin-right: 10px; flex-shrink: 0; }
 .rl-lat { margin-left: auto; padding-left: 14px; color: #626b78; flex-shrink: 0; font-variant-numeric: tabular-nums; }
