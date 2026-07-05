@@ -118,6 +118,14 @@
     });
   }
 
+  // on load: a completed rollout (full box, no empty void) waiting at a ready-prompt
+  function renderFull() {
+    clearTimers();
+    setTitle();
+    const ep = ENVS[state.ei];
+    term.innerHTML = D("$ ") + esc(cmdOf()) + "\n\n" + ep.lines.join("\n") + "\n\n" + D("$ ") + '<span class="t-cur"></span>';
+  }
+
   function syncActive() {
     document.querySelectorAll("#env-row .chip").forEach((c, i) => c.classList.toggle("active", i === state.ei));
     document.querySelectorAll("#agent-row .chip").forEach((c, i) => c.classList.toggle("active", i === state.ai));
@@ -141,5 +149,5 @@
   }
 
   wireChips(false);
-  playEpisode();
+  renderFull();   // start filled — the deliberate typing plays when you pick a chip
 })();
