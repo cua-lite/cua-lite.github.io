@@ -638,7 +638,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* benchmark rows — one pixel-panel listing */
 .rows { border: 2px solid var(--panel-edge); border-radius: 0; overflow: hidden; background: var(--panel-fill);
   box-shadow: inset 2px 2px 0 var(--panel-hi), inset -3px -3px 0 var(--panel-lo); }
-.row { display: grid; grid-template-columns: minmax(150px,auto) 1fr 128px 30px; align-items: center; gap: 20px; padding: 18px 24px; border-top: 1px solid var(--panel-edge); font-family: var(--mono); transition: background .12s ease; }
+.row { display: grid; grid-template-columns: minmax(150px,auto) 1fr auto 30px; align-items: center; gap: 20px; padding: 18px 24px; border-top: 1px solid var(--panel-edge); font-family: var(--mono); transition: background .12s ease; }
 .r-desc { font-family: var(--sans); font-size: 13.5px; color: var(--dim); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .row:hover .r-desc { color: var(--muted); }
 .row:first-child { border-top: none; }
@@ -648,7 +648,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .r-name { display: flex; align-items: center; font-size: 14.5px; color: var(--text); }
 .row:hover .r-name { color: var(--accent); }
 /* a small device glyph per platform — the same three devices as the hero */
-.rows-note { font-family: var(--mono); font-size: 11px; letter-spacing: .4px; color: var(--dim); text-align: right; margin: 0 2px 12px; }
 .r-ico { display: inline-block; position: relative; margin-right: 12px; color: var(--dim); flex-shrink: 0; transition: color .12s ease; }
 .row:hover .r-ico { color: var(--accent); }
 .r-ico.desktop { width: 16px; height: 12px; box-shadow: inset 0 0 0 1.5px currentColor; }
@@ -661,19 +660,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .r-ico.cross::before { content: ""; position: absolute; left: 0; top: 0; width: 9px; height: 9px; box-shadow: inset 0 0 0 1.5px currentColor; }
 .r-ico.cross::after { content: ""; position: absolute; right: 0; bottom: 0; width: 9px; height: 9px; box-shadow: inset 0 0 0 1.5px currentColor; background: var(--panel-fill); }
 /* an animated score bar — the section's concrete benchmark example */
-.r-score { display: flex; align-items: center; justify-content: flex-end; gap: 11px; }
-.r-bar { width: 66px; height: 6px; background: rgba(255,255,255,.08); position: relative; overflow: hidden; }
-.r-fill { position: absolute; left: 0; top: 0; height: 100%; width: calc(var(--score) * 1%); background: var(--accent); }
-.js-reveal .r-fill { width: 0; transition: width .9s var(--ease); }
-.js-reveal .rows.in .r-fill { width: calc(var(--score) * 1%); }
-.js-reveal .rows.in .row:nth-child(1) .r-fill { transition-delay: .10s; }
-.js-reveal .rows.in .row:nth-child(2) .r-fill { transition-delay: .18s; }
-.js-reveal .rows.in .row:nth-child(3) .r-fill { transition-delay: .26s; }
-.js-reveal .rows.in .row:nth-child(4) .r-fill { transition-delay: .34s; }
-.js-reveal .rows.in .row:nth-child(5) .r-fill { transition-delay: .42s; }
-.js-reveal .rows.in .row:nth-child(6) .r-fill { transition-delay: .50s; }
-.r-num { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--muted); min-width: 18px; text-align: right; }
-.row:hover .r-num { color: var(--accent); }
+/* honest coverage, not invented scores: a quiet platform tag */
+.r-plat { font-family: var(--mono); font-size: 11px; letter-spacing: .6px; color: var(--dim); text-transform: uppercase;
+  justify-self: end; transition: color .12s ease; }
+.row:hover .r-plat, .row.hl .r-plat { color: var(--accent); }
 .r-arrow { text-align: right; color: var(--dim); transition: color .12s ease, transform .12s ease; }
 .row:hover .r-arrow { color: var(--accent); transform: translate(2px,-2px); }
 
