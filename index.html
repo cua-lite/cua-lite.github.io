@@ -191,6 +191,10 @@
         <h3>Any agent × any environment</h3>
         <p>10+ built-in agents — GPT, Claude, Qwen, UI-TARS, MAI-UI — and one unified action +
            observation space across desktop, web, and mobile. Drop any agent into any env.</p>
+        <div class="card-viz" aria-hidden="true">
+          <span class="cv-label">agents × envs</span>
+          <div class="cv-grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
         <code class="snip">env = gym.make("lite.osworld@…")</code>
       </article>
       <article class="card reveal">
@@ -200,6 +204,10 @@
            <a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">corpora</a>,
            or distill any teacher via
            <a href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">rollouts</a>.</p>
+        <div class="card-viz" aria-hidden="true">
+          <span class="cv-label">LiteSample</span>
+          <div class="cv-schema"><span class="cv-field"><b></b><s style="--w:72%"></s></span><span class="cv-field on"><b></b><s style="--w:50%"></s></span><span class="cv-field"><b></b><s style="--w:86%"></s></span></div>
+        </div>
         <code class="snip">result.lite_sample  # ready to train</code>
       </article>
       <article class="card reveal">
@@ -207,6 +215,10 @@
         <h3>Eval &amp; RL, one command</h3>
         <p>Score any agent on any benchmark, or train it with GRPO on highly optimized tasks —
            CUAGym, WebGym, MobileGym — on top of Slime.</p>
+        <div class="card-viz" aria-hidden="true">
+          <span class="cv-label">reward</span>
+          <svg viewBox="0 0 240 46" fill="none"><polyline class="rv-line" points="3,42 27,37 51,39 75,29 99,32 123,21 147,24 171,13 195,16 219,7 237,5"/><circle class="rv-dot" cx="237" cy="5" r="3"/></svg>
+        </div>
         <code class="snip">python rollout.py --env-id osworld</code>
       </article>
     </div>
