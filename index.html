@@ -7,7 +7,7 @@
 <meta name="description" content="One lightweight framework to evaluate, fine-tune, and RL any computer-use agent across Desktop, Web, and Mobile — unified action & observation spaces, standardized data, one command." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600;700&family=Nunito:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body id="top">
@@ -15,7 +15,7 @@
 <!-- ---------- NAV ---------- -->
 <header class="nav">
   <div class="nav-inner">
-    <a class="brand" href="#top"><span class="brand-mark"></span><span class="brand-name">CUA-Lite</span></a>
+    <a class="brand" href="#top"><span class="brand-plane"></span><span class="brand-name">CUA-Lite</span></a>
     <nav class="nav-links">
       <a href="#features">Features</a>
       <a href="#benchmarks">Benchmarks</a>
@@ -28,6 +28,11 @@
 
 <!-- ---------- HERO ---------- -->
 <section class="hero">
+  <div class="sky-clouds">
+    <img class="cloud-1" src="assets/pixel/cloud_big.png" alt="" />
+    <img class="cloud-2" src="assets/pixel/cloud_mid.png" alt="" />
+    <img class="cloud-3" src="assets/pixel/cloud_sm.png" alt="" />
+  </div>
   <div class="container hero-grid">
     <div class="hero-left">
       <span class="eyebrow"><b>[</b>&nbsp;simple computer use agents&nbsp;<b>]</b></span>
@@ -42,9 +47,9 @@
       <p class="trust"><b>10+</b> agents · <b>3</b> platforms · <b>6+</b> benchmarks · <b>10+</b> SFT corpora</p>
     </div>
 
-    <!-- SIGNATURE: the agent's-eye view -->
-    <div class="agentview">
-      <div class="av-controls">
+    <!-- SIGNATURE: the pixel computer the paper-airplane agent operates -->
+    <div class="machine">
+      <div class="machine-top">
         <span class="seg-label">agent</span>
         <div class="seg agent" id="agent-seg">
           <button class="active" data-agent="gpt-5.5">gpt-5.5</button>
@@ -61,40 +66,70 @@
       </div>
 
       <div class="screen" id="screen">
-        <div class="mock-chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="mock-url" id="mock-url">shop.example.com</span></div>
-        <div class="mock-body">
-          <div class="mb-topbar">
-            <div class="mb-logo"></div>
-            <div class="mb-spacer"></div>
-            <div class="mb-cart"></div>
-          </div>
-          <div class="mb-searchrow">
-            <div class="mb-search">wireless earbuds</div>
-            <div class="mb-btn">Search</div>
-          </div>
-          <div class="mb-cards">
-            <div class="mb-card"><div class="mb-img"></div><div class="mb-line w1"></div><div class="mb-price"></div><div class="mb-add">Add</div></div>
-            <div class="mb-card"><div class="mb-img"></div><div class="mb-line w1"></div><div class="mb-price"></div><div class="mb-add">Add</div></div>
+
+        <!-- WEB: shopping page -->
+        <div class="mock" data-env="web">
+          <div class="mock-chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="mock-url">shop.example.com</span></div>
+          <div class="mock-body">
+            <div class="mb-topbar">
+              <div class="mb-logo"></div>
+              <div class="mb-spacer"></div>
+              <div class="mb-cart somel" data-tag="1"></div>
+            </div>
+            <div class="mb-searchrow">
+              <div class="mb-search somel" data-tag="2">wireless earbuds</div>
+              <div class="mb-btn somel" data-tag="3">Search</div>
+            </div>
+            <div class="mb-cards">
+              <div class="mb-card"><div class="mb-img"></div><div class="mb-line w1"></div><div class="mb-price"></div><div class="mb-add somel" data-tag="4">Add</div></div>
+              <div class="mb-card"><div class="mb-img"></div><div class="mb-line w1"></div><div class="mb-price"></div><div class="mb-add somel" data-tag="5">Add</div></div>
+            </div>
           </div>
         </div>
-        <!-- Set-of-Marks tags anchored on real interactive elements -->
-        <span class="som" style="left:90%;top:16%">1</span>
-        <span class="som" style="left:8%;top:33%">2</span>
-        <span class="som" style="left:80%;top:33%">3</span>
-        <span class="som" style="left:8%;top:80%">4</span>
-        <span class="som" style="left:51%;top:80%">5</span>
+
+        <!-- DESKTOP: spreadsheet window -->
+        <div class="mock hidden" data-env="desktop">
+          <div class="dt-titlebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dt-title">report.ods — Calc</span></div>
+          <div class="dt-menubar">
+            <span class="dt-menu somel" data-tag="1">File</span><span class="dt-menu">Edit</span><span class="dt-menu">View</span><span class="dt-menu">Insert</span>
+            <span class="dt-sum somel" data-tag="3">Σ</span>
+          </div>
+          <div class="dt-formula"><span class="dt-fx">fx</span><span class="dt-forminput somel" data-tag="4">=SUM(B1:B11)</span></div>
+          <div class="dt-grid">
+            <div class="dt-ch"></div><div class="dt-ch">A</div><div class="dt-ch">B</div><div class="dt-ch">C</div>
+            <div class="dt-rh">1</div><div class="dt-cell">Rent</div><div class="dt-cell n">1,250</div><div class="dt-cell"></div>
+            <div class="dt-rh">2</div><div class="dt-cell">Cloud</div><div class="dt-cell n">340</div><div class="dt-cell"></div>
+            <div class="dt-rh">3</div><div class="dt-cell">Travel</div><div class="dt-cell n">812</div><div class="dt-cell"></div>
+            <div class="dt-rh">12</div><div class="dt-cell">Total</div><div class="dt-cell n somel" data-tag="2"></div><div class="dt-cell"></div>
+          </div>
+        </div>
+
+        <!-- MOBILE: contacts app -->
+        <div class="mock hidden" data-env="mobile">
+          <div class="ph-gutter">
+            <div class="phone">
+              <div class="ph-status"><span>09:41</span><span>▮▮▮</span></div>
+              <div class="ph-header">Contacts<span class="ph-save somel" data-tag="3">Save</span></div>
+              <div class="ph-field somel" data-tag="2">Ada Lovelace</div>
+              <div class="ph-row"><span class="ph-av"></span><span class="ph-line"></span></div>
+              <div class="ph-row"><span class="ph-av"></span><span class="ph-line short"></span></div>
+              <div class="ph-fab somel" data-tag="1">+</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="som-layer"></div>
         <div class="target-box" id="target"></div>
         <div class="clickring" id="clickring"></div>
-        <div class="av-cursor" id="cursor"></div>
+        <div class="plane-cursor" id="cursor"></div>
       </div>
 
-      <div class="av-bottom">
-        <div class="trace" id="trace">
-          <div class="trace-head"><span class="rec"></span><span id="trace-title">rollout · gpt-5.5 · webarena</span></div>
-        </div>
+      <div class="trace" id="trace">
+        <div class="trace-head"><span class="rec"></span><span id="trace-title">rollout · gpt-5.5 · webarena</span></div>
       </div>
     </div>
   </div>
+  <div class="hills" aria-hidden="true"></div>
 </section>
 
 <!-- ---------- FEATURES ---------- -->

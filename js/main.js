@@ -1,20 +1,16 @@
 /* ============================================================
-   CUA-Lite — the agent's-eye view
-   The cursor walks the Set-of-Marks tags while the action trace
-   types the observe -> think -> act loop. Pick an agent or an env
-   and the same loop replays — the interaction IS the thesis.
+   CUA-Lite — the paper-airplane agent operates a pixel computer.
+   Set-of-Marks annotations are MEASURED from the real element
+   geometry (no hand-tuned coordinates): every .somel gets an
+   outline box + a number label flush on its top-left corner,
+   and the airplane flies to the element's true center.
    ============================================================ */
 (function () {
   "use strict";
 
-  // SoM tag anchor points (% of the screen), matching the tags in the HTML
-  // [x, y, w, h] in % of the screen — box frames the element, cursor lands on it
-  const P = { 1: [90, 16, 7, 11], 2: [38, 37, 66, 12], 3: [85, 37, 13, 12], 4: [12, 84, 13, 11], 5: [55, 84, 13, 11] };
-
-  // per-environment scenario: url + a rollout as a list of steps
   const ENV = {
     web: {
-      url: "shop.example.com",
+      bench: "webarena",
       steps: [
         { op: "observe", arg: "screenshot 1280×720" },
         { op: "think", arg: '"find the search box"' },
@@ -26,10 +22,10 @@
       ],
     },
     desktop: {
-      url: "LibreOffice Calc — report.ods",
+      bench: "lite.osworld",
       steps: [
         { op: "observe", arg: "screenshot 1920×1080" },
-        { op: "click", tag: 1, arg: "File menu" },
+        { op: "think", arg: '"total column B"' },
         { op: "click", tag: 2, arg: "cell B12" },
         { op: "type", arg: '"=SUM(B1:B11)"' },
         { op: "key", arg: "Enter" },
@@ -37,7 +33,7 @@
       ],
     },
     mobile: {
-      url: "Contacts",
+      bench: "mobilegym",
       steps: [
         { op: "observe", arg: "screenshot 1080×2400" },
         { op: "click", tag: 1, arg: "new contact" },
@@ -57,26 +53,69 @@
   const ring = document.getElementById("clickring");
   const trace = document.getElementById("trace");
   const traceTitle = document.getElementById("trace-title");
-  const mockUrl = document.getElementById("mock-url");
+  const somLayer = document.getElementById("som-layer");
+  const mocks = [...document.querySelectorAll(".mock")];
 
+  let rects = {}; // tag -> {x,y,w,h,cx,cy} in px within screen
   let timers = [];
   const clear = () => { timers.forEach(clearTimeout); timers = []; };
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
 
+  function activeMock() { return mocks.find((m) => m.dataset.env === state.env); }
+
+  /* Measure the active mock's elements; anchor labels to true corners. */
+  function annotate() {
+    somLayer.innerHTML = "";
+    rects = {};
+    const sr = screen.getBoundingClientRect();
+    activeMock().querySelectorAll(".somel").forEach((el) => {
+      const r = el.getBoundingClientRect();
+      const x = r.left - sr.left, y = r.top - sr.top;
+      const rec = { x, y, w: r.width, h: r.height, cx: x + r.width / 2, cy: y + r.height / 2 };
+      rects[el.dataset.tag] = rec;
+      const lab = document.createElement("span");
+      lab.className = "som";
+      lab.textContent = el.dataset.tag;
+      lab.style.left = rec.x + "px";
+      lab.style.top = rec.y + "px";
+      somLayer.appendChild(lab);
+    });
+  }
+
+  let last = null;
+  function spawnTrail(x0, y0, x1, y1) {
+    const N = 6;
+    for (let i = 1; i < N; i++) {
+      const t = i / N;
+      const d = document.createElement("div");
+      d.className = "trail-dot";
+      d.style.left = x0 + (x1 - x0) * t + "px";
+      d.style.top = y0 + (y1 - y0) * t + "px";
+      d.style.animationDelay = t * 0.18 + "s";
+      screen.appendChild(d);
+      d.addEventListener("animationend", () => d.remove());
+    }
+  }
+
   function moveTo(tag) {
-    const [x, y, w, h] = P[tag];
-    cursor.style.left = x + "%";
-    cursor.style.top = y + "%";
-    box.style.left = x + "%";
-    box.style.top = y + "%";
-    box.style.width = w + "%";
-    box.style.height = h + "%";
+    const r = rects[tag];
+    if (!r) return;
+    if (last) spawnTrail(last[0], last[1], r.cx, r.cy);
+    last = [r.cx, r.cy];
+    cursor.style.left = r.cx + "px";
+    cursor.style.top = r.cy + "px";
+    box.style.left = r.cx + "px";
+    box.style.top = r.cy + "px";
+    box.style.width = r.w + 10 + "px";
+    box.style.height = r.h + 10 + "px";
     box.style.opacity = "1";
   }
+
   function clickFx(tag) {
-    const [x, y] = P[tag];
-    ring.style.left = x + "%";
-    ring.style.top = y + "%";
+    const r = rects[tag];
+    if (!r) return;
+    ring.style.left = r.cx + "px";
+    ring.style.top = r.cy + "px";
     ring.classList.remove("fire");
     void ring.offsetWidth;
     ring.classList.add("fire");
@@ -86,43 +125,43 @@
     const el = document.createElement("div");
     el.className = "trace-line";
     const idx = String(i + 1).padStart(3, "0");
-    const arg = step.tag
-      ? `<span class="tag">[${step.tag}]</span> ${step.arg}`
-      : step.arg;
-    const opColor = step.ok ? "arg" : "op";
-    el.innerHTML = `<span class="idx">${idx}</span><span class="op" style="${step.ok ? "color:#7ddc9a" : ""}">${step.op}</span><span class="arg">${arg}</span>`;
+    const arg = step.tag ? `<span class="tag">[${step.tag}]</span> ${step.arg}` : step.arg;
+    el.innerHTML = `<span class="idx">${idx}</span><span class="op"${step.ok ? ' style="color:#86e0a0"' : ""}>${step.op}</span><span class="arg">${arg}</span>`;
     trace.appendChild(el);
     requestAnimationFrame(() => el.classList.add("on"));
-    return el;
-  }
-
-  function resetTrace() {
-    [...trace.querySelectorAll(".trace-line")].forEach((n) => n.remove());
   }
 
   function play() {
     clear();
-    resetTrace();
+    [...trace.querySelectorAll(".trace-line")].forEach((n) => n.remove());
     box.style.opacity = "0";
+    last = null;
+
+    mocks.forEach((m) => m.classList.toggle("hidden", m.dataset.env !== state.env));
+    annotate();
+
     const env = ENV[state.env];
-    traceTitle.textContent = `rollout · ${state.agent} · ${state.env === "web" ? "webarena" : state.env === "desktop" ? "lite.osworld" : "mobilegym"}`;
-    mockUrl.textContent = env.url;
+    traceTitle.textContent = `rollout · ${state.agent} · ${env.bench}`;
+
+    // park the plane mid-screen before the first move
+    const sr = screen.getBoundingClientRect();
+    cursor.style.left = sr.width * 0.5 + "px";
+    cursor.style.top = sr.height * 0.42 + "px";
 
     if (reduce) { env.steps.forEach(addLine); return; }
 
-    let t = 400;
+    let t = 500;
     env.steps.forEach((step, i) => {
       at(t, () => {
         if (step.tag) moveTo(step.tag);
-        at(step.tag ? 480 : 0, () => {
+        at(step.tag ? 500 : 0, () => {
           if (step.tag) clickFx(step.tag);
           addLine(step, i);
         });
       });
-      t += step.tag ? 1150 : 780;
+      t += step.tag ? 1200 : 800;
     });
-    // loop
-    at(t + 1400, play);
+    at(t + 1600, play);
   }
 
   document.querySelectorAll("#agent-seg button").forEach((b) =>
@@ -142,7 +181,9 @@
     })
   );
 
-  // click sparkle — a small nod to the teaser, site-wide
+  addEventListener("resize", annotate);
+
+  // pixel click sparkle — the teaser motif, site-wide
   const layer = document.getElementById("sparkle-layer");
   addEventListener("pointerdown", (e) => {
     const s = document.createElement("div");
