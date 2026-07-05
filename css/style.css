@@ -158,6 +158,15 @@ a:focus-visible, button:focus-visible, .mc-btn:focus-visible {
 .terminal pre { margin: 0; padding: 20px 22px; font-size: 13px; line-height: 1.85; color: #dfe6df; overflow-x: auto; }
 .c-dim{color:#6f7b6f} .c-kw{color:#ffd75f} .c-str{color:#9be08a} .c-cm{color:#6f7b6f}
 
+/* dusk scene — day -> night bookend into the footer */
+.dusk { position: relative; height: 210px; overflow: hidden;
+  background: linear-gradient(180deg, var(--paper) 0%, #f0c79a 30%, #cf9c95 56%, #8a7f9c 80%, #565a74 100%); }
+.dusk .sun { position: absolute; right: 14%; top: 46px; width: 52px; height: 52px; image-rendering: pixelated; }
+.dusk .hill { position: absolute; left: 0; right: 0; background-repeat: repeat-x; image-rendering: pixelated; }
+.dusk-far  { bottom: 74px; height: 90px;  background-image: url('../assets/pixel/dusk_far.png');  background-size: 512px 90px;  opacity: .8; }
+.dusk-mid  { bottom: 40px; height: 100px; background-image: url('../assets/pixel/dusk_mid.png');  background-size: 512px 100px; }
+.dusk-near { bottom: 0;    height: 110px; background-image: url('../assets/pixel/dusk_near.png'); background-size: 512px 110px; }
+
 /* footer */
 .footer { background: var(--dark); color: #b9b9b0; padding: 46px 0 36px; border-top: 3px solid #000; }
 .footer-inner { display: flex; justify-content: space-between; gap: 28px; flex-wrap: wrap; }
