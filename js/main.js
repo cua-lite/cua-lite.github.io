@@ -294,6 +294,63 @@
     stage.addEventListener("pointerleave", () => { if (!editing()) paused = false; });
   }
 
+  /* ---------- the live HF dataset browser: tabs + chips swap the viewer ---------- */
+  const hfFrame = document.getElementById("hf-frame");
+  if (hfFrame) {
+    // the two README sources, every dataset selectable — browse the whole corpus
+    const GROUPS = {
+      rollouts: ["WebGym", "Lite.OSWorld", "CuaGymDesktopGPT55AuditV0"],
+      corpora: ["Aguvis", "ScaleCUA", "OpenCUA", "GUIAct", "GUIOdyssey", "GUI-360",
+                "Multimodal-Mind2Web", "CAGUI", "UI-Genie-Agent"],
+    };
+    const picker = document.getElementById("hf-picker");
+    const urlEl = document.getElementById("hf-url");
+    const openEl = document.getElementById("hf-open");
+    const tabs = document.querySelectorAll(".hf-tab");
+    let group = "rollouts", ds = "WebGym", started = false;
+
+    function load(name) {
+      ds = name;
+      const id = "cua-lite/" + name;
+      urlEl.textContent = "huggingface.co/datasets/" + id;
+      openEl.href = "https://huggingface.co/datasets/" + id;
+      hfFrame.classList.remove("loaded");
+      const old = hfFrame.querySelector("iframe");
+      if (old) old.remove();
+      const f = document.createElement("iframe");
+      f.title = name + " dataset viewer on Hugging Face";
+      f.loading = "lazy";
+      f.src = "https://huggingface.co/datasets/" + id + "/embed/viewer/default/train";
+      f.addEventListener("load", () => hfFrame.classList.add("loaded"));
+      hfFrame.appendChild(f);
+      picker.querySelectorAll(".hf-chip").forEach((c) => c.classList.toggle("active", c.dataset.ds === name));
+    }
+    function renderChips() {
+      picker.innerHTML = "";
+      GROUPS[group].forEach((name) => {
+        const c = document.createElement("button");
+        c.className = "hf-chip" + (name === ds ? " active" : "");
+        c.dataset.ds = name; c.textContent = name;
+        c.addEventListener("click", () => { if (started) load(name); else { ds = name; renderChips(); } });
+        picker.appendChild(c);
+      });
+    }
+    tabs.forEach((t) => t.addEventListener("click", () => {
+      group = t.dataset.group;
+      tabs.forEach((x) => x.classList.toggle("active", x === t));
+      ds = GROUPS[group][0];
+      renderChips();
+      if (started) load(ds);
+    }));
+    renderChips();
+
+    const start = () => { if (!started) { started = true; load(ds); } };
+    if ("IntersectionObserver" in window) {
+      const hio = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { hio.disconnect(); start(); } }), { rootMargin: "500px" });
+      hio.observe(hfFrame);
+    } else { start(); }
+  }
+
   /* ---------- scroll reveal ---------- */
   const reveals = document.querySelectorAll(".reveal");
   if (reveals.length && "IntersectionObserver" in window && !reduce) {

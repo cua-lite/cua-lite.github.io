@@ -33,10 +33,9 @@
   <div class="nav-inner">
     <a class="brand" href="#top"><span class="brand-plane"></span><span class="brand-name">CUA-Lite</span></a>
     <nav class="nav-links">
-      <a href="#features">Features</a>
+      <a href="#data">Data</a>
       <a href="#benchmarks">Benchmarks</a>
       <a href="#start">Quickstart</a>
-      <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Datasets</a>
       <a class="btn-solid sm" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a>
     </nav>
   </div>
@@ -185,67 +184,44 @@
   <span class="fly-plane"></span>
 </div>
 
-<!-- ================= FEATURES ================= -->
-<section class="section" id="features">
+<!-- ================= PILLAR 01 · DATA ================= -->
+<section class="section" id="data">
   <div class="container">
-    <p class="eyebrow">The toolkit</p>
-    <h2>One interface, <em>the whole loop.</em></h2>
-    <div class="cards">
-      <article class="card reveal">
-        <span class="num">01</span>
-        <h3>Any agent × any environment</h3>
-        <p>10+ built-in agents — GPT, Claude, Qwen, UI-TARS, MAI-UI — and one unified action +
-           observation space across desktop, web, and mobile. Drop any agent into any env.</p>
-        <div class="card-viz" aria-hidden="true">
-          <span class="cv-label">agents × envs</span>
-          <svg class="cv-mesh" viewBox="0 0 240 46" fill="none">
-            <g class="cv-links">
-              <line x1="18" y1="8" x2="222" y2="8"/><line x1="18" y1="8" x2="222" y2="23"/><line x1="18" y1="8" x2="222" y2="38"/>
-              <line x1="18" y1="23" x2="222" y2="8"/><line x1="18" y1="23" x2="222" y2="23"/><line x1="18" y1="23" x2="222" y2="38"/>
-              <line x1="18" y1="38" x2="222" y2="8"/><line x1="18" y1="38" x2="222" y2="23"/><line x1="18" y1="38" x2="222" y2="38"/>
-            </g>
-            <g class="cv-nodes">
-              <circle cx="18" cy="8" r="3.5"/><circle cx="18" cy="23" r="3.5"/><circle cx="18" cy="38" r="3.5"/>
-              <circle cx="222" cy="8" r="3.5"/><circle cx="222" cy="23" r="3.5"/><circle cx="222" cy="38" r="3.5"/>
-            </g>
-          </svg>
+    <p class="eyebrow">01 · Unified data</p>
+    <h2>One schema, <em>every agent.</em></h2>
+    <p class="section-lead">Every sample — from 10+ preprocessed
+      <a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">corpora</a>
+      or distilled from any teacher via
+      <a href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">rollouts</a> —
+      lands in one format, <code>LiteSample</code>. Per-agent adapters postprocess it into each model's own
+      scaffolding, so any agent trains on the same data. Here it is, live on the Hub:</p>
+    <figure class="hf-embed reveal">
+      <div class="hf-tabs" role="tablist" aria-label="dataset source">
+        <button class="hf-tab active" data-group="rollouts" role="tab">Rollouts <span class="hf-ct">3</span></button>
+        <button class="hf-tab" data-group="corpora" role="tab">Corpora <span class="hf-ct">9</span></button>
+      </div>
+      <div class="hf-picker" id="hf-picker" role="tablist" aria-label="datasets"></div>
+      <div class="hf-window">
+        <div class="hf-bar" aria-hidden="true">
+          <span class="bw-lights"><i></i><i></i><i></i></span>
+          <span class="hf-url" id="hf-url">huggingface.co/datasets/cua-lite/WebGym</span>
+          <a class="hf-open" id="hf-open" href="https://huggingface.co/datasets/cua-lite/WebGym" target="_blank" rel="noopener">open ↗</a>
         </div>
-        <code class="snip">env = gym.make("lite.osworld@…")</code>
-      </article>
-      <article class="card reveal">
-        <span class="num">02</span>
-        <h3>One data schema</h3>
-        <p>Every rollout lands in <code>LiteSample</code> — fine-tune from 10+ preprocessed
-           <a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">corpora</a>,
-           or distill any teacher via
-           <a href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">rollouts</a>.</p>
-        <div class="card-viz" aria-hidden="true">
-          <span class="cv-label">LiteSample</span>
-          <div class="cv-schema"><span class="cv-field"><b></b><s style="--w:72%"></s></span><span class="cv-field on"><b></b><s style="--w:50%"></s></span><span class="cv-field"><b></b><s style="--w:86%"></s></span></div>
+        <div class="hf-frame" id="hf-frame">
+          <div class="hf-skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
         </div>
-        <code class="snip">result.lite_sample  # ready to train</code>
-      </article>
-      <article class="card reveal">
-        <span class="num">03</span>
-        <h3>Eval &amp; RL, one command</h3>
-        <p>Score any agent on any benchmark, or train it with GRPO on highly optimized tasks —
-           CUAGym, WebGym, MobileGym — on top of Slime.</p>
-        <div class="card-viz" aria-hidden="true">
-          <span class="cv-label">reward</span>
-          <svg viewBox="0 0 240 46" fill="none"><polyline class="rv-line" points="3,42 27,37 51,39 75,29 99,32 123,21 147,24 171,13 195,16 219,7 237,5"/><circle class="rv-dot" cx="237" cy="5" r="3"/></svg>
-        </div>
-        <code class="snip">python rollout.py --env-id osworld</code>
-      </article>
-    </div>
+      </div>
+    </figure>
   </div>
 </section>
 
 <!-- ================= BENCHMARKS ================= -->
 <section class="section" id="benchmarks">
   <div class="container">
-    <p class="eyebrow">Coverage</p>
-    <h2>Every benchmark <em>on the map.</em></h2>
-    <p class="rows-note">GPT-5.5 success rate — illustrative</p>
+    <p class="eyebrow">02 · Evaluate</p>
+    <h2>Any agent, <em>any benchmark.</em></h2>
+    <p class="section-lead">One command scores any agent across desktop, web, and mobile — the same
+      action space everywhere. <span class="rows-note-inline">GPT-5.5 success rate, illustrative:</span></p>
     <div class="rows reveal">
       <a class="row" style="--score:38" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/osworld/README.md" target="_blank" rel="noopener"><span class="r-name"><i class="r-ico desktop" aria-hidden="true"></i>osworld</span><span class="r-desc">real Ubuntu desktop apps</span><span class="r-score"><span class="r-bar"><span class="r-fill"></span></span><b class="r-num">38</b></span><span class="r-arrow">↗</span></a>
       <a class="row" style="--score:43" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/browsergym/README.md" target="_blank" rel="noopener"><span class="r-name"><i class="r-ico web" aria-hidden="true"></i>webarena</span><span class="r-desc">self-hosted shop · forum · GitLab</span><span class="r-score"><span class="r-bar"><span class="r-fill"></span></span><b class="r-num">43</b></span><span class="r-arrow">↗</span></a>
