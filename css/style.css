@@ -437,7 +437,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .rollout { font-family: var(--mono); font-size: 14.5px; }
 .rl-cmd { font-size: 12.5px; line-height: 1.55; color: #9aa2ae; padding-bottom: 12px; border-bottom: 1px solid var(--line); word-break: break-word; }
 .rl-cmd .c-p { color: var(--accent); } .rl-cmd .c-flag { color: #7f8896; } .rl-cmd .c-val { color: #c8cfda; } .rl-cmd .c-env { color: var(--accent); }
-.rl-log { margin-top: 14px; min-height: 130px; display: flex; flex-direction: column; gap: 10px; }
+.rl-log { margin-top: 14px; min-height: 200px; display: flex; flex-direction: column; gap: 10px; }
 .rl-line { display: flex; color: #cbd2dd; opacity: 0; transform: translateY(3px); animation: rlIn .22s ease forwards; }
 .rl-mark { color: #6b7480; margin-right: 10px; flex-shrink: 0; }
 .rl-lat { margin-left: auto; padding-left: 14px; color: #626b78; flex-shrink: 0; font-variant-numeric: tabular-nums; }
