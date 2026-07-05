@@ -66,9 +66,9 @@
               <div class="sh-grid">
                 <span class="sh-hc"></span><span class="sh-hc">A</span><span class="sh-hc">B</span>
                 <span class="sh-hr">1</span><span class="sh-cell">Item</span><span class="sh-cell num dim">Cost</span>
-                <span class="sh-hr">2</span><span class="sh-cell">GPU hours</span><span class="sh-cell num">1,250</span>
-                <span class="sh-hr">3</span><span class="sh-cell">Storage</span><span class="sh-cell num">340</span>
-                <span class="sh-hr">4</span><span class="sh-cell">Bandwidth</span><span class="sh-cell num">812</span>
+                <span class="sh-hr">2</span><span class="sh-cell">GPU hours</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b2">1,250</span>
+                <span class="sh-hr">3</span><span class="sh-cell">Storage</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b3">340</span>
+                <span class="sh-hr">4</span><span class="sh-cell">Bandwidth</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b4">812</span>
                 <span class="sh-hr">5</span><span class="sh-cell strong">Total</span><span class="sh-cell num total" data-t="cell" id="total"></span>
               </div>
             </div>
@@ -88,6 +88,7 @@
       <div class="crt-foot" aria-hidden="true"></div>
       </div><!-- /.device -->
       <div class="screen-cap"><span class="cap-run" id="cap-run">$ rollout.py --model-id gpt-5.5 --env-id lite.osworld</span><button class="run-btn" id="run-btn">▶&nbsp;Run</button></div>
+      <p class="cap-hint">the costs (B2–B4) are yours to edit — change them, then watch the agent sum <em>your</em> numbers.</p>
     </div>
   </div>
 </section>

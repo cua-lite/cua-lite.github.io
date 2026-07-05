@@ -188,6 +188,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .sh-cell.num { justify-content: flex-end; }
 .sh-cell.dim { color: #9aa096; }
 .sh-cell.strong { font-weight: 700; }
+/* the cost cells are yours to edit — the agent sums whatever you enter */
+.sh-cell.editable { cursor: text; caret-color: var(--pgreen-lo); }
+.sh-cell.editable:hover { background: #eefaef; box-shadow: inset 0 0 0 1px var(--pgreen-lo), inset -1px -1px 0 #dfe2d9; }
+.sh-cell.editable:focus { outline: none; background: #fff; box-shadow: inset 0 0 0 2px var(--pgreen-lo); }
 /* the agent selects a cell, then the result lands */
 .sh-cell.sel { box-shadow: inset 0 0 0 2px var(--pgreen-lo); }
 .sh-cell.total.filled { color: #0d5f2a; font-weight: 700; background: #d7f6dd; box-shadow: inset 0 0 0 2px var(--pgreen-lo); }
@@ -232,6 +236,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .run-btn:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
 .run-btn:active:not(:disabled) { transform: translate(1px,1px); }
 .run-btn:disabled { cursor: default; color: #5f6875; background: transparent; box-shadow: inset 0 0 0 2px var(--line-2); }
+.cap-hint { margin: 10px 0 0; font-family: var(--mono); font-size: 10.5px; line-height: 1.5; color: var(--dim); }
+.cap-hint em { color: var(--muted); font-style: normal; }
 
 /* ---------- divider: the pixel paper airplane, breathing (the teaser) ---------- */
 .divider { position: relative; display: flex; align-items: center; justify-content: center; padding: 40px 0; }

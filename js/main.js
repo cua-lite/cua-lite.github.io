@@ -16,14 +16,25 @@
   const capAct = document.getElementById("cap-act");
   const cell = document.getElementById("total");   // the Total cell (B5)
   const fbar = document.getElementById("fbar");     // formula bar
-  const fillText = "2,402";
+  const inputs = ["b2", "b3", "b4"].map((id) => document.getElementById(id));
+
+  const num = (el) => parseInt((el.textContent || "").replace(/[^0-9]/g, ""), 10) || 0;
+  const fmt = (n) => n.toLocaleString("en-US");
+  const total = () => inputs.reduce((a, el) => a + num(el), 0);   // the agent sums YOUR numbers
+
+  // keep the editable cells clean; editing a cost invalidates the old total
+  inputs.forEach((el) => {
+    el.addEventListener("input", () => { if (!running) { cell.textContent = ""; cell.classList.remove("filled", "sel"); fbar.innerHTML = '<span class="mk-ph"></span>'; fbar.className = "sh-formula"; } });
+    el.addEventListener("blur", () => { el.textContent = fmt(num(el)); });
+    el.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); el.blur(); run(); } });
+  });
 
   // the one task: compute a total in LibreOffice Calc
   const STEPS = [
     { t: "cell", cap: "select cell B5", sel: true },
     { t: "cell", cap: "type =SUM(B2:B4)", type: "=SUM(B2:B4)" },
     { t: "cell", cap: "press Enter", enter: true },
-    { t: "cell", cap: "✓ Total = 2,402", done: true },
+    { t: "cell", cap: "done", done: true },
   ];
 
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -83,7 +94,7 @@
     let t = 500;
     STEPS.forEach((s) => {
       if (s.done) {                              // final: the outcome, held
-        at(t, () => setCap(`<b>${s.cap}</b>`));
+        at(t, () => setCap(`<b>✓ Total = ${fmt(total())}</b>`));
         t += 700;
         return;
       }
@@ -96,7 +107,7 @@
         click(s.t);
         if (s.sel) cell.classList.add("sel");            // selecting the cell
         if (s.type) typeInto(s.type);
-        if (s.enter) at(120, () => { cell.textContent = fillText; cell.classList.add("filled"); }); // Enter → result lands
+        if (s.enter) at(120, () => { cell.textContent = fmt(total()); cell.classList.add("filled"); }); // Enter → the real sum of your numbers
       });
       t += 980 + (s.type ? s.type.length * 46 + 320 : 260) + 300;   // act duration + settle
     });
@@ -105,8 +116,8 @@
 
   if (reduce) {
     fbar.className = "sh-formula typed"; fbar.textContent = "=SUM(B2:B4)";
-    cell.textContent = fillText; cell.classList.add("filled", "sel");
-    capAct.innerHTML = "<b>✓ Total = 2,402</b>";
+    cell.textContent = fmt(total()); cell.classList.add("filled", "sel");
+    capAct.innerHTML = `<b>✓ Total = ${fmt(total())}</b>`;
     place(screen.clientWidth * 0.5, screen.clientHeight * 0.62);
     setBtn("↻&nbsp;Run&nbsp;again", false);
   } else {
