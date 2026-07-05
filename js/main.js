@@ -102,10 +102,10 @@
         total.textContent = ""; total.classList.remove("filled", "sel");
       },
       steps: [
-        { t: "cell", cap: "click(coordinate=[812, 648])", onAct: () => total.classList.add("sel") },
-        { t: "cell", cap: 'type(text="=AVERAGE(B2:B4)")', typeLen: 15, onAct: () => typeInto(fbar, "sh-formula", "=AVERAGE(B2:B4)") },
-        { t: "cell", cap: 'key(keys=["enter"])', onAct: () => at(120, () => { total.textContent = avg().toFixed(1); total.classList.add("filled"); }) },
-        { done: true, cap: 'terminate(status="success")' },
+        { t: "cell", cap: "click([812, 648])", onAct: () => total.classList.add("sel") },
+        { t: "cell", cap: 'type("=AVERAGE(B2:B4)")', typeLen: 15, onAct: () => typeInto(fbar, "sh-formula", "=AVERAGE(B2:B4)") },
+        { t: "cell", cap: 'key(["enter"])', onAct: () => at(120, () => { total.textContent = avg().toFixed(1); total.classList.add("filled"); }) },
+        { done: true, cap: 'terminate("success")' },
       ],
       finished() { fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B4)"; total.textContent = avg().toFixed(1); total.classList.add("filled", "sel"); },
     },
@@ -121,11 +121,11 @@
         bwHost.textContent = "google.com";
       },
       steps: [
-        { t: "search", cap: "click(coordinate=[500, 470])", onAct: () => wfield.classList.add("hot") },
-        { t: "search", cap: 'type(text="cua-lite")', typeLen: 8, onAct: () => typeInto(wq, "", "cua-lite") },
-        { t: "go", cap: "click(coordinate=[434, 566])", onAct: () => { ggHome.classList.remove("show"); ggResults.classList.add("show"); bwHost.textContent = "google.com/search?q=cua-lite"; } },
-        { t: "open", cap: "click(coordinate=[286, 292])", onAct: () => { ggResults.classList.remove("show"); ggSite.classList.add("show"); bwHost.textContent = "cua-lite.github.io"; } },
-        { done: true, cap: 'terminate(status="success")' },
+        { t: "search", cap: "click([500, 470])", onAct: () => wfield.classList.add("hot") },
+        { t: "search", cap: 'type("cua-lite")', typeLen: 8, onAct: () => typeInto(wq, "", "cua-lite") },
+        { t: "go", cap: "click([434, 566])", onAct: () => { ggHome.classList.remove("show"); ggResults.classList.add("show"); bwHost.textContent = "google.com/search?q=cua-lite"; } },
+        { t: "open", cap: "click([286, 292])", onAct: () => { ggResults.classList.remove("show"); ggSite.classList.add("show"); bwHost.textContent = "cua-lite.github.io"; } },
+        { done: true, cap: 'terminate("success")' },
       ],
       finished() { wq.textContent = "cua-lite"; wq.className = "typed"; ggHome.classList.remove("show"); ggResults.classList.remove("show"); ggSite.classList.add("show"); bwHost.textContent = "cua-lite.github.io"; },
     },
@@ -139,10 +139,10 @@
         msent.classList.remove("show"); msave.classList.remove("sent");
       },
       steps: [
-        { t: "name", cap: "tap(coordinate=[432, 900])", onAct: () => minput.classList.add("hot") },
-        { t: "name", cap: 'type(text="yep — desktop, web & mobile")', typeLen: 26, onAct: () => typeInto(mname, "", "yep — desktop, web & mobile 🚀") },
-        { t: "save", cap: "tap(coordinate=[928, 904])", onAct: () => at(120, () => { msent.classList.add("show"); msave.classList.add("sent"); mname.textContent = "iMessage"; mname.className = "mk-ph"; minput.classList.remove("hot"); }) },
-        { done: true, cap: 'terminate(status="success")' },
+        { t: "name", cap: "tap([432, 900])", onAct: () => minput.classList.add("hot") },
+        { t: "name", cap: 'type("yep — desktop, web & mobile")', typeLen: 26, onAct: () => typeInto(mname, "", "yep — desktop, web & mobile 🚀") },
+        { t: "save", cap: "tap([928, 904])", onAct: () => at(120, () => { msent.classList.add("show"); msave.classList.add("sent"); mname.textContent = "iMessage"; mname.className = "mk-ph"; minput.classList.remove("hot"); }) },
+        { done: true, cap: 'terminate("success")' },
       ],
       finished() { msent.classList.add("show"); msave.classList.add("sent"); mname.textContent = "iMessage"; mname.className = "mk-ph"; },
     },
@@ -195,8 +195,8 @@
     MODES.desktop.finished();
     logClear();
     logLine("thinking", "think", "0.2s");
-    [['click(coordinate=[812, 648])', "0.6s"], ['type(text="=AVERAGE(B2:B4)")', "1.1s"], ['key(keys=["enter"])', "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
-    logLine('terminate(status="success")', "done", "2.0s");
+    [['click([812, 648])', "0.6s"], ['type("=AVERAGE(B2:B4)")', "1.1s"], ['key(["enter"])', "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
+    logLine('terminate("success")', "done", "2.0s");
     requestAnimationFrame(() => { ctx.cursor.style.transition = "none"; const c = centerOf(ctx, "cell"); if (c) place(ctx, c.x, c.y); });
     showHint();
   }
@@ -240,10 +240,10 @@
     logClear();
     fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B4)";
     total.textContent = ""; total.classList.remove("filled"); total.classList.add("sel");
-    at(60, () => logLine('click(coordinate=[812, 648])', "live", "0.1s"));
-    at(360, () => { moveTo(ctx, "cell"); logLine('key(keys=["enter"])', "live", "0.4s"); });
+    at(60, () => logLine('click([812, 648])', "live", "0.1s"));
+    at(360, () => { moveTo(ctx, "cell"); logLine('key(["enter"])', "live", "0.4s"); });
     at(820, () => { click(ctx, "cell"); total.textContent = avg().toFixed(1); total.classList.add("filled"); });
-    at(1080, () => logLine('terminate(status="success")', "done", "0.9s"));
+    at(1080, () => logLine('terminate("success")', "done", "0.9s"));
     at(1240, () => { running = false; });
   }
 
