@@ -93,7 +93,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .nav-links .btn-solid { color: var(--pgreen-ink); }
 
 /* ---------- hero ---------- */
-.hero { padding: 108px 0 96px; position: relative; overflow: hidden; }
+.hero { padding: 100px 0 64px; position: relative; overflow: hidden; }
 .hero::before {  /* faint green aurora, top-left — the only glow on the page */
   content: ""; position: absolute; top: -220px; left: -160px; width: 720px; height: 560px;
   background: radial-gradient(ellipse at center, rgba(126,231,135,.07), transparent 65%);
@@ -344,7 +344,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* ---------- sections ---------- */
 .section { padding: 76px 0 16px; }
-.section:last-of-type { padding-bottom: 84px; }
+.section:last-of-type { padding-bottom: 44px; }
 
 /* cards — pixel-panel objects, not flat rectangles */
 .cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
@@ -377,7 +377,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .start-term { max-width: 720px; margin: 0 auto; }
 
 /* footer */
-.footer { border-top: 1px solid var(--line); padding: 56px 0 52px; margin-top: 76px; }
+.footer { border-top: 1px solid var(--line); padding: 52px 0 48px; margin-top: 36px; }
 .footer-inner { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
 .foot-tag { color: var(--dim); font-size: 14px; margin: 14px 0 0; line-height: 1.7; }
 .footer-cols { display: flex; gap: 72px; flex-wrap: wrap; }
