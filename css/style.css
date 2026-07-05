@@ -135,8 +135,8 @@ a:focus-visible, button:focus-visible, .mc-btn:focus-visible {
 
 /* toolkit cards — warm light panels so they lift off the page (less grey) */
 .feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-.card { padding: 24px 22px; background: #f2efe6; }
-.card:hover { box-shadow: inset 3px 3px 0 var(--stone-l), inset -3px -3px 0 var(--stone-d), 0 0 0 3px var(--grass); }
+.card { padding: 24px 22px; background: #f2efe6; transition: transform .1s ease, box-shadow .1s ease; }
+.card:hover { transform: translate(-2px,-3px); box-shadow: inset 3px 3px 0 var(--stone-l), inset -3px -3px 0 var(--stone-d), 5px 7px 0 var(--grass-d); }
 .card .fico { width: 30px; height: 30px; margin-bottom: 15px; }
 .card h3 { font-family: var(--mc); font-weight: 700; font-size: 16px; margin: 0 0 8px; color: var(--ink); text-shadow: 1px 1px 0 var(--stone-l); }
 .card p { color: #4a463d; font-size: 13.5px; margin: 0 0 13px; }
@@ -146,8 +146,8 @@ a:focus-visible, button:focus-visible, .mc-btn:focus-visible {
 
 /* benchmarks */
 .bench-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 13px; }
-.bench { display: flex; align-items: center; gap: 12px; padding: 15px 17px; background: #f2efe6; color: var(--ink); }
-.bench:hover { text-decoration: none; box-shadow: inset 3px 3px 0 var(--stone-l), inset -3px -3px 0 var(--stone-d), 0 0 0 3px var(--grass); }
+.bench { display: flex; align-items: center; gap: 12px; padding: 15px 17px; background: #f2efe6; color: var(--ink); transition: transform .1s ease, box-shadow .1s ease; }
+.bench:hover { text-decoration: none; transform: translate(-2px,-3px); box-shadow: inset 3px 3px 0 var(--stone-l), inset -3px -3px 0 var(--stone-d), 5px 7px 0 var(--grass-d); }
 .bench .bico { width: 20px; height: 20px; flex-shrink: 0; }
 .bench b { font-weight: 700; font-size: 14px; display: block; }
 .bench em { font-style: normal; font-size: 10.5px; color: #6a6459; text-transform: uppercase; }
