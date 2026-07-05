@@ -237,4 +237,16 @@
     const tick = () => { const d = new Date(); const s = ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); clocks.forEach((c) => c.textContent = s); };
     tick(); setInterval(tick, 20000);
   }
+
+  /* ---------- copy the quickstart ---------- */
+  const copyBtn = document.getElementById("term-copy");
+  const codeEl = document.querySelector(".start-term .term-body");
+  if (copyBtn && codeEl && navigator.clipboard) {
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(codeEl.textContent.trim()).then(() => {
+        copyBtn.textContent = "copied ✓"; copyBtn.classList.add("done");
+        setTimeout(() => { copyBtn.textContent = "copy"; copyBtn.classList.remove("done"); }, 1600);
+      }).catch(() => {});
+    });
+  }
 })();

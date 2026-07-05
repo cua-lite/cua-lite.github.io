@@ -150,6 +150,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .term-bar { display: flex; align-items: center; gap: 7px; padding: 13px 16px; border-bottom: 1px solid var(--line); }
 .term-bar .d { width: 10px; height: 10px; border-radius: 0; background: #2b303a; }
 .term-title { margin-left: 10px; font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.term-copy { margin-left: auto; font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--dim); background: transparent; border: 0; cursor: pointer; padding: 3px 4px; transition: color .12s ease; }
+.term-copy:hover { color: var(--text); }
+.term-copy.done { color: var(--accent); }
 .term-body { margin: 0; padding: 22px 24px; font-family: var(--mono); font-size: 13px; line-height: 1.8; color: #cdd5e0; min-height: 356px; white-space: pre-wrap; word-break: break-word; }
 .term-body.static { min-height: 0; }
 .t-dim { color: var(--dim); }
