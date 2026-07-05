@@ -307,6 +307,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .ph-app { padding: 6px 13px; }
 .ph-appbar { display: flex; justify-content: space-between; align-items: center; font-family: var(--sans); font-weight: 800; font-size: 14px; color: #2a2e27; padding: 6px 0 14px; }
 .ph-save { font-family: var(--sans); font-weight: 800; font-size: 12px; color: var(--pgreen-ink); background: var(--accent); box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi), 0 0 0 2px #14161a; padding: 4px 13px; }
+.ph-save.saved { background: var(--pgreen-lo); color: #eafff0; box-shadow: inset -2px -2px 0 #2c7540, inset 2px 2px 0 #62c079, 0 0 0 2px #14161a; }
 .ph-field { margin-bottom: 13px; }
 .ph-lbl { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: #9aa096; margin-bottom: 5px; }
 .ph-input { display: flex; align-items: center; font-size: 13px; color: #2a2e27; background: #fff; box-shadow: inset 2px 2px 0 #e7e9e1, 0 0 0 2px #14161a; padding: 8px 11px; min-height: 19px; }

@@ -71,7 +71,7 @@
   const wq = $("#wq"), wfield = $(".dev-web [data-t='search']"), wgrid = $("#wgrid");
   const wadd = $(".dev-web [data-t='add']"), cart = $("#cart");
   // mobile
-  const mname = $("#mname"), minput = $(".dev-mobile [data-t='name']");
+  const mname = $("#mname"), minput = $(".dev-mobile [data-t='name']"), msave = $(".dev-mobile [data-t='save']");
 
   /* ---------- the three platforms ---------- */
   const MODES = {
@@ -110,14 +110,14 @@
     mobile: {
       env: "mobilegym",
       device: $(".dev-mobile"),
-      reset() { mname.textContent = "Full name"; mname.className = "mk-ph"; minput.classList.remove("hot"); },
+      reset() { mname.textContent = "Full name"; mname.className = "mk-ph"; minput.classList.remove("hot"); msave.textContent = "Save"; msave.classList.remove("saved"); },
       steps: [
         { t: "name", cap: "tap the name field", onAct: () => minput.classList.add("hot") },
         { t: "name", cap: 'type "Ada Lovelace"', typeLen: 12, onAct: () => typeInto(mname, "", "Ada Lovelace") },
-        { t: "save", cap: "tap Save" },
+        { t: "save", cap: "tap Save", onAct: () => at(150, () => { msave.textContent = "✓ Saved"; msave.classList.add("saved"); }) },
         { done: true, cap: "✓ contact saved" },
       ],
-      finished() { mname.textContent = "Ada Lovelace"; mname.className = "typed"; minput.classList.add("hot"); },
+      finished() { mname.textContent = "Ada Lovelace"; mname.className = "typed"; minput.classList.add("hot"); msave.textContent = "✓ Saved"; msave.classList.add("saved"); },
     },
   };
   const ORDER = ["desktop", "web", "mobile"];
