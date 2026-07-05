@@ -70,24 +70,33 @@
     capAct.innerHTML = "";
   }
 
+  const setCap = (html) => { capAct.innerHTML = html; };
+  const THINK = '<span class="ca-dim">agent</span> <span class="think">thinking<i>.</i><i>.</i><i>.</i></span>';
+
   function run() {
     clearAll(); reset();
     // the cursor continues from wherever it last was — no teleport on loop
-    let t = 650;
+    let t = 500;
     STEPS.forEach((s) => {
-      at(t, () => {
+      if (s.done) {                              // final: the outcome, held
+        at(t, () => setCap(`<b>${s.cap}</b>`));
+        t += 900;
+        return;
+      }
+      at(t, () => setCap(THINK));                // 1) reason (fills the pause with meaning)
+      at(t + 480, () => {                         // 2) move to target + name the action
         moveTo(s.t);
-        capAct.innerHTML = s.done ? `<b>${s.cap}</b>` : `<span class="ca-dim">agent</span> ${s.cap}`;
+        setCap(`<span class="ca-dim">agent</span> ${s.cap}`);
       });
-      at(t + 520, () => {
-        if (!s.done) click(s.t);
+      at(t + 980, () => {                         // 3) act, once the cursor has settled
+        click(s.t);
         if (s.type) typeInto(s.type);
-        if (s.reveal) at(240, () => grid.classList.remove("pending")); // results pop in
-        if (s.t === "add" && !s.done) at(140, () => { addBtn.textContent = "✓ Added"; addBtn.classList.add("added"); });
+        if (s.reveal) at(220, () => grid.classList.remove("pending"));
+        if (s.t === "add") at(150, () => { addBtn.textContent = "✓ Added"; addBtn.classList.add("added"); });
       });
-      t += s.type ? 520 + s.type.length * 46 + 340 : (s.reveal ? 1050 : 900);
+      t += 980 + (s.type ? s.type.length * 46 + 320 : 260) + 300;   // act duration + settle
     });
-    at(t + 1700, run); // hold, then loop
+    at(t + 1500, run); // hold on the result, then loop
   }
 
   if (reduce) {
