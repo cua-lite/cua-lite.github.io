@@ -510,25 +510,22 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* ---------- live HF dataset browser: a refined dropdown + framed viewer ---------- */
 .hf-embed { margin: 0; }
-/* the selector — a single quiet dropdown, not a wall of chips */
-.hf-select { position: relative; display: inline-block; margin-bottom: 16px; }
-.hf-trigger { display: inline-flex; align-items: center; gap: 11px; font-family: var(--mono); font-size: 14px;
-  color: var(--text); background: var(--panel-fill); border: 2px solid var(--panel-edge); padding: 10px 15px;
-  cursor: pointer; transition: border-color .16s var(--ease), background .16s var(--ease); }
-.hf-trigger:hover { border-color: var(--crt-hi); }
-.hf-select.open .hf-trigger { border-color: var(--accent); }
-.hf-tg-src { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
-  color: var(--pgreen-ink); background: var(--accent); padding: 3px 8px; }
-.hf-tg-name { letter-spacing: .2px; }
-/* a crisp CSS chevron that rotates on open — no glyph-font guesswork */
-.hf-caret { width: 8px; height: 8px; margin-left: 2px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
-  transform: translateY(-2px) rotate(45deg); transition: transform .22s var(--ease), border-color .16s ease; }
-.hf-select.open .hf-caret { transform: translateY(1px) rotate(-135deg); border-color: var(--accent); }
-.hf-menu { position: absolute; top: calc(100% + 8px); left: 0; z-index: 30; min-width: 320px; max-height: 366px; overflow-y: auto;
+/* the selector lives INSIDE the URL bar as an editable green token — the same
+   fill-in-the-blank language as the command builders, not a floating dropdown */
+.hf-ds { position: relative; display: inline-block; }
+.hf-ds-tok { font-family: var(--mono); font-size: inherit; color: var(--accent); background: rgba(154,212,110,.10);
+  border: 0; border-bottom: 1px dashed var(--accent-dim); padding: 1px 7px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 7px; transition: background .14s var(--ease), border-color .14s var(--ease); }
+.hf-ds-tok:hover { background: rgba(154,212,110,.18); border-bottom-color: var(--accent); }
+.hf-ds.open .hf-ds-tok { background: rgba(154,212,110,.18); border-bottom-style: solid; border-bottom-color: var(--accent); }
+.hf-caret { width: 6px; height: 6px; border-right: 1.5px solid var(--accent); border-bottom: 1.5px solid var(--accent);
+  transform: translateY(-2px) rotate(45deg); transition: transform .22s var(--ease); }
+.hf-ds.open .hf-caret { transform: translateY(1px) rotate(-135deg); }
+.hf-menu { position: absolute; top: calc(100% + 10px); left: 0; z-index: 30; min-width: 260px; max-height: 366px; overflow-y: auto;
   background: var(--panel-fill); border: 2px solid var(--panel-edge); padding: 6px; box-shadow: 0 26px 60px -24px rgba(0,0,0,.95);
   opacity: 0; visibility: hidden; transform: translateY(-8px) scale(.99); transform-origin: top left;
   transition: opacity .2s var(--ease), transform .2s var(--ease), visibility 0s .2s; }
-.hf-select.open .hf-menu { opacity: 1; visibility: visible; transform: none; transition: opacity .2s var(--ease), transform .2s var(--ease); }
+.hf-ds.open .hf-menu { opacity: 1; visibility: visible; transform: none; transition: opacity .2s var(--ease), transform .2s var(--ease); }
 .hf-grp { font-family: var(--mono); font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--dim);
   padding: 12px 12px 6px; }
 .hf-grp:first-child { padding-top: 6px; }
@@ -538,10 +535,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hf-opt:hover { background: var(--panel-2); color: var(--text); }
 .hf-opt.active { color: var(--accent); }
 .hf-opt.active::after { content: "✓"; font-size: 12px; }
-.hf-window { border: 2px solid var(--panel-edge); overflow: hidden; background: var(--panel-fill);
+.hf-window { border: 2px solid var(--panel-edge); background: var(--panel-fill);
   box-shadow: 0 40px 90px -55px rgba(0,0,0,.92); }
-.hf-bar { display: flex; align-items: center; gap: 14px; padding: 11px 16px; background: #0d1017; border-bottom: 2px solid var(--panel-edge); }
-.hf-url { flex: 1; font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hf-bar { position: relative; z-index: 3; display: flex; align-items: center; gap: 14px; padding: 11px 16px; background: #0d1017; border-bottom: 2px solid var(--panel-edge); }
+.hf-url { flex: 1; min-width: 0; font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; }
 .hf-open { font-family: var(--mono); font-size: 12px; color: var(--accent); white-space: nowrap; transition: opacity .12s ease; }
 .hf-open:hover { opacity: .7; }
 .hf-frame { position: relative; height: 520px; background: var(--panel-fill); }

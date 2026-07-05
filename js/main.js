@@ -307,17 +307,13 @@
     const trigger = document.getElementById("hf-trigger");
     const menu = document.getElementById("hf-menu");
     const nameEl = document.getElementById("hf-tg-name");
-    const srcEl = document.getElementById("hf-tg-src");
-    const urlEl = document.getElementById("hf-url");
     const openEl = document.getElementById("hf-open");
     let ds = "WebGym", started = false, loadTok = 0;
-    const groupOf = (n) => (GROUPS.Rollouts.includes(n) ? "Rollouts" : "Corpora");
 
     function load(name) {
       ds = name;
       const tok = ++loadTok;
       const id = "cua-lite/" + name;
-      urlEl.textContent = "huggingface.co/datasets/" + id;
       openEl.href = "https://huggingface.co/datasets/" + id;
       hfFrame.classList.remove("loaded");
       const old = hfFrame.querySelector("iframe");
@@ -333,7 +329,6 @@
     }
     function pick(name) {
       nameEl.textContent = name;
-      srcEl.textContent = groupOf(name);
       menu.querySelectorAll(".hf-opt").forEach((o) => o.classList.toggle("active", o.dataset.ds === name));
       if (started) load(name); else ds = name;
     }
