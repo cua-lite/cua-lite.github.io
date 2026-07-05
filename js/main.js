@@ -54,7 +54,7 @@
   function moveTo(ctx, t) {
     const c = centerOf(ctx, t); if (!c) return;
     const d = Math.hypot(c.x - ctx.cx, c.y - ctx.cy);
-    const dur = Math.min(0.82, Math.max(0.42, d / 540));
+    const dur = Math.min(0.36, Math.max(0.22, d / 700));
     ctx.cursor.style.transitionDuration = dur + "s";
     place(ctx, c.x, c.y);
   }
@@ -69,7 +69,7 @@
     el.className = base + "typed caret"; let i = 0;
     (function tick() {
       el.textContent = text.slice(0, i);
-      if (i++ <= text.length) at(40 + Math.random() * 30, tick);
+      if (i++ <= text.length) at(21 + Math.random() * 15, tick);
       else { el.className = base + "typed"; }
     })();
   }
@@ -141,15 +141,15 @@
   const ts = (ms) => (ms / 1000).toFixed(1) + "s";
   function runSeq(ctx, steps, onFinish) {
     clearAll(); logClear();
-    let t = 360;
-    { const tt = t; at(tt, () => logLine("thinking", "think live", ts(tt))); }   // plan once, then act
-    t += 780;
+    let t = 240;
+    { const tt = t; at(tt, () => logLine("thinking", "think live", ts(tt))); }   // plan once, then act — briskly
+    t += 520;
     steps.forEach((s) => {
       const tt = t;
-      if (s.done) { at(tt, () => logLine(typeof s.cap === "function" ? s.cap() : s.cap, "done", ts(tt))); t += 620; return; }
+      if (s.done) { at(tt, () => logLine(typeof s.cap === "function" ? s.cap() : s.cap, "done", ts(tt))); t += 480; return; }
       at(tt, () => { moveTo(ctx, s.t); logLine(s.cap, "live", ts(tt)); });
-      at(tt + 520, () => { click(ctx, s.t); s.onAct && s.onAct(); });
-      t += 520 + (s.typeLen ? s.typeLen * 42 + 240 : 210) + 230;
+      at(tt + 380, () => { click(ctx, s.t); s.onAct && s.onAct(); });
+      t += 380 + (s.typeLen ? s.typeLen * 30 + 170 : 150) + 170;
     });
     at(t, onFinish);
   }
@@ -166,29 +166,46 @@
     place(ctx, s.clientWidth * 0.7, s.clientHeight * 0.8);
     requestAnimationFrame(() => { ctx.cursor.style.transition = ""; });
   }
-  function activate(m) {
+  function activate(m, skipReset) {
     mode = m; ctx = ctxFor(MODES[m].device);
     document.querySelectorAll(".stage .device").forEach((d) => d.classList.toggle("active", d.dataset.mode === m));
     syncPlats();
     capRun.innerHTML = `<span class="c-p">$</span> rollout.py <span class="c-flag">--model-id</span> <span class="c-val">gpt-5.5</span> <span class="c-flag">--env-id</span> <span class="c-env">${MODES[m].env}</span>`;
-    MODES[m].reset(); logClear();
+    if (!skipReset) { MODES[m].reset(); logClear(); }
   }
-  // the intro tours all three machines ONCE (desktop → web → mobile → home),
-  // then rests on the desktop. Calm and confident, not a restless loop —
-  // the lead words are there to drive it again whenever you want.
-  let advances = 0;
-  const touring = () => advances < ORDER.length;
+  // the desktop task, shown already-complete (no re-run): the rest/home state
+  function showDesktopDone() {
+    MODES.desktop.finished();
+    logClear();
+    logLine("thinking", "think", "0.2s");
+    [["select cell B5", "0.6s"], ["type =SUM(B2:B4)", "1.1s"], ["press Enter", "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
+    logLine(`Total = ${fmt(sum())}`, "done", "2.0s");
+    requestAnimationFrame(() => { ctx.cursor.style.transition = "none"; const c = centerOf(ctx, "cell"); if (c) place(ctx, c.x, c.y); });
+    showHint();
+  }
+  // the intro tours all three machines ONCE (desktop → web → mobile), then
+  // settles home on the finished desktop and invites you to drive. Calm and
+  // confident, not a restless loop — the lead words steer it any time.
+  let advances = 0, settled = false;
   function advance() { advances++; const i = ORDER.indexOf(mode); switchTo(ORDER[(i + 1) % ORDER.length]); }
   const held = () => paused || !visible;   // don't advance while hovered or off-screen
-  function holdThenAdvance() { at(held() ? 500 : 1200, () => { if (held()) holdThenAdvance(); else advance(); }); }
+  function holdThenAdvance() { at(held() ? 500 : 700, () => { if (held()) holdThenAdvance(); else advance(); }); }
+  // land back home without re-running the task — just show it complete + invite
+  function settleHome() {
+    clearAll(); running = false; settled = true; stage.classList.remove("snappy");
+    activate("desktop", true);
+    at(360, showDesktopDone);
+  }
 
   function runActive() {
     running = true;
     MODES[mode].reset();
     runSeq(ctx, MODES[mode].steps, () => {
       running = false;
-      if (touring()) holdThenAdvance();   // still touring → turn to the next machine
-      else showHint();                    // rested → quietly invite you to edit a cost
+      if (!settled) {
+        if (advances < ORDER.length - 1) holdThenAdvance();   // more machines to visit
+        else settleHome();                                    // shown all three → settle home
+      } else if (mode === "desktop") { showHint(); }          // driving now → rest here, invite edits
     });
   }
   // immediate = a user drove this (hover/click a lead word) → respond crisply.
@@ -239,14 +256,7 @@
 
   if (reduce) {
     ORDER.forEach((m) => MODES[m].reset());
-    activate("desktop"); MODES.desktop.finished();
-    // rest the cursor on the result cell — the "just clicked the total" frame
-    requestAnimationFrame(() => { ctx.cursor.style.transition = "none"; const c = centerOf(ctx, "cell"); if (c) place(ctx, c.x, c.y); });
-    logClear();
-    logLine("thinking", "think", "0.4s");
-    [["select cell B5", "1.1s"], ["type =SUM(B2:B4)", "2.1s"], ["press Enter", "3.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
-    logLine("Total = 2,402", "done", "4.2s");
-    showHint();   // editing still works with motion off — invite it
+    activate("desktop", true); showDesktopDone();   // static finished frame + invite
   } else {
     activate("desktop"); parkCursor();
     if ("IntersectionObserver" in window) {
@@ -259,17 +269,6 @@
     } else { visible = true; started = true; runActive(); }
   }
 
-  /* ---------- the active device tilts toward your real cursor ---------- */
-  const heroRight = document.querySelector(".hero-right");
-  if (!reduce && heroRight && matchMedia("(pointer: fine)").matches) {
-    heroRight.addEventListener("pointermove", (e) => {
-      const r = heroRight.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
-      stage.style.setProperty("--ty", (px * 5).toFixed(2) + "deg");
-      stage.style.setProperty("--tx", (-py * 4).toFixed(2) + "deg");
-    });
-    heroRight.addEventListener("pointerleave", () => { stage.style.setProperty("--ty", "0deg"); stage.style.setProperty("--tx", "0deg"); });
-  }
   // hover the device to hold the current platform (read it, edit it); leaving resumes the cycle
   if (!reduce) {
     stage.addEventListener("pointerenter", () => { if (started) paused = true; });

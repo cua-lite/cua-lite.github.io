@@ -106,10 +106,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hero-left  { animation: heroIn .62s cubic-bezier(.2,.7,.3,1) both; }
 .hero-right { animation: heroIn .62s cubic-bezier(.2,.7,.3,1) .14s both; }
 /* seat the monitor: a soft glow, like a screen lit in a dark room */
-.hero-right { position: relative; perspective: 1200px; }
-/* the active device tilts subtly toward your real cursor — a physical object in the room */
-.stage { position: relative; min-height: 442px; transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg));
-  transform-style: preserve-3d; transition: transform .4s cubic-bezier(.2,.7,.3,1); will-change: transform; }
+.hero-right { position: relative; }
+.stage { position: relative; min-height: 442px; }
 /* three platforms, one focal device — a true two-way crossfade.
    visibility is delayed to the end of the fade so the outgoing device
    actually fades out (instead of vanishing instantly). */
