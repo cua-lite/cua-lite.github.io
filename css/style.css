@@ -672,7 +672,18 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* quickstart */
 /* quickstart is the closing "get started" moment — centered as a focal block,
    heading/terminal/CTA aligned, instead of a left heading + centered terminal */
-.start-term { max-width: 760px; }
+/* centered 'how it works' column — focused, never full-width */
+.section.centered .eyebrow,
+.section.centered h2,
+.section.centered .section-lead { text-align: center; }
+.section.centered .section-lead { margin-left: auto; margin-right: auto; }
+.section.centered .start-term,
+.section.centered .cmdbuild,
+.section.centered .rows,
+.section.centered .hf-embed { margin-left: auto; margin-right: auto; text-align: left; }
+/* short code lines look lost when stretched — keep the terminals compact */
+.start-term, .cmdbuild, .rows { max-width: 660px; }
+.hf-embed { max-width: 840px; }
 
 /* footer */
 .footer { border-top: 1px solid var(--line); padding: 52px 0 48px; margin-top: 36px; }
