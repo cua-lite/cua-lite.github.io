@@ -16,9 +16,7 @@
   const capAct = document.getElementById("cap-act");
   const capRun = document.getElementById("cap-run");
   const agentLine = document.querySelector(".agent-line");
-  const runBtn = document.getElementById("run-btn");
-  const toggle = document.getElementById("mode-toggle");
-  const ind = document.getElementById("mode-ind");
+  const plats = [...document.querySelectorAll(".plat")];   // the lead words = the control
 
   let timers = [];
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
@@ -138,17 +136,12 @@
     at(t, onFinish);
   }
 
-  /* ---------- mode manager ---------- */
+  /* ---------- mode manager: continuous auto-cycle, steered by the lead words ---------- */
   let mode = "desktop";
   let ctx = ctxFor(MODES.desktop.device);
-  let running = false, touring = false;
+  let running = false, paused = false, started = false;
 
-  function moveIndicator() {
-    const btn = toggle && toggle.querySelector(".mode-btn.active");
-    if (!btn || !ind) return;
-    ind.style.width = btn.offsetWidth + "px";
-    ind.style.transform = `translateX(${btn.offsetLeft}px)`;
-  }
+  function syncPlats() { plats.forEach((p) => p.classList.toggle("on", p.dataset.mode === mode)); }
   function parkCursor() {
     const s = ctx.screen;
     ctx.cursor.style.transition = "none";
@@ -158,55 +151,49 @@
   function activate(m) {
     mode = m; ctx = ctxFor(MODES[m].device);
     document.querySelectorAll(".stage .device").forEach((d) => d.classList.toggle("active", d.dataset.mode === m));
-    document.querySelectorAll(".mode-btn").forEach((b) => b.classList.toggle("active", b.dataset.mode === m));
-    moveIndicator();
+    syncPlats();
     capRun.textContent = `$ rollout.py --model-id gpt-5.5 --env-id ${MODES[m].env}`;
-    MODES[m].reset();
-    setCap("");
+    MODES[m].reset(); setCap("");
   }
+  function advance() { const i = ORDER.indexOf(mode); switchTo(ORDER[(i + 1) % ORDER.length]); }
+  function holdThenAdvance() { at(paused ? 500 : 1400, () => { if (paused) holdThenAdvance(); else advance(); }); }
 
   function runActive() {
-    running = true; setBtn("● Running", true); agentLine.classList.add("busy");
+    running = true; agentLine.classList.add("busy");
     MODES[mode].reset();
-    runSeq(ctx, MODES[mode].steps, () => {
-      running = false; agentLine.classList.remove("busy");
-      if (touring) {
-        const i = ORDER.indexOf(mode);
-        if (i < ORDER.length - 1) {
-          at(1000, () => { activate(ORDER[i + 1]); parkCursor(); at(520, runActive); });
-        } else { touring = false; setBtn("↻&nbsp;Run&nbsp;again", false); }
-      } else { setBtn("↻&nbsp;Run&nbsp;again", false); }
-    });
+    runSeq(ctx, MODES[mode].steps, () => { running = false; agentLine.classList.remove("busy"); holdThenAdvance(); });
   }
-
-  function pickMode(m) {
-    if (m === mode && running) return;
-    touring = false; clearAll(); running = false;
+  function switchTo(m) {
+    clearAll(); running = false;
     activate(m); parkCursor();
-    at(360, runActive);
+    at(420, runActive);
   }
 
   /* ---------- editable desktop cells ---------- */
   cells.forEach((el) => {
     el.addEventListener("input", () => { if (mode === "desktop" && !running) { total.textContent = ""; total.classList.remove("filled", "sel"); fbar.innerHTML = '<span class="mk-ph"></span>'; fbar.className = "sh-formula"; } });
     el.addEventListener("blur", () => { el.textContent = fmt(numOf(el)); });
-    el.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); el.blur(); pickMode("desktop"); } });
+    el.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); el.blur(); switchTo("desktop"); } });
   });
 
-  /* ---------- wire it up ---------- */
-  if (toggle) toggle.querySelectorAll(".mode-btn").forEach((b) => b.addEventListener("click", () => pickMode(b.dataset.mode)));
-  if (runBtn) runBtn.addEventListener("click", () => { if (!running) { touring = false; runActive(); } });
+  /* ---------- the lead words steer the demo ---------- */
+  plats.forEach((p) => {
+    const m = p.dataset.mode;
+    p.addEventListener("pointerenter", () => { paused = true; if (started && m !== mode) switchTo(m); });
+    p.addEventListener("pointerleave", () => { paused = false; });
+    p.addEventListener("click", () => { paused = false; if (m !== mode) switchTo(m); });
+    p.setAttribute("tabindex", "0");
+    p.addEventListener("focus", () => { if (started && m !== mode) switchTo(m); });
+  });
 
   if (reduce) {
-    ORDER.forEach((m) => { MODES[m].reset(); });
-    MODES.desktop.finished(); setBtn("↻&nbsp;Run&nbsp;again", false);
-    moveIndicator();
+    ORDER.forEach((m) => MODES[m].reset());
+    activate("desktop"); MODES.desktop.finished();
   } else {
-    activate("desktop"); parkCursor(); moveIndicator();
-    // auto-tour once when the stage is first seen
-    const start = () => { touring = true; runActive(); };
+    activate("desktop"); parkCursor();
+    const start = () => { if (started) return; started = true; runActive(); };
     if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((es) => { es.forEach((e) => { if (e.isIntersecting) { io.disconnect(); start(); } }); }, { threshold: 0.35 });
+      const io = new IntersectionObserver((es) => { es.forEach((e) => { if (e.isIntersecting) { io.disconnect(); start(); } }); }, { threshold: 0.3 });
       io.observe(stage);
     } else { start(); }
   }
@@ -222,7 +209,6 @@
     });
     heroRight.addEventListener("pointerleave", () => { stage.style.setProperty("--ty", "0deg"); stage.style.setProperty("--tx", "0deg"); });
   }
-  addEventListener("resize", moveIndicator);
 
   /* ---------- scroll reveal ---------- */
   const reveals = document.querySelectorAll(".reveal");

@@ -44,7 +44,9 @@
       <p class="eyebrow">Simple computer use agents</p>
       <h1>Any agent operates<br /><em>any computer.</em></h1>
       <p class="lead">One lightweight framework to <b>evaluate</b>, <b>fine-tune</b>, and <b>RL</b>
-        computer-use agents across desktop, web, and mobile — one action space, one data
+        computer-use agents across <span class="plat" data-mode="desktop">desktop</span>,
+        <span class="plat" data-mode="web">web</span>, and
+        <span class="plat" data-mode="mobile">mobile</span> — one action space, one data
         format, one command.</p>
       <div class="cta-row">
         <a class="btn-solid" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">Star on GitHub</a>
@@ -54,13 +56,6 @@
     </div>
 
     <div class="hero-right">
-      <div class="mode-toggle" id="mode-toggle" role="tablist" aria-label="platform">
-        <button class="mode-btn active" data-mode="desktop" role="tab">Desktop</button>
-        <button class="mode-btn" data-mode="web" role="tab">Web</button>
-        <button class="mode-btn" data-mode="mobile" role="tab">Mobile</button>
-        <span class="mode-ind" id="mode-ind" aria-hidden="true"></span>
-      </div>
-
       <div class="stage" id="stage">
 
         <!-- DESKTOP · lite.osworld — a pixel CRT running LibreOffice Calc -->
@@ -95,7 +90,8 @@
         <!-- WEB · webarena — a pixel browser shopping -->
         <div class="device dev-web" data-mode="web">
           <div class="browser" aria-label="a web agent in a browser">
-            <div class="bw-bar"><span class="win-dot"></span><span class="bw-url">🔒 shop.pixelnet.io</span></div>
+            <div class="bw-tabs"><span class="bw-tab"><span class="bw-fav"></span>pixelnet<span class="bw-x">×</span></span><span class="bw-newtab">+</span></div>
+            <div class="bw-nav"><span class="bw-arrows">‹&nbsp;›</span><span class="bw-reload">⟳</span><span class="bw-url">🔒 shop.pixelnet.io</span></div>
             <div class="bw-view">
               <div class="wp-head">pixelnet<span class="wp-cart">cart · <b id="cart">0</b></span></div>
               <div class="wp-row"><span class="wp-field" data-t="search"><span class="mk-ph" id="wq">search products…</span></span><span class="wp-go" data-t="go">Search</span></div>
@@ -112,6 +108,7 @@
         <!-- MOBILE · mobilegym — a phone adding a contact -->
         <div class="device dev-mobile" data-mode="mobile">
           <div class="phone" aria-label="a mobile agent on a phone">
+            <span class="ph-cam" aria-hidden="true"></span>
             <div class="ph-screen">
               <div class="ph-status"><span data-clock>9:41</span><span class="ph-sig"></span></div>
               <div class="ph-app">
@@ -123,12 +120,13 @@
               <div class="spark"></div>
               <div class="mouse-cur"></div>
             </div>
+            <span class="ph-home" aria-hidden="true"></span>
           </div>
         </div>
 
       </div>
 
-      <div class="screen-cap"><span class="cap-run" id="cap-run">$ rollout.py --model-id gpt-5.5 --env-id lite.osworld</span><button class="run-btn" id="run-btn">▶&nbsp;Run</button></div>
+      <div class="screen-cap"><span class="cap-run" id="cap-run">$ rollout.py --model-id gpt-5.5 --env-id lite.osworld</span></div>
       <p class="agent-line"><span class="agent-dot" id="agent-dot"></span><span class="cap-act" id="cap-act"></span></p>
     </div>
   </div>
