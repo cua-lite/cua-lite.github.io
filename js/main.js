@@ -139,7 +139,7 @@
   /* ---------- mode manager: continuous auto-cycle, steered by the lead words ---------- */
   let mode = "desktop";
   let ctx = ctxFor(MODES.desktop.device);
-  let running = false, paused = false, started = false;
+  let running = false, paused = false, started = false, visible = false;
 
   function syncPlats() { plats.forEach((p) => p.classList.toggle("on", p.dataset.mode === mode)); }
   function parkCursor() {
@@ -156,7 +156,8 @@
     MODES[m].reset(); setCap("");
   }
   function advance() { const i = ORDER.indexOf(mode); switchTo(ORDER[(i + 1) % ORDER.length]); }
-  function holdThenAdvance() { at(paused ? 500 : 1400, () => { if (paused) holdThenAdvance(); else advance(); }); }
+  const held = () => paused || !visible;   // don't advance while hovered or off-screen
+  function holdThenAdvance() { at(held() ? 500 : 1400, () => { if (held()) holdThenAdvance(); else advance(); }); }
 
   function runActive() {
     running = true; agentLine.classList.add("busy");
@@ -191,11 +192,14 @@
     activate("desktop"); MODES.desktop.finished();
   } else {
     activate("desktop"); parkCursor();
-    const start = () => { if (started) return; started = true; runActive(); };
     if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((es) => { es.forEach((e) => { if (e.isIntersecting) { io.disconnect(); start(); } }); }, { threshold: 0.3 });
+      // persistent: start on first view, and pause the cycle whenever off-screen
+      const io = new IntersectionObserver((es) => { es.forEach((e) => {
+        visible = e.isIntersecting;
+        if (visible && !started) { started = true; runActive(); }
+      }); }, { threshold: 0.25 });
       io.observe(stage);
-    } else { start(); }
+    } else { visible = true; started = true; runActive(); }
   }
 
   /* ---------- the active device tilts toward your real cursor ---------- */
