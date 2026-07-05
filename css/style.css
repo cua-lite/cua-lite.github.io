@@ -45,6 +45,10 @@ body {
 img { display: block; image-rendering: pixelated; }
 a { color: #2f6b34; text-decoration: none; }
 a:hover { text-decoration: underline; }
+/* keyboard focus — Minecraft gold selection ring */
+a:focus-visible, button:focus-visible, .mc-btn:focus-visible {
+  outline: 3px solid var(--gold); outline-offset: 3px; text-decoration: none;
+}
 .hidden { display: none !important; }
 .container { max-width: var(--maxw); margin: 0 auto; padding: 0 26px; position: relative; }
 
@@ -163,4 +167,4 @@ a:hover { text-decoration: underline; }
   .hero-grid { grid-template-columns: 1fr; gap: 32px; }
   .feature-grid, .bench-grid { grid-template-columns: 1fr; }
 }
-@media (prefers-reduced-motion: reduce) { #plane, .cloud { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .cloud { animation: none; } html { scroll-behavior: auto; } }
