@@ -259,7 +259,7 @@ a:hover { text-decoration: underline; }
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
   .nav-links a:not(.nav-cta) { display: none; }
-  #flight, #plane { display: none; }
+  #flight, #plane, .sky-clouds { display: none; }
   .step { padding: 64px 0; }
   .step:nth-of-type(even) .steptag { justify-content: flex-start; }
   .step:nth-of-type(even) .step-head { margin-left: 0; text-align: left; }
