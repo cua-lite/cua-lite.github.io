@@ -9,6 +9,7 @@
 @font-face { font-family: 'Fraunces'; src: url('../assets/fonts/Fraunces.woff2') format('woff2'); font-weight: 300 700; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Fraunces'; src: url('../assets/fonts/Fraunces-Italic.woff2') format('woff2'); font-weight: 300 700; font-style: italic; font-display: swap; }
 @font-face { font-family: 'Urbanist'; src: url('../assets/fonts/Urbanist.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Cascadia Code'; src: url('../assets/fonts/CascadiaCode.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
 
 :root {
   /* one signature easing across every motion — switch, cursor, bubbles, pages */
@@ -26,9 +27,10 @@
 
   --serif: 'Fraunces', Georgia, serif;
   --sans:  'Urbanist', -apple-system, system-ui, sans-serif;
-  /* VS Code's own default editor.fontFamily, per OS: Menlo (mac), Consolas
-     (win), Droid Sans Mono (linux) — so the code reads exactly like the editor */
-  --mono:  Menlo, Monaco, Consolas, 'Droid Sans Mono', 'Courier New', monospace;
+  /* Cascadia Code — Microsoft's own dev-tools font (VS Code / Windows Terminal),
+     self-hosted so every visitor gets the same nice code face; falls back to
+     VS Code's per-OS defaults (Menlo / Consolas / Droid Sans Mono) */
+  --mono:  'Cascadia Code', Menlo, Consolas, 'Droid Sans Mono', 'Courier New', monospace;
 
   /* one reusable pixel-panel material — solid fill, hard bevel, chunky edge */
   --panel-fill: #0f131a;
