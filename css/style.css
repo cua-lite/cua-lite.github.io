@@ -12,6 +12,8 @@
 @font-face { font-family: 'JetBrains Mono'; src: url('../assets/fonts/JetBrainsMono.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 
 :root {
+  /* one signature easing across every motion — switch, cursor, bubbles, pages */
+  --ease: cubic-bezier(.33, 0, .15, 1);
   --bg:      #000000;
   --panel:   #0b0d11;
   --panel-2: #10131a;
@@ -118,7 +120,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
    a premium slideshow, not a cut. */
 .stage .device { position: absolute; inset: 0; isolation: isolate; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
   opacity: 0; visibility: hidden; transform: translateX(34px) scale(.982);
-  transition: opacity .4s ease, transform .5s cubic-bezier(.33,0,.15,1), visibility 0s .5s; }
+  transition: opacity .4s ease, transform .5s var(--ease), visibility 0s .5s; }
 /* a shared lit tabletop: the three devices all stand on the same surface, so
    the narrow phone reads as an object resting on a desk, not floating in a void */
 .stage::after { content: ""; position: absolute; left: 50%; bottom: -16px; width: 108%; height: 70px;
@@ -134,14 +136,14 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .dev-web::after     { width: 440px; height: 30px; }
 .dev-mobile::after  { width: 196px; height: 28px; }
 .stage .device.active { opacity: 1; visibility: visible; transform: none; z-index: 2;
-  transition: opacity .42s ease, transform .52s cubic-bezier(.33,0,.15,1), visibility 0s 0s; }
+  transition: opacity .42s ease, transform .52s var(--ease), visibility 0s 0s; }
 /* the outgoing device — slides out to the left as the incoming slides in */
 .stage .device.exit { opacity: 0; visibility: visible; transform: translateX(-34px) scale(.982); z-index: 1;
-  transition: opacity .4s ease, transform .5s cubic-bezier(.33,0,.15,1), visibility 0s .5s; }
+  transition: opacity .4s ease, transform .5s var(--ease), visibility 0s .5s; }
 /* when YOU drive the switch, the same motion — just quicker */
-.stage.snappy .device { transition: opacity .26s ease, transform .34s cubic-bezier(.33,0,.15,1), visibility 0s .34s; }
-.stage.snappy .device.active { transition: opacity .28s ease, transform .36s cubic-bezier(.33,0,.15,1), visibility 0s 0s; }
-.stage.snappy .device.exit { transition: opacity .26s ease, transform .34s cubic-bezier(.33,0,.15,1), visibility 0s .34s; }
+.stage.snappy .device { transition: opacity .26s ease, transform .34s var(--ease), visibility 0s .34s; }
+.stage.snappy .device.active { transition: opacity .28s ease, transform .36s var(--ease), visibility 0s 0s; }
+.stage.snappy .device.exit { transition: opacity .26s ease, transform .34s var(--ease), visibility 0s .34s; }
 .dev-desktop > .crt, .dev-web > .browser { width: 100%; }
 .hero-right::before { content: ""; position: absolute; left: 50%; top: 40%; width: 128%; height: 92%;
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
@@ -260,7 +262,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* the agent: a real mouse cursor + a pixel click sparkle.
    Movement is GPU-composited transform (buttery), not left/top (janky). */
-.mouse-cur { position: absolute; left: 0; top: 0; margin: -1px 0 0 -2px; width: 21px; height: 32px; background: url('../assets/pixel/cursor.png') top left/contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)); transform: translate3d(0,0,0); transition: transform .5s cubic-bezier(.33,.9,.35,1); will-change: transform; z-index: 8; pointer-events: none; }
+.mouse-cur { position: absolute; left: 0; top: 0; margin: -1px 0 0 -2px; width: 21px; height: 32px; background: url('../assets/pixel/cursor.png') top left/contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)); transform: translate3d(0,0,0); transition: transform .42s var(--ease); will-change: transform; z-index: 8; pointer-events: none; }
 .press { transform: translate(1px,1px); filter: brightness(.93); }
 .spark { position: absolute; width: 28px; height: 28px; background: url('../assets/pixel/sparkle.png') center/contain no-repeat; image-rendering: pixelated; transform: translate(-50%,-50%) scale(.3); opacity: 0; z-index: 7; pointer-events: none; }
 .spark.go { animation: spark .5s steps(5) 1; }
@@ -318,9 +320,9 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* the three browser pages cross-fade like a real page load, never a hard cut */
 .gg-home, .gg-results, .gg-site { position: absolute; inset: 0; opacity: 0; visibility: hidden; transform: translateY(9px);
-  transition: opacity .3s ease, transform .42s cubic-bezier(.33,0,.15,1), visibility 0s .42s; pointer-events: none; }
+  transition: opacity .3s ease, transform .42s var(--ease), visibility 0s .42s; pointer-events: none; }
 .gg-home.show, .gg-results.show, .gg-site.show { opacity: 1; visibility: visible; transform: none;
-  transition: opacity .34s ease, transform .44s cubic-bezier(.33,0,.15,1), visibility 0s 0s; }
+  transition: opacity .34s ease, transform .44s var(--ease), visibility 0s 0s; }
 /* Google — home */
 .gg-home { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 0 28px; }
 .gg-logo { display: flex; font-family: var(--sans); font-weight: 800; font-size: 46px; letter-spacing: -1.5px; }
@@ -398,7 +400,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
    up smoothly (never a jump) — the classic silky messaging feel */
 .ph-bub.me { align-self: flex-end; background: var(--accent); color: #08240f; font-weight: 600; border-bottom-right-radius: 5px;
   max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; overflow: hidden; transform: translateY(7px) scale(.95); transform-origin: 100% 100%;
-  transition: max-height .42s cubic-bezier(.33,0,.15,1), padding .42s cubic-bezier(.33,0,.15,1), opacity .3s ease, transform .42s cubic-bezier(.2,.9,.3,1.2); }
+  transition: max-height .42s var(--ease), padding .42s var(--ease), opacity .3s ease, transform .42s cubic-bezier(.2,.9,.3,1.2); }
 .ph-bub.me.show { max-height: 80px; padding-top: 8px; padding-bottom: 8px; opacity: 1; transform: none; }
 .ph-composer { display: flex; align-items: center; gap: 8px; padding: 9px 12px 20px; box-shadow: inset 0 1px 0 #e3e5df; }
 .ph-input { flex: 1; display: flex; align-items: center; font-size: 12.5px; color: #2a2e27; background: #fff; border-radius: 16px; box-shadow: inset 0 0 0 1.5px #d3d5ce; padding: 7px 13px; min-height: 18px; }
