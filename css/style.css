@@ -26,7 +26,9 @@
 
   --serif: 'Fraunces', Georgia, serif;
   --sans:  'Urbanist', -apple-system, system-ui, sans-serif;
-  --mono:  ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  /* VS Code's own default editor.fontFamily, per OS: Menlo (mac), Consolas
+     (win), Droid Sans Mono (linux) — so the code reads exactly like the editor */
+  --mono:  Menlo, Monaco, Consolas, 'Droid Sans Mono', 'Courier New', monospace;
 
   /* one reusable pixel-panel material — solid fill, hard bevel, chunky edge */
   --panel-fill: #0f131a;
