@@ -125,13 +125,14 @@
   /* ---------- run one platform's task ---------- */
   function runSeq(ctx, steps, onFinish) {
     clearAll();
-    let t = 500;
+    let t = 360;
+    at(t, () => setCap(THINK));   // plan once, then act decisively — no dithering before every click
+    t += 780;
     steps.forEach((s) => {
-      if (s.done) { at(t, () => setCap(`<b>${typeof s.cap === "function" ? s.cap() : s.cap}</b>`)); t += 700; return; }
-      at(t, () => setCap(THINK));
-      at(t + 480, () => { moveTo(ctx, s.t); setCap(`<span class="ca-dim">agent</span> ${s.cap}`); });
-      at(t + 980, () => { click(ctx, s.t); s.onAct && s.onAct(); });
-      t += 980 + (s.typeLen ? s.typeLen * 46 + 320 : 260) + 300;
+      if (s.done) { at(t, () => setCap(`<b>${typeof s.cap === "function" ? s.cap() : s.cap}</b>`)); t += 620; return; }
+      at(t, () => { moveTo(ctx, s.t); setCap(`<span class="ca-dim">agent</span> ${s.cap}`); });
+      at(t + 520, () => { click(ctx, s.t); s.onAct && s.onAct(); });
+      t += 520 + (s.typeLen ? s.typeLen * 42 + 240 : 210) + 230;
     });
     at(t, onFinish);
   }
@@ -157,7 +158,7 @@
   }
   function advance() { const i = ORDER.indexOf(mode); switchTo(ORDER[(i + 1) % ORDER.length]); }
   const held = () => paused || !visible;   // don't advance while hovered or off-screen
-  function holdThenAdvance() { at(held() ? 500 : 1400, () => { if (held()) holdThenAdvance(); else advance(); }); }
+  function holdThenAdvance() { at(held() ? 500 : 1100, () => { if (held()) holdThenAdvance(); else advance(); }); }
 
   function runActive() {
     running = true; agentLine.classList.add("busy");
