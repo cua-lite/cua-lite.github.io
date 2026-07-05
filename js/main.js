@@ -294,20 +294,24 @@
     stage.addEventListener("pointerleave", () => { if (!editing()) paused = false; });
   }
 
-  /* ---------- the live HF dataset browser: tabs + chips swap the viewer ---------- */
+  /* ---------- the live HF dataset browser: one quiet dropdown swaps the viewer ---------- */
   const hfFrame = document.getElementById("hf-frame");
   if (hfFrame) {
     // the two README sources, every dataset selectable — browse the whole corpus
     const GROUPS = {
-      rollouts: ["WebGym", "Lite.OSWorld", "CuaGymDesktopGPT55AuditV0"],
-      corpora: ["Aguvis", "ScaleCUA", "OpenCUA", "GUIAct", "GUIOdyssey", "GUI-360",
+      Rollouts: ["WebGym", "Lite.OSWorld", "CuaGymDesktopGPT55AuditV0"],
+      Corpora: ["Aguvis", "ScaleCUA", "OpenCUA", "GUIAct", "GUIOdyssey", "GUI-360",
                 "Multimodal-Mind2Web", "CAGUI", "UI-Genie-Agent"],
     };
-    const picker = document.getElementById("hf-picker");
+    const sel = document.getElementById("hf-select");
+    const trigger = document.getElementById("hf-trigger");
+    const menu = document.getElementById("hf-menu");
+    const nameEl = document.getElementById("hf-tg-name");
+    const srcEl = document.getElementById("hf-tg-src");
     const urlEl = document.getElementById("hf-url");
     const openEl = document.getElementById("hf-open");
-    const tabs = document.querySelectorAll(".hf-tab");
-    let group = "rollouts", ds = "WebGym", started = false, loadTok = 0;
+    let ds = "WebGym", started = false, loadTok = 0;
+    const groupOf = (n) => (GROUPS.Rollouts.includes(n) ? "Rollouts" : "Corpora");
 
     function load(name) {
       ds = name;
@@ -326,26 +330,32 @@
       // beat later, so hold the dark skeleton a moment more before crossfading.
       f.addEventListener("load", () => setTimeout(() => { if (tok === loadTok) hfFrame.classList.add("loaded"); }, 2200));
       hfFrame.appendChild(f);
-      picker.querySelectorAll(".hf-chip").forEach((c) => c.classList.toggle("active", c.dataset.ds === name));
     }
-    function renderChips() {
-      picker.innerHTML = "";
-      GROUPS[group].forEach((name) => {
-        const c = document.createElement("button");
-        c.className = "hf-chip" + (name === ds ? " active" : "");
-        c.dataset.ds = name; c.textContent = name;
-        c.addEventListener("click", () => { if (started) load(name); else { ds = name; renderChips(); } });
-        picker.appendChild(c);
-      });
+    function pick(name) {
+      nameEl.textContent = name;
+      srcEl.textContent = groupOf(name);
+      menu.querySelectorAll(".hf-opt").forEach((o) => o.classList.toggle("active", o.dataset.ds === name));
+      if (started) load(name); else ds = name;
     }
-    tabs.forEach((t) => t.addEventListener("click", () => {
-      group = t.dataset.group;
-      tabs.forEach((x) => x.classList.toggle("active", x === t));
-      ds = GROUPS[group][0];
-      renderChips();
-      if (started) load(ds);
-    }));
-    renderChips();
+    function buildMenu() {
+      menu.innerHTML = "";
+      for (const g of ["Rollouts", "Corpora"]) {
+        const h = document.createElement("div"); h.className = "hf-grp"; h.textContent = g; menu.appendChild(h);
+        GROUPS[g].forEach((name) => {
+          const o = document.createElement("button");
+          o.className = "hf-opt" + (name === ds ? " active" : "");
+          o.dataset.ds = name; o.textContent = name; o.setAttribute("role", "option");
+          o.addEventListener("click", () => { pick(name); close(); });
+          menu.appendChild(o);
+        });
+      }
+    }
+    const open = () => { sel.classList.add("open"); trigger.setAttribute("aria-expanded", "true"); };
+    const close = () => { sel.classList.remove("open"); trigger.setAttribute("aria-expanded", "false"); };
+    trigger.addEventListener("click", (e) => { e.stopPropagation(); sel.classList.contains("open") ? close() : open(); });
+    document.addEventListener("click", (e) => { if (!sel.contains(e.target)) close(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+    buildMenu();
 
     const start = () => { if (!started) { started = true; load(ds); } };
     if ("IntersectionObserver" in window) {

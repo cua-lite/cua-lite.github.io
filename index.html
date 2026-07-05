@@ -196,11 +196,14 @@
       lands in one format, <code>LiteSample</code>. Per-agent adapters postprocess it into each model's own
       scaffolding, so any agent trains on the same data. Here it is, live on the Hub:</p>
     <figure class="hf-embed reveal">
-      <div class="hf-tabs" role="tablist" aria-label="dataset source">
-        <button class="hf-tab active" data-group="rollouts" role="tab">Rollouts <span class="hf-ct">3</span></button>
-        <button class="hf-tab" data-group="corpora" role="tab">Corpora <span class="hf-ct">9</span></button>
+      <div class="hf-select" id="hf-select">
+        <button class="hf-trigger" id="hf-trigger" aria-haspopup="listbox" aria-expanded="false">
+          <span class="hf-tg-src" id="hf-tg-src">Rollouts</span>
+          <span class="hf-tg-name" id="hf-tg-name">WebGym</span>
+          <span class="hf-caret" aria-hidden="true"></span>
+        </button>
+        <div class="hf-menu" id="hf-menu" role="listbox" aria-label="dataset"></div>
       </div>
-      <div class="hf-picker" id="hf-picker" role="tablist" aria-label="datasets"></div>
       <div class="hf-window">
         <div class="hf-bar" aria-hidden="true">
           <span class="bw-lights"><i></i><i></i><i></i></span>
