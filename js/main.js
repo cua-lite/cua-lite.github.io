@@ -17,7 +17,8 @@
   const title = document.getElementById("screen-title");
   const capRun = document.getElementById("cap-run");
   const capAct = document.getElementById("cap-act");
-  const mocks = [...document.querySelectorAll(".mock")];
+  const mocks = [...document.querySelectorAll(".win")];
+  const tbEnv = document.getElementById("tb-env");
 
   const AGENTS = [
     { id: "gpt-5.5", flag: "gpt-5.5" },
@@ -64,6 +65,7 @@
   function setCmd() {
     capRun.textContent = `$ rollout.py --model-id ${AGENTS[state.ai].flag} --env-id ${ENVS[state.ei].env}`;
     if (title) title.textContent = ENVS[state.ei].env;
+    if (tbEnv) tbEnv.textContent = ENVS[state.ei].env;
   }
 
   function resetMock() {
@@ -78,7 +80,7 @@
     }
     const cell = document.getElementById("dt-total");
     if (cell) cell.parentElement && cell.classList.remove("filled");
-    document.querySelectorAll(".mk-field.hot").forEach((e) => e.classList.remove("hot"));
+    document.querySelectorAll(".hot").forEach((e) => e.classList.remove("hot"));
   }
 
   function centerOf(t) {

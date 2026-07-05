@@ -52,52 +52,66 @@
     </div>
 
     <div class="hero-right">
-      <div class="screen-frame" aria-label="agent operating a computer">
-        <div class="screen-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="screen-title" id="screen-title">webarena</span><span class="rec-dot" id="rec"></span></div>
+      <div class="crt" aria-label="agent operating a computer">
+        <div class="crt-bar"><span class="d d1"></span><span class="d d2"></span><span class="d d3"></span><span class="screen-title" id="screen-title">webarena</span><span class="rec-dot" id="rec"></span></div>
         <div class="screen" id="screen">
+          <div class="wall"></div>
 
-          <!-- WEB: a browser -->
-          <div class="mock" data-env="web">
-            <div class="mk-chrome"><span class="mk-url">shop.example.com</span></div>
-            <div class="mk-body">
-              <div class="mk-row"><div class="mk-field" data-t="search"><span class="mk-ph" id="web-search">search products…</span></div><div class="mk-btn" data-t="go">Search</div></div>
-              <div class="mk-grid">
-                <div class="mk-card"><div class="mk-thumb"></div><div class="mk-l1"></div><div class="mk-price"></div><div class="mk-add" data-t="add">Add</div></div>
-                <div class="mk-card"><div class="mk-thumb"></div><div class="mk-l1"></div><div class="mk-price"></div><div class="mk-add">Add</div></div>
+          <!-- WEB: a pixel browser -->
+          <div class="win" data-env="web">
+            <div class="win-bar"><span class="win-dot"></span><span class="win-name">pixelnet — shop</span></div>
+            <div class="win-body">
+              <div class="bx-url">🔒 shop.example.com</div>
+              <div class="bx-row"><span class="bx-field" data-t="search"><span class="mk-ph" id="web-search">search products…</span></span><span class="bx-go" data-t="go">Search</span></div>
+              <div class="bx-grid">
+                <div class="bx-card"><span class="bx-thumb t1"></span><span class="bx-l1"></span><span class="bx-price">$29</span><span class="bx-add" data-t="add">Add</span></div>
+                <div class="bx-card"><span class="bx-thumb t2"></span><span class="bx-l1"></span><span class="bx-price">$34</span><span class="bx-add">Add</span></div>
               </div>
             </div>
           </div>
 
-          <!-- DESKTOP: a spreadsheet -->
-          <div class="mock hidden" data-env="desktop">
-            <div class="mk-menu"><span>File</span><span>Edit</span><span>View</span><span class="mk-fx" data-t="fx">fx</span></div>
-            <div class="mk-formula"><span id="dt-formula" class="mk-ph"></span></div>
-            <div class="mk-sheet">
-              <div class="mk-cell mk-h"></div><div class="mk-cell mk-h">A</div><div class="mk-cell mk-h">B</div>
-              <div class="mk-cell mk-h">1</div><div class="mk-cell">Rent</div><div class="mk-cell n">1250</div>
-              <div class="mk-cell mk-h">2</div><div class="mk-cell">Cloud</div><div class="mk-cell n">340</div>
-              <div class="mk-cell mk-h">3</div><div class="mk-cell">Travel</div><div class="mk-cell n">812</div>
-              <div class="mk-cell mk-h">12</div><div class="mk-cell">Total</div><div class="mk-cell n" data-t="cell" id="dt-total"></div>
+          <!-- DESKTOP: a pixel spreadsheet -->
+          <div class="win hidden" data-env="desktop">
+            <div class="win-bar"><span class="win-dot"></span><span class="win-name">budget.calc</span></div>
+            <div class="win-body">
+              <div class="sh-menu"><span>File</span><span>Edit</span><span>View</span><span class="sh-fx" data-t="fx">fx</span></div>
+              <div class="sh-formula"><span id="dt-formula" class="mk-ph"></span></div>
+              <div class="sh-grid">
+                <span class="sh-cell sh-h"></span><span class="sh-cell sh-h">A</span><span class="sh-cell sh-h">B</span>
+                <span class="sh-cell sh-h">1</span><span class="sh-cell">Rent</span><span class="sh-cell n">1250</span>
+                <span class="sh-cell sh-h">2</span><span class="sh-cell">Cloud</span><span class="sh-cell n">340</span>
+                <span class="sh-cell sh-h">3</span><span class="sh-cell">Travel</span><span class="sh-cell n">812</span>
+                <span class="sh-cell sh-h">12</span><span class="sh-cell">Total</span><span class="sh-cell n" data-t="cell" id="dt-total"></span>
+              </div>
             </div>
           </div>
 
-          <!-- MOBILE: a phone -->
-          <div class="mock hidden" data-env="mobile">
-            <div class="mk-phone">
-              <div class="mk-status"><span>09:41</span><span>▮▮▮</span></div>
-              <div class="mk-appbar">Contacts<span class="mk-save" data-t="save">Save</span></div>
-              <div class="mk-input" data-t="name"><span class="mk-ph" id="mb-name">Name</span></div>
-              <div class="mk-listrow"><span class="mk-av"></span><span class="mk-l1"></span></div>
-              <div class="mk-fab" data-t="fab">+</div>
+          <!-- MOBILE: a pixel phone -->
+          <div class="win hidden" data-env="mobile">
+            <div class="phone">
+              <div class="ph-status"><span>09:41</span><span class="ph-batt"></span></div>
+              <div class="ph-appbar"><span>Contacts</span><span class="ph-save" data-t="save">Save</span></div>
+              <div class="ph-input" data-t="name"><span class="mk-ph" id="mb-name">Name</span></div>
+              <div class="ph-row"><span class="ph-av"></span><span class="ph-l1"></span></div>
+              <div class="ph-row"><span class="ph-av"></span><span class="ph-l1 short"></span></div>
+              <div class="ph-fab" data-t="fab">+</div>
             </div>
           </div>
 
-          <div class="ripple" id="ripple"></div>
+          <div class="spark" id="ripple"></div>
           <div class="plane-cur" id="cursor"></div>
-          <div class="reward" id="reward"><span class="rw-pill"><span class="rw-check">✓</span> reward 1.0 · LiteSample → ready to train</span></div>
+          <div class="reward" id="reward"><span class="rw-pill"><span class="rw-check">✓</span> reward 1.0 · LiteSample</span></div>
+
+          <div class="taskbar">
+            <span class="tb-start"><span class="tb-logo"></span><span id="tb-env">webarena</span></span>
+            <span class="cap-act" id="cap-act"></span>
+            <span class="tb-clock">09:41</span>
+          </div>
         </div>
-        <div class="screen-cap"><span class="cap-run" id="cap-run">$ rollout.py --env-id webarena</span><span class="cap-act" id="cap-act"></span></div>
       </div>
+      <div class="crt-stand" aria-hidden="true"></div>
+      <div class="crt-foot" aria-hidden="true"></div>
+      <div class="screen-cap"><span class="cap-run" id="cap-run">$ rollout.py --env-id webarena</span></div>
       <div class="picker" id="picker">
         <div class="pick-row" id="agent-row">
           <span class="pick-label">agent</span>
