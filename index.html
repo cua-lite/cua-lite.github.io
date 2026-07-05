@@ -54,19 +54,22 @@
     <div class="hero-right">
       <div class="device" id="device">
       <div class="crt" aria-label="a computer-use agent doing a task">
-        <div class="crt-bar"><span class="d d1"></span><span class="d d2"></span><span class="d d3"></span><span class="screen-title">gpt-5.5 · webarena</span><span class="rec-dot" id="rec"></span></div>
+        <div class="crt-bar"><span class="d d1"></span><span class="d d2"></span><span class="d d3"></span><span class="screen-title">gpt-5.5 · lite.osworld</span><span class="rec-dot" id="rec"></span></div>
         <div class="screen" id="screen">
           <div class="wall"></div>
 
-          <!-- one example: a web agent buying a product -->
+          <!-- one example: a desktop agent computing a total in LibreOffice Calc -->
           <div class="win">
-            <div class="win-bar"><span class="win-dot"></span><span class="win-name">pixelnet — shop</span></div>
-            <div class="win-body">
-              <div class="bx-url">🔒 shop.example.com</div>
-              <div class="bx-row"><span class="bx-field" data-t="search"><span class="mk-ph" id="web-search">search products…</span></span><span class="bx-go" data-t="go">Search</span></div>
-              <div class="bx-grid">
-                <div class="bx-card"><span class="bx-thumb t1"></span><span class="bx-name">Wireless Buds</span><span class="bx-price">$29</span><span class="bx-add" data-t="add">Add</span></div>
-                <div class="bx-card"><span class="bx-thumb t2"></span><span class="bx-name">Buds Pro</span><span class="bx-price">$34</span><span class="bx-add">Add</span></div>
+            <div class="win-bar"><span class="win-dot"></span><span class="win-name">budget.ods — LibreOffice Calc</span></div>
+            <div class="win-body sheet">
+              <div class="sh-fbar"><span class="sh-ref">B5</span><span class="sh-fx">ƒₓ</span><span class="sh-formula" id="fbar"><span class="mk-ph"></span></span></div>
+              <div class="sh-grid">
+                <span class="sh-hc"></span><span class="sh-hc">A</span><span class="sh-hc">B</span>
+                <span class="sh-hr">1</span><span class="sh-cell">Item</span><span class="sh-cell num dim">Cost</span>
+                <span class="sh-hr">2</span><span class="sh-cell">GPU hours</span><span class="sh-cell num">1,250</span>
+                <span class="sh-hr">3</span><span class="sh-cell">Storage</span><span class="sh-cell num">340</span>
+                <span class="sh-hr">4</span><span class="sh-cell">Bandwidth</span><span class="sh-cell num">812</span>
+                <span class="sh-hr">5</span><span class="sh-cell strong">Total</span><span class="sh-cell num total" data-t="cell" id="total"></span>
               </div>
             </div>
           </div>
@@ -84,7 +87,7 @@
       <div class="crt-stand" aria-hidden="true"></div>
       <div class="crt-foot" aria-hidden="true"></div>
       </div><!-- /.device -->
-      <div class="screen-cap"><span class="cap-run" id="cap-run">$ rollout.py --model-id gpt-5.5 --env-id webarena</span></div>
+      <div class="screen-cap"><span class="cap-run" id="cap-run">$ rollout.py --model-id gpt-5.5 --env-id lite.osworld</span></div>
     </div>
   </div>
 </section>

@@ -1,7 +1,8 @@
 /* ============================================================
    CUA-Lite — one example, on loop.
-   A computer-use agent (a real mouse cursor) does a web task:
-   click the search box, type a query, run it, add to cart.
+   A computer-use agent (a real mouse cursor) does a desktop task in
+   LibreOffice Calc: select cell B5, type =SUM(B2:B4), press Enter —
+   the total lands. Think → move → act, in a breathing pixel world.
    No config, no combinatorics — just the loop, done well.
    Reduced motion: the finished frame, held still.
    ============================================================ */
@@ -13,18 +14,16 @@
   const cursor = document.getElementById("cursor");
   const spark = document.getElementById("ripple");
   const capAct = document.getElementById("cap-act");
-  const field = screen.querySelector('[data-t="search"]');
-  const query = document.getElementById("web-search");
-  const grid = screen.querySelector(".bx-grid");
-  const addBtn = screen.querySelector('.bx-add[data-t="add"]');
+  const cell = document.getElementById("total");   // the Total cell (B5)
+  const fbar = document.getElementById("fbar");     // formula bar
+  const fillText = "2,402";
 
-  // the one task, as a list of agent steps
+  // the one task: compute a total in LibreOffice Calc
   const STEPS = [
-    { t: "search", cap: "click search box" },
-    { t: "search", cap: 'type "wireless earbuds"', type: "wireless earbuds" },
-    { t: "go", cap: "click Search", reveal: true },
-    { t: "add", cap: "click Add to cart" },
-    { t: "add", cap: "✓ added to cart", done: true },
+    { t: "cell", cap: "select cell B5", sel: true },
+    { t: "cell", cap: "type =SUM(B2:B4)", type: "=SUM(B2:B4)" },
+    { t: "cell", cap: "press Enter", enter: true },
+    { t: "cell", cap: "✓ Total = 2,402", done: true },
   ];
 
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -54,19 +53,18 @@
     c.el.classList.add("press"); at(150, () => c.el.classList.remove("press"));
   }
   function typeInto(text, done) {
-    query.className = "typed caret"; field.classList.add("hot"); let i = 0;
+    fbar.className = "sh-formula typed caret"; let i = 0;
     (function tick() {
-      query.textContent = text.slice(0, i);
-      if (i++ <= text.length) at(38 + Math.random() * 30, tick);
-      else { query.className = "typed"; done && done(); }
+      fbar.textContent = text.slice(0, i);
+      if (i++ <= text.length) at(40 + Math.random() * 32, tick);
+      else { fbar.className = "sh-formula typed"; done && done(); }
     })();
   }
 
   function reset() {
-    query.textContent = "search products…"; query.className = "mk-ph";
-    field.classList.remove("hot");
-    grid.classList.add("pending");   // results not there until the agent searches
-    addBtn.textContent = "Add"; addBtn.classList.remove("added");
+    fbar.innerHTML = '<span class="mk-ph"></span>'; fbar.className = "sh-formula";
+    cell.textContent = ""; cell.classList.remove("filled");
+    document.querySelectorAll(".sh-cell.sel").forEach((e) => e.classList.remove("sel"));
     capAct.innerHTML = "";
   }
 
@@ -90,9 +88,9 @@
       });
       at(t + 980, () => {                         // 3) act, once the cursor has settled
         click(s.t);
+        if (s.sel) cell.classList.add("sel");            // selecting the cell
         if (s.type) typeInto(s.type);
-        if (s.reveal) at(220, () => grid.classList.remove("pending"));
-        if (s.t === "add") at(150, () => { addBtn.textContent = "✓ Added"; addBtn.classList.add("added"); });
+        if (s.enter) at(120, () => { cell.textContent = fillText; cell.classList.add("filled"); }); // Enter → result lands
       });
       t += 980 + (s.type ? s.type.length * 46 + 320 : 260) + 300;   // act duration + settle
     });
@@ -100,10 +98,9 @@
   }
 
   if (reduce) {
-    query.textContent = "wireless earbuds"; query.className = "typed";
-    field.classList.add("hot"); grid.classList.remove("pending");
-    addBtn.textContent = "✓ Added"; addBtn.classList.add("added");
-    capAct.innerHTML = "<b>✓ added to cart</b>";
+    fbar.className = "sh-formula typed"; fbar.textContent = "=SUM(B2:B4)";
+    cell.textContent = fillText; cell.classList.add("filled", "sel");
+    capAct.innerHTML = "<b>✓ Total = 2,402</b>";
     place(screen.clientWidth * 0.5, screen.clientHeight * 0.62);
   } else {
     // park the cursor with no entrance slide, then start the loop

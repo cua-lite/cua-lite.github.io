@@ -172,33 +172,28 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .win-name { letter-spacing: .3px; }
 .win-body { flex: 1; padding: 11px 12px; min-height: 0; }
 
-/* browser */
-.bx-url { font-family: var(--mono); font-size: 10px; color: #55605a; background: #e9ebe4;
-  box-shadow: inset 2px 2px 0 #cfd2c9, 0 0 0 2px var(--ink); padding: 4px 8px; margin-bottom: 9px; }
-.bx-row { display: flex; gap: 8px; margin-bottom: 11px; }
-.bx-field { flex: 1; display: flex; align-items: center; font-size: 12px; color: var(--win-ink); background: #fff;
-  box-shadow: inset 2px 2px 0 #d8dbd2, 0 0 0 2px var(--ink); padding: 5px 9px; }
-.bx-field.hot { box-shadow: inset 2px 2px 0 #d8dbd2, 0 0 0 2px var(--pgreen-lo); }
-.bx-go, .bx-add, .ph-save, .ph-fab { font-family: var(--sans); font-weight: 800; color: var(--pgreen-ink);
-  background: var(--pgreen); box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi), 0 0 0 2px var(--ink); }
-.bx-go { display: flex; align-items: center; font-size: 12px; padding: 5px 13px; }
-.bx-grid { display: flex; gap: 11px; }
-/* results appear only after the agent searches */
-.bx-card { transition: opacity .28s ease, transform .28s cubic-bezier(.2,1.1,.4,1); }
-.bx-grid.pending .bx-card { opacity: 0; transform: translateY(8px); }
-.bx-grid.pending .bx-card:nth-child(2) { transition-delay: .06s; }
-/* blinking text caret while the agent types */
+/* LibreOffice Calc — the desktop task */
+.sheet { display: flex; flex-direction: column; gap: 9px; }
+.sh-fbar { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; }
+.sh-ref { color: var(--win-ink); background: #e9ebe4; box-shadow: inset 2px 2px 0 #cfd2c9, 0 0 0 2px var(--ink);
+  padding: 4px 9px; min-width: 34px; text-align: center; }
+.sh-fx { color: #8a8f86; font-style: italic; }
+.sh-formula { flex: 1; color: #0d5f2a; background: #fff; box-shadow: inset 2px 2px 0 #eef1e9, 0 0 0 2px var(--ink);
+  padding: 4px 9px; min-height: 25px; display: flex; align-items: center; }
+.sh-grid { display: grid; grid-template-columns: 26px 1fr 84px; box-shadow: 0 0 0 2px var(--ink); }
+.sh-hc, .sh-hr { background: #dfe3da; color: #6a706a; font-family: var(--mono); font-size: 10px;
+  display: flex; align-items: center; justify-content: center; padding: 3px; box-shadow: inset -1px -1px 0 #c4c9bd; }
+.sh-cell { font-family: var(--mono); font-size: 11px; color: var(--win-ink); background: #fff; padding: 4px 9px;
+  min-height: 24px; display: flex; align-items: center; box-shadow: inset -1px -1px 0 #dfe2d9; }
+.sh-cell.num { justify-content: flex-end; }
+.sh-cell.dim { color: #9aa096; }
+.sh-cell.strong { font-weight: 700; }
+/* the agent selects a cell, then the result lands */
+.sh-cell.sel { box-shadow: inset 0 0 0 2px var(--pgreen-lo); }
+.sh-cell.total.filled { color: #0d5f2a; font-weight: 700; background: #d7f6dd; box-shadow: inset 0 0 0 2px var(--pgreen-lo); }
+/* blinking text caret while the agent types the formula */
 .typed.caret::after { content: ""; display: inline-block; width: 2px; height: 1.05em; margin-left: 1px;
   background: #0d5f2a; vertical-align: -0.15em; animation: blink 1s steps(1) infinite; }
-.bx-card { flex: 1; background: #fbfcf9; box-shadow: 0 0 0 2px var(--ink); padding: 8px; display: flex; flex-direction: column; }
-.bx-thumb { height: 46px; box-shadow: inset 3px 3px 0 rgba(255,255,255,.28), inset -4px -4px 0 rgba(0,0,0,.16), 0 0 0 2px var(--ink); margin-bottom: 8px; }
-.bx-thumb.t1 { background: #e88fae; } .bx-thumb.t2 { background: #7fb3ea; }
-.bx-name { font-family: var(--sans); font-weight: 700; font-size: 11.5px; color: var(--win-ink); margin-bottom: 5px; }
-.bx-price { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--win-ink); margin-bottom: 8px; }
-.bx-add { font-size: 11px; padding: 4px 0; text-align: center; align-self: stretch; transition: none; }
-/* the clicked button shows the consequence: added */
-.bx-add.added { background: var(--pgreen-lo); color: #eafff0;
-  box-shadow: inset -2px -2px 0 #2c7540, inset 2px 2px 0 #62c079, 0 0 0 2px var(--ink); }
 
 /* the agent: a real mouse cursor + a pixel click sparkle.
    Movement is GPU-composited transform (buttery), not left/top (janky). */
