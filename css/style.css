@@ -108,7 +108,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
    the CRT beside its streaming trace, so the demo is the dominant object
    and the trace reads as a real, prominent output column. */
 .hero-head { max-width: 900px; }
-.hero-demo { position: relative; display: grid; grid-template-columns: 1.5fr 1fr; gap: 48px; align-items: center; margin-top: 38px; }
+.hero-demo { position: relative; display: grid; grid-template-columns: 1.22fr 1fr; gap: 44px; align-items: center; margin-top: 38px; }
 .hero-demo > * { min-width: 0; }
 .hero-side { display: flex; flex-direction: column; justify-content: center; }
 /* one quiet entrance — the page settles in, then the agent gets to work */
