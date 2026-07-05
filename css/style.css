@@ -280,19 +280,19 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .typed.caret::after { content: ""; display: inline-block; width: 2px; height: 1.05em; margin-left: 1px;
   background: #0d5f2a; vertical-align: -0.15em; animation: blink 1s steps(1) infinite; }
 
-/* the agent: a real mouse cursor + a pixel click sparkle.
+/* the agent: a real mouse cursor + a clean ring pulse on click.
    Movement is GPU-composited transform (buttery), not left/top (janky). */
 .mouse-cur { position: absolute; left: 0; top: 0; margin: -1px 0 0 -2px; width: 21px; height: 32px; background: url('../assets/pixel/cursor.png') top left/contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)); transform: translate3d(0,0,0); transition: transform .42s var(--ease); will-change: transform; z-index: 8; pointer-events: none; }
 .press { transform: translate(1px,1px); filter: brightness(.93); }
-.spark { position: absolute; width: 28px; height: 28px; background: url('../assets/pixel/sparkle.png') center/contain no-repeat; image-rendering: pixelated; transform: translate(-50%,-50%) scale(.3); opacity: 0; z-index: 7; pointer-events: none; }
-.spark.go { animation: spark .5s steps(5) 1; }
-@keyframes spark { 0% { opacity: 0; transform: translate(-50%,-50%) scale(.3); } 40% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.15); } }
-/* a phone is touch, not mouse: hide the arrow cursor, and taps land as a
-   soft finger ripple instead of a pixel sparkle */
+/* click / tap feedback: a clean expanding ring pulse — premium, not a
+   game-y sparkle. One language for every device (mouse or touch). */
+.spark { position: absolute; width: 30px; height: 30px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(63,158,87,.7);
+  transform: translate(-50%,-50%) scale(.3); opacity: 0; z-index: 7; pointer-events: none; }
+.spark.go { animation: tap .52s ease-out 1; }
+@keyframes tap { 0% { opacity: .7; transform: translate(-50%,-50%) scale(.3); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.2); } }
+/* a phone is touch, not mouse: hide the arrow cursor, use a larger finger ripple */
 .dev-mobile .mouse-cur { display: none; }
-.dev-mobile .spark { width: 40px; height: 40px; background: none; border-radius: 50%; box-shadow: 0 0 0 2.5px rgba(63,158,87,.6); image-rendering: auto; }
-.dev-mobile .spark.go { animation: tap .5s ease-out 1; }
-@keyframes tap { 0% { opacity: .65; transform: translate(-50%,-50%) scale(.35); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.25); } }
+.dev-mobile .spark { width: 42px; height: 42px; box-shadow: 0 0 0 2.5px rgba(63,158,87,.55); }
 
 /* taskbar — the OS bar carries the live action */
 .taskbar { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; display: flex; align-items: center; gap: 9px;
