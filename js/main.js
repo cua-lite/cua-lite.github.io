@@ -15,12 +15,13 @@
   const capAct = document.getElementById("cap-act");
   const field = screen.querySelector('[data-t="search"]');
   const query = document.getElementById("web-search");
+  const grid = screen.querySelector(".bx-grid");
 
   // the one task, as a list of agent steps
   const STEPS = [
     { t: "search", cap: "click search box" },
     { t: "search", cap: 'type "wireless earbuds"', type: "wireless earbuds" },
-    { t: "go", cap: "click Search" },
+    { t: "go", cap: "click Search", reveal: true },
     { t: "add", cap: "click Add to cart" },
     { t: "add", cap: "✓ added to cart", done: true },
   ];
@@ -47,16 +48,18 @@
     c.el.classList.add("press"); at(150, () => c.el.classList.remove("press"));
   }
   function typeInto(text, done) {
-    query.className = "typed"; field.classList.add("hot"); let i = 0;
+    query.className = "typed caret"; field.classList.add("hot"); let i = 0;
     (function tick() {
       query.textContent = text.slice(0, i);
-      if (i++ <= text.length) at(38 + Math.random() * 30, tick); else done && done();
+      if (i++ <= text.length) at(38 + Math.random() * 30, tick);
+      else { query.className = "typed"; done && done(); }
     })();
   }
 
   function reset() {
     query.textContent = "search products…"; query.className = "mk-ph";
     field.classList.remove("hot");
+    grid.classList.add("pending");   // results not there until the agent searches
     capAct.innerHTML = "";
   }
 
@@ -70,15 +73,19 @@
         moveTo(s.t);
         capAct.innerHTML = s.done ? `<b>${s.cap}</b>` : `<span class="ca-dim">agent</span> ${s.cap}`;
       });
-      at(t + 520, () => { if (!s.done) click(s.t); if (s.type) typeInto(s.type); });
-      t += s.type ? 520 + s.type.length * 46 + 340 : 900;
+      at(t + 520, () => {
+        if (!s.done) click(s.t);
+        if (s.type) typeInto(s.type);
+        if (s.reveal) at(240, () => grid.classList.remove("pending")); // results pop in
+      });
+      t += s.type ? 520 + s.type.length * 46 + 340 : (s.reveal ? 1050 : 900);
     });
     at(t + 1700, run); // hold, then loop
   }
 
   if (reduce) {
     query.textContent = "wireless earbuds"; query.className = "typed";
-    field.classList.add("hot");
+    field.classList.add("hot"); grid.classList.remove("pending");
     capAct.innerHTML = "<b>✓ added to cart</b>";
   } else {
     run();
