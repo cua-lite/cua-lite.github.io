@@ -23,14 +23,15 @@
 
   // the rollout streams line by line, like a live log
   const logClear = () => { rlLog.innerHTML = ""; };
-  function logLine(text, cls) {
+  function logLine(text, cls, lat) {
     const prev = rlLog.querySelector(".rl-line.live");
     if (prev) prev.classList.remove("live");
     const el = document.createElement("div");
     el.className = "rl-line " + (cls || "live");
     const mark = /done/.test(cls || "") ? "✓" : /think/.test(cls || "") ? "⋯" : "›";
-    el.innerHTML = `<span class="rl-mark">${mark}</span><span class="rl-text">${text}</span>`;
-    if ((cls || "").includes("live")) el.querySelector(".rl-text").insertAdjacentHTML("beforeend", '<span class="caret"></span>');
+    const caret = (cls || "").includes("live") ? '<span class="caret"></span>' : "";
+    const time = lat ? `<span class="rl-lat">${lat}</span>` : "";
+    el.innerHTML = `<span class="rl-mark">${mark}</span><span class="rl-text">${text}${caret}</span>${time}`;
     rlLog.appendChild(el);
     return el;
   }
@@ -133,15 +134,17 @@
   const ORDER = ["desktop", "web", "mobile"];
 
   /* ---------- run one platform's task ---------- */
+  const ts = (ms) => (ms / 1000).toFixed(1) + "s";
   function runSeq(ctx, steps, onFinish) {
     clearAll(); logClear();
     let t = 360;
-    at(t, () => logLine("thinking", "think live"));   // plan once, then act — each step streams into the log
+    { const tt = t; at(tt, () => logLine("thinking", "think live", ts(tt))); }   // plan once, then act
     t += 780;
     steps.forEach((s) => {
-      if (s.done) { at(t, () => logLine(typeof s.cap === "function" ? s.cap() : s.cap, "done")); t += 620; return; }
-      at(t, () => { moveTo(ctx, s.t); logLine(s.cap, "live"); });
-      at(t + 520, () => { click(ctx, s.t); s.onAct && s.onAct(); });
+      const tt = t;
+      if (s.done) { at(tt, () => logLine(typeof s.cap === "function" ? s.cap() : s.cap, "done", ts(tt))); t += 620; return; }
+      at(tt, () => { moveTo(ctx, s.t); logLine(s.cap, "live", ts(tt)); });
+      at(tt + 520, () => { click(ctx, s.t); s.onAct && s.onAct(); });
       t += 520 + (s.typeLen ? s.typeLen * 42 + 240 : 210) + 230;
     });
     at(t, onFinish);
@@ -204,8 +207,9 @@
     ORDER.forEach((m) => MODES[m].reset());
     activate("desktop"); MODES.desktop.finished();
     logClear();
-    ["select cell B5", "type =SUM(B2:B4)", "press Enter"].forEach((l) => logLine(l, "past"));
-    logLine("Total = 2,402", "done");
+    logLine("thinking", "think", "0.4s");
+    [["select cell B5", "1.1s"], ["type =SUM(B2:B4)", "2.1s"], ["press Enter", "3.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
+    logLine("Total = 2,402", "done", "4.2s");
   } else {
     activate("desktop"); parkCursor();
     if ("IntersectionObserver" in window) {

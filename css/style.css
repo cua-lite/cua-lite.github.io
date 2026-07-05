@@ -327,6 +327,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .rl-log { margin-top: 9px; min-height: 92px; display: flex; flex-direction: column; gap: 4px; }
 .rl-line { display: flex; color: #b6bdc9; opacity: 0; transform: translateY(3px); animation: rlIn .22s ease forwards; }
 .rl-mark { color: #5f6875; margin-right: 9px; flex-shrink: 0; }
+.rl-lat { margin-left: auto; padding-left: 14px; color: #4d5560; flex-shrink: 0; font-variant-numeric: tabular-nums; }
 .rl-line.think { color: #8a93a2; }
 .rl-line.done { color: var(--accent); font-weight: 500; }
 .rl-line.done .rl-mark { color: var(--accent); }
