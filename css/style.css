@@ -247,7 +247,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .screen::after { content: ""; position: absolute; inset: 3px; z-index: 10; pointer-events: none;
   box-shadow: inset 0 0 40px rgba(2,6,4,.42); }
 /* bezel brand plate + power LED */
-.crt-led { position: absolute; right: 15px; bottom: 6px; width: 6px; height: 6px; background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: blink 2.4s ease-in-out infinite; }
+.crt-led { position: absolute; right: 15px; bottom: 6px; width: 6px; height: 6px; background: var(--accent); box-shadow: 0 0 6px var(--accent), 0 0 2px #fff inset; }
 .mk-ph { color: var(--win-sub); }
 .typed { color: #0d5f2a; font-weight: 700; }
 
@@ -459,15 +459,19 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .demo-hint .dh-key { color: var(--pgreen-ink); background: var(--accent-dim); padding: 1px 7px; margin-right: 9px;
   letter-spacing: .3px; text-transform: uppercase; font-size: 9.5px; font-weight: 700; }
 
-/* ---------- divider: the pixel paper airplane, breathing (the teaser) ---------- */
+/* ---------- divider: the pixel paper airplane flies into place, then rests ---------- */
 .divider { position: relative; display: flex; align-items: center; justify-content: center; padding: 28px 0; }
 .divider::before, .divider::after { content: ""; height: 1px; width: clamp(60px, 20vw, 200px); }
 .divider::before { background: linear-gradient(to right, transparent, var(--line-2)); }
 .divider::after  { background: linear-gradient(to left,  transparent, var(--line-2)); }
 .fly-plane { width: 28px; height: 22px; margin: 0 22px; flex-shrink: 0;
   background: url('../assets/pixel/airplane.png') center/contain no-repeat; image-rendering: pixelated;
-  filter: drop-shadow(0 3px 5px rgba(0,0,0,.5)); animation: breath 3.4s ease-in-out infinite; }
-@keyframes breath { 0%, 100% { transform: translateY(-3px) rotate(-1deg); } 50% { transform: translateY(3px) rotate(1deg); } }
+  filter: drop-shadow(0 3px 5px rgba(0,0,0,.5)); }
+/* it flies in from the lower-left when the divider scrolls into view, banking
+   level as it lands — a single purposeful motion, no perpetual bobbing. */
+.js-reveal .fly-plane { opacity: 0; transform: translate(-22px, 5px) rotate(-13deg); }
+.js-reveal .divider.in .fly-plane { opacity: 1; transform: none;
+  transition: opacity .5s ease .05s, transform .9s var(--ease) .05s; }
 
 /* scroll reveal — content settles up as you reach it (only when JS is on) */
 .js-reveal .reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .58s var(--ease); }
