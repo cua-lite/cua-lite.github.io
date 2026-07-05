@@ -96,7 +96,7 @@ a:hover { text-decoration: underline; }
   background: linear-gradient(180deg, var(--sky-1) 0%, var(--sky-2) 100%); }
 .hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1.05fr; gap: 46px; align-items: center; }
 .hero .eyebrow { color: #1e3350; }
-.hero h1 { font-family: var(--mc); font-weight: 700; font-size: clamp(34px, 4.6vw, 58px); line-height: 1.12; margin: 14px 0 20px; color: #1b2a42; text-shadow: 3px 3px 0 rgba(255,255,255,.4); }
+.hero h1 { font-family: var(--mc); font-weight: 700; font-size: clamp(32px, 3.9vw, 48px); line-height: 1.16; margin: 14px 0 20px; color: #1b2a42; text-shadow: 3px 3px 0 rgba(255,255,255,.4); }
 .hero h1 .op { color: var(--grass-d); }
 .hero .lead { font-size: 16px; color: #23344a; max-width: 440px; margin: 0 0 26px; }
 .hero .lead b { color: #10203a; font-weight: 700; }
