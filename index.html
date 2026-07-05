@@ -237,12 +237,7 @@
     <h2>A trajectory <em>in five lines.</em></h2>
     <div class="term start-term reveal">
       <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">quick_start.py</span><button class="term-copy" id="term-copy" aria-label="Copy code">copy</button></div>
-<pre class="term-body static"><span class="t-dim">$</span> uv sync --extra quick-start
-
-<span class="t-dim">&gt;&gt;&gt;</span> <span class="t-kw">import</span> lite.gym <span class="t-kw">as</span> gym, lite.agents <span class="t-kw">as</span> agents
-<span class="t-dim">&gt;&gt;&gt;</span> env    = gym.make(<span class="t-str">"lite.demo@create_file"</span>, max_steps=10)
-<span class="t-dim">&gt;&gt;&gt;</span> agent  = agents.make(<span class="t-str">"gpt-5.5"</span>, env=env)
-<span class="t-dim">&gt;&gt;&gt;</span> result = <span class="t-kw">await</span> agent.sample(env)   <span class="t-dim"># → LiteSample</span></pre>
+<div class="term-body qs"><span class="qs-line"><span class="t-dim">$</span> uv sync --extra quick-start</span><span class="qs-line qs-gap"><span class="t-dim">&gt;&gt;&gt;</span> <span class="t-kw">import</span> lite.gym <span class="t-kw">as</span> gym, lite.agents <span class="t-kw">as</span> agents</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> env    = gym.make(<span class="t-str">"lite.demo@create_file"</span>, max_steps=10)</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> agent  = agents.make(<span class="t-str">"gpt-5.5"</span>, env=env)</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> result = <span class="t-kw">await</span> agent.sample(env)   <span class="t-dim"># → LiteSample</span><span class="qs-caret" aria-hidden="true"></span></span></div>
     </div>
     <div class="cta-row center">
       <a class="btn-solid" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">Star on GitHub</a>

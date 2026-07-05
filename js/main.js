@@ -314,7 +314,7 @@
   const codeEl = document.querySelector(".start-term .term-body");
   if (copyBtn && codeEl && navigator.clipboard) {
     copyBtn.addEventListener("click", () => {
-      navigator.clipboard.writeText(codeEl.textContent.trim()).then(() => {
+      navigator.clipboard.writeText(codeEl.innerText.trim()).then(() => {
         copyBtn.textContent = "copied ✓"; copyBtn.classList.add("done");
         setTimeout(() => { copyBtn.textContent = "copy"; copyBtn.classList.remove("done"); }, 1600);
       }).catch(() => {});
