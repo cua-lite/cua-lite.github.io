@@ -643,6 +643,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .row:hover .r-desc { color: var(--muted); }
 .row:first-child { border-top: none; }
 .row:hover { background: rgba(126,231,135,.06); }
+/* the row the eval builder currently targets — a quiet green marker */
+.row.hl { background: rgba(154,212,110,.06); box-shadow: inset 3px 0 0 var(--accent); }
 .r-name { display: flex; align-items: center; font-size: 14.5px; color: var(--text); }
 .row:hover .r-name { color: var(--accent); }
 /* a small device glyph per platform — the same three devices as the hero */

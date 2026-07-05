@@ -375,9 +375,16 @@
       env: ["webgym", "mobilegym", "cuagym"],
     },
   };
+  // the eval builder drives the results table: selecting a benchmark lights its row
+  const benchRows = document.querySelectorAll("#benchmarks .row");
+  const highlightBench = (name) => benchRows.forEach((r) => {
+    const nm = r.querySelector(".r-name");
+    r.classList.toggle("hl", !!nm && nm.textContent.trim() === name);
+  });
   document.querySelectorAll(".cmdbuild").forEach((cb) => {
     const opts = CB_OPTS[cb.dataset.cmd];
     if (!opts) return;
+    const drivesTable = cb.dataset.cmd === "eval";
     const closeAll = (except) => cb.querySelectorAll(".cb-slot.open").forEach((s) => { if (s !== except) s.classList.remove("open"); });
     cb.querySelectorAll(".cb-slot").forEach((slot) => {
       const list = opts[slot.dataset.slot];
@@ -399,6 +406,7 @@
             tok.querySelector(".cb-txt").textContent = v;
             menu.querySelectorAll(".cb-opt").forEach((x) => x.classList.toggle("active", x.textContent === v));
             slot.classList.remove("swap"); void slot.offsetWidth; slot.classList.add("swap");
+            if (drivesTable && slot.dataset.slot === "env") highlightBench(v);
           }
           slot.classList.remove("open"); tok.setAttribute("aria-expanded", "false");
         });
@@ -411,6 +419,7 @@
         slot.classList.toggle("open", willOpen); tok.setAttribute("aria-expanded", String(willOpen));
       });
       slot.appendChild(tok); slot.appendChild(menu);
+      if (drivesTable && slot.dataset.slot === "env") highlightBench(cur);
     });
     document.addEventListener("click", (e) => { if (!cb.contains(e.target)) closeAll(); });
   });
