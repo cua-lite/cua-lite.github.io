@@ -77,10 +77,9 @@
 
   function fly() {
     if (innerWidth <= 900 || !pathLen) return;
-    const wr = world.getBoundingClientRect();
-    const anchor = -wr.top + innerHeight * 0.5;
-    const H = world.scrollHeight;
-    const p = Math.min(1, Math.max(0, (anchor - 150) / (H - 54 - 150)));
+    // progress = how far down the whole page we've scrolled -> plane lands at the end
+    const max = document.body.scrollHeight - innerHeight;
+    const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
     const len = p * pathLen;
     const pt = flown.getPointAtLength(len);
     const back = flown.getPointAtLength(Math.max(0, len - 8));
