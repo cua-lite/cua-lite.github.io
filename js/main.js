@@ -129,4 +129,11 @@
     }, { rootMargin: "0px 0px -12% 0px", threshold: 0.12 });
     reveals.forEach((el) => io.observe(el));
   }
+
+  // the desktop clock shows the real time — a small sign of life
+  const clock = document.querySelector(".tb-clock");
+  if (clock) {
+    const tick = () => { const d = new Date(); clock.textContent = ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); };
+    tick(); setInterval(tick, 20000);
+  }
 })();
