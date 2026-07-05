@@ -54,43 +54,82 @@
     </div>
 
     <div class="hero-right">
-      <div class="device" id="device">
-      <div class="crt" aria-label="a computer-use agent doing a task">
-        <div class="screen" id="screen">
-          <div class="wall"></div>
+      <div class="mode-toggle" id="mode-toggle" role="tablist" aria-label="platform">
+        <button class="mode-btn active" data-mode="desktop" role="tab">Desktop</button>
+        <button class="mode-btn" data-mode="web" role="tab">Web</button>
+        <button class="mode-btn" data-mode="mobile" role="tab">Mobile</button>
+        <span class="mode-ind" id="mode-ind" aria-hidden="true"></span>
+      </div>
 
-          <!-- one example: a desktop agent computing a total in LibreOffice Calc -->
-          <div class="win">
-            <div class="win-bar"><span class="win-dot"></span><span class="win-name">budget.ods — LibreOffice Calc</span></div>
-            <div class="win-body sheet">
-              <div class="sh-fbar"><span class="sh-ref">B5</span><span class="sh-fx">ƒₓ</span><span class="sh-formula" id="fbar"><span class="mk-ph"></span></span></div>
-              <div class="sh-grid">
-                <span class="sh-hc"></span><span class="sh-hc">A</span><span class="sh-hc">B</span>
-                <span class="sh-hr">1</span><span class="sh-cell">Item</span><span class="sh-cell num dim">Cost</span>
-                <span class="sh-hr">2</span><span class="sh-cell">GPU hours</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b2">1,250</span>
-                <span class="sh-hr">3</span><span class="sh-cell">Storage</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b3">340</span>
-                <span class="sh-hr">4</span><span class="sh-cell">Bandwidth</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b4">812</span>
-                <span class="sh-hr">5</span><span class="sh-cell strong">Total</span><span class="sh-cell num total" data-t="cell" id="total"></span>
+      <div class="stage" id="stage">
+
+        <!-- DESKTOP · lite.osworld — a pixel CRT running LibreOffice Calc -->
+        <div class="device dev-desktop active" data-mode="desktop">
+          <div class="crt" aria-label="a desktop agent in LibreOffice Calc">
+            <div class="screen">
+              <div class="wall"></div>
+              <div class="win">
+                <div class="win-bar"><span class="win-dot"></span><span class="win-name">budget.ods — LibreOffice Calc</span></div>
+                <div class="win-body sheet">
+                  <div class="sh-fbar"><span class="sh-ref">B5</span><span class="sh-fx">ƒₓ</span><span class="sh-formula" id="fbar"><span class="mk-ph"></span></span></div>
+                  <div class="sh-grid">
+                    <span class="sh-hc"></span><span class="sh-hc">A</span><span class="sh-hc">B</span>
+                    <span class="sh-hr">1</span><span class="sh-cell">Item</span><span class="sh-cell num dim">Cost</span>
+                    <span class="sh-hr">2</span><span class="sh-cell">GPU hours</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b2">1,250</span>
+                    <span class="sh-hr">3</span><span class="sh-cell">Storage</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b3">340</span>
+                    <span class="sh-hr">4</span><span class="sh-cell">Bandwidth</span><span class="sh-cell num editable" contenteditable="true" inputmode="numeric" id="b4">812</span>
+                    <span class="sh-hr">5</span><span class="sh-cell strong">Total</span><span class="sh-cell num total" data-t="cell" id="total"></span>
+                  </div>
+                </div>
               </div>
+              <div class="spark"></div>
+              <div class="mouse-cur"></div>
+              <div class="taskbar"><span class="tb-start"><span class="tb-logo"></span>cua-lite</span><span class="tb-clock" data-clock>09:41</span></div>
+            </div>
+            <div class="crt-brand" aria-hidden="true"><span class="crt-led"></span><span class="crt-word">CUA-LITE</span></div>
+          </div>
+          <div class="crt-neck" aria-hidden="true"></div>
+          <div class="crt-base" aria-hidden="true"></div>
+        </div>
+
+        <!-- WEB · webarena — a pixel browser shopping -->
+        <div class="device dev-web" data-mode="web">
+          <div class="browser" aria-label="a web agent in a browser">
+            <div class="bw-bar"><span class="win-dot"></span><span class="bw-url">🔒 shop.pixelnet.io</span></div>
+            <div class="bw-view">
+              <div class="wp-head">pixelnet<span class="wp-cart">cart · <b id="cart">0</b></span></div>
+              <div class="wp-row"><span class="wp-field" data-t="search"><span class="mk-ph" id="wq">search products…</span></span><span class="wp-go" data-t="go">Search</span></div>
+              <div class="wp-grid" id="wgrid">
+                <div class="wp-card"><span class="wp-thumb a"></span><span class="wp-name">Wireless Buds</span><span class="wp-price">$29</span><span class="wp-add" data-t="add">Add</span></div>
+                <div class="wp-card"><span class="wp-thumb b"></span><span class="wp-name">Buds Pro</span><span class="wp-price">$34</span><span class="wp-add">Add</span></div>
+              </div>
+              <div class="spark"></div>
+              <div class="mouse-cur"></div>
             </div>
           </div>
+        </div>
 
-          <div class="spark" id="ripple"></div>
-          <div class="mouse-cur" id="cursor"></div>
-
-          <div class="taskbar">
-            <span class="tb-start"><span class="tb-logo"></span>cua-lite</span>
-            <span class="cap-act" id="cap-act"></span>
-            <span class="tb-clock">09:41</span>
+        <!-- MOBILE · mobilegym — a phone adding a contact -->
+        <div class="device dev-mobile" data-mode="mobile">
+          <div class="phone" aria-label="a mobile agent on a phone">
+            <div class="ph-screen">
+              <div class="ph-status"><span data-clock>9:41</span><span class="ph-sig"></span></div>
+              <div class="ph-app">
+                <div class="ph-appbar"><span>New contact</span><span class="ph-save" data-t="save">Save</span></div>
+                <div class="ph-field"><span class="ph-lbl">Name</span><span class="ph-input" data-t="name"><span class="mk-ph" id="mname">Full name</span></span></div>
+                <div class="ph-field"><span class="ph-lbl">Phone</span><span class="ph-val">+1 415 …</span></div>
+                <div class="ph-field"><span class="ph-lbl">Email</span><span class="ph-val">—</span></div>
+              </div>
+              <div class="spark"></div>
+              <div class="mouse-cur"></div>
+            </div>
           </div>
         </div>
-        <div class="crt-brand" aria-hidden="true"><span class="crt-led"></span><span class="crt-word">CUA-LITE</span></div>
+
       </div>
-      <div class="crt-neck" aria-hidden="true"></div>
-      <div class="crt-base" aria-hidden="true"></div>
-      </div><!-- /.device -->
+
       <div class="screen-cap"><span class="cap-run" id="cap-run">$ rollout.py --model-id gpt-5.5 --env-id lite.osworld</span><button class="run-btn" id="run-btn">▶&nbsp;Run</button></div>
-      <p class="cap-hint">the costs (B2–B4) are yours to edit — change them, then watch the agent sum <em>your</em> numbers.</p>
+      <p class="agent-line"><span class="agent-dot" id="agent-dot"></span><span class="cap-act" id="cap-act"></span></p>
     </div>
   </div>
 </section>

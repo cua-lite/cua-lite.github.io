@@ -107,9 +107,14 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hero-right { animation: heroIn .62s cubic-bezier(.2,.7,.3,1) .14s both; }
 /* seat the monitor: a soft glow, like a screen lit in a dark room */
 .hero-right { position: relative; perspective: 1200px; }
-/* the whole monitor tilts subtly toward your real cursor — a physical object in the room */
-.device { transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)); transform-style: preserve-3d;
-  transition: transform .4s cubic-bezier(.2,.7,.3,1); will-change: transform; }
+/* the active device tilts subtly toward your real cursor — a physical object in the room */
+.stage { position: relative; min-height: 392px; transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg));
+  transform-style: preserve-3d; transition: transform .4s cubic-bezier(.2,.7,.3,1); will-change: transform; }
+/* three platforms, one focal device — crossfade between them */
+.stage .device { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity .36s ease, transform .36s cubic-bezier(.2,.7,.3,1); transform: scale(.986); }
+.stage .device.active { opacity: 1; visibility: visible; transform: none; }
+.dev-desktop > .crt, .dev-web > .browser { width: 100%; }
 .hero-right::before { content: ""; position: absolute; left: 50%; top: 40%; width: 128%; height: 92%;
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
   background: radial-gradient(46% 48% at 50% 50%, rgba(126,231,135,.14), rgba(90,150,230,.06) 55%, transparent 72%);
@@ -234,6 +239,62 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo); }
 .crt-base { width: 172px; height: 15px; margin: 5px auto 0; background: var(--crt);
   box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo), 0 0 0 2px #000; }
+
+/* ---------- platform toggle: one agent, any computer ---------- */
+.mode-toggle { position: relative; display: inline-flex; gap: 0; padding: 3px; margin: 0 0 18px;
+  background: var(--panel-fill); border: 2px solid var(--panel-edge);
+  box-shadow: inset 2px 2px 0 var(--panel-hi), inset -3px -3px 0 var(--panel-lo); }
+.mode-btn { position: relative; z-index: 2; font-family: var(--mono); font-size: 12px; letter-spacing: .4px;
+  color: var(--muted); background: transparent; border: 0; padding: 7px 17px; cursor: pointer; transition: color .18s ease; }
+.mode-btn.active { color: var(--pgreen-ink); font-weight: 700; }
+.mode-btn:hover:not(.active) { color: var(--text); }
+.mode-ind { position: absolute; z-index: 1; top: 3px; bottom: 3px; left: 0; width: 0; background: var(--accent);
+  box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi);
+  transition: transform .3s cubic-bezier(.3,.85,.3,1), width .3s cubic-bezier(.3,.85,.3,1); }
+
+/* ---------- WEB: a pixel browser ---------- */
+.browser { background: var(--crt); box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo), 0 0 0 2px #000, 0 30px 62px -38px rgba(0,0,0,.92); }
+.bw-bar { display: flex; align-items: center; gap: 9px; padding: 9px 12px; }
+.bw-url { flex: 1; font-family: var(--mono); font-size: 11px; color: #aeb4bd; background: #05070b; box-shadow: inset 0 0 0 2px #1b1f26; padding: 5px 11px; }
+.bw-view { position: relative; aspect-ratio: 16/10.4; overflow: hidden; background: #f4f5f0; box-shadow: inset 0 0 0 2px #000; }
+.wp-head { display: flex; justify-content: space-between; align-items: center; font-family: var(--sans); font-weight: 800; font-size: 14px; color: #2a2e27; padding: 11px 15px; box-shadow: inset 0 -2px 0 #e2e5dd; }
+.wp-cart { font-family: var(--mono); font-size: 11px; color: #6a706a; font-weight: 400; }
+.wp-cart b { color: #0d5f2a; }
+.wp-row { display: flex; gap: 9px; padding: 13px 15px 10px; }
+.wp-field { flex: 1; display: flex; align-items: center; font-size: 12px; color: #2a2e27; background: #fff; box-shadow: inset 2px 2px 0 #e7e9e1, 0 0 0 2px #14161a; padding: 7px 10px; }
+.wp-field.hot { box-shadow: inset 2px 2px 0 #e7e9e1, 0 0 0 2px var(--pgreen-lo); }
+.wp-go { font-family: var(--sans); font-weight: 800; font-size: 12px; color: var(--pgreen-ink); background: var(--accent); box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi), 0 0 0 2px #14161a; padding: 7px 15px; display: flex; align-items: center; }
+.wp-grid { display: flex; gap: 12px; padding: 4px 15px 15px; }
+.wp-card { flex: 1; background: #fbfcf9; box-shadow: 0 0 0 2px #14161a; padding: 9px; display: flex; flex-direction: column;
+  transition: opacity .3s ease, transform .3s cubic-bezier(.2,1.1,.4,1); }
+.wp-grid.pending .wp-card { opacity: 0; transform: translateY(9px); }
+.wp-grid.pending .wp-card:nth-child(2) { transition-delay: .06s; }
+.wp-thumb { height: 52px; box-shadow: inset 3px 3px 0 rgba(255,255,255,.3), inset -4px -4px 0 rgba(0,0,0,.16), 0 0 0 2px #14161a; margin-bottom: 8px; }
+.wp-thumb.a { background: #e88fae; } .wp-thumb.b { background: #7fb3ea; }
+.wp-name { font-family: var(--sans); font-weight: 700; font-size: 11.5px; color: #2a2e27; margin-bottom: 4px; }
+.wp-price { font-family: var(--mono); font-size: 12px; font-weight: 700; color: #2a2e27; margin-bottom: 9px; }
+.wp-add { font-family: var(--sans); font-weight: 800; font-size: 11px; text-align: center; color: var(--pgreen-ink); background: var(--accent);
+  box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi), 0 0 0 2px #14161a; padding: 5px 0; }
+.wp-add.added { background: var(--pgreen-lo); color: #eafff0; box-shadow: inset -2px -2px 0 #2c7540, inset 2px 2px 0 #62c079, 0 0 0 2px #14161a; }
+
+/* ---------- MOBILE: a pixel phone ---------- */
+.phone { width: 208px; padding: 11px; background: var(--crt); box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo), 0 0 0 2px #000, 0 30px 62px -38px rgba(0,0,0,.92); }
+.ph-screen { position: relative; aspect-ratio: 9/16; overflow: hidden; background: #f4f5f0; box-shadow: inset 0 0 0 2px #000; }
+.ph-status { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 9px; color: #55605a; padding: 7px 13px 5px; }
+.ph-sig { width: 15px; height: 8px; background: #2a2e27; }
+.ph-app { padding: 6px 13px; }
+.ph-appbar { display: flex; justify-content: space-between; align-items: center; font-family: var(--sans); font-weight: 800; font-size: 14px; color: #2a2e27; padding: 6px 0 14px; }
+.ph-save { font-family: var(--sans); font-weight: 800; font-size: 12px; color: var(--pgreen-ink); background: var(--accent); box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi), 0 0 0 2px #14161a; padding: 4px 13px; }
+.ph-field { margin-bottom: 13px; }
+.ph-lbl { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: #9aa096; margin-bottom: 5px; }
+.ph-input { display: flex; align-items: center; font-size: 13px; color: #2a2e27; background: #fff; box-shadow: inset 2px 2px 0 #e7e9e1, 0 0 0 2px #14161a; padding: 8px 11px; min-height: 19px; }
+.ph-input.hot { box-shadow: inset 2px 2px 0 #e7e9e1, 0 0 0 2px var(--pgreen-lo); }
+.ph-val { display: flex; align-items: center; font-size: 13px; color: #9aa096; background: #eceee7; box-shadow: 0 0 0 2px #d5d8cf; padding: 8px 11px; }
+
+/* ---------- shared agent status line ---------- */
+.agent-line { display: flex; align-items: center; gap: 9px; margin: 13px 0 0; font-family: var(--mono); font-size: 11.5px; color: #cdd3dd; min-height: 16px; }
+.agent-dot { width: 7px; height: 7px; flex-shrink: 0; background: var(--accent); box-shadow: 0 0 6px var(--accent); opacity: .3; transition: opacity .2s ease; }
+.agent-line.busy .agent-dot { opacity: 1; animation: blink 1.1s ease-in-out infinite; }
 .screen-cap { display: flex; align-items: center; gap: 12px; margin-top: 20px; font-family: var(--mono); font-size: 11.5px; }
 .cap-run { color: var(--dim); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 /* run the rollout yourself */
