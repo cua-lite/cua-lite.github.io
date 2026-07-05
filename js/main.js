@@ -32,6 +32,8 @@
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
   const clearAll = () => { timers.forEach(clearTimeout); timers = []; };
 
+  let cx = 0, cy = 0;   // tracked cursor position (px, relative to #screen)
+  function place(x, y) { cx = x; cy = y; cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`; }
   function centerOf(t) {
     const el = screen.querySelector(`[data-t="${t}"]`);
     if (!el) return null;
@@ -40,11 +42,10 @@
   }
   function moveTo(t) {
     const c = centerOf(t); if (!c) return;
-    const cs = getComputedStyle(cursor);
-    const dist = Math.hypot(c.x - (parseFloat(cs.left) || 0), c.y - (parseFloat(cs.top) || 0));
-    const dur = Math.min(0.72, Math.max(0.32, dist / 620));   // longer hops take longer — natural
-    cursor.style.transitionDuration = dur + "s, " + dur + "s";
-    cursor.style.left = c.x + "px"; cursor.style.top = c.y + "px";
+    const dist = Math.hypot(c.x - cx, c.y - cy);
+    const dur = Math.min(0.82, Math.max(0.42, dist / 540));   // longer hops take longer — natural, calm
+    cursor.style.transitionDuration = dur + "s";
+    place(c.x, c.y);
   }
   function click(t) {
     const c = centerOf(t); if (!c) return;
@@ -94,8 +95,12 @@
     field.classList.add("hot"); grid.classList.remove("pending");
     addBtn.textContent = "✓ Added"; addBtn.classList.add("added");
     capAct.innerHTML = "<b>✓ added to cart</b>";
+    place(screen.clientWidth * 0.5, screen.clientHeight * 0.62);
   } else {
-    run();
+    // park the cursor with no entrance slide, then start the loop
+    cursor.style.transition = "none";
+    place(screen.clientWidth * 0.74, screen.clientHeight * 0.82);
+    requestAnimationFrame(() => { cursor.style.transition = ""; run(); });
   }
 
   // the monitor tilts toward your real cursor — a physical object you can almost touch
