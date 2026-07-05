@@ -110,10 +110,14 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* the active device tilts subtly toward your real cursor — a physical object in the room */
 .stage { position: relative; min-height: 392px; transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg));
   transform-style: preserve-3d; transition: transform .4s cubic-bezier(.2,.7,.3,1); will-change: transform; }
-/* three platforms, one focal device — crossfade between them */
+/* three platforms, one focal device — a true two-way crossfade.
+   visibility is delayed to the end of the fade so the outgoing device
+   actually fades out (instead of vanishing instantly). */
 .stage .device { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  opacity: 0; visibility: hidden; transition: opacity .36s ease, transform .36s cubic-bezier(.2,.7,.3,1); transform: scale(.986); }
-.stage .device.active { opacity: 1; visibility: visible; transform: none; }
+  opacity: 0; visibility: hidden; transform: scale(.985);
+  transition: opacity .42s ease, transform .42s cubic-bezier(.2,.7,.3,1), visibility 0s .42s; }
+.stage .device.active { opacity: 1; visibility: visible; transform: none;
+  transition: opacity .42s ease, transform .42s cubic-bezier(.2,.7,.3,1), visibility 0s 0s; }
 .dev-desktop > .crt, .dev-web > .browser { width: 100%; }
 .hero-right::before { content: ""; position: absolute; left: 50%; top: 40%; width: 128%; height: 92%;
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
