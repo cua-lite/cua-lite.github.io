@@ -90,8 +90,14 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   background: radial-gradient(ellipse at center, rgba(126,231,135,.07), transparent 65%);
   pointer-events: none;
 }
-.hero-grid { display: grid; grid-template-columns: 1.04fr 1fr; gap: 64px; align-items: start; }
+.hero-grid { display: grid; grid-template-columns: 1.04fr 1fr; gap: 64px; align-items: center; }
 .hero-grid > * { min-width: 0; }
+/* seat the monitor: a soft glow, like a screen lit in a dark room */
+.hero-right { position: relative; }
+.hero-right::before { content: ""; position: absolute; left: 50%; top: 40%; width: 128%; height: 92%;
+  transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
+  background: radial-gradient(46% 48% at 50% 50%, rgba(126,231,135,.14), rgba(90,150,230,.06) 55%, transparent 72%);
+  filter: blur(26px); }
 .hero .lead { font-size: 17.5px; color: var(--muted); max-width: 460px; margin: 0 0 34px; }
 .hero .lead b { color: var(--text); font-weight: 650; }
 .stats { font-family: var(--mono); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin: 34px 0 0; }
@@ -140,13 +146,15 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   box-shadow: inset 0 0 0 3px #090b0d, inset 0 0 0 5px #2a2f36; }
 .wall { position: absolute; inset: 3px; background: url('../assets/pixel/wallpaper.png') center/cover no-repeat;
   image-rendering: pixelated; }
+/* a whisper of CRT curvature — depth, not decoration */
+.screen::after { content: ""; position: absolute; inset: 3px; z-index: 10; pointer-events: none;
+  box-shadow: inset 0 0 34px rgba(4,10,6,.30); }
 .mk-ph { color: var(--win-sub); }
 .typed { color: #0d5f2a; font-weight: 700; }
 
-/* a pixel window (browser / sheet) */
-.win { position: absolute; left: 16px; right: 16px; top: 14px; bottom: 40px;
-  background: var(--win); box-shadow: 0 0 0 2px var(--ink), 5px 6px 0 rgba(10,20,14,.28); display: flex; flex-direction: column; }
-.win.hidden { display: none; }
+/* the app window — floated so the pixel desktop shows around it */
+.win { position: absolute; left: 7%; right: 7%; top: 6.5%; bottom: 46px;
+  background: var(--win); box-shadow: 0 0 0 2px var(--ink), 6px 7px 0 rgba(10,20,14,.30); display: flex; flex-direction: column; }
 .win-bar { display: flex; align-items: center; gap: 7px; height: 20px; padding: 0 8px; background: var(--win-bar);
   box-shadow: inset 0 -2px 0 #c3c8bd; font-family: var(--mono); font-size: 10px; color: var(--win-ink); }
 .win-dot { width: 8px; height: 8px; background: var(--pgreen); box-shadow: 0 0 0 2px var(--ink); }
@@ -171,46 +179,12 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .bx-price { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--win-ink); margin-bottom: 8px; }
 .bx-add { font-size: 11px; padding: 4px 0; text-align: center; align-self: stretch; }
 
-/* spreadsheet */
-.sh-menu { display: flex; align-items: center; gap: 15px; font-family: var(--mono); font-size: 11px; color: #6a706a; margin-bottom: 8px; }
-.sh-menu .sh-fx { margin-left: auto; color: var(--pgreen-ink); background: var(--pgreen);
-  box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi), 0 0 0 2px var(--ink); padding: 1px 9px; font-weight: 800; font-style: italic; }
-.sh-formula { font-family: var(--mono); font-size: 11px; color: #0d5f2a; background: #eef1e9;
-  box-shadow: inset 2px 2px 0 #d5d9cd, 0 0 0 2px var(--ink); padding: 4px 9px; margin-bottom: 9px; min-height: 22px; }
-.sh-grid { display: grid; grid-template-columns: 34px 1fr 1fr; box-shadow: 0 0 0 2px var(--ink); }
-.sh-cell { font-family: var(--mono); font-size: 11px; color: var(--win-ink); padding: 4px 9px; background: #fff;
-  box-shadow: inset -1px -1px 0 #cfd2c9; min-height: 18px; display: flex; align-items: center; }
-.sh-cell.sh-h { background: #e4e7de; color: #7a807a; justify-content: center; }
-.sh-cell.n { justify-content: flex-end; }
-.sh-cell.filled { background: #c9f5cf; color: #0d5f2a; font-weight: 700; }
-
-/* phone (mobile) */
-.win[data-env="mobile"] { background: none; box-shadow: none; }
-.phone { position: absolute; left: 50%; top: 46%; transform: translate(-50%,-50%); width: 148px; padding: 7px 7px 15px;
-  background: #e7eae2; box-shadow: 0 0 0 3px var(--ink), inset -3px -3px 0 #bfc3b8, inset 3px 3px 0 #ffffff, 5px 6px 0 rgba(10,20,14,.3); }
-.ph-status { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 8px; color: #6a706a; padding: 1px 3px 6px; }
-.ph-batt { width: 14px; height: 7px; background: #63bd57; box-shadow: 0 0 0 1px var(--ink); }
-.ph-appbar { display: flex; align-items: center; justify-content: space-between; font-family: var(--sans); font-weight: 800; font-size: 13px; color: var(--win-ink); background: #fff; box-shadow: 0 0 0 2px var(--ink); padding: 5px 7px; margin-bottom: 8px; }
-.ph-save { font-size: 10px; padding: 2px 8px; }
-.ph-input { font-size: 12px; color: var(--win-ink); background: #fff; box-shadow: inset 2px 2px 0 #d8dbd2, 0 0 0 2px var(--ink); padding: 6px 8px; margin-bottom: 9px; }
-.ph-row { display: flex; align-items: center; gap: 8px; padding: 4px 2px; }
-.ph-av { width: 20px; height: 20px; background: #cdd0c6; box-shadow: 0 0 0 2px var(--ink); }
-.ph-l1 { flex: 1; height: 7px; background: #cdd0c6; }
-.ph-l1.short { max-width: 60%; }
-.ph-fab { position: absolute; right: 12px; bottom: 8px; width: 30px; height: 30px; display: grid; place-items: center; font-size: 19px; line-height: 1; }
-
-/* the agent: paper-airplane cursor + pixel sparkle + reward */
-.plane-cur { position: absolute; left: 50%; top: 44%; width: 30px; height: 23px; background: url('../assets/pixel/airplane.png') center/contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 3px 4px rgba(0,0,0,.5)); transform: translate(-14%,-8%); transition: left .5s cubic-bezier(.5,.05,.2,1), top .5s cubic-bezier(.5,.05,.2,1); z-index: 8; pointer-events: none; }
-.spark { position: absolute; width: 30px; height: 30px; background: url('../assets/pixel/sparkle.png') center/contain no-repeat; image-rendering: pixelated; transform: translate(-50%,-50%) scale(.3); opacity: 0; z-index: 7; pointer-events: none; }
+/* the agent: a real mouse cursor + a pixel click sparkle */
+.mouse-cur { position: absolute; left: 76%; top: 82%; width: 21px; height: 32px; background: url('../assets/pixel/cursor.png') top left/contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)); transform: translate(-2px,-1px); transition: left .5s cubic-bezier(.5,.05,.2,1), top .5s cubic-bezier(.5,.05,.2,1); z-index: 8; pointer-events: none; }
+.press { transform: translate(1px,1px); filter: brightness(.93); }
+.spark { position: absolute; width: 28px; height: 28px; background: url('../assets/pixel/sparkle.png') center/contain no-repeat; image-rendering: pixelated; transform: translate(-50%,-50%) scale(.3); opacity: 0; z-index: 7; pointer-events: none; }
 .spark.go { animation: spark .5s steps(5) 1; }
 @keyframes spark { 0% { opacity: 0; transform: translate(-50%,-50%) scale(.3); } 40% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.15); } }
-.reward { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(6,10,8,.32); opacity: 0; transition: opacity .2s steps(3); z-index: 9; pointer-events: none; }
-.reward.show { opacity: 1; }
-.rw-pill { font-family: var(--mono); font-size: 12px; color: var(--pgreen-ink); background: var(--pgreen);
-  box-shadow: inset -3px -3px 0 var(--pgreen-lo), inset 3px 3px 0 var(--pgreen-hi), 0 0 0 3px var(--ink); padding: 9px 16px;
-  transform: scale(.8); transition: transform .3s cubic-bezier(.2,1.4,.4,1); }
-.reward.show .rw-pill { transform: scale(1); }
-.rw-check { font-weight: 700; margin-right: 6px; }
 
 /* taskbar — the OS bar carries the live action */
 .taskbar { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; display: flex; align-items: center; gap: 9px;
@@ -218,7 +192,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .tb-start { display: flex; align-items: center; gap: 5px; color: var(--pgreen-ink); background: var(--pgreen); font-weight: 800;
   box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi); padding: 3px 9px; }
 .tb-logo { width: 10px; height: 8px; background: url('../assets/pixel/airplane.png') center/contain no-repeat; image-rendering: pixelated; }
-.cap-act { color: #aeb6c2; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.cap-act { color: #cdd3dd; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.cap-act .ca-dim { color: #6b7480; }
 .cap-act b { color: var(--pgreen); font-weight: 700; }
 .tb-clock { margin-left: auto; color: #8a93a2; }
 
@@ -229,19 +204,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   box-shadow: inset -3px -3px 0 var(--crt-lo), inset 3px 3px 0 var(--crt-hi), 0 0 0 3px var(--ink); }
 .screen-cap { display: flex; align-items: center; gap: 12px; margin-top: 20px; font-family: var(--mono); font-size: 11.5px; }
 .cap-run { color: var(--dim); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-
-/* ---------- picker: compose agent × env, terminal runs it ---------- */
-.picker { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
-.pick-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.pick-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); width: 46px; flex-shrink: 0; }
-.chip {
-  font-family: var(--mono); font-size: 12.5px; color: var(--muted);
-  background: transparent; border: 2px solid var(--line-2); border-radius: 0;
-  padding: 5px 14px; cursor: pointer; transition: color .12s ease, border-color .12s ease, background .12s ease;
-}
-.chip:hover { color: var(--text); border-color: #3a4150; }
-.chip.active { color: var(--pgreen-ink); background: var(--accent); border-color: var(--accent);
-  box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi); font-weight: 700; }
 
 /* ---------- ascii divider — the paper airplane, gliding ---------- */
 .divider { display: flex; justify-content: center; padding: 26px 0 10px; overflow: hidden; }
