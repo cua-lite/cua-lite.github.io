@@ -40,6 +40,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 body {
   margin: 0; font-family: var(--mc); font-size: 15px; line-height: 1.7;
   color: var(--ink); background: var(--paper);
+  overflow-x: hidden;
 }
 img { display: block; image-rendering: pixelated; }
 a { color: #2f6b34; text-decoration: none; }
@@ -94,6 +95,7 @@ a:hover { text-decoration: underline; }
 .hero { position: relative; overflow: hidden; padding: 78px 0 60px;
   background: linear-gradient(180deg, var(--sky-1) 0%, var(--sky-2) 100%); }
 .hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1.05fr; gap: 46px; align-items: center; }
+.hero-grid > * { min-width: 0; }   /* let the code panel scroll instead of widening the row */
 .hero .eyebrow { color: #1e3350; }
 .hero h1 { font-family: var(--mc); font-weight: 700; font-size: clamp(32px, 3.9vw, 48px); line-height: 1.16; margin: 14px 0 20px; color: #1b2a42; text-shadow: 3px 3px 0 rgba(255,255,255,.4); }
 .hero h1 .op { color: var(--grass-d); }
