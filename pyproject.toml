@@ -1,0 +1,16 @@
+[project]
+name = "cua-lite-homepage"
+version = "0.1.0"
+description = "Pixel-art interactive landing page for CUA-Lite (github.com/cua-lite/cua-lite)."
+requires-python = ">=3.10"
+
+# The site itself is pure static HTML/CSS/JS and has NO runtime dependencies —
+# GitHub Pages serves it as-is with no build step. Everything below is DEV-ONLY
+# tooling: `playwright` for visual-debug screenshots, `pillow` for asset (gif/png) work.
+dependencies = [
+    "playwright>=1.44",
+    "pillow>=10.0",
+]
+
+[tool.uv]
+package = false

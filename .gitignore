@@ -1,0 +1,9 @@
+# python dev tooling
+.venv/
+__pycache__/
+*.pyc
+
+# local preview / debug artifacts
+/tmp/
+*.local.png
+.DS_Store
