@@ -59,7 +59,7 @@ a:focus-visible, button:focus-visible, .plat:focus-visible { outline: 2px solid 
   text-transform: uppercase; color: var(--dim); margin: 0 0 18px;
 }
 h1 { font-family: var(--serif); font-weight: 380; font-variation-settings: 'opsz' 144, 'wght' 380, 'SOFT' 0, 'WONK' 0; font-size: clamp(44px, 4.6vw, 65px); line-height: 1.06; letter-spacing: -0.016em; margin: 0 0 26px; text-wrap: balance; }
-h2 { font-family: var(--serif); font-weight: 400; font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 0, 'WONK' 0; font-size: clamp(32px, 3.6vw, 46px); line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 32px; }
+h2 { font-family: var(--serif); font-weight: 400; font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 0, 'WONK' 0; font-size: clamp(32px, 3.6vw, 46px); line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 42px; }
 h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 0, 'WONK' 0; }
 
 @keyframes blink { 50% { opacity: 0; } }
@@ -467,7 +467,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .js-reveal .cards .card:nth-child(3) { transition-delay: .16s; }
 
 /* ---------- sections ---------- */
-.section { padding: 76px 0 16px; }
+.section { padding: 94px 0 20px; }
 .section:last-of-type { padding-bottom: 44px; }
 
 /* cards — pixel-panel objects, not flat rectangles */
