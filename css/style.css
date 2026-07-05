@@ -33,7 +33,7 @@
   --panel-hi: rgba(255,255,255,.055);
   --panel-lo: rgba(0,0,0,.5);
 
-  --maxw: 1120px;
+  --maxw: 1180px;
 }
 
 * { box-sizing: border-box; }
@@ -53,7 +53,7 @@ a:focus-visible, button:focus-visible, .plat:focus-visible { outline: 2px solid 
   font-family: var(--mono); font-size: 11.5px; letter-spacing: 2.5px;
   text-transform: uppercase; color: var(--dim); margin: 0 0 18px;
 }
-h1 { font-family: var(--serif); font-weight: 380; font-variation-settings: 'opsz' 144, 'wght' 380, 'SOFT' 0, 'WONK' 0; font-size: clamp(46px, 5.6vw, 74px); line-height: 1.05; letter-spacing: -0.018em; margin: 0 0 26px; }
+h1 { font-family: var(--serif); font-weight: 380; font-variation-settings: 'opsz' 144, 'wght' 380, 'SOFT' 0, 'WONK' 0; font-size: clamp(44px, 4.6vw, 65px); line-height: 1.06; letter-spacing: -0.016em; margin: 0 0 26px; text-wrap: balance; }
 h2 { font-family: var(--serif); font-weight: 400; font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 0, 'WONK' 0; font-size: clamp(32px, 3.6vw, 46px); line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 32px; }
 h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 0, 'WONK' 0; }
 
@@ -99,7 +99,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   background: radial-gradient(ellipse at center, rgba(126,231,135,.07), transparent 65%);
   pointer-events: none;
 }
-.hero-grid { display: grid; grid-template-columns: 1.04fr 1fr; gap: 64px; align-items: center; }
+.hero-grid { display: grid; grid-template-columns: 1fr 1.14fr; gap: 56px; align-items: center; }
 .hero-grid > * { min-width: 0; }
 /* one quiet entrance — the page settles in, then the agent gets to work */
 @keyframes heroIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
@@ -108,7 +108,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* seat the monitor: a soft glow, like a screen lit in a dark room */
 .hero-right { position: relative; perspective: 1200px; }
 /* the active device tilts subtly toward your real cursor — a physical object in the room */
-.stage { position: relative; min-height: 392px; transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg));
+.stage { position: relative; min-height: 442px; transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg));
   transform-style: preserve-3d; transition: transform .4s cubic-bezier(.2,.7,.3,1); will-change: transform; }
 /* three platforms, one focal device — a true two-way crossfade.
    visibility is delayed to the end of the fade so the outgoing device
@@ -313,7 +313,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* ---------- MOBILE: a pixel phone ---------- */
 /* a pixel handset: chunky bezel, earpiece slit + camera, home indicator, a power key */
-.phone { position: relative; width: 208px; padding: 25px 13px 22px; background: var(--crt);
+.phone { position: relative; width: 232px; padding: 27px 14px 24px; background: var(--crt);
   box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo), 0 0 0 2px #000, 0 34px 62px -38px rgba(0,0,0,.92); }
 /* a power key on the right rail */
 .phone::before { content: ""; position: absolute; right: -3px; top: 92px; width: 3px; height: 30px; background: var(--crt-lo); box-shadow: 2px 0 0 #000; }
@@ -335,13 +335,14 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* ---------- shared agent status line ---------- */
 /* the rollout streams as a live log — the agent's run, line by line */
-.rollout { margin-top: 20px; font-family: var(--mono); font-size: 11.5px; }
-.rl-cmd { color: var(--dim); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.rl-log { margin-top: 9px; min-height: 92px; display: flex; flex-direction: column; gap: 4px; }
-.rl-line { display: flex; color: #b6bdc9; opacity: 0; transform: translateY(3px); animation: rlIn .22s ease forwards; }
-.rl-mark { color: #5f6875; margin-right: 9px; flex-shrink: 0; }
-.rl-lat { margin-left: auto; padding-left: 14px; color: #4d5560; flex-shrink: 0; font-variant-numeric: tabular-nums; }
-.rl-line.think { color: #8a93a2; }
+.rollout { margin-top: 22px; font-family: var(--mono); font-size: 12.5px; }
+.rl-cmd { color: #9aa2ae; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-bottom: 11px; border-bottom: 1px solid var(--line); }
+.rl-cmd .c-p { color: var(--accent); } .rl-cmd .c-flag { color: #7f8896; } .rl-cmd .c-val { color: #c8cfda; } .rl-cmd .c-env { color: var(--accent); }
+.rl-log { margin-top: 11px; min-height: 102px; display: flex; flex-direction: column; gap: 5px; }
+.rl-line { display: flex; color: #cbd2dd; opacity: 0; transform: translateY(3px); animation: rlIn .22s ease forwards; }
+.rl-mark { color: #6b7480; margin-right: 10px; flex-shrink: 0; }
+.rl-lat { margin-left: auto; padding-left: 14px; color: #626b78; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.rl-line.think { color: #99a2b0; }
 .rl-line.done { color: var(--accent); font-weight: 500; }
 .rl-line.done .rl-mark { color: var(--accent); }
 .rl-line.live .rl-mark::after { content: ""; }

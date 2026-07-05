@@ -166,7 +166,7 @@
     mode = m; ctx = ctxFor(MODES[m].device);
     document.querySelectorAll(".stage .device").forEach((d) => d.classList.toggle("active", d.dataset.mode === m));
     syncPlats();
-    capRun.textContent = `$ rollout.py --model-id gpt-5.5 --env-id ${MODES[m].env}`;
+    capRun.innerHTML = `<span class="c-p">$</span> rollout.py <span class="c-flag">--model-id</span> <span class="c-val">gpt-5.5</span> <span class="c-flag">--env-id</span> <span class="c-env">${MODES[m].env}</span>`;
     MODES[m].reset(); logClear();
   }
   // the intro tours all three machines ONCE (desktop → web → mobile → home),
