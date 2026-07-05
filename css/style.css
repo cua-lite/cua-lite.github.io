@@ -558,7 +558,11 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .row:hover .r-arrow { color: var(--accent); transform: translate(2px,-2px); }
 
 /* quickstart */
+/* quickstart is the closing "get started" moment — centered as a focal block,
+   heading/terminal/CTA aligned, instead of a left heading + centered terminal */
+#start .eyebrow, #start h2 { text-align: center; }
 .start-term { max-width: 720px; margin: 0 auto; }
+.start-term .term-body { text-align: left; }
 
 /* footer */
 .footer { border-top: 1px solid var(--line); padding: 52px 0 48px; margin-top: 36px; }
