@@ -96,8 +96,16 @@ a:focus-visible, button:focus-visible, .mc-btn:focus-visible {
 @keyframes drift { from { transform: translateX(-12px); } to { transform: translateX(22px); } }
 
 /* ---------- HERO ---------- */
-.hero { position: relative; overflow: hidden; padding: 78px 0 60px;
-  background: linear-gradient(180deg, var(--sky-1) 0%, var(--sky-2) 100%); }
+.hero { position: relative; overflow: hidden; padding: 76px 0 224px;
+  background: linear-gradient(180deg, var(--sky-1) 0%, #b6d6ec 62%, #cfe6f2 100%); }
+
+/* layered Minecraft landscape at the horizon — atmospheric depth */
+.landscape { position: absolute; left: 0; right: 0; bottom: 0; height: 230px; z-index: 1; pointer-events: none; }
+.hill { position: absolute; left: 0; right: 0; background-repeat: repeat-x; image-rendering: pixelated; }
+.hill-far  { bottom: 108px; height: 90px;  background-image: url('../assets/pixel/hill_far.png');  background-size: 512px 90px;  opacity: .85; }
+.hill-mid  { bottom: 66px;  height: 100px; background-image: url('../assets/pixel/hill_mid.png');  background-size: 512px 100px; }
+.hill-near { bottom: 30px;  height: 110px; background-image: url('../assets/pixel/hill_near.png'); background-size: 512px 110px; }
+.hill-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 40px; background: url('../assets/pixel/ground.png') repeat-x top; background-size: 96px 120px; image-rendering: pixelated; }
 .hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1.05fr; gap: 46px; align-items: center; }
 .hero-grid > * { min-width: 0; }   /* let the code panel scroll instead of widening the row */
 .hero .eyebrow { color: #1e3350; }
