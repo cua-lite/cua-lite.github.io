@@ -2,8 +2,8 @@
    CUA-Lite — one agent, any computer.
    The same agent operates three platforms, each its own device:
    desktop (a pixel CRT running LibreOffice Calc), web (a browser),
-   mobile (a phone). A segmented toggle switches the focal device;
-   on load it auto-tours all three, then rests and lets you drive.
+   mobile (a phone). The lead words desktop/web/mobile are the control;
+   on load it tours all three once, then rests home and lets you drive.
    Shared engine: think → move → act, GPU-composited cursor.
    Reduced motion: the desktop finished frame, held still.
    ============================================================ */
@@ -169,14 +169,22 @@
     capRun.textContent = `$ rollout.py --model-id gpt-5.5 --env-id ${MODES[m].env}`;
     MODES[m].reset(); logClear();
   }
-  function advance() { const i = ORDER.indexOf(mode); switchTo(ORDER[(i + 1) % ORDER.length]); }
+  // the intro tours all three machines ONCE (desktop → web → mobile → home),
+  // then rests on the desktop. Calm and confident, not a restless loop —
+  // the lead words are there to drive it again whenever you want.
+  let advances = 0;
+  const touring = () => advances < ORDER.length;
+  function advance() { advances++; const i = ORDER.indexOf(mode); switchTo(ORDER[(i + 1) % ORDER.length]); }
   const held = () => paused || !visible;   // don't advance while hovered or off-screen
-  function holdThenAdvance() { at(held() ? 500 : 1100, () => { if (held()) holdThenAdvance(); else advance(); }); }
+  function holdThenAdvance() { at(held() ? 500 : 1200, () => { if (held()) holdThenAdvance(); else advance(); }); }
 
   function runActive() {
     running = true;
     MODES[mode].reset();
-    runSeq(ctx, MODES[mode].steps, () => { running = false; holdThenAdvance(); });
+    runSeq(ctx, MODES[mode].steps, () => {
+      running = false;
+      if (touring()) holdThenAdvance();   // still touring → turn to the next machine; else rest
+    });
   }
   function switchTo(m) {
     clearAll(); running = false;
