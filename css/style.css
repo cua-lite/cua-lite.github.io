@@ -56,9 +56,9 @@ a:focus-visible, button:focus-visible, .plat:focus-visible { outline: 2px solid 
 /* ---------- type roles ---------- */
 .eyebrow {
   font-family: var(--mono); font-size: 11.5px; letter-spacing: 2.5px;
-  text-transform: uppercase; color: var(--dim); margin: 0 0 18px;
+  text-transform: uppercase; color: var(--dim); margin: 0 0 22px;
 }
-h1 { font-family: var(--serif); font-weight: 380; font-variation-settings: 'opsz' 144, 'wght' 380, 'SOFT' 0, 'WONK' 0; font-size: clamp(46px, 5.4vw, 78px); line-height: 1.04; letter-spacing: -0.02em; margin: 0 0 26px; text-wrap: balance; }
+h1 { font-family: var(--serif); font-weight: 380; font-variation-settings: 'opsz' 144, 'wght' 380, 'SOFT' 0, 'WONK' 0; font-size: clamp(40px, 4vw, 58px); line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 24px; text-wrap: balance; }
 h2 { font-family: var(--serif); font-weight: 400; font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 0, 'WONK' 0; font-size: clamp(32px, 3.6vw, 46px); line-height: 1.12; letter-spacing: -0.015em; margin: 0 0 42px; }
 h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 0, 'WONK' 0; }
 
@@ -104,13 +104,13 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   background: radial-gradient(ellipse at center, rgba(126,231,135,.045), transparent 65%);
   pointer-events: none;
 }
-/* stacked hero: the pitch on top (big headline), the live demo below —
-   the CRT beside its streaming trace, so the demo is the dominant object
-   and the trace reads as a real, prominent output column. */
-.hero-head { max-width: 900px; }
-.hero-demo { position: relative; display: grid; grid-template-columns: 1.22fr 1fr; gap: 44px; align-items: center; margin-top: 38px; }
+/* two-column hero: the pitch on the left, the live demo on the right — the
+   device sits top-right as the focal object, its streaming trace directly
+   beneath it. Not a stacked overflow; a deliberate side-by-side. */
+.hero-grid { display: grid; grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr); gap: 52px; align-items: start; }
+.hero-head { max-width: 560px; }
+.hero-demo { position: relative; display: flex; flex-direction: column; gap: 18px; }
 .hero-demo > * { min-width: 0; }
-.hero-side { display: flex; flex-direction: column; justify-content: center; }
 /* an orchestrated entrance — the pitch settles in line by line, then the
    demo rises and the agent gets to work. A crafted load, not a flat fade. */
 @keyframes heroIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
@@ -119,8 +119,9 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hero-head > *:nth-child(2) { animation-delay: .12s; }
 .hero-head > *:nth-child(3) { animation-delay: .24s; }
 .hero-head > *:nth-child(4) { animation-delay: .34s; }
+.hero-head > *:nth-child(5) { animation-delay: .42s; }
 .hero-demo { animation: heroIn .68s var(--ease) .46s both; }
-.stage { position: relative; min-height: 470px; }
+.stage { position: relative; min-height: 430px; }
 /* three platforms, one focal device — a true two-way crossfade.
    visibility is delayed to the end of the fade so the outgoing device
    actually fades out (instead of vanishing instantly). */
@@ -162,10 +163,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
   background: radial-gradient(46% 48% at 50% 50%, rgba(126,231,135,.07), rgba(90,150,230,.035) 55%, transparent 72%);
   filter: blur(28px); }
-.hero .lead { font-size: 17.5px; color: var(--muted); max-width: 500px; margin: 0 0 28px; }
+.hero .lead { font-size: 17.5px; line-height: 1.62; color: var(--muted); max-width: 500px; margin: 0 0 36px; }
 .hero .lead b { color: var(--text); font-weight: 650; }
 /* stats — concise by default, the full list on hover */
-.stats { list-style: none; display: flex; flex-wrap: wrap; gap: 8px 30px; padding: 0; margin: 40px 0 0;
+.stats { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 30px; padding: 0; margin: 46px 0 0;
   font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
 .stat { position: relative; cursor: default; display: inline-flex; align-items: baseline; gap: 6px; }
 .stat:not(:last-child)::after { content: "·"; position: absolute; right: -17px; color: var(--dim); }
@@ -236,11 +237,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 .screen { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #05070b;
   box-shadow: inset 0 0 0 3px #000, inset 0 0 0 6px #1b1f26; }
-/* a clean, dark desktop — a modern GNOME-like wallpaper, not busy XP Bliss.
-   Deep blue-charcoal with one soft brand-green ambient in the corner. */
-.wall { position: absolute; inset: 3px; background:
-    radial-gradient(115% 82% at 50% 6%, #212c42 0%, #141b2a 44%, #0a0e17 100%),
-    radial-gradient(58% 42% at 82% 90%, rgba(154,212,110,.10), transparent 70%); }
+/* the brand's own pixel Bliss — grass-green hills, pixel clouds, the same
+   wallpaper as the cua-lite teaser. A deliberate callback, not a generic bg. */
+.wall { position: absolute; inset: 3px; background: url('../assets/pixel/wallpaper.png') center/cover no-repeat;
+  image-rendering: pixelated; }
 /* the glass: faint scanlines + a soft curvature vignette */
 .screen::before { content: ""; position: absolute; inset: 3px; z-index: 11; pointer-events: none; opacity: .5;
   background: repeating-linear-gradient(to bottom, rgba(0,0,0,.16) 0 1px, transparent 1px 3px); }
@@ -442,7 +442,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .rollout { font-family: var(--mono); font-size: 14.5px; }
 .rl-cmd { font-size: 12.5px; line-height: 1.55; color: #9aa2ae; padding-bottom: 12px; border-bottom: 1px solid var(--line); word-break: break-word; }
 .rl-cmd .c-p { color: var(--accent); } .rl-cmd .c-flag { color: #7f8896; } .rl-cmd .c-val { color: #c8cfda; } .rl-cmd .c-env { color: var(--accent); }
-.rl-log { margin-top: 14px; min-height: 200px; display: flex; flex-direction: column; gap: 10px; }
+.rl-log { margin-top: 12px; min-height: 120px; display: flex; flex-direction: column; gap: 9px; }
 .rl-line { display: flex; color: #cbd2dd; opacity: 0; transform: translateY(3px); animation: rlIn .22s ease forwards; }
 .rl-mark { color: #6b7480; margin-right: 10px; flex-shrink: 0; }
 .rl-lat { margin-left: auto; padding-left: 14px; color: #626b78; flex-shrink: 0; font-variant-numeric: tabular-nums; }
@@ -591,8 +591,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 @media (max-width: 940px) {
   .nav-links a:not(.btn-solid) { display: none; }
   .hero { padding: 68px 0 40px; }
-  .hero-demo { grid-template-columns: 1fr; gap: 30px; margin-top: 34px; }
-  .hero-side { margin-top: 4px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+  .hero-head { max-width: none; }
   .cards { grid-template-columns: minmax(0,1fr); }
   .divider { padding: 14px 0; }
   .section { padding: 54px 0 12px; }
