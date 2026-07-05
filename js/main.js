@@ -76,7 +76,7 @@
   /* ---------- the three platforms ---------- */
   const MODES = {
     desktop: {
-      env: "lite.osworld",
+      env: "osworld",
       device: $(".dev-desktop"),
       reset() {
         fbar.innerHTML = '<span class="mk-ph"></span>'; fbar.className = "sh-formula";
@@ -108,7 +108,7 @@
       finished() { wq.textContent = "wireless earbuds"; wq.className = "typed"; wfield.classList.add("hot"); wgrid.classList.remove("pending"); wadd.textContent = "✓ Added"; wadd.classList.add("added"); cart.textContent = "1"; },
     },
     mobile: {
-      env: "mobilegym",
+      env: "androidworld",
       device: $(".dev-mobile"),
       reset() { mname.textContent = "Full name"; mname.className = "mk-ph"; minput.classList.remove("hot"); msave.textContent = "Save"; msave.classList.remove("saved"); },
       steps: [
