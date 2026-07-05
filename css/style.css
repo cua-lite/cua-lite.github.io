@@ -527,12 +527,18 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hf-url { flex: 1; font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hf-open { font-family: var(--mono); font-size: 12px; color: var(--accent); white-space: nowrap; transition: opacity .12s ease; }
 .hf-open:hover { opacity: .7; }
-.hf-frame { position: relative; height: 520px; background: #fff; }
-.hf-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
-.hf-frame.loaded .hf-skeleton { opacity: 0; visibility: hidden; transition: opacity .35s ease; }
-/* shimmer skeleton until the viewer streams in */
-.hf-skeleton { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 14px; padding: 28px 26px; background: var(--panel-fill); }
-.hf-skeleton span { height: 32px; background: linear-gradient(90deg, var(--panel-2) 25%, #1b212b 50%, var(--panel-2) 75%); background-size: 200% 100%; animation: hfShimmer 1.5s ease-in-out infinite; }
+.hf-frame { position: relative; height: 520px; background: var(--panel-fill); }
+.hf-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; z-index: 1;
+  opacity: 0; transition: opacity .45s ease; }
+.hf-frame.loaded iframe { opacity: 1; }
+/* the dark loading state sits ON TOP of the (white, still-empty) iframe until
+   the viewer actually paints, then crossfades out — never a blank white flash */
+.hf-skeleton { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; gap: 14px;
+  padding: 46px 28px 28px; background: var(--panel-fill); }
+.hf-frame.loaded .hf-skeleton { opacity: 0; visibility: hidden; transition: opacity .45s ease, visibility 0s .45s; }
+.hf-skeleton::before { content: "Loading live from 🤗 Hugging Face…"; position: absolute; top: 16px; left: 28px;
+  font-family: var(--mono); font-size: 12px; color: var(--dim); letter-spacing: .3px; }
+.hf-skeleton span { height: 30px; background: linear-gradient(90deg, var(--panel-2) 25%, #1b212b 50%, var(--panel-2) 75%); background-size: 200% 100%; animation: hfShimmer 1.5s ease-in-out infinite; }
 .hf-skeleton span:nth-child(2) { width: 82%; } .hf-skeleton span:nth-child(3) { width: 64%; }
 @keyframes hfShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
