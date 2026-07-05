@@ -109,7 +109,8 @@ a:focus-visible, button:focus-visible, .mc-btn:focus-visible {
 .hill-mid  { bottom: 66px;  height: 100px; background-image: url('../assets/pixel/hill_mid.png');  background-size: 512px 100px; }
 .hill-near { bottom: 30px;  height: 110px; background-image: url('../assets/pixel/hill_near.png'); background-size: 512px 110px; }
 .hill-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 40px; background: url('../assets/pixel/ground.png') repeat-x top; background-size: 96px 120px; image-rendering: pixelated; }
-.hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1.05fr; gap: 46px; align-items: center; }
+.hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1.05fr; gap: 46px; align-items: start; }
+.hero-right { margin-top: 34px; }   /* nudge the terminal down to sit against the headline, not the eyebrow */
 .hero-grid > * { min-width: 0; }   /* let the code panel scroll instead of widening the row */
 .hero .eyebrow { color: #1e3350; }
 .hero h1 { font-family: var(--mc); font-weight: 700; font-size: clamp(32px, 3.9vw, 48px); line-height: 1.16; margin: 14px 0 20px; color: #1b2a42; text-shadow: 3px 3px 0 rgba(255,255,255,.4); }
