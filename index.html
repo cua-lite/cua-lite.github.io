@@ -35,6 +35,7 @@
     <nav class="nav-links">
       <a href="#data">Data</a>
       <a href="#benchmarks">Benchmarks</a>
+      <a href="#train">Train</a>
       <a href="#start">Quickstart</a>
       <a class="btn-solid sm" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a>
     </nav>
@@ -223,8 +224,15 @@
   <div class="container">
     <p class="eyebrow">02 · Evaluate</p>
     <h2>Any agent, <em>any benchmark.</em></h2>
-    <p class="section-lead">One command scores any agent across desktop, web, and mobile — the same
-      action space everywhere. <span class="rows-note-inline">GPT-5.5 success rate, illustrative:</span></p>
+    <p class="section-lead">The same command evaluates any agent on any benchmark — one action space
+      everywhere. Click the <span class="lead-tok">tokens</span> to build it:</p>
+    <div class="cmdbuild reveal" data-cmd="eval">
+      <div class="cb-term">
+        <div class="cb-bar"><span class="cb-dot"></span><span class="cb-dot"></span><span class="cb-dot"></span><span class="cb-title">one command · any agent × any benchmark</span></div>
+        <div class="cb-body"><span class="t-dim">$</span> rollout.py <span class="cb-flag">--model-id</span> <span class="cb-slot" data-slot="agent"></span> <span class="cb-flag">--env-id</span> <span class="cb-slot" data-slot="env"></span> <span class="cb-flag">--save-gif</span></div>
+      </div>
+    </div>
+    <p class="rows-note">GPT-5.5 success rate — illustrative</p>
     <div class="rows reveal">
       <a class="row" style="--score:38" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/osworld/README.md" target="_blank" rel="noopener"><span class="r-name"><i class="r-ico desktop" aria-hidden="true"></i>osworld</span><span class="r-desc">real Ubuntu desktop apps</span><span class="r-score"><span class="r-bar"><span class="r-fill"></span></span><b class="r-num">38</b></span><span class="r-arrow">↗</span></a>
       <a class="row" style="--score:43" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/browsergym/README.md" target="_blank" rel="noopener"><span class="r-name"><i class="r-ico web" aria-hidden="true"></i>webarena</span><span class="r-desc">self-hosted shop · forum · GitLab</span><span class="r-score"><span class="r-bar"><span class="r-fill"></span></span><b class="r-num">43</b></span><span class="r-arrow">↗</span></a>
@@ -232,6 +240,24 @@
       <a class="row" style="--score:51" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/androidworld/README.md" target="_blank" rel="noopener"><span class="r-name"><i class="r-ico mobile" aria-hidden="true"></i>androidworld</span><span class="r-desc">real Android apps</span><span class="r-score"><span class="r-bar"><span class="r-fill"></span></span><b class="r-num">51</b></span><span class="r-arrow">↗</span></a>
       <a class="row" style="--score:42" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/mobileworld/README.md" target="_blank" rel="noopener"><span class="r-name"><i class="r-ico mobile" aria-hidden="true"></i>mobileworld</span><span class="r-desc">mobile app tasks</span><span class="r-score"><span class="r-bar"><span class="r-fill"></span></span><b class="r-num">42</b></span><span class="r-arrow">↗</span></a>
       <a class="row" style="--score:36" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/cua/README.md" target="_blank" rel="noopener"><span class="r-name"><i class="r-ico cross" aria-hidden="true"></i>cuabench</span><span class="r-desc">cross-platform tasks</span><span class="r-score"><span class="r-bar"><span class="r-fill"></span></span><b class="r-num">36</b></span><span class="r-arrow">↗</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PILLAR 03 · TRAIN ================= -->
+<section class="section" id="train">
+  <div class="container">
+    <p class="eyebrow">03 · Train</p>
+    <h2>SFT &amp; RL, <em>any agent.</em></h2>
+    <p class="section-lead">Fine-tune any agent on the unified corpora, then reinforce it on highly
+      optimized gym environments — GRPO and beyond, on top of
+      <a href="https://github.com/THUDM/slime" target="_blank" rel="noopener">Slime</a>. Same shape, any
+      agent × any environment:</p>
+    <div class="cmdbuild reveal" data-cmd="rl">
+      <div class="cb-term">
+        <div class="cb-bar"><span class="cb-dot"></span><span class="cb-dot"></span><span class="cb-dot"></span><span class="cb-title">one command · any agent × any environment</span></div>
+        <div class="cb-body"><span class="t-dim">$</span> train.py <span class="cb-flag">--model-id</span> <span class="cb-slot" data-slot="agent"></span> <span class="cb-flag">--env-id</span> <span class="cb-slot" data-slot="env"></span> <span class="cb-flag">--algo</span> grpo</div>
+      </div>
     </div>
   </div>
 </section>

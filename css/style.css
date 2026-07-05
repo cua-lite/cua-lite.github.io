@@ -556,6 +556,43 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hf-skeleton span:nth-child(2) { width: 82%; } .hf-skeleton span:nth-child(3) { width: 64%; }
 @keyframes hfShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
+/* ---------- command builder: click a token, the command rebuilds ---------- */
+.cmdbuild { margin: 0 0 22px; }
+.lead-tok { color: var(--accent); border-bottom: 1px dashed var(--accent-dim); padding-bottom: 1px; }
+.cb-term { border: 2px solid var(--panel-edge); background: var(--panel-fill); box-shadow: 0 30px 72px -46px rgba(0,0,0,.9); }
+.cb-bar { display: flex; align-items: center; padding: 11px 16px; background: #0d1017; border-bottom: 2px solid var(--panel-edge); }
+.cb-dot { width: 10px; height: 10px; border-radius: 50%; background: #39404d; margin-right: 8px; }
+.cb-title { font-family: var(--mono); font-size: 12px; color: var(--dim); margin-left: 8px; letter-spacing: .3px; }
+.cb-body { font-family: var(--mono); font-size: 15px; line-height: 2.15; color: var(--text); padding: 24px 22px; }
+.cb-flag { color: var(--muted); }
+/* the editable token — reads as a fill-in-the-blank you can click */
+.cb-slot { position: relative; display: inline-block; }
+.cb-tok { font-family: var(--mono); font-size: 15px; color: var(--accent); background: rgba(154,212,110,.09);
+  border: 0; border-bottom: 1px dashed var(--accent-dim); padding: 3px 8px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 7px; transition: background .15s var(--ease), border-color .15s var(--ease); }
+.cb-tok:hover { background: rgba(154,212,110,.17); border-bottom-color: var(--accent); }
+.cb-slot.open .cb-tok { background: rgba(154,212,110,.17); border-bottom-style: solid; border-bottom-color: var(--accent); }
+.cb-tcaret { width: 6px; height: 6px; border-right: 1.5px solid var(--accent); border-bottom: 1.5px solid var(--accent);
+  transform: translateY(-2px) rotate(45deg); transition: transform .22s var(--ease); }
+.cb-slot.open .cb-tcaret { transform: translateY(1px) rotate(-135deg); }
+.cb-txt { display: inline-block; }
+/* the silky swap: a green fill commits, then settles back to the token tint */
+.cb-slot.swap .cb-tok { animation: cbFlash .55s var(--ease); }
+.cb-slot.swap .cb-txt { animation: cbLift .4s var(--ease); }
+@keyframes cbFlash { 0%,35% { background: var(--accent); color: var(--pgreen-ink); border-bottom-color: var(--accent); }
+  100% { background: rgba(154,212,110,.09); color: var(--accent); } }
+@keyframes cbLift { 0% { transform: translateY(4px); opacity: .2; } 100% { transform: translateY(0); opacity: 1; } }
+/* the option menu */
+.cb-menu { position: absolute; top: calc(100% + 8px); left: 0; z-index: 30; min-width: 200px; background: var(--panel-fill);
+  border: 2px solid var(--panel-edge); padding: 5px; box-shadow: 0 22px 52px -22px rgba(0,0,0,.95);
+  opacity: 0; visibility: hidden; transform: translateY(-8px) scale(.99); transform-origin: top left;
+  transition: opacity .18s var(--ease), transform .18s var(--ease), visibility 0s .18s; }
+.cb-slot.open .cb-menu { opacity: 1; visibility: visible; transform: none; transition: opacity .18s var(--ease), transform .18s var(--ease); }
+.cb-opt { display: block; width: 100%; font-family: var(--mono); font-size: 13px; color: var(--muted); background: transparent;
+  border: 0; padding: 8px 12px; cursor: pointer; text-align: left; transition: background .1s ease, color .1s ease; }
+.cb-opt:hover { background: var(--panel-2); color: var(--text); }
+.cb-opt.active { color: var(--accent); }
+
 .cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
 .card { min-width: 0; display: flex; flex-direction: column; background: var(--panel-fill); border: 2px solid var(--panel-edge); border-radius: 0;
   box-shadow: inset 3px 3px 0 rgba(255,255,255,.06), inset -4px -4px 0 rgba(0,0,0,.55); padding: 26px 24px 22px;
