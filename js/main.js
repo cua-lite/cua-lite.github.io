@@ -214,6 +214,8 @@
   if (reduce) {
     ORDER.forEach((m) => MODES[m].reset());
     activate("desktop"); MODES.desktop.finished();
+    // rest the cursor on the result cell — the "just clicked the total" frame
+    requestAnimationFrame(() => { ctx.cursor.style.transition = "none"; const c = centerOf(ctx, "cell"); if (c) place(ctx, c.x, c.y); });
     logClear();
     logLine("thinking", "think", "0.4s");
     [["select cell B5", "1.1s"], ["type =SUM(B2:B4)", "2.1s"], ["press Enter", "3.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
