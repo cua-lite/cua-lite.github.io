@@ -227,9 +227,11 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 .screen { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #05070b;
   box-shadow: inset 0 0 0 3px #000, inset 0 0 0 6px #1b1f26; }
-.wall { position: absolute; inset: 3px; background: url('../assets/pixel/wallpaper.png') 50% 50% / 116% 116% no-repeat;
-  image-rendering: pixelated; filter: saturate(.62) brightness(.72) contrast(1.03); animation: sky 46s ease-in-out infinite; }
-@keyframes sky { 0%, 100% { background-position: 42% 50%; } 50% { background-position: 58% 50%; } }
+/* a clean, dark desktop — a modern GNOME-like wallpaper, not busy XP Bliss.
+   Deep blue-charcoal with one soft brand-green ambient in the corner. */
+.wall { position: absolute; inset: 3px; background:
+    radial-gradient(115% 82% at 50% 6%, #212c42 0%, #141b2a 44%, #0a0e17 100%),
+    radial-gradient(58% 42% at 82% 90%, rgba(154,212,110,.10), transparent 70%); }
 /* the glass: faint scanlines + a soft curvature vignette */
 .screen::before { content: ""; position: absolute; inset: 3px; z-index: 11; pointer-events: none; opacity: .5;
   background: repeating-linear-gradient(to bottom, rgba(0,0,0,.16) 0 1px, transparent 1px 3px); }
@@ -577,9 +579,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 }
 @media (prefers-reduced-motion: reduce) {
   .typed.caret::after, .fly-plane, .crt-led, .spark,
-  .wall, .think i, .hero-left, .hero-right, .rl-line, .rl-line .caret { animation: none; }
+  .think i, .hero-left, .hero-right, .rl-line, .rl-line .caret { animation: none; }
   .rl-line { opacity: 1; transform: none; }
-  .wall { background-position: 50% 50%; }
   .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }
 }
