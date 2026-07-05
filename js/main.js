@@ -95,13 +95,13 @@
       device: $(".dev-web"),
       reset() {
         wq.textContent = "search products…"; wq.className = "mk-ph";
-        wfield.classList.remove("hot"); wgrid.classList.add("pending");
+        wfield.classList.remove("hot"); wgrid.classList.remove("pending");
         wadd.textContent = "Add"; wadd.classList.remove("added"); cart.textContent = "0";
       },
       steps: [
         { t: "search", cap: "click the search box", onAct: () => wfield.classList.add("hot") },
         { t: "search", cap: 'type "wireless earbuds"', typeLen: 16, onAct: () => typeInto(wq, "", "wireless earbuds") },
-        { t: "go", cap: "click Search", onAct: () => at(220, () => wgrid.classList.remove("pending")) },
+        { t: "go", cap: "click Search", onAct: () => { wgrid.classList.add("pending"); at(150, () => wgrid.classList.remove("pending")); } },
         { t: "add", cap: "add to cart", onAct: () => at(140, () => { wadd.textContent = "✓ Added"; wadd.classList.add("added"); cart.textContent = "1"; }) },
         { done: true, cap: "✓ added to cart" },
       ],
