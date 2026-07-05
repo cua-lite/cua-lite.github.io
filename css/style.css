@@ -127,8 +127,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .t-tag { color: #7c8698; }
 .t-kw  { color: #9ecbff; }
 .t-str { color: var(--accent); }
-.t-acc { color: var(--accent); }
-.t-cur { display: inline-block; width: 8px; height: 1.05em; background: var(--accent); vertical-align: -0.18em; animation: blink 1s steps(1) infinite; }
 .hero .term { margin-top: 10px; }
 
 /* ============================================================
@@ -141,7 +139,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   --win:   #f5f6f2; --win-bar: #dde1d7; --win-ink: #2a2e27; --win-sub: #8a8f86;
   --grass: #6db24b; --pgreen: #7ee787; --pgreen-lo: #3f9e57; --pgreen-hi: #b8f5bd; --pgreen-ink: #08240f;
 }
-.pix { image-rendering: pixelated; image-rendering: crisp-edges; }
 
 .crt { background: var(--crt); padding: 9px 10px 12px; box-shadow:
     inset -3px -3px 0 0 var(--crt-lo), inset 3px 3px 0 0 var(--crt-hi),
@@ -305,7 +302,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   .row { padding: 17px 18px; gap: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .typed.caret::after, .t-cur, .fly-plane, .rec-dot, .spark,
+  .typed.caret::after, .fly-plane, .rec-dot, .spark,
   .wall, .think i, .hero-left, .hero-right { animation: none; }
   .wall { background-position: 50% 50%; }
   .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
