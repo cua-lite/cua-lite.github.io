@@ -116,11 +116,11 @@ a:hover { text-decoration: underline; }
 .section-head p { color: #57534a; font-size: 15px; margin: 0; }
 .section-head p code { background: #d3cfc3; padding: 0 5px; color: var(--ink); }
 
-/* toolkit cards */
+/* toolkit cards — warm light panels so they lift off the page (less grey) */
 .feature-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-.card { padding: 22px 20px; background: var(--stone); }
+.card { padding: 24px 22px; background: #f2efe6; }
 .card:hover { box-shadow: inset 3px 3px 0 var(--stone-l), inset -3px -3px 0 var(--stone-d), 0 0 0 3px var(--grass); }
-.card .fico { width: 26px; height: 26px; margin-bottom: 13px; }
+.card .fico { width: 30px; height: 30px; margin-bottom: 15px; }
 .card h3 { font-family: var(--mc); font-weight: 700; font-size: 16px; margin: 0 0 8px; color: var(--ink); text-shadow: 1px 1px 0 var(--stone-l); }
 .card p { color: #4a463d; font-size: 13.5px; margin: 0 0 13px; }
 .card code { font-size: 12px; background: #1d1f21; color: #c7f0c7; padding: 7px 10px; display: block; overflow-x: auto; white-space: nowrap; border: 2px solid #000; }
@@ -129,7 +129,7 @@ a:hover { text-decoration: underline; }
 
 /* benchmarks */
 .bench-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 13px; }
-.bench { display: flex; align-items: center; gap: 12px; padding: 15px 17px; background: var(--stone); color: var(--ink); }
+.bench { display: flex; align-items: center; gap: 12px; padding: 15px 17px; background: #f2efe6; color: var(--ink); }
 .bench:hover { text-decoration: none; box-shadow: inset 3px 3px 0 var(--stone-l), inset -3px -3px 0 var(--stone-d), 0 0 0 3px var(--grass); }
 .bench .bico { width: 20px; height: 20px; flex-shrink: 0; }
 .bench b { font-weight: 700; font-size: 14px; display: block; }
