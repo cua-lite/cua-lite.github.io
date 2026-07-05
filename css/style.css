@@ -10,6 +10,8 @@
 
 @font-face { font-family: 'Monocraft'; src: url('../assets/fonts/Monocraft.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Monocraft'; src: url('../assets/fonts/Monocraft-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+/* clean coding font for actual code blocks (Monocraft is the pixel UI font) */
+@font-face { font-family: 'JetBrains Mono'; src: url('../assets/fonts/JetBrainsMono.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 
 :root {
   --sky-1:  #74a7d8;
@@ -32,6 +34,7 @@
   --tshadow:#3a3a30;
 
   --mc: 'Monocraft', ui-monospace, monospace;
+  --code: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   --maxw: 1080px;
 }
 
@@ -137,7 +140,7 @@ a:focus-visible, button:focus-visible, .mc-btn:focus-visible {
 .card .fico { width: 30px; height: 30px; margin-bottom: 15px; }
 .card h3 { font-family: var(--mc); font-weight: 700; font-size: 16px; margin: 0 0 8px; color: var(--ink); text-shadow: 1px 1px 0 var(--stone-l); }
 .card p { color: #4a463d; font-size: 13.5px; margin: 0 0 13px; }
-.card code { font-size: 12px; background: #1d1f21; color: #c7f0c7; padding: 7px 10px; display: block; overflow-x: auto; white-space: nowrap; border: 2px solid #000; }
+.card code { font-family: var(--code); font-size: 12px; background: #1d1f21; color: #c7f0c7; padding: 7px 10px; display: block; overflow-x: auto; white-space: nowrap; border: 2px solid #000; }
 .card p code { display: inline; padding: 0 4px; background: #d3cfc3; color: var(--ink); border: none; }
 .card a { color: var(--grass-d); font-weight: 700; }
 
@@ -154,8 +157,8 @@ a:focus-visible, button:focus-visible, .mc-btn:focus-visible {
 /* quick start */
 .start-wrap { max-width: 720px; margin: 0 auto; }
 .terminal { border: 3px solid #000; box-shadow: inset 3px 3px 0 #2a2c2e, inset -3px -3px 0 #0c0d0e; background: #1d1f21; overflow: hidden; }
-.terminal .bar { padding: 9px 13px; background: #2a2c2e; color: #9aa39a; font-size: 12px; border-bottom: 3px solid #000; }
-.terminal pre { margin: 0; padding: 20px 22px; font-size: 13px; line-height: 1.85; color: #dfe6df; overflow-x: auto; }
+.terminal .bar { font-family: var(--code); padding: 9px 13px; background: #2a2c2e; color: #9aa39a; font-size: 12px; border-bottom: 3px solid #000; }
+.terminal pre { font-family: var(--code); margin: 0; padding: 20px 22px; font-size: 13px; line-height: 1.85; color: #dfe6df; overflow-x: auto; }
 .c-dim{color:#6f7b6f} .c-kw{color:#ffd75f} .c-str{color:#9be08a} .c-cm{color:#6f7b6f}
 
 /* dusk scene — day -> night bookend into the footer */
