@@ -194,7 +194,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .bx-thumb.t1 { background: #e88fae; } .bx-thumb.t2 { background: #7fb3ea; }
 .bx-l1 { height: 7px; width: 72%; background: #c9ccc2; margin-bottom: 7px; }
 .bx-price { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--win-ink); margin-bottom: 8px; }
-.bx-add { font-size: 11px; padding: 4px 0; text-align: center; align-self: stretch; }
+.bx-add { font-size: 11px; padding: 4px 0; text-align: center; align-self: stretch; transition: none; }
+/* the clicked button shows the consequence: added */
+.bx-add.added { background: var(--pgreen-lo); color: #eafff0;
+  box-shadow: inset -2px -2px 0 #2c7540, inset 2px 2px 0 #62c079, 0 0 0 2px var(--ink); }
 
 /* the agent: a real mouse cursor + a pixel click sparkle */
 .mouse-cur { position: absolute; left: 76%; top: 82%; width: 21px; height: 32px; background: url('../assets/pixel/cursor.png') top left/contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 2px 3px rgba(0,0,0,.45)); transform: translate(-2px,-1px); transition: left .5s cubic-bezier(.5,.05,.2,1), top .5s cubic-bezier(.5,.05,.2,1); z-index: 8; pointer-events: none; }

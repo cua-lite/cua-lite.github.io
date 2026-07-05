@@ -16,6 +16,7 @@
   const field = screen.querySelector('[data-t="search"]');
   const query = document.getElementById("web-search");
   const grid = screen.querySelector(".bx-grid");
+  const addBtn = screen.querySelector('.bx-add[data-t="add"]');
 
   // the one task, as a list of agent steps
   const STEPS = [
@@ -64,6 +65,7 @@
     query.textContent = "search products…"; query.className = "mk-ph";
     field.classList.remove("hot");
     grid.classList.add("pending");   // results not there until the agent searches
+    addBtn.textContent = "Add"; addBtn.classList.remove("added");
     capAct.innerHTML = "";
   }
 
@@ -80,6 +82,7 @@
         if (!s.done) click(s.t);
         if (s.type) typeInto(s.type);
         if (s.reveal) at(240, () => grid.classList.remove("pending")); // results pop in
+        if (s.t === "add" && !s.done) at(140, () => { addBtn.textContent = "✓ Added"; addBtn.classList.add("added"); });
       });
       t += s.type ? 520 + s.type.length * 46 + 340 : (s.reveal ? 1050 : 900);
     });
@@ -89,6 +92,7 @@
   if (reduce) {
     query.textContent = "wireless earbuds"; query.className = "typed";
     field.classList.add("hot"); grid.classList.remove("pending");
+    addBtn.textContent = "✓ Added"; addBtn.classList.add("added");
     capAct.innerHTML = "<b>✓ added to cart</b>";
   } else {
     run();
