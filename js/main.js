@@ -39,6 +39,10 @@
   }
   function moveTo(t) {
     const c = centerOf(t); if (!c) return;
+    const cs = getComputedStyle(cursor);
+    const dist = Math.hypot(c.x - (parseFloat(cs.left) || 0), c.y - (parseFloat(cs.top) || 0));
+    const dur = Math.min(0.72, Math.max(0.32, dist / 620));   // longer hops take longer — natural
+    cursor.style.transitionDuration = dur + "s, " + dur + "s";
     cursor.style.left = c.x + "px"; cursor.style.top = c.y + "px";
   }
   function click(t) {
@@ -65,8 +69,7 @@
 
   function run() {
     clearAll(); reset();
-    // park the cursor bottom-right, then work
-    cursor.style.left = "76%"; cursor.style.top = "82%";
+    // the cursor continues from wherever it last was — no teleport on loop
     let t = 650;
     STEPS.forEach((s) => {
       at(t, () => {
@@ -89,5 +92,22 @@
     capAct.innerHTML = "<b>✓ added to cart</b>";
   } else {
     run();
+  }
+
+  // the monitor tilts toward your real cursor — a physical object you can almost touch
+  const heroRight = document.querySelector(".hero-right");
+  const device = document.getElementById("device");
+  if (!reduce && heroRight && device && matchMedia("(pointer: fine)").matches) {
+    heroRight.addEventListener("pointermove", (e) => {
+      const r = heroRight.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      device.style.setProperty("--ty", (px * 6).toFixed(2) + "deg");
+      device.style.setProperty("--tx", (-py * 5).toFixed(2) + "deg");
+    });
+    heroRight.addEventListener("pointerleave", () => {
+      device.style.setProperty("--ty", "0deg");
+      device.style.setProperty("--tx", "0deg");
+    });
   }
 })();

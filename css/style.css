@@ -100,7 +100,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hero-left  { animation: heroIn .62s cubic-bezier(.2,.7,.3,1) both; }
 .hero-right { animation: heroIn .62s cubic-bezier(.2,.7,.3,1) .14s both; }
 /* seat the monitor: a soft glow, like a screen lit in a dark room */
-.hero-right { position: relative; }
+.hero-right { position: relative; perspective: 1200px; }
+/* the whole monitor tilts subtly toward your real cursor — a physical object in the room */
+.device { transform: rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)); transform-style: preserve-3d;
+  transition: transform .4s cubic-bezier(.2,.7,.3,1); will-change: transform; }
 .hero-right::before { content: ""; position: absolute; left: 50%; top: 40%; width: 128%; height: 92%;
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
   background: radial-gradient(46% 48% at 50% 50%, rgba(126,231,135,.14), rgba(90,150,230,.06) 55%, transparent 72%);
