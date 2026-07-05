@@ -16,6 +16,10 @@
   const capRun = document.getElementById("cap-run");
   const rlLog = document.getElementById("rl-log");
   const plats = [...document.querySelectorAll(".plat")];   // the lead words = the control
+  const demoHint = document.getElementById("demo-hint");
+  let hintDone = false;   // once you've edited a cost, stop inviting
+  const showHint = () => { if (!hintDone && mode === "desktop") demoHint.classList.add("show"); };
+  const hideHint = () => demoHint.classList.remove("show");
 
   let timers = [];
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
@@ -183,32 +187,54 @@
     MODES[mode].reset();
     runSeq(ctx, MODES[mode].steps, () => {
       running = false;
-      if (touring()) holdThenAdvance();   // still touring → turn to the next machine; else rest
+      if (touring()) holdThenAdvance();   // still touring → turn to the next machine
+      else showHint();                    // rested → quietly invite you to edit a cost
     });
   }
-  function switchTo(m) {
-    clearAll(); running = false;
+  // immediate = a user drove this (hover/click a lead word) → respond crisply.
+  // the auto-tour leaves it off so its handoff stays calm and unhurried.
+  function switchTo(m, immediate) {
+    clearAll(); running = false; hideHint();
+    stage.classList.toggle("snappy", !!immediate);
     activate(m); parkCursor();
-    at(420, runActive);
+    at(immediate ? 210 : 420, runActive);
+  }
+  // you changed a cost → the agent re-runs on YOUR number. A short focused
+  // response (~1s), not the whole select/type/enter ceremony — crisp feedback.
+  function recompute() {
+    clearAll(); running = true;
+    logClear();
+    fbar.className = "sh-formula typed"; fbar.textContent = "=SUM(B2:B4)";
+    total.textContent = ""; total.classList.remove("filled"); total.classList.add("sel");
+    at(60, () => logLine("read cells B2:B4", "live", "0.1s"));
+    at(360, () => { moveTo(ctx, "cell"); logLine("recompute =SUM(B2:B4)", "live", "0.4s"); });
+    at(820, () => { click(ctx, "cell"); total.textContent = fmt(sum()); total.classList.add("filled"); });
+    at(1080, () => logLine(`Total = ${fmt(sum())}`, "done", "0.9s"));
+    at(1240, () => { running = false; });
   }
 
   /* ---------- editable desktop cells: edit the numbers, the agent sums YOURS ---------- */
   const editing = () => document.activeElement && document.activeElement.classList && document.activeElement.classList.contains("editable");
+  let sheetDirty = false;   // did you actually change a cost? only then does the agent re-run
   cells.forEach((el) => {
-    el.addEventListener("focus", () => { paused = true; });   // don't cycle away mid-edit
-    el.addEventListener("input", () => { if (mode === "desktop" && !running) { total.textContent = ""; total.classList.remove("filled", "sel"); fbar.innerHTML = '<span class="mk-ph"></span>'; fbar.className = "sh-formula"; } });
-    el.addEventListener("blur", () => { el.textContent = fmt(numOf(el)); at(700, () => { if (!editing()) paused = false; }); });
-    el.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); el.blur(); paused = false; switchTo("desktop"); } });
+    el.addEventListener("focus", () => { paused = true; hintDone = true; hideHint(); });   // engaged → stop inviting
+    el.addEventListener("input", () => { sheetDirty = true; if (mode === "desktop" && !running) { total.textContent = ""; total.classList.remove("filled", "sel"); fbar.innerHTML = '<span class="mk-ph"></span>'; fbar.className = "sh-formula"; } });
+    // click away after editing → the agent re-runs on YOUR number (no hidden keypress needed)
+    el.addEventListener("blur", () => {
+      el.textContent = fmt(numOf(el));
+      at(430, () => { if (!editing()) { paused = false; if (sheetDirty) { sheetDirty = false; recompute(); } } });
+    });
+    el.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); el.blur(); } });
   });
 
   /* ---------- the lead words steer the demo ---------- */
   plats.forEach((p) => {
     const m = p.dataset.mode;
-    p.addEventListener("pointerenter", () => { paused = true; if (started && m !== mode) switchTo(m); });
+    p.addEventListener("pointerenter", () => { paused = true; if (started && m !== mode) switchTo(m, true); });
     p.addEventListener("pointerleave", () => { paused = false; });
-    p.addEventListener("click", () => { paused = false; if (m !== mode) switchTo(m); });
+    p.addEventListener("click", () => { paused = false; if (m !== mode) switchTo(m, true); });
     p.setAttribute("tabindex", "0");
-    p.addEventListener("focus", () => { if (started && m !== mode) switchTo(m); });
+    p.addEventListener("focus", () => { if (started && m !== mode) switchTo(m, true); });
   });
 
   if (reduce) {
@@ -220,6 +246,7 @@
     logLine("thinking", "think", "0.4s");
     [["select cell B5", "1.1s"], ["type =SUM(B2:B4)", "2.1s"], ["press Enter", "3.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
     logLine("Total = 2,402", "done", "4.2s");
+    showHint();   // editing still works with motion off — invite it
   } else {
     activate("desktop"); parkCursor();
     if ("IntersectionObserver" in window) {

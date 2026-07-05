@@ -135,6 +135,9 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .dev-mobile::after  { width: 232px; height: 30px; }
 .stage .device.active { opacity: 1; visibility: visible; transform: none;
   transition: opacity .42s ease .2s, transform .55s cubic-bezier(.2,.85,.3,1) .1s, visibility 0s 0s; }
+/* when YOU drive the switch, respond crisply — the calm handoff is for the auto-tour */
+.stage.snappy .device { transition: opacity .12s ease, transform .24s cubic-bezier(.4,.6,.4,1), visibility 0s .12s; }
+.stage.snappy .device.active { transition: opacity .2s ease .07s, transform .32s cubic-bezier(.2,.85,.3,1) .03s, visibility 0s 0s; }
 .dev-desktop > .crt, .dev-web > .browser { width: 100%; }
 .hero-right::before { content: ""; position: absolute; left: 50%; top: 40%; width: 128%; height: 92%;
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
@@ -235,8 +238,9 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .sh-cell.num { justify-content: flex-end; }
 .sh-cell.dim { color: #9aa096; }
 .sh-cell.strong { font-weight: 700; }
-/* the cost cells are yours to edit — the agent sums whatever you enter */
-.sh-cell.editable { cursor: text; caret-color: var(--pgreen-lo); }
+/* the cost cells are yours to edit — the agent sums whatever you enter.
+   a faint green underline at rest signals "this is a live field". */
+.sh-cell.editable { cursor: text; caret-color: var(--pgreen-lo); box-shadow: inset -1px -1px 0 #dfe2d9, inset 0 -2px 0 rgba(63,158,87,.34); }
 .sh-cell.editable:hover { background: #eefaef; box-shadow: inset 0 0 0 1px var(--pgreen-lo), inset -1px -1px 0 #dfe2d9; }
 .sh-cell.editable:focus { outline: none; background: #fff; box-shadow: inset 0 0 0 2px var(--pgreen-lo); }
 /* the agent selects a cell, then the result lands */
@@ -348,6 +352,12 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .rl-line.live .rl-mark::after { content: ""; }
 .rl-line.live .caret { display: inline-block; width: 6px; height: 1.05em; margin-left: 3px; background: var(--accent); vertical-align: -0.15em; animation: blink 1s steps(1) infinite; }
 @keyframes rlIn { to { opacity: 1; transform: none; } }
+/* a quiet invitation — shown only once the demo rests, gone the moment you engage */
+.demo-hint { margin: 14px 0 0; font-family: var(--mono); font-size: 11.5px; color: #6b7480;
+  opacity: 0; transform: translateY(3px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
+.demo-hint.show { opacity: 1; transform: none; }
+.demo-hint .dh-key { color: var(--pgreen-ink); background: var(--accent-dim); padding: 1px 7px; margin-right: 9px;
+  letter-spacing: .3px; text-transform: uppercase; font-size: 9.5px; font-weight: 700; }
 
 /* ---------- divider: the pixel paper airplane, breathing (the teaser) ---------- */
 .divider { position: relative; display: flex; align-items: center; justify-content: center; padding: 28px 0; }
