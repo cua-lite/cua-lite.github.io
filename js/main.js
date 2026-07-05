@@ -359,15 +359,29 @@
     } else { start(); }
   }
 
-  /* ---------- command builders: click a token, the command rebuilds ---------- */
+  /* ---------- command builders: pick an agent, the envs it SUPPORTS fill in ----------
+     grounded in scripts/configs — each agent only lists the envs it has configs for. */
   const CB_OPTS = {
     eval: {
-      agent: ["gpt-5.5", "claude-opus-4.1", "Qwen3-VL-8B", "UI-TARS-72B", "MAI-UI", "gemini-2.5-pro"],
-      env: ["osworld", "webarena", "webvoyager", "androidworld", "mobileworld", "cuabench"],
+      agents: ["gpt-5.5", "qwen3-vl", "claude", "ui-tars", "mai-ui", "fara"],
+      support: {
+        "gpt-5.5": ["osworld", "webarena", "webvoyager", "androidworld", "mobileworld", "cuabench"],
+        "qwen3-vl": ["osworld", "webarena", "webvoyager", "androidworld", "mobileworld", "cuabench"],
+        "claude": ["osworld", "webarena", "androidworld", "mobileworld"],
+        "ui-tars": ["osworld", "androidworld", "mobileworld"],
+        "mai-ui": ["androidworld", "mobileworld"],
+        "fara": ["webarena", "webvoyager"],
+      },
     },
     rl: {
-      agent: ["gpt-5.5", "Qwen3-VL-8B", "UI-TARS-72B", "MAI-UI"],
-      env: ["webgym", "mobilegym", "cuagym"],
+      agents: ["qwen3-vl", "gpt-5.5", "ui-tars", "mai-ui", "fara"],
+      support: {
+        "qwen3-vl": ["webgym", "mobilegym"],
+        "gpt-5.5": ["mobilegym"],
+        "ui-tars": ["mobilegym"],
+        "mai-ui": ["mobilegym"],
+        "fara": ["webgym"],
+      },
     },
   };
   // the eval builder drives the results table: selecting a benchmark lights its row
@@ -377,45 +391,47 @@
     r.classList.toggle("hl", !!nm && nm.textContent.trim() === name);
   });
   document.querySelectorAll(".cmdbuild").forEach((cb) => {
-    const opts = CB_OPTS[cb.dataset.cmd];
-    if (!opts) return;
+    const cfg = CB_OPTS[cb.dataset.cmd];
+    if (!cfg) return;
     const drivesTable = cb.dataset.cmd === "eval";
+    const agentSlot = cb.querySelector('.cb-slot[data-slot="agent"]');
+    const envSlot = cb.querySelector('.cb-slot[data-slot="env"]');
+    if (!agentSlot || !envSlot) return;
+    let agent = cfg.agents[0];
+    let env = cfg.support[agent][0];
     const closeAll = (except) => cb.querySelectorAll(".cb-slot.open").forEach((s) => { if (s !== except) s.classList.remove("open"); });
-    cb.querySelectorAll(".cb-slot").forEach((slot) => {
-      const list = opts[slot.dataset.slot];
-      if (!list) return;
-      let cur = list[0];
+    const swap = (slot) => { slot.classList.remove("swap"); void slot.offsetWidth; slot.classList.add("swap"); };
+
+    function setupSlot(slot, getList, getCur, onPick) {
       const tok = document.createElement("button");
       tok.className = "cb-tok"; tok.type = "button"; tok.setAttribute("aria-haspopup", "listbox"); tok.setAttribute("aria-expanded", "false");
       tok.innerHTML = '<span class="cb-txt"></span><span class="cb-tcaret" aria-hidden="true"></span>';
-      tok.querySelector(".cb-txt").textContent = cur;
       const menu = document.createElement("span");
       menu.className = "cb-menu"; menu.setAttribute("role", "listbox");
-      list.forEach((v) => {
-        const o = document.createElement("button");
-        o.className = "cb-opt" + (v === cur ? " active" : ""); o.type = "button"; o.textContent = v; o.setAttribute("role", "option");
-        o.addEventListener("click", (e) => {
-          e.stopPropagation();
-          if (v !== cur) {
-            cur = v;
-            tok.querySelector(".cb-txt").textContent = v;
-            menu.querySelectorAll(".cb-opt").forEach((x) => x.classList.toggle("active", x.textContent === v));
-            slot.classList.remove("swap"); void slot.offsetWidth; slot.classList.add("swap");
-            if (drivesTable && slot.dataset.slot === "env") highlightBench(v);
-          }
-          slot.classList.remove("open"); tok.setAttribute("aria-expanded", "false");
+      function render() {
+        tok.querySelector(".cb-txt").textContent = getCur();
+        menu.innerHTML = "";
+        getList().forEach((v) => {
+          const o = document.createElement("button");
+          o.className = "cb-opt" + (v === getCur() ? " active" : ""); o.type = "button"; o.textContent = v; o.setAttribute("role", "option");
+          o.addEventListener("click", (e) => { e.stopPropagation(); slot.classList.remove("open"); tok.setAttribute("aria-expanded", "false"); if (v !== getCur()) onPick(v); });
+          menu.appendChild(o);
         });
-        menu.appendChild(o);
-      });
-      tok.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const willOpen = !slot.classList.contains("open");
-        closeAll(slot);
-        slot.classList.toggle("open", willOpen); tok.setAttribute("aria-expanded", String(willOpen));
-      });
+      }
+      tok.addEventListener("click", (e) => { e.stopPropagation(); const willOpen = !slot.classList.contains("open"); closeAll(slot); slot.classList.toggle("open", willOpen); tok.setAttribute("aria-expanded", String(willOpen)); });
       slot.appendChild(tok); slot.appendChild(menu);
-      if (drivesTable && slot.dataset.slot === "env") highlightBench(cur);
+      slot._render = render; render();
+    }
+
+    setupSlot(agentSlot, () => cfg.agents, () => agent, (v) => {
+      agent = v; swap(agentSlot); agentSlot._render();
+      if (!cfg.support[agent].includes(env)) { env = cfg.support[agent][0]; swap(envSlot); if (drivesTable) highlightBench(env); }
+      envSlot._render();
     });
+    setupSlot(envSlot, () => cfg.support[agent], () => env, (v) => {
+      env = v; swap(envSlot); envSlot._render(); if (drivesTable) highlightBench(env);
+    });
+    if (drivesTable) highlightBench(env);
     document.addEventListener("click", (e) => { if (!cb.contains(e.target)) closeAll(); });
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") document.querySelectorAll(".cb-slot.open").forEach((s) => s.classList.remove("open")); });
