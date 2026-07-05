@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>CUA-Lite — Simple Computer Use Agents</title>
 <meta name="description" content="One lightweight framework to evaluate, fine-tune, and RL any computer-use agent across Desktop, Web, and Mobile — one action space, one data format, one command." />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500;600;700&family=Nunito:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body id="top">
@@ -17,243 +14,165 @@
   <div class="nav-inner">
     <a class="brand" href="#top"><span class="brand-plane"></span><span class="brand-name">CUA-Lite</span></a>
     <nav class="nav-links">
-      <a href="#rollout">Rollout</a>
+      <a href="#craft">Rollout</a>
       <a href="#toolkit">Toolkit</a>
       <a href="#eval">Eval</a>
       <a href="#start">Quick start</a>
-      <a class="nav-cta" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="nav-cta" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a>
     </nav>
   </div>
 </header>
 
-<!-- ================= THE WORLD =================
-     The page is one rollout: the paper airplane (the agent) flies a
-     planned route (dotted) and leaves a flown trajectory (solid coral).
-     Each section is a numbered waypoint of the episode. -->
 <main id="world">
-
-  <svg id="flight" aria-hidden="true">
-    <path id="route" fill="none" />
-    <path id="flown" fill="none" />
-  </svg>
+  <svg id="flight" aria-hidden="true"><path id="route" fill="none" /><path id="flown" fill="none" /></svg>
   <div id="plane" aria-hidden="true"></div>
-
   <div class="sky-clouds" aria-hidden="true">
     <img class="cloud c1" src="assets/pixel/cloud_big.png" alt="" />
     <img class="cloud c2" src="assets/pixel/cloud_mid.png" alt="" />
     <img class="cloud c3" src="assets/pixel/cloud_sm.png" alt="" />
-    <img class="cloud c4" src="assets/pixel/cloud_mid.png" alt="" />
-    <img class="cloud c5" src="assets/pixel/cloud_sm.png" alt="" />
   </div>
 
-  <!-- ---------- 000 · boot ---------- -->
-  <section class="step hero" id="boot">
-    <div class="container">
-      <p class="steptag"><span class="wp" data-wp>0</span><span class="mono">000 · boot</span></p>
-      <h1>Any agent<br /><span class="op">operates</span> any computer.</h1>
-      <p class="lead">CUA-Lite is one lightweight framework to <b>evaluate</b>, <b>fine-tune</b>, and
-        <b>RL</b> computer-use agents across <b>Desktop</b>, <b>Web</b>, and <b>Mobile</b> —
-        one action space, one data format, one command.</p>
-      <div class="hero-cta">
-        <a class="btn primary" href="#start">Get started</a>
-        <a class="btn" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">★ Star on GitHub</a>
-      </div>
-      <p class="trust"><b>10+</b> agents · <b>3</b> platforms · <b>6+</b> benchmarks · <b>10+</b> SFT corpora</p>
-      <p class="scrollhint mono">scroll to fly ↓</p>
-    </div>
-  </section>
-
-  <!-- ---------- 001 · rollout ---------- -->
-  <section class="step" id="rollout">
-    <div class="container">
-      <p class="steptag"><span class="wp" data-wp>1</span><span class="mono">001 · rollout</span></p>
-      <div class="step-head">
-        <h2>Watch it fly a task</h2>
-        <p>The agent sees a Set-of-Marks screenshot, then clicks and types its way to the goal.
-           Same loop, three worlds — switch the environment.</p>
+  <!-- ---------- HERO ---------- -->
+  <section class="hero step" id="craft">
+    <div class="container hero-grid">
+      <div class="hero-left">
+        <p class="steptag"><span class="wp" data-wp>1</span>simple computer use agents</p>
+        <h1>Any agent<br /><span class="op">operates</span> any computer.</h1>
+        <p class="lead">One lightweight framework to <b>evaluate</b>, <b>fine-tune</b>, and <b>RL</b>
+          computer-use agents across <b>Desktop</b>, <b>Web</b>, and <b>Mobile</b> —
+          one action space, one data format, one command.</p>
+        <div class="hero-cta">
+          <a class="mc-btn primary" href="#start">Get started</a>
+          <a class="mc-btn" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">★ GitHub</a>
+        </div>
+        <p class="trust"><b>10+</b> agents · <b>3</b> platforms · <b>6+</b> benchmarks · <b>10+</b> corpora</p>
       </div>
 
-      <div class="machine">
-        <div class="machine-top">
-          <span class="seg-label">agent</span>
-          <div class="seg agent" id="agent-seg">
-            <button class="active" data-agent="gpt-5.5">gpt-5.5</button>
-            <button data-agent="claude">claude</button>
-            <button data-agent="qwen3-vl">qwen3-vl</button>
-            <button data-agent="ui-tars">ui-tars</button>
+      <!-- crafting table: [Agent] + [Env] -> Rollout -->
+      <div class="mc-panel craft">
+        <div class="craft-bar"><span class="em"></span><span>CUA·CRAFTING</span></div>
+        <div class="craft-grid">
+          <div class="craft-in">
+            <div class="slot-wrap">
+              <button class="slot" id="agent-slot"><span class="item" id="agent-item"></span></button>
+              <span class="slot-cap" id="agent-cap">gpt-5.5</span>
+              <span class="slot-cap sub">agent</span>
+            </div>
+            <span class="plus">+</span>
+            <div class="slot-wrap">
+              <button class="slot" id="env-slot"><span class="item" id="env-item"></span></button>
+              <span class="slot-cap" id="env-cap">web</span>
+              <span class="slot-cap sub">environment</span>
+            </div>
           </div>
-          <span class="seg-label">env</span>
-          <div class="seg env" id="env-seg">
-            <button class="active" data-env="web">web</button>
-            <button data-env="desktop">desktop</button>
-            <button data-env="mobile">mobile</button>
+          <span class="craft-arrow">▶</span>
+          <div class="slot-wrap">
+            <div class="slot out"><span class="item" style="background-image:url('assets/icons/emerald.png')"></span></div>
+            <span class="slot-cap">reward 1.0</span>
+            <span class="slot-cap sub">LiteSample</span>
           </div>
         </div>
-
-        <div class="screen" id="screen">
-          <!-- WEB: shopping page -->
-          <div class="mock" data-env="web">
-            <div class="mock-chrome"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="mock-url">shop.example.com</span></div>
-            <div class="mock-body">
-              <div class="mb-topbar">
-                <div class="mb-logo"></div>
-                <div class="mb-spacer"></div>
-                <div class="mb-cart somel" data-tag="1"></div>
-              </div>
-              <div class="mb-searchrow">
-                <div class="mb-search somel" data-tag="2">wireless earbuds</div>
-                <div class="mb-btn somel" data-tag="3">Search</div>
-              </div>
-              <div class="mb-cards">
-                <div class="mb-card"><div class="mb-img"></div><div class="mb-line w1"></div><div class="mb-price"></div><div class="mb-add somel" data-tag="4">Add</div></div>
-                <div class="mb-card"><div class="mb-img"></div><div class="mb-line w1"></div><div class="mb-price"></div><div class="mb-add somel" data-tag="5">Add</div></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- DESKTOP: spreadsheet window -->
-          <div class="mock hidden" data-env="desktop">
-            <div class="dt-titlebar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dt-title">report.ods — Calc</span></div>
-            <div class="dt-menubar">
-              <span class="dt-menu somel" data-tag="1">File</span><span class="dt-menu">Edit</span><span class="dt-menu">View</span><span class="dt-menu">Insert</span>
-              <span class="dt-sum somel" data-tag="3">Σ</span>
-            </div>
-            <div class="dt-formula"><span class="dt-fx">fx</span><span class="dt-forminput somel" data-tag="4">=SUM(B1:B11)</span></div>
-            <div class="dt-grid">
-              <div class="dt-ch"></div><div class="dt-ch">A</div><div class="dt-ch">B</div><div class="dt-ch">C</div>
-              <div class="dt-rh">1</div><div class="dt-cell">Rent</div><div class="dt-cell n">1,250</div><div class="dt-cell"></div>
-              <div class="dt-rh">2</div><div class="dt-cell">Cloud</div><div class="dt-cell n">340</div><div class="dt-cell"></div>
-              <div class="dt-rh">3</div><div class="dt-cell">Travel</div><div class="dt-cell n">812</div><div class="dt-cell"></div>
-              <div class="dt-rh">12</div><div class="dt-cell">Total</div><div class="dt-cell n somel" data-tag="2"></div><div class="dt-cell"></div>
-            </div>
-          </div>
-
-          <!-- MOBILE: contacts app -->
-          <div class="mock hidden" data-env="mobile">
-            <div class="ph-gutter">
-              <div class="phone">
-                <div class="ph-status"><span>09:41</span><span>▮▮▮</span></div>
-                <div class="ph-header">Contacts<span class="ph-save somel" data-tag="3">Save</span></div>
-                <div class="ph-field somel" data-tag="2">Ada Lovelace</div>
-                <div class="ph-row"><span class="ph-av"></span><span class="ph-line"></span></div>
-                <div class="ph-row"><span class="ph-av"></span><span class="ph-line short"></span></div>
-                <div class="ph-fab somel" data-tag="1">+</div>
-              </div>
-            </div>
-          </div>
-
-          <div id="som-layer"></div>
-          <div class="target-box" id="target"></div>
-          <div class="clickring" id="clickring"></div>
-          <div class="plane-cursor" id="cursor"></div>
-        </div>
-
-        <div class="trace" id="trace">
-          <div class="trace-head"><span class="rec"></span><span id="trace-title">rollout · gpt-5.5 · webarena</span></div>
-        </div>
+        <div class="craft-cmd" id="craft-cmd"></div>
+        <p class="craft-hint">▶ click the agent or environment slot to swap</p>
       </div>
     </div>
   </section>
 
-  <!-- ---------- 002 · toolkit ---------- -->
-  <section class="step" id="toolkit">
+  <div class="ground" aria-hidden="true"></div>
+
+  <!-- ---------- TOOLKIT ---------- -->
+  <section class="step section" id="toolkit">
     <div class="container">
-      <p class="steptag"><span class="wp" data-wp>2</span><span class="mono">002 · toolkit</span></p>
       <div class="step-head">
+        <p class="steptag"><span class="wp" data-wp>2</span>the toolkit</p>
         <h2>One interface, the whole loop</h2>
-        <p>Every agent, every environment, every sample — the same three lines.</p>
+        <p>Every agent, every environment, every sample — the same few lines.</p>
       </div>
       <div class="feature-grid">
-        <article class="card">
+        <article class="mc-panel card">
           <span class="ico fico ico-cpu"></span>
           <h3>Any agent × any env</h3>
-          <p>10+ built-in agents and a unified action + observation space across Desktop, Web, and Mobile. Compose your own from the blocks we ship.</p>
+          <p>10+ built-in agents and one unified action + observation space across Desktop, Web, and Mobile.</p>
           <code>agents.make("gpt-5.5", env=env)</code>
         </article>
-        <article class="card">
+        <article class="mc-panel card">
           <span class="ico fico ico-floppy"></span>
           <h3>One data schema</h3>
-          <p>Every rollout lands in <code>LiteSample</code> — fine-tune from 10+ preprocessed <a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">corpora</a> or distill any teacher via <a href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">rollouts</a>.</p>
-          <code>result.lite_sample  # ready to train</code>
+          <p>Every rollout lands in <code>LiteSample</code> — fine-tune from 10+ <a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">corpora</a> or distill any teacher via <a href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">rollouts</a>.</p>
+          <code>result.lite_sample</code>
         </article>
-        <article class="card">
+        <article class="mc-panel card">
           <span class="ico fico ico-bolt"></span>
           <h3>Eval &amp; RL, one command</h3>
-          <p>Score any agent on any benchmark, or train it with GRPO on CUAGym, WebGym, MobileGym — on top of Slime.</p>
+          <p>Score any agent on any benchmark, or train it with GRPO on CUAGym, WebGym, MobileGym — on Slime.</p>
           <code>rollout.py --env-id osworld</code>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- ---------- 003 · eval ---------- -->
-  <section class="step" id="eval">
+  <!-- ---------- EVAL ---------- -->
+  <section class="step section dirt" id="eval">
     <div class="container">
-      <p class="steptag"><span class="wp" data-wp>3</span><span class="mono">003 · eval</span></p>
       <div class="step-head">
+        <p class="steptag"><span class="wp" data-wp>3</span>coverage</p>
         <h2>Every benchmark on the map</h2>
-        <p>One flag away: <span class="mono sm">--env-id osworld · webarena · androidworld · …</span></p>
+        <p>One flag away — <code>--env-id osworld · webarena · androidworld · …</code></p>
       </div>
       <div class="bench-grid">
-        <a class="bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/osworld/README.md" target="_blank" rel="noopener"><span class="ico bico ico-desktop"></span><span><b>OSWorld</b><em>Desktop</em></span><span class="arrow">↗</span></a>
-        <a class="bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/browsergym/README.md" target="_blank" rel="noopener"><span class="ico bico ico-web"></span><span><b>WebArena</b><em>Web</em></span><span class="arrow">↗</span></a>
-        <a class="bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/webharbor/webvoyager/README.md" target="_blank" rel="noopener"><span class="ico bico ico-web"></span><span><b>WebVoyager</b><em>Web</em></span><span class="arrow">↗</span></a>
-        <a class="bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/androidworld/README.md" target="_blank" rel="noopener"><span class="ico bico ico-mobile"></span><span><b>AndroidWorld</b><em>Mobile</em></span><span class="arrow">↗</span></a>
-        <a class="bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/mobileworld/README.md" target="_blank" rel="noopener"><span class="ico bico ico-mobile"></span><span><b>MobileWorld</b><em>Mobile</em></span><span class="arrow">↗</span></a>
-        <a class="bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/cua/README.md" target="_blank" rel="noopener"><span class="ico bico ico-target"></span><span><b>CUABench</b><em>Cross-platform</em></span><span class="arrow">↗</span></a>
+        <a class="mc-panel bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/osworld/README.md" target="_blank" rel="noopener"><span class="ico bico ico-desktop"></span><span><b>OSWorld</b><em>Desktop</em></span><span class="arrow">›</span></a>
+        <a class="mc-panel bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/browsergym/README.md" target="_blank" rel="noopener"><span class="ico bico ico-web"></span><span><b>WebArena</b><em>Web</em></span><span class="arrow">›</span></a>
+        <a class="mc-panel bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/webharbor/webvoyager/README.md" target="_blank" rel="noopener"><span class="ico bico ico-web"></span><span><b>WebVoyager</b><em>Web</em></span><span class="arrow">›</span></a>
+        <a class="mc-panel bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/androidworld/README.md" target="_blank" rel="noopener"><span class="ico bico ico-mobile"></span><span><b>AndroidWorld</b><em>Mobile</em></span><span class="arrow">›</span></a>
+        <a class="mc-panel bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/mobileworld/README.md" target="_blank" rel="noopener"><span class="ico bico ico-mobile"></span><span><b>MobileWorld</b><em>Mobile</em></span><span class="arrow">›</span></a>
+        <a class="mc-panel bench" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/cua/README.md" target="_blank" rel="noopener"><span class="ico bico ico-target"></span><span><b>CUABench</b><em>Cross-platform</em></span><span class="arrow">›</span></a>
       </div>
     </div>
   </section>
 
-  <!-- ---------- 004 · done — landing ---------- -->
-  <section class="step landing" id="start">
+  <!-- ---------- QUICK START ---------- -->
+  <section class="step section" id="start">
     <div class="container">
-      <p class="steptag"><span class="wp" data-wp>4</span><span class="mono done">done · reward 1.0</span></p>
       <div class="step-head">
-        <h2>Land it in five lines</h2>
+        <p class="steptag"><span class="wp" data-wp>4</span>quick start</p>
+        <h2>A trajectory in five lines</h2>
         <p>Install, pick an agent and an env, sample. That's the whole loop.</p>
       </div>
       <div class="start-wrap">
         <div class="terminal">
-          <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>quick_start.py</span></div>
+          <div class="bar">quick_start.py</div>
 <pre><span class="c-dim">$</span> uv sync --extra quick-start
 
 <span class="c-dim">&gt;&gt;&gt;</span> <span class="c-kw">import</span> lite.gym <span class="c-kw">as</span> gym, lite.agents <span class="c-kw">as</span> agents
 <span class="c-dim">&gt;&gt;&gt;</span> env    = gym.make(<span class="c-str">"lite.demo@create_file"</span>, max_steps=10)
 <span class="c-dim">&gt;&gt;&gt;</span> agent  = agents.make(<span class="c-str">"gpt-5.5"</span>, env=env)
-<span class="c-dim">&gt;&gt;&gt;</span> result = <span class="c-kw">await</span> agent.sample(env)   <span class="c-cm"># -> LiteRLSample (reward · steps · data)</span></pre>
+<span class="c-dim">&gt;&gt;&gt;</span> result = <span class="c-kw">await</span> agent.sample(env)   <span class="c-cm"># -> LiteRLSample</span></pre>
         </div>
-        <div class="hero-cta center">
-          <a class="btn primary" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">★ Star on GitHub</a>
-          <a class="btn" href="https://github.com/cua-lite/cua-lite#documentation" target="_blank" rel="noopener">Read the docs</a>
+        <div class="hero-cta center" style="margin-top:24px">
+          <a class="mc-btn primary" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">★ Star on GitHub</a>
+          <a class="mc-btn" href="https://github.com/cua-lite/cua-lite#documentation" target="_blank" rel="noopener">Read the docs</a>
         </div>
       </div>
     </div>
-    <div class="hills" aria-hidden="true"></div>
   </section>
 
 </main>
 
-<!-- ---------- FOOTER ---------- -->
 <footer class="footer">
   <div class="container footer-inner">
     <div>
-      <a class="brand" href="#top"><span class="brand-plane light"></span><span class="brand-name">CUA-Lite</span></a>
+      <a class="brand" href="#top"><span class="brand-plane"></span><span class="brand-name">CUA-Lite</span></a>
       <p>Simple Computer Use Agents. One framework to eval, fine-tune, and RL any agent, anywhere.</p>
     </div>
     <div class="footer-cols">
-      <div class="footer-col">
-        <h4>Project</h4>
+      <div class="footer-col"><h4>Project</h4>
         <a href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a>
         <a href="https://github.com/cua-lite/cua-lite#documentation" target="_blank" rel="noopener">Docs</a>
-        <a href="#eval">Benchmarks</a>
-      </div>
-      <div class="footer-col">
-        <h4>Data</h4>
+        <a href="#eval">Benchmarks</a></div>
+      <div class="footer-col"><h4>Data</h4>
         <a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">Corpora</a>
         <a href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">Rollouts</a>
-        <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">HuggingFace</a>
-      </div>
+        <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">HuggingFace</a></div>
     </div>
   </div>
 </footer>
