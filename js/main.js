@@ -297,8 +297,9 @@
   /* ---------- the live HF dataset browser: one quiet dropdown swaps the viewer ---------- */
   const hfFrame = document.getElementById("hf-frame");
   if (hfFrame) {
-    // the two README sources, every dataset selectable — browse the whole corpus
-    const GROUPS = {
+    // the two README sources — a hardcoded snapshot that gets replaced live from
+    // the real HF collections below, so the menu always matches what's on the Hub.
+    let GROUPS = {
       Rollouts: ["WebGym", "Lite.OSWorld", "CuaGymDesktopGPT55AuditV0"],
       Corpora: ["Aguvis", "ScaleCUA", "OpenCUA", "GUIAct", "GUIOdyssey", "GUI-360",
                 "Multimodal-Mind2Web", "CAGUI", "UI-Genie-Agent"],
@@ -351,6 +352,24 @@
     document.addEventListener("click", (e) => { if (!sel.contains(e.target)) close(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
     buildMenu();
+
+    // rebuild the menu from the live HF collections — never let it drift from the Hub
+    (async () => {
+      try {
+        const parse = async (slug) => {
+          const r = await fetch("https://huggingface.co/api/collections/cua-lite/" + slug);
+          if (!r.ok) throw new Error(slug);
+          const d = await r.json();
+          return d.items.filter((i) => i.type === "dataset").map((i) => i.id.split("/").pop());
+        };
+        const [rol, cor] = await Promise.all([parse("rollouts"), parse("corpora")]);
+        if (rol.length && cor.length) {
+          GROUPS = { Rollouts: rol, Corpora: cor };
+          if (!rol.includes(ds) && !cor.includes(ds)) { ds = rol[0]; nameEl.textContent = ds; if (started) load(ds); }
+          buildMenu();
+        }
+      } catch (e) { /* offline / API change → keep the hardcoded snapshot */ }
+    })();
 
     const start = () => { if (!started) { started = true; load(ds); } };
     if ("IntersectionObserver" in window) {
