@@ -2,8 +2,8 @@
    CUA-Lite — the terminal is interactive.
    Compose an agent × an environment; the terminal runs THAT
    real rollout: command → observe → click/type → reward 1.0 →
-   LiteSample. Before you touch it, it auto-demos (attract loop).
-   The moment you pick, it responds to you — like a real REPL.
+   LiteSample. On load it shows a completed run at a ready-prompt;
+   picking a chip re-runs it with a live typing animation — a real REPL.
    Reduced motion: static transcript, no typing.
    ============================================================ */
 (function () {
@@ -91,7 +91,7 @@
       if (i <= cmd.length) {
         term.innerHTML = D("$ ") + esc(cmd.slice(0, i)) + '<span class="t-cur"></span>';
         i++;
-        timers.push(setTimeout(tick, 16 + Math.random() * 24));
+        timers.push(setTimeout(tick, 9 + Math.random() * 13));
       } else {
         done();
       }
@@ -107,7 +107,7 @@
       const base = D("$ ") + esc(cmd) + "\n\n";
       const shown = [];
       ep.lines.forEach((line, i) => {
-        at(420 * (i + 1), () => {
+        at(240 * (i + 1) + 260, () => {
           shown.push(line);
           const last = i === ep.lines.length - 1;
           // after the last line settles, drop to a fresh ready-prompt — "your turn"
