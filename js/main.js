@@ -1,15 +1,4 @@
-/* CUA-Lite — a small pixel sparkle on click (the teaser motif). That's it:
-   the page is a straightforward, Minecraft-styled project landing page. */
-(function () {
-  "use strict";
-  const layer = document.getElementById("sparkle-layer");
-  if (!layer) return;
-  addEventListener("pointerdown", (e) => {
-    const s = document.createElement("div");
-    s.className = "sparkle";
-    s.style.left = e.clientX + "px";
-    s.style.top = e.clientY + "px";
-    layer.appendChild(s);
-    s.addEventListener("animationend", () => s.remove());
-  });
-})();
+/* CUA-Lite — a straightforward, Minecraft-styled project page.
+   No client-side gimmicks: native cursor, native clicks, CSS smooth-scroll.
+   (Intentionally empty — kept so index.html's script tag has a target and
+   future progressive enhancements have a home.) */
