@@ -117,17 +117,17 @@
       reset() {
         wq.textContent = "Search Google or type a URL"; wq.className = "mk-ph";
         wfield.classList.remove("hot");
-        ggHome.style.display = ""; ggResults.classList.remove("show"); ggSite.classList.remove("show");
+        ggHome.classList.add("show"); ggResults.classList.remove("show"); ggSite.classList.remove("show");
         bwHost.textContent = "google.com";
       },
       steps: [
         { t: "search", cap: "click the search bar", onAct: () => wfield.classList.add("hot") },
         { t: "search", cap: 'type "cua-lite"', typeLen: 8, onAct: () => typeInto(wq, "", "cua-lite") },
-        { t: "go", cap: "press Search", onAct: () => { ggHome.style.display = "none"; ggResults.classList.add("show"); bwHost.textContent = "google.com/search?q=cua-lite"; } },
+        { t: "go", cap: "press Search", onAct: () => { ggHome.classList.remove("show"); ggResults.classList.add("show"); bwHost.textContent = "google.com/search?q=cua-lite"; } },
         { t: "open", cap: "open cua-lite.github.io", onAct: () => { ggResults.classList.remove("show"); ggSite.classList.add("show"); bwHost.textContent = "cua-lite.github.io"; } },
         { done: true, cap: "cua-lite.github.io" },
       ],
-      finished() { wq.textContent = "cua-lite"; wq.className = "typed"; ggHome.style.display = "none"; ggResults.classList.remove("show"); ggSite.classList.add("show"); bwHost.textContent = "cua-lite.github.io"; },
+      finished() { wq.textContent = "cua-lite"; wq.className = "typed"; ggHome.classList.remove("show"); ggResults.classList.remove("show"); ggSite.classList.add("show"); bwHost.textContent = "cua-lite.github.io"; },
     },
     mobile: {
       // texting ZHZisZZ about why CUA-Lite is good
