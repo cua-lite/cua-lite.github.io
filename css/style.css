@@ -264,6 +264,12 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .spark { position: absolute; width: 28px; height: 28px; background: url('../assets/pixel/sparkle.png') center/contain no-repeat; image-rendering: pixelated; transform: translate(-50%,-50%) scale(.3); opacity: 0; z-index: 7; pointer-events: none; }
 .spark.go { animation: spark .5s steps(5) 1; }
 @keyframes spark { 0% { opacity: 0; transform: translate(-50%,-50%) scale(.3); } 40% { opacity: 1; transform: translate(-50%,-50%) scale(1); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.15); } }
+/* a phone is touch, not mouse: hide the arrow cursor, and taps land as a
+   soft finger ripple instead of a pixel sparkle */
+.dev-mobile .mouse-cur { display: none; }
+.dev-mobile .spark { width: 40px; height: 40px; background: none; border-radius: 50%; box-shadow: 0 0 0 2.5px rgba(63,158,87,.6); image-rendering: auto; }
+.dev-mobile .spark.go { animation: tap .5s ease-out 1; }
+@keyframes tap { 0% { opacity: .65; transform: translate(-50%,-50%) scale(.35); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1.25); } }
 
 /* taskbar — the OS bar carries the live action */
 .taskbar { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; display: flex; align-items: center; gap: 9px;
@@ -399,7 +405,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* ---------- shared agent status line ---------- */
 /* the rollout streams as a live log — the agent's run, line by line */
 .rollout { margin-top: 22px; font-family: var(--mono); font-size: 12.5px; }
-.rl-cmd { color: #9aa2ae; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-bottom: 11px; border-bottom: 1px solid var(--line); }
+.rl-cmd { font-size: 11.5px; color: #9aa2ae; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-bottom: 11px; border-bottom: 1px solid var(--line); }
 .rl-cmd .c-p { color: var(--accent); } .rl-cmd .c-flag { color: #7f8896; } .rl-cmd .c-val { color: #c8cfda; } .rl-cmd .c-env { color: var(--accent); }
 .rl-log { margin-top: 11px; min-height: 102px; display: flex; flex-direction: column; gap: 5px; }
 .rl-line { display: flex; color: #cbd2dd; opacity: 0; transform: translateY(3px); animation: rlIn .22s ease forwards; }

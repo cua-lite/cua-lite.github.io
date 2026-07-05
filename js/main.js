@@ -95,6 +95,7 @@
     desktop: {
       // a spreadsheet of CUA-Lite benchmark scores; the agent averages them
       env: "osworld",
+      instr: "average the scores",
       device: $(".dev-desktop"),
       reset() {
         fbar.innerHTML = '<span class="mk-ph"></span>'; fbar.className = "sh-formula";
@@ -111,6 +112,7 @@
     web: {
       // Google → search "cua-lite" → open this very homepage
       env: "webvoyager",
+      instr: "look up cua-lite",
       device: $(".dev-web"),
       reset() {
         wq.textContent = "Search Google or type a URL"; wq.className = "mk-ph";
@@ -130,6 +132,7 @@
     mobile: {
       // texting ZHZisZZ about why CUA-Lite is good
       env: "androidworld",
+      instr: "text ZHZisZZ about cua-lite",
       device: $(".dev-mobile"),
       reset() {
         mname.textContent = "iMessage"; mname.className = "mk-ph"; minput.classList.remove("hot");
@@ -137,7 +140,7 @@
       },
       steps: [
         { t: "name", cap: "tap the message field", onAct: () => minput.classList.add("hot") },
-        { t: "name", cap: 'type "any agent, any computer"', typeLen: 24, onAct: () => typeInto(mname, "", "any agent, any computer 🚀") },
+        { t: "name", cap: 'type "yep — desktop, web & mobile"', typeLen: 26, onAct: () => typeInto(mname, "", "yep — desktop, web & mobile 🚀") },
         { t: "save", cap: "tap Send", onAct: () => at(120, () => { msent.classList.add("show"); msave.classList.add("sent"); mname.textContent = "iMessage"; mname.className = "mk-ph"; minput.classList.remove("hot"); }) },
         { done: true, cap: "message sent" },
       ],
@@ -184,7 +187,7 @@
       d.classList.toggle("exit", !on && d.dataset.mode === prev && prev !== m);   // outgoing slides out
     });
     syncPlats();
-    capRun.innerHTML = `<span class="c-p">$</span> rollout.py <span class="c-flag">--model-id</span> <span class="c-val">gpt-5.5</span> <span class="c-flag">--env-id</span> <span class="c-env">${MODES[m].env}</span>`;
+    capRun.innerHTML = `<span class="c-p">$</span> rollout.py <span class="c-flag">--env-id</span> <span class="c-env">${MODES[m].env}</span> <span class="c-flag">--instruction</span> <span class="c-val">"${MODES[m].instr}"</span>`;
     if (!skipReset) { MODES[m].reset(); logClear(); }
   }
   // the desktop task, shown already-complete (no re-run): the rest/home state
