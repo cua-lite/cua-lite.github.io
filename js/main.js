@@ -71,14 +71,20 @@
   const setCap = (html) => { capAct.innerHTML = html; };
   const THINK = '<span class="ca-dim">agent</span> <span class="think">thinking<i>.</i><i>.</i><i>.</i></span>';
 
+  const runBtn = document.getElementById("run-btn");
+  let running = false;
+  const setBtn = (label, dis) => { if (runBtn) { runBtn.innerHTML = label; runBtn.disabled = dis; } };
+
   function run() {
+    if (running) return;
+    running = true; setBtn("● Running", true);
     clearAll(); reset();
-    // the cursor continues from wherever it last was — no teleport on loop
+    // the cursor continues from wherever it last was — no teleport between runs
     let t = 500;
     STEPS.forEach((s) => {
       if (s.done) {                              // final: the outcome, held
         at(t, () => setCap(`<b>${s.cap}</b>`));
-        t += 900;
+        t += 700;
         return;
       }
       at(t, () => setCap(THINK));                // 1) reason (fills the pause with meaning)
@@ -94,7 +100,7 @@
       });
       t += 980 + (s.type ? s.type.length * 46 + 320 : 260) + 300;   // act duration + settle
     });
-    at(t + 1500, run); // hold on the result, then loop
+    at(t, () => { running = false; setBtn("↻&nbsp;Run&nbsp;again", false); });  // settle, invite replay
   }
 
   if (reduce) {
@@ -102,11 +108,19 @@
     cell.textContent = fillText; cell.classList.add("filled", "sel");
     capAct.innerHTML = "<b>✓ Total = 2,402</b>";
     place(screen.clientWidth * 0.5, screen.clientHeight * 0.62);
+    setBtn("↻&nbsp;Run&nbsp;again", false);
   } else {
-    // park the cursor with no entrance slide, then start the loop
+    if (runBtn) runBtn.addEventListener("click", run);
+    // park the cursor, then auto-play once when the monitor is first seen
     cursor.style.transition = "none";
     place(screen.clientWidth * 0.74, screen.clientHeight * 0.82);
-    requestAnimationFrame(() => { cursor.style.transition = ""; run(); });
+    requestAnimationFrame(() => { cursor.style.transition = ""; });
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((es) => {
+        es.forEach((e) => { if (e.isIntersecting) { io.disconnect(); run(); } });
+      }, { threshold: 0.4 });
+      io.observe(screen);
+    } else { run(); }
   }
 
   // the monitor tilts toward your real cursor — a physical object you can almost touch

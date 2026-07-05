@@ -225,6 +225,13 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   box-shadow: inset -3px -3px 0 var(--crt-lo), inset 3px 3px 0 var(--crt-hi), 0 0 0 3px var(--ink); }
 .screen-cap { display: flex; align-items: center; gap: 12px; margin-top: 20px; font-family: var(--mono); font-size: 11.5px; }
 .cap-run { color: var(--dim); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* run the rollout yourself */
+.run-btn { flex-shrink: 0; margin-left: auto; font-family: var(--sans); font-weight: 750; font-size: 12px;
+  color: var(--pgreen-ink); background: var(--accent); border: 0; border-radius: 0; padding: 6px 14px; cursor: pointer;
+  box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi); transition: filter .12s ease, transform .1s ease; }
+.run-btn:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+.run-btn:active:not(:disabled) { transform: translate(1px,1px); }
+.run-btn:disabled { cursor: default; color: #5f6875; background: transparent; box-shadow: inset 0 0 0 2px var(--line-2); }
 
 /* ---------- divider: the pixel paper airplane, breathing (the teaser) ---------- */
 .divider { position: relative; display: flex; align-items: center; justify-content: center; padding: 40px 0; }
