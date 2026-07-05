@@ -194,7 +194,17 @@
            observation space across desktop, web, and mobile. Drop any agent into any env.</p>
         <div class="card-viz" aria-hidden="true">
           <span class="cv-label">agents × envs</span>
-          <div class="cv-grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <svg class="cv-mesh" viewBox="0 0 240 46" fill="none">
+            <g class="cv-links">
+              <line x1="18" y1="8" x2="222" y2="8"/><line x1="18" y1="8" x2="222" y2="23"/><line x1="18" y1="8" x2="222" y2="38"/>
+              <line x1="18" y1="23" x2="222" y2="8"/><line x1="18" y1="23" x2="222" y2="23"/><line x1="18" y1="23" x2="222" y2="38"/>
+              <line x1="18" y1="38" x2="222" y2="8"/><line x1="18" y1="38" x2="222" y2="23"/><line x1="18" y1="38" x2="222" y2="38"/>
+            </g>
+            <g class="cv-nodes">
+              <circle cx="18" cy="8" r="3.5"/><circle cx="18" cy="23" r="3.5"/><circle cx="18" cy="38" r="3.5"/>
+              <circle cx="222" cy="8" r="3.5"/><circle cx="222" cy="23" r="3.5"/><circle cx="222" cy="38" r="3.5"/>
+            </g>
+          </svg>
         </div>
         <code class="snip">env = gym.make("lite.osworld@…")</code>
       </article>

@@ -494,13 +494,13 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .js-reveal .rv-dot { opacity: 0; }
 .js-reveal .card.in .rv-line { stroke-dashoffset: 0; transition: stroke-dashoffset 1.2s var(--ease) .3s; }
 .js-reveal .card.in .rv-dot { opacity: 1; transition: opacity .3s ease 1.35s; }
-/* 01 — agents × envs coverage grid (every combination lights up) */
-.cv-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 5px; margin-top: 6px; }
-.cv-grid i { height: 13px; background: var(--accent); border-radius: 1px; }
-.js-reveal .cv-grid i { opacity: 0; transform: scale(.55); }
-.js-reveal .card.in .cv-grid i { opacity: 1; transform: none; transition: opacity .34s ease, transform .34s var(--ease); }
-.js-reveal .card.in .cv-grid i:nth-child(3n+2) { transition-delay: .09s; }
-.js-reveal .card.in .cv-grid i:nth-child(3n) { transition-delay: .18s; }
+/* 01 — a bipartite mesh: any agent connects to any env (every-to-every) */
+.cv-mesh { display: block; width: 100%; height: 46px; margin-top: 6px; }
+.cv-mesh line { stroke: var(--accent); stroke-width: 1; opacity: .26; }
+.cv-mesh circle { fill: var(--accent); }
+.js-reveal .cv-mesh line, .js-reveal .cv-mesh circle { opacity: 0; }
+.js-reveal .card.in .cv-mesh circle { opacity: 1; transition: opacity .4s ease; }
+.js-reveal .card.in .cv-mesh line { opacity: .26; transition: opacity .7s ease .25s; }
 /* 02 — the LiteSample record: a few fields, one accented */
 .cv-schema { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
 .cv-field { display: flex; align-items: center; gap: 9px; }
