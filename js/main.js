@@ -110,17 +110,11 @@
         at(420 * (i + 1), () => {
           shown.push(line);
           const last = i === ep.lines.length - 1;
-          term.innerHTML = base + shown.join("\n") + (last ? "" : '\n<span class="t-cur"></span>');
+          // after the last line settles, drop to a fresh ready-prompt — "your turn"
+          const tail = last ? '\n\n' + D("$ ") + '<span class="t-cur"></span>' : '\n<span class="t-cur"></span>';
+          term.innerHTML = base + shown.join("\n") + tail;
         });
       });
-      // attract loop: only auto-advance the env until the user takes control
-      if (!state.interacted) {
-        at(420 * ep.lines.length + 3400, () => {
-          state.ei = (state.ei + 1) % ENVS.length;
-          syncActive();
-          playEpisode();
-        });
-      }
     });
   }
 
