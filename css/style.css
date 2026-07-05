@@ -113,9 +113,13 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* three platforms, one focal device — a true two-way crossfade.
    visibility is delayed to the end of the fade so the outgoing device
    actually fades out (instead of vanishing instantly). */
-.stage .device { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+.stage .device { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
   opacity: 0; visibility: hidden; transform: scale(.985);
   transition: opacity .42s ease, transform .42s cubic-bezier(.2,.7,.3,1), visibility 0s .42s; }
+/* a shared lit surface so all three devices sit on the same "desk", not floating */
+.stage::after { content: ""; position: absolute; left: 50%; bottom: -6px; width: 62%; height: 40px;
+  transform: translateX(-50%); z-index: -1; pointer-events: none; filter: blur(18px);
+  background: radial-gradient(50% 50% at 50% 50%, rgba(154,212,110,.10), transparent 72%); }
 .stage .device.active { opacity: 1; visibility: visible; transform: none;
   transition: opacity .42s ease, transform .42s cubic-bezier(.2,.7,.3,1), visibility 0s 0s; }
 .dev-desktop > .crt, .dev-web > .browser { width: 100%; }
