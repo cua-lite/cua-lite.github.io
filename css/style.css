@@ -799,17 +799,29 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 }
 /* phones: keep the URL bar + menu inside the viewport */
 @media (max-width: 560px) {
+  /* closed hover-popovers + dropdown menus are absolutely positioned and can
+     extend past the right edge; clip document-level horizontal overflow so a
+     phone never scrolls sideways. (Vertical page — nothing legit scrolls x.) */
+  html { overflow-x: hidden; }
   .hf-url-host { display: none; }        /* show just cua-lite/<dataset> */
   .hf-url { font-size: 12px; }
   .hf-bar { gap: 10px; padding: 10px 12px; }
   /* let the menu span the bar (relative to .hf-bar) instead of the mid-bar token */
   .hf-ds { position: static; }
   .hf-menu { left: 12px; right: 12px; width: auto; min-width: 0; max-width: none; }
-  .stat-pop { display: none; }   /* hover-only detail; the sections cover it on touch */
+  .stat-pop, .ls-pop { display: none; }   /* hover-only detail; the sections cover it on touch (and it can't overflow the viewport) */
   .cb-body { font-size: 13px; padding: 20px 16px; }
   .section-lead { font-size: 15.5px; }
   .sft-cfg { flex-direction: column; align-items: stretch; gap: 12px; }
   .sft-arrow { display: none; }
+  /* stop the hero overflowing the viewport on phones: let the grid column shrink
+     below its content's min-width, and let the one-row stats wrap instead of
+     forcing a ~480px line. (Desktop keeps the single nowrap row untouched.) */
+  .hero-grid { grid-template-columns: minmax(0, 1fr); }
+  .stats { flex-wrap: wrap; white-space: normal; row-gap: 7px; }
+  /* the device mockup is a fixed-proportion object (~465px min); zoom the whole
+     demo down so it fits a phone without reflowing/clipping its internals. */
+  .hero-demo { min-width: 0; zoom: 0.76; }
 }
 @media (prefers-reduced-motion: reduce) {
   .typed.caret::after, .spark, .hero::before,
