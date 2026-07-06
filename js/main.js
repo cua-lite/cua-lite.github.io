@@ -184,7 +184,7 @@
       d.classList.toggle("exit", !on && d.dataset.mode === prev && prev !== m);   // outgoing slides out
     });
     syncPlats();
-    capRun.innerHTML = `<span class="c-p">$</span> rollout.py <span class="c-flag">--env-id</span> <span class="c-env">${MODES[m].env}</span> <span class="c-flag">--instruction</span> <span class="c-val">"${MODES[m].instr}"</span>`;
+    capRun.innerHTML = `<span class="c-p">$</span> rollout.py <span class="c-flag">--platform</span> <span class="c-env">${m}</span> <span class="c-flag">--instruction</span> <span class="c-val">"${MODES[m].instr}"</span>`;
     if (!skipReset) { MODES[m].reset(); logClear(); }
   }
   // the desktop task, shown already-complete (no re-run): the rest/home state
