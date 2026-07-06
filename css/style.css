@@ -172,7 +172,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .stage .device::after { content: ""; position: absolute; left: 50%; bottom: -15px; transform: translateX(-50%);
   z-index: -1; pointer-events: none; filter: blur(13px);
   background: radial-gradient(50% 50% at 50% 50%, rgba(40,30,15,.42), rgba(40,30,15,.2) 46%, transparent 74%); }
-.dev-desktop::after { width: 250px; height: 30px; }
+.dev-desktop::after { display: none; }   /* monitor.png already carries its own shadow */
 .dev-web::after     { width: 440px; height: 30px; }
 .dev-mobile::after  { width: 196px; height: 28px; }
 .stage .device.active { opacity: 1; visibility: visible; transform: none; z-index: 2;
@@ -261,25 +261,24 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   --grass: #6db24b; --pgreen: #7ee787; --pgreen-lo: #3f9e57; --pgreen-hi: #b8f5bd; --pgreen-ink: #08240f;
 }
 
-/* one committed object: a chunky pixel CRT. Thick charcoal casing, the
-   glass is the only bright thing, the stand is the same material. */
-.crt { position: relative; background: var(--crt); padding: 15px 15px 17px; box-shadow:
-    inset 3px 3px 0 0 var(--crt-hi), inset -4px -4px 0 0 var(--crt-lo),
-    var(--crt-rim), 0 30px 54px -34px rgba(40,30,15,.4); }
+/* the desktop device IS the teaser's own pixel monitor art — silver bezel, dots,
+   stand and shadow all baked in. The live screen is composited into its
+   transparent screen hole (measured from the teaser: left 5.08% / top 13.75%). */
+.crt { position: relative; aspect-ratio: 354 / 291; }
+.crt::after { content: ""; position: absolute; inset: 0; z-index: 12; pointer-events: none;
+  background: url('../assets/pixel/monitor.png') center/contain no-repeat; }
 
-.screen { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #05070b;
-  box-shadow: inset 0 0 0 3px #000, inset 0 0 0 6px #1b1f26; }
+.screen { position: absolute; left: 5.08%; top: 13.75%; width: 90.4%; height: 60.82%;
+  overflow: hidden; background: #05070b; z-index: 1; }
 /* the brand's own pixel Bliss — grass-green hills, pixel clouds, the same
    wallpaper as the cua-lite teaser. A deliberate callback, not a generic bg. */
-.wall { position: absolute; inset: 3px; background: url('../assets/pixel/wallpaper.png') center/cover no-repeat;
+.wall { position: absolute; inset: 0; background: url('../assets/pixel/wallpaper.png') center/cover no-repeat;
   image-rendering: pixelated; }
 /* the glass: faint scanlines + a soft curvature vignette */
-.screen::before { content: ""; position: absolute; inset: 3px; z-index: 11; pointer-events: none; opacity: .5;
+.screen::before { content: ""; position: absolute; inset: 0; z-index: 11; pointer-events: none; opacity: .5;
   background: repeating-linear-gradient(to bottom, rgba(0,0,0,.16) 0 1px, transparent 1px 3px); }
-.screen::after { content: ""; position: absolute; inset: 3px; z-index: 10; pointer-events: none;
-  box-shadow: inset 0 0 40px rgba(2,6,4,.42); }
-/* bezel brand plate + power LED */
-.crt-led { position: absolute; right: 15px; bottom: 6px; width: 6px; height: 6px; background: var(--accent); box-shadow: 0 0 6px var(--accent), 0 0 2px #fff inset; }
+.screen::after { content: ""; position: absolute; inset: 0; z-index: 10; pointer-events: none;
+  box-shadow: inset 0 0 34px rgba(2,6,4,.4); }
 .mk-ph { color: var(--win-sub); }
 .typed { color: #0d5f2a; font-weight: 700; }
 
@@ -347,15 +346,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 @keyframes dot { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
 .tb-clock { margin-left: auto; color: #8a93a2; }
 
-/* monitor neck + base — a trapezoidal stand flaring into a splayed foot, like the
-   teaser: same silver casing, clearly one grounded object */
-.crt-neck { width: 92px; height: 22px; margin: -1px auto 0; background: var(--crt);
-  clip-path: polygon(28% 0, 72% 0, 88% 100%, 12% 100%);
-  box-shadow: inset 3px 2px 0 var(--crt-hi), inset -4px -5px 0 var(--crt-lo); }
-.crt-base { width: 216px; height: 22px; margin: 0 auto; background: var(--crt);
-  clip-path: polygon(9% 0, 91% 0, 100% 100%, 0 100%);
-  box-shadow: inset 3px 2px 0 var(--crt-hi), inset -4px -5px 0 var(--crt-lo);
-  filter: drop-shadow(0 2px 0 #2b2c33); }
+/* (monitor neck + base + shadow are baked into monitor.png now) */
 
 /* the platform words in the lead ARE the control — hover to switch the device.
    Distinct from the bold keywords: an underline that lights up, never bold. */
