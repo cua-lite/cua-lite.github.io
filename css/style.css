@@ -693,7 +693,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .section.centered .hf-embed { margin-left: auto; margin-right: auto; text-align: left; }
 /* short code lines look lost when stretched — keep the terminals compact */
 .start-term, .cmdbuild, .rows { max-width: 660px; }
-.hf-embed { max-width: 840px; }
+.hf-embed { max-width: none; }   /* the live data viewer wants width — fill the section */
 
 /* footer */
 .footer { border-top: 1px solid var(--line); padding: 52px 0 48px; margin-top: 36px; }

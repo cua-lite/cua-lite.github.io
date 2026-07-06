@@ -103,7 +103,8 @@
       },
       steps: [
         { t: "cell", cap: "click([812, 648])", onAct: () => total.classList.add("sel") },
-        { t: "cell", cap: 'type("=AVERAGE(B2:B4)")', typeLen: 15, onAct: () => typeInto(fbar, "sh-formula", "=AVERAGE(B2:B4)") },
+        { t: "fbar", cap: "click([430, 128])", onAct: () => {} },
+        { t: "fbar", noClick: true, cap: 'type("=AVERAGE(B2:B4)")', typeLen: 15, onAct: () => typeInto(fbar, "sh-formula", "=AVERAGE(B2:B4)") },
         { t: "cell", cap: 'key(["enter"])', onAct: () => at(120, () => { total.textContent = avg().toFixed(1); total.classList.add("filled"); }) },
         { done: true, cap: 'terminate("success")' },
       ],
@@ -160,7 +161,7 @@
       const tt = t;
       if (s.done) { at(tt, () => logLine(typeof s.cap === "function" ? s.cap() : s.cap, "done", ts(tt))); t += 480; return; }
       at(tt, () => { moveTo(ctx, s.t); logLine(s.cap, "live", ts(tt)); });
-      at(tt + 380, () => { click(ctx, s.t); s.onAct && s.onAct(); });
+      at(tt + 380, () => { if (!s.noClick) click(ctx, s.t); s.onAct && s.onAct(); });
       t += 380 + (s.typeLen ? s.typeLen * 30 + 170 : 150) + 170;
     });
     at(t, onFinish);
