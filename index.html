@@ -235,7 +235,7 @@
     <div class="cmdbuild reveal" data-cmd="eval">
       <div class="term">
         <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">evaluate.sh</span></div>
-        <div class="term-body static cb-body"><span class="t-dim">$</span> rollout.py <span class="cb-flag">--model-id</span> <span class="cb-slot" data-slot="agent"></span> <span class="cb-flag">--env-id</span> <span class="cb-slot" data-slot="env"></span> <span class="cb-flag">--save-gif</span></div>
+        <div class="term-body static cb-body"><span class="t-dim">$</span> python scripts/rollout.py <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-flag">--model-id</span> <span class="cb-slot" data-slot="agent"></span> <span class="cb-flag">--env-id</span> <span class="cb-slot" data-slot="env"></span> <span class="cb-flag">--splits</span> eval <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-flag">--config-path</span> scripts/configs/<span class="cb-drv" data-drv="family"></span>/default/<span class="cb-drv" data-drv="env"></span>.yaml</div>
       </div>
     </div>
     <div class="rows reveal">
@@ -260,8 +260,8 @@
       pick an agent, the gyms it trains on fill in:</p>
     <div class="cmdbuild reveal" data-cmd="rl">
       <div class="term">
-        <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">train.sh</span></div>
-        <div class="term-body static cb-body"><span class="t-dim">$</span> train.py <span class="cb-flag">--model-id</span> <span class="cb-slot" data-slot="agent"></span> <span class="cb-flag">--env-id</span> <span class="cb-slot" data-slot="env"></span> <span class="cb-flag">--algo</span> grpo</div>
+        <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">run_grpo.sh</span></div>
+        <div class="term-body static cb-body"><span class="t-dim">$</span> <span class="cb-flag">MODEL_ID=</span><span class="cb-slot" data-slot="agent"></span> <span class="cb-flag">ENV_ID=</span><span class="cb-slot" data-slot="env"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-flag">CONFIG_PATH=</span>scripts/configs/<span class="cb-drv" data-drv="family"></span>/compact/<span class="cb-drv" data-drv="env"></span>.yaml <span class="cb-cont">\</span><br><span class="cb-i"></span>bash scripts/train/run_grpo.sh</div>
       </div>
     </div>
   </div>

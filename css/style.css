@@ -567,8 +567,13 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* the builder IS a .term (same shell as the quickstart), with editable tokens.
    term-body gives the shared code aesthetic; we only loosen the line-height so
    the clickable token chips have room to breathe. */
-.cb-body { line-height: 2.3; }
+.cb-body { white-space: normal; line-height: 2.05; }
 .cb-flag { color: var(--dim); }
+.cb-cont { color: var(--dim); }            /* the trailing \ line-continuation */
+.cb-i { display: inline-block; width: 2.4ch; }  /* indent for continued lines */
+/* derived from the tokens (config-path) — green like the tokens to show the link,
+   but plain text (no chip/caret) so it's clearly not separately clickable */
+.cb-drv { color: var(--accent); }
 /* the editable token — reads as a fill-in-the-blank you can click */
 .cb-slot { position: relative; display: inline-block; }
 .cb-tok { font-family: var(--mono); font-size: inherit; color: var(--accent); background: rgba(154,212,110,.09);

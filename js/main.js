@@ -378,62 +378,75 @@
     } else { start(); }
   }
 
-  /* ---------- command builders: pick an agent, the envs it SUPPORTS fill in ----------
-     grounded in scripts/configs — each agent only lists the envs it has configs for. */
+  /* ---------- command builders: the REAL rollout / run_grpo commands ----------
+     Grounded in scripts/configs. Picking an agent sets its model-id AND config
+     family; the env fills --env-id and the derived --config-path; the env list is
+     filtered to the configs that actually exist. Eval runs on any agent; RL only
+     on open, trainable models (no closed API models). Verified against README +
+     docs/grpo.md. */
   const CB_OPTS = {
     eval: {
-      agents: ["gpt-5.5", "qwen3-vl", "claude", "ui-tars", "mai-ui", "fara"],
+      agents: [
+        { model: "gpt-5.5", family: "gpt" },
+        { model: "Qwen/Qwen3-VL-8B-Instruct", family: "qwen3_vl" },
+        { model: "Qwen/Qwen3.5-4B", family: "qwen3_5" },
+        { model: "Tongyi-MAI/MAI-UI-2B", family: "mai_ui" },
+      ],
       support: {
-        "gpt-5.5": ["osworld", "webarena", "webvoyager", "androidworld", "mobileworld", "cuabench"],
-        "qwen3-vl": ["osworld", "webarena", "webvoyager", "androidworld", "mobileworld", "cuabench"],
-        "claude": ["osworld", "webarena", "androidworld", "mobileworld"],
-        "ui-tars": ["osworld", "androidworld", "mobileworld"],
-        "mai-ui": ["androidworld", "mobileworld"],
-        "fara": ["webarena", "webvoyager"],
+        "gpt-5.5": ["osworld", "browsergym.webarena", "webharbor.webvoyager", "androidworld", "mobileworld", "cua.bench"],
+        "Qwen/Qwen3-VL-8B-Instruct": ["osworld", "browsergym.webarena", "webharbor.webvoyager", "androidworld", "mobileworld", "cua.bench"],
+        "Qwen/Qwen3.5-4B": ["osworld", "browsergym.webarena", "webharbor.webvoyager", "androidworld", "mobileworld", "cua.bench"],
+        "Tongyi-MAI/MAI-UI-2B": ["androidworld", "mobileworld"],
       },
+      table: true,
     },
     rl: {
-      agents: ["qwen3-vl", "gpt-5.5", "ui-tars", "mai-ui", "fara"],
+      agents: [
+        { model: "Qwen/Qwen3-VL-8B-Instruct", family: "qwen3_vl" },
+        { model: "Qwen/Qwen3.5-4B", family: "qwen3_5" },
+        { model: "Tongyi-MAI/MAI-UI-2B", family: "mai_ui" },
+      ],
       support: {
-        "qwen3-vl": ["webgym", "mobilegym"],
-        "gpt-5.5": ["mobilegym"],
-        "ui-tars": ["mobilegym"],
-        "mai-ui": ["mobilegym"],
-        "fara": ["webgym"],
+        "Qwen/Qwen3-VL-8B-Instruct": ["webgym", "screenspot_pro", "lite.osworld", "androidworld", "mobilegym"],
+        "Qwen/Qwen3.5-4B": ["webgym", "screenspot_pro", "lite.osworld", "androidworld", "mobilegym"],
+        "Tongyi-MAI/MAI-UI-2B": ["androidworld", "mobilegym"],
       },
+      table: false,
     },
   };
-  // the eval builder drives the results table: selecting a benchmark lights its row
+  // real env-id -> the friendly benchmark row it maps to (for the table highlight)
+  const ENV2ROW = { "osworld": "osworld", "browsergym.webarena": "webarena", "webharbor.webvoyager": "webvoyager", "androidworld": "androidworld", "mobileworld": "mobileworld", "cua.bench": "cuabench" };
   const benchRows = document.querySelectorAll("#benchmarks .row");
-  const highlightBench = (name) => benchRows.forEach((r) => {
-    const nm = r.querySelector(".r-name");
-    r.classList.toggle("hl", !!nm && nm.textContent.trim() === name);
-  });
+  const highlightBench = (env) => { const nm = ENV2ROW[env] || env; benchRows.forEach((r) => { const n = r.querySelector(".r-name"); r.classList.toggle("hl", !!n && n.textContent.trim() === nm); }); };
+
   document.querySelectorAll(".cmdbuild").forEach((cb) => {
     const cfg = CB_OPTS[cb.dataset.cmd];
     if (!cfg) return;
-    const drivesTable = cb.dataset.cmd === "eval";
     const agentSlot = cb.querySelector('.cb-slot[data-slot="agent"]');
     const envSlot = cb.querySelector('.cb-slot[data-slot="env"]');
     if (!agentSlot || !envSlot) return;
+    const drvFamily = cb.querySelectorAll('.cb-drv[data-drv="family"]');
+    const drvEnv = cb.querySelectorAll('.cb-drv[data-drv="env"]');
     let agent = cfg.agents[0];
-    let env = cfg.support[agent][0];
+    let env = cfg.support[agent.model][0];
     const closeAll = (except) => cb.querySelectorAll(".cb-slot.open").forEach((s) => { if (s !== except) s.classList.remove("open"); });
     const swap = (slot) => { slot.classList.remove("swap"); void slot.offsetWidth; slot.classList.add("swap"); };
+    const sync = () => { drvFamily.forEach((e) => (e.textContent = agent.family)); drvEnv.forEach((e) => (e.textContent = env)); if (cfg.table) highlightBench(env); };
 
-    function setupSlot(slot, getList, getCur, onPick) {
+    function makeSlot(slot, getList, getLabel, curLabel, onPick) {
       const tok = document.createElement("button");
       tok.className = "cb-tok"; tok.type = "button"; tok.setAttribute("aria-haspopup", "listbox"); tok.setAttribute("aria-expanded", "false");
       tok.innerHTML = '<span class="cb-txt"></span><span class="cb-tcaret" aria-hidden="true"></span>';
       const menu = document.createElement("span");
       menu.className = "cb-menu"; menu.setAttribute("role", "listbox");
       function render() {
-        tok.querySelector(".cb-txt").textContent = getCur();
+        tok.querySelector(".cb-txt").textContent = curLabel();
         menu.innerHTML = "";
         getList().forEach((v) => {
+          const label = getLabel(v);
           const o = document.createElement("button");
-          o.className = "cb-opt" + (v === getCur() ? " active" : ""); o.type = "button"; o.textContent = v; o.setAttribute("role", "option");
-          o.addEventListener("click", (e) => { e.stopPropagation(); slot.classList.remove("open"); tok.setAttribute("aria-expanded", "false"); if (v !== getCur()) onPick(v); });
+          o.className = "cb-opt" + (label === curLabel() ? " active" : ""); o.type = "button"; o.textContent = label; o.setAttribute("role", "option");
+          o.addEventListener("click", (e) => { e.stopPropagation(); slot.classList.remove("open"); tok.setAttribute("aria-expanded", "false"); if (label !== curLabel()) onPick(v); });
           menu.appendChild(o);
         });
       }
@@ -442,15 +455,15 @@
       slot._render = render; render();
     }
 
-    setupSlot(agentSlot, () => cfg.agents, () => agent, (v) => {
-      agent = v; swap(agentSlot); agentSlot._render();
-      if (!cfg.support[agent].includes(env)) { env = cfg.support[agent][0]; swap(envSlot); if (drivesTable) highlightBench(env); }
-      envSlot._render();
+    makeSlot(agentSlot, () => cfg.agents, (a) => a.model, () => agent.model, (a) => {
+      agent = a; swap(agentSlot); agentSlot._render();
+      if (!cfg.support[agent.model].includes(env)) { env = cfg.support[agent.model][0]; swap(envSlot); }
+      envSlot._render(); sync();
     });
-    setupSlot(envSlot, () => cfg.support[agent], () => env, (v) => {
-      env = v; swap(envSlot); envSlot._render(); if (drivesTable) highlightBench(env);
+    makeSlot(envSlot, () => cfg.support[agent.model], (e) => e, () => env, (e) => {
+      env = e; swap(envSlot); envSlot._render(); sync();
     });
-    if (drivesTable) highlightBench(env);
+    sync();
     document.addEventListener("click", (e) => { if (!cb.contains(e.target)) closeAll(); });
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") document.querySelectorAll(".cb-slot.open").forEach((s) => s.classList.remove("open")); });
