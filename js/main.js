@@ -563,21 +563,25 @@
       slot._render = render; render();
     }
 
-    // pulse the derived spans (config-path family/env, dataset…) when a pick updates them
-    const flashDrv = () => cb.querySelectorAll(".cb-drv").forEach((e) => { e.classList.remove("drv-flash"); void e.offsetWidth; e.classList.add("drv-flash"); });
+    // flash ONLY the derived fields the changed variable drives — changing the env must
+    // not pulse the model-derived <family> in the config-path, and vice versa.
+    const flashDrv = (names) => names.forEach((nm) => cb.querySelectorAll('.cb-drv[data-drv="' + nm + '"]').forEach((e) => { e.classList.remove("drv-flash"); void e.offsetWidth; e.classList.add("drv-flash"); }));
     makeSlot(agentSlot, () => cfg.agents, (a) => a.model, () => agent.model, (a) => {
       agent = a;
       // the new agent may not support the current env — fall back to its first supported one
-      if (!allowedEnvs().includes(env)) { env = allowedEnvs()[0]; resetTask(); swap(envSlot); if (taskSlot) swap(taskSlot); }
-      swap(agentSlot); agentSlot._render(); envSlot._render(); if (taskSlot) taskSlot._render(); sync(); flashDrv();
+      let envChanged = false;
+      if (!allowedEnvs().includes(env)) { env = allowedEnvs()[0]; resetTask(); swap(envSlot); if (taskSlot) swap(taskSlot); envChanged = true; }
+      swap(agentSlot); agentSlot._render(); envSlot._render(); if (taskSlot) taskSlot._render(); sync();
+      flashDrv(envChanged ? ["family", "agent", "env"] : ["family", "agent"]);   // agent drives family + agent (+ env only if it had to fall back)
     });
     makeSlot(envSlot, allowedEnvs, (e) => e, () => env, (e) => {
       // switching env resets the task to that env's first representative one
-      env = e; resetTask(); swap(envSlot); envSlot._render(); if (taskSlot) { taskSlot._render(); swap(taskSlot); } sync(); flashDrv();
+      env = e; resetTask(); swap(envSlot); envSlot._render(); if (taskSlot) { taskSlot._render(); swap(taskSlot); } sync();
+      flashDrv(["env"]);   // env only drives the <env> field, not the model-derived <family>
     }, (e) => capPlat(ENV_PLAT[e]));   // env menu grouped by platform, like the data viewer's dropdown
-    // the task slot lists the env's representative task-ids + a trailing … (a no-op sentinel)
+    // the task slot lists the env's representative task-ids + a trailing … (a no-op sentinel); it drives no derived field
     if (taskSlot) makeSlot(taskSlot, () => [...cfg.tasks[env], "…"], (t) => t, () => task, (t) => {
-      if (t === "…") return; task = t; swap(taskSlot); taskSlot._render(); sync(); flashDrv();
+      if (t === "…") return; task = t; swap(taskSlot); taskSlot._render(); sync();
     });
     sync();
     document.addEventListener("click", (e) => { if (!cb.contains(e.target)) closeAll(); });
@@ -644,9 +648,10 @@
       slot._render = render; render();
     }
 
-    const flashDrv = () => panel.querySelectorAll(".cb-drv").forEach((e) => { e.classList.remove("drv-flash"); void e.offsetWidth; e.classList.add("drv-flash"); });
-    build(dsSlot, SFT_DATASETS, () => dataset, (v) => { dataset = v; swap(dsSlot); dsSlot._render(); sync(); flashDrv(); });
-    build(mdSlot, MODELS, () => model.model, (v) => { model = v; swap(mdSlot); mdSlot._render(); sync(); flashDrv(); });
+    // flash only the fields the changed selector drives: dataset -> dataset/slug, model -> model/family
+    const flashDrv = (names) => names.forEach((nm) => panel.querySelectorAll('.cb-drv[data-drv="' + nm + '"]').forEach((e) => { e.classList.remove("drv-flash"); void e.offsetWidth; e.classList.add("drv-flash"); }));
+    build(dsSlot, SFT_DATASETS, () => dataset, (v) => { dataset = v; swap(dsSlot); dsSlot._render(); sync(); flashDrv(["dataset", "slug"]); });
+    build(mdSlot, MODELS, () => model.model, (v) => { model = v; swap(mdSlot); mdSlot._render(); sync(); flashDrv(["model", "family"]); });
     sync();
     document.addEventListener("click", (e) => { if (!panel.contains(e.target)) closeAll(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
