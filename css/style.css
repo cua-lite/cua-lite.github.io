@@ -1,9 +1,9 @@
 /* ============================================================
-   CUA-Lite — pixel-brand, dark.
-   Pure black, near-white, ONE grass-green accent. Fraunces serif
-   display with an italic accent word; Urbanist body; JetBrains Mono
-   for everything the machine says. Chunky pixel-panel material, zero
-   radius. One agent operates three pixel devices. Quality = restraint.
+   CUA-Lite — warm editorial, cream.
+   Ivory→peach canvas, soft taupe ink, ONE terracotta accent. Fraunces
+   serif display with an italic accent word; Urbanist body; Geist Mono
+   for everything the machine says. One agent operates three devices —
+   a desktop, a browser, a phone. Quality = restraint.
    ============================================================ */
 
 @font-face { font-family: 'Fraunces'; src: url('../assets/fonts/Fraunces.woff2') format('woff2'); font-weight: 300 700; font-style: normal; font-display: swap; }
@@ -14,7 +14,7 @@
 :root {
   /* one signature easing across every motion — switch, cursor, bubbles, pages */
   --ease: cubic-bezier(.33, 0, .15, 1);
-  /* warm ivory→peach canvas + soft taupe ink (microsoft.ai palette), ONE grass-green */
+  /* warm ivory→peach canvas + soft taupe ink (microsoft.ai palette), ONE terracotta accent */
   --bg:      #faf4e8;
   --panel:   #f2eadb;
   --panel-2: #ece2d1;
@@ -28,7 +28,7 @@
 
   --serif: 'Fraunces', Georgia, serif;
   --sans:  'Urbanist', -apple-system, system-ui, sans-serif;
-  /* Geist Mono — Vercel's monospace: tighter and more refined than Cascadia,
+  /* Geist Mono — Vercel's monospace: tighter and more refined,
      at home in a warm editorial layout; self-hosted, with per-OS mono fallbacks */
   --mono:  'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
@@ -201,7 +201,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   font-family: var(--mono); font-size: 11px; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
 .stat { position: static; cursor: default; display: inline-flex; align-items: baseline; gap: 5px; }
 .stat:not(:last-child)::after { content: "·"; margin: 0 12px; color: var(--dim); }
-.stat-n { font-size: 15px; }
 .stat-n { color: var(--accent); font-weight: 700; font-size: 16px; letter-spacing: 0; }
 /* affiliation lockup, echoed from the footer — muted, non-distracting */
 .hero-affil { display: flex; align-items: center; gap: 14px; margin-top: 22px; transition: opacity .18s var(--ease); }
@@ -273,14 +272,14 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* ============================================================
    the agent operating a screen — a pixel CRT, the teaser alive.
    Chunky bevels, flat fills, zero radius, no blur. The Bliss
-   wallpaper + a pixel window; the paper airplane operates it.
+   wallpaper + a LibreOffice Calc window; the cursor operates it.
    ============================================================ */
 :root {
   /* dark modern device casing — thin premium bezels (Apple-product-shot on cream) */
   --crt:   #2a2a30; --crt-hi: #45454e; --crt-lo: #1a1a1e; --ink: #07080a;
   --crt-rim: 0 0 0 1px rgba(0,0,0,.35);
   --win:   #f5f6f2; --win-bar: #dde1d7; --win-ink: #2a2e27; --win-sub: #8a8f86;
-  --grass: #6db24b; --pgreen: #7ee787; --pgreen-lo: #3f9e57; --pgreen-hi: #b8f5bd; --pgreen-ink: #08240f;
+  --pgreen: #7ee787; --pgreen-lo: #3f9e57; --pgreen-ink: #08240f;
 }
 
 /* the desktop device — a clean silver monitor sharing the phone's casing material
@@ -519,43 +518,26 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .rl-line.live .rl-mark::after { content: ""; }
 .rl-line.live .caret { display: inline-block; width: 6px; height: 1.05em; margin-left: 3px; background: var(--accent); vertical-align: -0.15em; animation: blink 1s steps(1) infinite; }
 @keyframes rlIn { to { opacity: 1; transform: none; } }
-/* a quiet invitation — shown only once the demo rests, gone the moment you engage */
-.demo-hint { margin: 14px 0 0; font-family: var(--mono); font-size: 11.5px; color: #6b7480;
-  opacity: 0; transform: translateY(3px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
-.demo-hint.show { opacity: 1; transform: none; }
-.demo-hint .dh-key { color: var(--pgreen-ink); background: var(--accent-dim); padding: 1px 7px; margin-right: 9px;
-  letter-spacing: .3px; text-transform: uppercase; font-size: 9.5px; font-weight: 700; }
 
-/* ---------- divider: the brand plane flies across a dashed flight-path ---------- */
+/* ---------- divider: a short centred hairline between sections ---------- */
 .divider { position: relative; display: flex; align-items: center; justify-content: center; padding: 22px 0; }
 /* a quiet, short centred hairline — a minimal editorial break between sections */
 .flightline { width: 52px; height: 1px; background: var(--line-2); }
 .js-reveal .flightline { transform: scaleX(0); }
 .js-reveal .divider.in .flightline { transform: scaleX(1); transition: transform .9s var(--ease) .1s; }
-@keyframes fly-across {
-  0%   { left: calc(50% - min(310px, 38%)); opacity: 0; transform: translateY(7px) rotate(-11deg); }
-  14%  { opacity: 1; }
-  55%  { transform: translateY(-5px) rotate(4deg); }
-  100% { left: calc(50% + min(288px, 35%)); opacity: 1; transform: translateY(0) rotate(0deg); }
-}
-@keyframes plane-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 @media (prefers-reduced-motion: reduce) {
   .js-reveal .flightline { clip-path: none; }
-  .js-reveal .fly-plane { opacity: 1; left: calc(50% + min(288px, 35%)); }
 }
 
 /* scroll reveal — content settles up as you reach it (only when JS is on) */
 .js-reveal .reveal { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .58s var(--ease); }
 .js-reveal .reveal.in { opacity: 1; transform: none; transition-delay: var(--rev-delay, 0s); }
-.js-reveal .cards .card:nth-child(2) { transition-delay: .08s; }
-.js-reveal .cards .card:nth-child(3) { transition-delay: .16s; }
 
 /* ---------- sections ---------- */
 .section { padding: 132px 0 24px; }
 #start { padding-top: 84px; }   /* it follows the hero's divider — keep the gap ~in line with the other sections */
 .section:last-of-type { padding-bottom: 44px; }
 
-/* cards — pixel-panel objects, not flat rectangles */
 /* ---------- section lead paragraph (intro under an h2) ---------- */
 .section-lead { max-width: 600px; margin: 0 0 56px; color: var(--muted); font-size: 16.5px; line-height: 1.62; }
 .section-lead code { font-family: var(--mono); font-size: 13.5px; background: var(--panel-2); border: 1px solid var(--line); padding: 1px 6px; color: var(--text); }
@@ -719,47 +701,6 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 .sft-cfg .cb-txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sft-cfg .cb-menu { min-width: 220px; }
 
-.cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
-.card { min-width: 0; display: flex; flex-direction: column; background: var(--panel-fill); border: 2px solid var(--panel-edge); border-radius: 0;
-  box-shadow: inset 3px 3px 0 rgba(255,255,255,.06), inset -4px -4px 0 rgba(0,0,0,.55); padding: 26px 24px 22px;
-  transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease; }
-.card:hover { transform: translate(-2px,-2px); border-color: var(--accent-dim);
-  box-shadow: inset 2px 2px 0 rgba(126,231,135,.12), inset -3px -3px 0 var(--panel-lo), 5px 5px 0 rgba(126,231,135,.16); }
-.card .num { font-family: var(--mono); font-size: 13px; color: var(--accent-dim); display: block; margin-bottom: 20px; }
-.card h3 { font-family: var(--sans); font-weight: 650; font-size: 17.5px; margin: 0 0 10px; }
-.card p { color: var(--muted); font-size: 14.5px; margin: 0 0 20px; }
-.card p code { font-family: var(--mono); font-size: 12.5px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 0; padding: 1px 6px; color: var(--text); }
-.card p a { color: var(--accent); }
-.card p a:hover { text-decoration: underline; }
-.snip { display: block; min-width: 0; margin-top: auto; font-family: var(--mono); font-size: 12px; color: var(--accent-dim); border-top: 1px solid var(--line); padding-top: 16px; overflow-x: auto; white-space: nowrap; }
-/* a tiny reward curve — GRPO training, drawn on scroll: the RL example */
-.card-viz { position: relative; margin: 20px 0 4px; }
-.card-viz svg { display: block; width: 100%; height: 46px; }
-.rv-line { stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-.rv-dot { fill: var(--accent); }
-.cv-label { position: absolute; top: -3px; right: 0; font-family: var(--mono); font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); }
-.js-reveal .rv-line { stroke-dasharray: 340; stroke-dashoffset: 340; }
-.js-reveal .rv-dot { opacity: 0; }
-.js-reveal .card.in .rv-line { stroke-dashoffset: 0; transition: stroke-dashoffset 1.2s var(--ease) .3s; }
-.js-reveal .card.in .rv-dot { opacity: 1; transition: opacity .3s ease 1.35s; }
-/* 01 — a bipartite mesh: any agent connects to any env (every-to-every) */
-.cv-mesh { display: block; width: 100%; height: 46px; margin-top: 6px; }
-.cv-mesh line { stroke: var(--accent); stroke-width: 1; opacity: .26; }
-.cv-mesh circle { fill: var(--accent); }
-.js-reveal .cv-mesh line, .js-reveal .cv-mesh circle { opacity: 0; }
-.js-reveal .card.in .cv-mesh circle { opacity: 1; transition: opacity .4s ease; }
-.js-reveal .card.in .cv-mesh line { opacity: .26; transition: opacity .7s ease .25s; }
-/* 02 — the LiteSample record: a few fields, one accented */
-.cv-schema { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
-.cv-field { display: flex; align-items: center; gap: 9px; }
-.cv-field b { width: 7px; height: 7px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
-.cv-field.on b { background: var(--accent); }
-.cv-field s { display: block; height: 8px; width: var(--w); background: rgba(255,255,255,.1); text-decoration: none; }
-.cv-field.on s { background: var(--accent-dim); }
-.js-reveal .cv-field { opacity: 0; transform: translateX(-7px); }
-.js-reveal .card.in .cv-field { opacity: 1; transform: none; transition: opacity .35s ease, transform .35s var(--ease); }
-.js-reveal .card.in .cv-field:nth-child(2) { transition-delay: .11s; }
-.js-reveal .card.in .cv-field:nth-child(3) { transition-delay: .22s; }
 
 /* ---------- benchmark coverage — a segmented control + one floating panel ----------
    Breadth reads at a glance (count badges), never runs long (one platform shown),
@@ -849,7 +790,6 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
   .hero { padding: 68px 0 40px; }
   .hero-grid { grid-template-columns: 1fr; gap: 34px; }
   .hero-head { max-width: none; }
-  .cards { grid-template-columns: minmax(0,1fr); }
   .divider { padding: 14px 0; }
   .section { padding: 54px 0 12px; }
   .term-body { min-height: 300px; }
@@ -872,7 +812,7 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
   .sft-arrow { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .typed.caret::after, .fly-plane, .crt-led, .spark, .hero::before,
+  .typed.caret::after, .spark, .hero::before,
   .think i, .hero-head > *, .hero-demo, .rl-line, .rl-line .caret { animation: none; }
   .rl-line { opacity: 1; transform: none; }
   .js-reveal .reveal { opacity: 1; transform: none; transition: none; }

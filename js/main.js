@@ -16,10 +16,6 @@
   const capRun = document.getElementById("cap-run");
   const rlLog = document.getElementById("rl-log");
   const plats = [...document.querySelectorAll(".plat")];   // the lead words = the control
-  const demoHint = document.getElementById("demo-hint");
-  let hintDone = false;   // once you've edited a score, stop inviting
-  const showHint = () => { if (demoHint && !hintDone && mode === "desktop") demoHint.classList.add("show"); };
-  const hideHint = () => { if (demoHint) demoHint.classList.remove("show"); };
 
   let timers = [];
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
@@ -199,7 +195,6 @@
     [['click([812, 648])', "0.6s"], ['type("=AVERAGE(B2:B4)")', "1.1s"], ['key(["enter"])', "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
     logLine('terminate("success")', "done", "2.0s");
     requestAnimationFrame(() => { ctx.cursor.style.transition = "none"; const c = centerOf(ctx, "fbar"); if (c) place(ctx, c.x, c.y); });
-    showHint();
   }
   // the intro tours all three machines ONCE (desktop → web → mobile), then
   // settles home on the finished desktop and invites you to drive. Calm and
@@ -223,13 +218,13 @@
       if (!settled) {
         if (advances < ORDER.length - 1) holdThenAdvance();   // more machines to visit
         else at(1700, settleHome);                            // shown all three → dwell on the finished mobile, then settle home
-      } else if (mode === "desktop") { showHint(); }          // driving now → rest here, invite edits
+      }
     });
   }
   // immediate = a user drove this (hover/click a lead word) → respond crisply.
   // the auto-tour leaves it off so its handoff stays calm and unhurried.
   function switchTo(m, immediate) {
-    clearAll(); running = false; hideHint();
+    clearAll(); running = false;
     stage.classList.toggle("snappy", !!immediate);
     activate(m); parkCursor();
     at(immediate ? 210 : 420, runActive);
@@ -251,7 +246,7 @@
   const editing = () => document.activeElement && document.activeElement.classList && document.activeElement.classList.contains("editable");
   let sheetDirty = false;   // did you actually change a score? only then does the agent re-run
   cells.forEach((el) => {
-    el.addEventListener("focus", () => { paused = true; hintDone = true; hideHint(); });   // engaged → stop inviting
+    el.addEventListener("focus", () => { paused = true; });   // engaged → pause the auto-tour
     el.addEventListener("input", () => { sheetDirty = true; if (mode === "desktop" && !running) { total.textContent = ""; total.classList.remove("filled", "sel"); fbar.innerHTML = '<span class="mk-ph"></span>'; fbar.className = "sh-formula"; } });
     // click away after editing → the agent re-runs on YOUR number (no hidden keypress needed)
     el.addEventListener("blur", () => {
