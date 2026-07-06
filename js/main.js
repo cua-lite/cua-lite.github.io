@@ -496,16 +496,21 @@
     };
     const sync = () => { drvFamily.forEach((e) => (e.textContent = agent.family)); drvEnv.forEach((e) => (e.textContent = env)); if (cfg.table) { highlightBench(env); dimUnsupported(); } };
 
-    function makeSlot(slot, getList, getLabel, curLabel, onPick) {
+    const PLAT_ORDER = { Grounding: 0, Desktop: 1, Web: 2, Mobile: 3 };
+    function makeSlot(slot, getList, getLabel, curLabel, onPick, groupBy) {
       const tok = document.createElement("button");
       tok.className = "cb-tok"; tok.type = "button"; tok.setAttribute("aria-haspopup", "listbox"); tok.setAttribute("aria-expanded", "false");
       tok.innerHTML = '<span class="cb-txt"></span><span class="cb-tcaret" aria-hidden="true"></span>';
       const menu = document.createElement("span");
-      menu.className = "cb-menu"; menu.setAttribute("role", "listbox");
+      menu.className = "cb-menu" + (groupBy ? " cb-menu-grp" : ""); menu.setAttribute("role", "listbox");
       function render() {
         tok.querySelector(".cb-txt").textContent = curLabel();
         menu.innerHTML = "";
-        getList().forEach((v) => {
+        let list = getList();
+        if (groupBy) list = [...list].sort((a, b) => (PLAT_ORDER[groupBy(a)] ?? 9) - (PLAT_ORDER[groupBy(b)] ?? 9));
+        let lastGrp = null;
+        list.forEach((v) => {
+          if (groupBy) { const g = groupBy(v); if (g !== lastGrp) { const hd = document.createElement("span"); hd.className = "cb-grp"; hd.textContent = g; menu.appendChild(hd); lastGrp = g; } }
           const label = getLabel(v);
           const o = document.createElement("button");
           o.className = "cb-opt" + (label === curLabel() ? " active" : ""); o.type = "button"; o.textContent = label; o.setAttribute("role", "option");
@@ -526,7 +531,7 @@
     });
     makeSlot(envSlot, allowedEnvs, (e) => e, () => env, (e) => {
       env = e; swap(envSlot); envSlot._render(); sync();
-    });
+    }, (e) => capPlat(ENV_PLAT[e]));   // env menu grouped by platform, like the data viewer's dropdown
     sync();
     document.addEventListener("click", (e) => { if (!cb.contains(e.target)) closeAll(); });
   });

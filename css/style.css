@@ -642,6 +642,9 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   border: 0; padding: 8px 12px; cursor: pointer; text-align: left; transition: background .1s ease, color .1s ease; }
 .cb-opt:hover { background: var(--panel-2); color: var(--text); }
 .cb-opt.active { color: var(--accent); }
+/* platform group header inside the env dropdown (grouped like the data viewer) */
+.cb-grp { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--accent-dim); padding: 10px 12px 3px; }
+.cb-grp:first-child { padding-top: 5px; }
 
 .cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
 .card { min-width: 0; display: flex; flex-direction: column; background: var(--panel-fill); border: 2px solid var(--panel-edge); border-radius: 0;
