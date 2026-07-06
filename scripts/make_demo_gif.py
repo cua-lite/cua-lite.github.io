@@ -109,8 +109,8 @@ def build(meta, fps, rect, vw, vh, margin, max_width, gif_out, mp4_out):
 def main() -> None:
     ap = argparse.ArgumentParser(description="Render the hero demo to GIF + MP4 (3 versions).")
     ap.add_argument("--zoom", type=float, default=1.9, help="CSS zoom for the stacked crops; default 1.9")
-    ap.add_argument("--zoom-side", type=float, default=1.7, help="CSS zoom for the side/landscape crop; default 1.7")
-    ap.add_argument("--fps", type=float, default=12.5)
+    ap.add_argument("--zoom-side", type=float, default=1.5, help="CSS zoom for the side/landscape crop; default 1.5")
+    ap.add_argument("--fps", type=float, default=30, help="output fps; higher = smoother transitions")
     ap.add_argument("--seconds", type=float, default=14.5, help="one full desktop->web->mobile tour")
     ap.add_argument("--settle-ms", type=int, default=1200)
     ap.add_argument("--margin", type=int, default=28, help="white margin around the demo, px")
@@ -128,9 +128,11 @@ def main() -> None:
         time.sleep(1.0)
         url = f"http://localhost:{a.port}/index.html"
 
-        # 1 & 2 — stacked layout: device-only (crop the stage) + device+trace (crop hero-demo)
+        # 1 & 2 — stacked layout: device-only (crop the stage) + device+trace (crop hero-demo).
+        # pin the demo to its natural design width (547px) then zoom, so proportions match the
+        # site and the rollout command wraps normally instead of overflowing/clipping.
         vw, vh = 1240, 1680
-        css = f".hero-demo{{zoom:{a.zoom} !important;margin:20px auto !important}}"
+        css = f".hero-demo{{width:547px !important;zoom:{a.zoom} !important;margin:20px auto !important}}"
         with tempfile.TemporaryDirectory() as td:
             raw = Path(td) / "raw"; raw.mkdir()
             print("capturing stacked layout ...")
@@ -143,10 +145,14 @@ def main() -> None:
 
         # 3 — side layout: device + trace to its right
         vw, vh = 1900, 1120
+        # top-align device + trace: the stage normally parks the device at its bottom
+        # (justify-content:flex-end) leaving empty space on top; move it to the top and
+        # pin a height that fits the tallest device (the phone) so nothing clips.
         css = (f".hero-demo{{zoom:{a.zoom_side} !important;margin:24px auto !important;"
-               "flex-direction:row !important;align-items:center !important;gap:26px !important;width:max-content !important}"
-               ".stage{flex:0 0 auto !important;width:460px !important}"
-               ".rollout{flex:0 0 auto !important;width:440px !important;margin-top:0 !important}")
+               "flex-direction:row !important;align-items:flex-start !important;gap:30px !important;width:max-content !important}"
+               ".stage{flex:0 0 auto !important;width:470px !important;min-height:0 !important;height:470px !important}"
+               ".stage .device{justify-content:flex-start !important}"
+               ".rollout{flex:0 0 auto !important;width:430px !important;margin:0 !important}")
         with tempfile.TemporaryDirectory() as td:
             raw = Path(td) / "raw"; raw.mkdir()
             print("capturing side layout ...")
