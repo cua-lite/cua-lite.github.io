@@ -14,15 +14,15 @@
 :root {
   /* one signature easing across every motion — switch, cursor, bubbles, pages */
   --ease: cubic-bezier(.33, 0, .15, 1);
-  /* warm cream canvas (microsoft.ai-inspired), warm near-black ink, ONE grass-green */
-  --bg:      #f3ede0;
-  --panel:   #ece4d3;
-  --panel-2: #e6ddc9;
-  --line:    rgba(40,35,25,.12);
-  --line-2:  rgba(40,35,25,.20);
-  --text:    #26221a;
-  --muted:   #6c6456;
-  --dim:     #a89e89;
+  /* warm ivory→peach canvas + soft taupe ink (microsoft.ai palette), ONE grass-green */
+  --bg:      #faf4e8;
+  --panel:   #f2eadb;
+  --panel-2: #ece2d1;
+  --line:    rgba(60,48,36,.11);
+  --line-2:  rgba(60,48,36,.18);
+  --text:    #453d33;                        /* soft warm taupe — low-contrast calm, not hard black */
+  --muted:   #6f665a;
+  --dim:     #a89e8c;
   --accent:  #3f9a37;                       /* warmer grass green, harmonizes with cream */
   --accent-dim: rgba(63,154,55,.55);
 
@@ -33,11 +33,11 @@
      VS Code's per-OS defaults (Menlo / Consolas / Droid Sans Mono) */
   --mono:  'Cascadia Code', Menlo, Consolas, 'Droid Sans Mono', 'Courier New', monospace;
 
-  /* light card material — soft cream panel, warm tan edge (tables, popovers, menus) */
-  --panel-fill: #fbf7ec;
-  --panel-edge: #e0d6c0;
-  --panel-hi: rgba(255,255,255,.75);
-  --panel-lo: rgba(40,35,25,.06);
+  /* light card material — near-ivory panel, soft warm edge (tables, popovers, menus) */
+  --panel-fill: #fefaf0;
+  --panel-edge: #e7ddc9;
+  --panel-hi: rgba(255,255,255,.8);
+  --panel-lo: rgba(60,48,36,.05);
 
   /* dark terminal material — the code/CRT blocks stay dark on cream, bright green pops */
   --term-bg:    #16140e;
@@ -54,7 +54,13 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 92px; }
 body {
-  margin: 0; background: var(--bg); color: var(--text);
+  margin: 0; color: var(--text);
+  /* soft warm peach washes over ivory — microsoft.ai's ambient warmth, viewport-fixed */
+  background:
+    radial-gradient(72% 55% at 86% 0%, rgba(240,206,190,.55), transparent 60%),
+    radial-gradient(66% 52% at 4% 6%, rgba(238,210,197,.45), transparent 62%),
+    var(--bg);
+  background-attachment: fixed;
   font-family: var(--sans); font-size: 16px; line-height: 1.65; font-weight: 450;
   /* clip (not hidden): still contains stray horizontal overflow, but does NOT
      create a scroll container — so the sticky nav keeps working in Safari.
@@ -104,7 +110,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .closing-line { font-family: var(--serif); font-weight: 400; font-style: italic; font-size: clamp(28px, 3.2vw, 42px); letter-spacing: -0.01em; color: var(--text); margin: 0; }
 
 /* ---------- nav ---------- */
-.nav { position: sticky; top: 0; z-index: 100; background: rgba(243,237,224,.78); backdrop-filter: blur(14px) saturate(1.1); border-bottom: 1px solid var(--line); }
+.nav { position: sticky; top: 0; z-index: 100; background: rgba(250,244,232,.72); backdrop-filter: blur(16px) saturate(1.15); border-bottom: 1px solid var(--line); }
 .nav-inner { max-width: var(--maxw); margin: 0 auto; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; }
 .brand { display: inline-flex; align-items: center; gap: 10px; }
 .brand-plane { width: 24px; height: 19px; background: url('../assets/pixel/airplane-green.png') center/contain no-repeat; }
@@ -116,15 +122,20 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* ---------- hero ---------- */
 .hero { padding: 60px 0 64px; position: relative; overflow: hidden; }
-.hero::before {  /* faint green aurora, top-left — the only glow on the page */
-  content: ""; position: absolute; top: -220px; left: -160px; width: 720px; height: 560px;
-  background: radial-gradient(ellipse at center, rgba(126,231,135,.045), transparent 65%);
-  pointer-events: none;
+.hero::before {  /* slow warm ambient wash — echoes microsoft.ai's flowing canvas, with a whisper of green */
+  content: ""; position: absolute; inset: -200px -140px 0 -160px; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(38% 46% at 20% 14%, rgba(126,231,135,.05), transparent 60%),
+    radial-gradient(48% 54% at 80% 22%, rgba(243,198,179,.45), transparent 62%),
+    radial-gradient(44% 52% at 58% 62%, rgba(238,212,197,.34), transparent 66%);
+  filter: blur(26px);
+  animation: heroDrift 26s var(--ease) infinite alternate;
 }
+@keyframes heroDrift { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(-2.5%, 1.8%, 0) scale(1.07); } }
 /* two-column hero: the pitch on the left, the live demo on the right — the
    device sits top-right as the focal object, its streaming trace directly
    beneath it. Not a stacked overflow; a deliberate side-by-side. */
-.hero-grid { display: grid; grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr); gap: 52px; align-items: start; }
+.hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr); gap: 52px; align-items: start; }
 .hero-head { max-width: 560px; }
 .hero-demo { position: relative; display: flex; flex-direction: column; gap: 18px; }
 .hero-demo > * { min-width: 0; }
@@ -760,7 +771,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   .section-lead { font-size: 15.5px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .typed.caret::after, .fly-plane, .crt-led, .spark,
+  .typed.caret::after, .fly-plane, .crt-led, .spark, .hero::before,
   .think i, .hero-head > *, .hero-demo, .rl-line, .rl-line .caret { animation: none; }
   .rl-line { opacity: 1; transform: none; }
   .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
