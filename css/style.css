@@ -172,19 +172,22 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hero .lead { font-size: 17.5px; line-height: 1.62; color: var(--muted); max-width: 500px; margin: 0 0 36px; }
 .hero .lead b { color: var(--text); font-weight: 650; }
 /* stats — concise by default, the full list on hover */
-.stats { list-style: none; display: flex; flex-wrap: wrap; gap: 10px 30px; padding: 0; margin: 46px 0 0;
+.stats { position: relative; list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 0; padding: 0; margin: 46px 0 0;
   font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
-.stat { position: relative; cursor: default; display: inline-flex; align-items: baseline; gap: 6px; }
-.stat:not(:last-child)::after { content: "·"; position: absolute; right: -17px; color: var(--dim); }
+.stat { position: static; cursor: default; display: inline-flex; align-items: baseline; gap: 6px; }
+.stat:not(:last-child)::after { content: "·"; margin: 0 18px; color: var(--dim); }
 .stat-n { color: var(--accent); font-weight: 700; font-size: 16px; letter-spacing: 0; }
-.stat-pop { position: absolute; bottom: calc(100% + 12px); left: -12px; z-index: 30; width: max-content; max-width: 300px;
+/* one shared panel-slot below the row — hover fills the whitespace instead of a cramped tooltip above */
+.stat-pop { position: absolute; top: 100%; left: 0; margin-top: 20px; z-index: 30; width: 100%; max-width: 430px;
   background: var(--panel-fill); border: 2px solid var(--panel-edge);
   box-shadow: inset 2px 2px 0 var(--panel-hi), inset -3px -3px 0 var(--panel-lo), 8px 10px 0 rgba(0,0,0,.4);
-  padding: 10px 13px; font-size: 11px; letter-spacing: .2px; text-transform: none; color: var(--text); line-height: 1.65;
-  opacity: 0; transform: translateY(6px); pointer-events: none; transition: opacity .18s ease, transform .18s ease; }
-.stat-pop b { display: block; color: var(--accent); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+  padding: 14px 15px 15px; text-transform: none;
+  opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity .22s var(--ease), transform .22s var(--ease); }
+.stat-pop b { display: block; color: var(--accent); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+.pop-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.pop-chips span { font-family: var(--mono); font-size: 11px; letter-spacing: .3px; color: var(--muted);
+  padding: 3px 8px; border: 1px solid var(--panel-edge); background: rgba(255,255,255,.02); }
 .stat:hover .stat-pop, .stat:focus-within .stat-pop { opacity: 1; transform: none; }
-.stat-pop::after { content: ""; position: absolute; top: 100%; left: 18px; border: 6px solid transparent; border-top-color: var(--panel-edge); }
 
 /* ---------- terminal — a pixel-panel too ---------- */
 .term { position: relative; background: var(--panel-fill); border: 2px solid var(--panel-edge); border-radius: 0; overflow: hidden;
