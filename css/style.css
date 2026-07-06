@@ -563,6 +563,9 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* ---------- command builder: click a token, the command rebuilds ---------- */
 .cmdbuild { margin: 0 0 22px; }
+/* the quickstart .term clips its content (overflow:hidden); the builder terms
+   must NOT, or the token dropdown menu gets clipped to the terminal box */
+.cmdbuild .term { overflow: visible; }
 .lead-tok { color: var(--accent); border-bottom: 1px dashed var(--accent-dim); padding-bottom: 1px; }
 /* the builder IS a .term (same shell as the quickstart), with editable tokens.
    term-body gives the shared code aesthetic; we only loosen the line-height so
