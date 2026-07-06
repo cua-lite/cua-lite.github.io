@@ -456,6 +456,13 @@
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") document.querySelectorAll(".cb-slot.open").forEach((s) => s.classList.remove("open")); });
 
   /* ---------- scroll reveal ---------- */
+  // give the centered sections' headers the same fade-up as their blocks, so each
+  // section arrives composed (eyebrow -> headline -> lead) rather than popping in.
+  // marked BEFORE js-reveal is set, so they start hidden with no flash.
+  document.querySelectorAll(".section.centered").forEach((sec) => {
+    const head = sec.querySelectorAll(".eyebrow, h2, .section-lead");
+    head.forEach((el, i) => { el.classList.add("reveal"); el.style.setProperty("--rev-delay", (i * 0.09) + "s"); });
+  });
   const reveals = document.querySelectorAll(".reveal");
   if (reveals.length && "IntersectionObserver" in window && !reduce) {
     document.documentElement.classList.add("js-reveal");
