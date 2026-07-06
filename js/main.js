@@ -222,7 +222,7 @@
       running = false;
       if (!settled) {
         if (advances < ORDER.length - 1) holdThenAdvance();   // more machines to visit
-        else settleHome();                                    // shown all three → settle home
+        else at(1700, settleHome);                            // shown all three → dwell on the finished mobile, then settle home
       } else if (mode === "desktop") { showHint(); }          // driving now → rest here, invite edits
     });
   }
