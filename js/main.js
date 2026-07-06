@@ -384,17 +384,30 @@
      config families are all real (scripts/configs); picking an agent updates its
      --model-id AND the derived --config-path family. Eval envs = the benchmarks
      (docs/eval.md); RL envs = the training gyms. Verified vs README + docs. */
+  // Mirrors lite/agents/factory.py — API families (gpt, claude) eval-only; the rest are open-weight (trainable).
   const AGENTS = [
-    { model: "gpt-5.5", family: "gpt" },
-    { model: "claude-opus-4-6", family: "claude" },
+    { model: "gpt-5.5", family: "gpt", api: true },
+    { model: "gpt-5.4", family: "gpt", api: true },
+    { model: "claude-opus-4-7", family: "claude", api: true },
+    { model: "claude-opus-4-6", family: "claude", api: true },
+    { model: "claude-sonnet-4-6", family: "claude", api: true },
     { model: "Qwen/Qwen3-VL-8B-Instruct", family: "qwen3_vl" },
+    { model: "Qwen/Qwen3-VL-32B-Instruct", family: "qwen3_vl" },
+    { model: "Qwen/Qwen3-VL-4B-Instruct", family: "qwen3_vl" },
+    { model: "Qwen/Qwen3-VL-2B-Instruct", family: "qwen3_vl" },
     { model: "Qwen/Qwen3.5-4B", family: "qwen3_5" },
+    { model: "Qwen/Qwen3.5-9B", family: "qwen3_5" },
+    { model: "Qwen/Qwen3.5-27B", family: "qwen3_5" },
+    { model: "Qwen/Qwen3.5-2B", family: "qwen3_5" },
+    { model: "Qwen/Qwen2.5-VL-7B-Instruct", family: "qwen2_5_vl" },
     { model: "Qwen/Qwen2.5-VL-3B-Instruct", family: "qwen2_5_vl" },
-    { model: "ByteDance-Seed/UI-TARS-7B-DPO", family: "ui_tars" },
-    { model: "ByteDance-Seed/UI-TARS-1.5-7B", family: "ui_tars_15_v1" },
     { model: "microsoft/Fara-7B", family: "fara" },
-    { model: "xlangai/OpenCUA-7B", family: "opencua" },
+    { model: "ByteDance-Seed/UI-TARS-1.5-7B", family: "ui_tars_15_v1" },
+    { model: "ByteDance-Seed/UI-TARS-7B-DPO", family: "ui_tars" },
     { model: "OpenGVLab/ScaleCUA-7B", family: "scalecua" },
+    { model: "xlangai/OpenCUA-7B", family: "opencua" },
+    { model: "meituan/EvoCUA-8B-20260105", family: "evocua" },
+    { model: "Tongyi-MAI/MAI-UI-8B", family: "mai_ui" },
     { model: "Tongyi-MAI/MAI-UI-2B", family: "mai_ui" },
     { model: "MarsXL/UI-Voyager", family: "ui_voyager" },
     { model: "stepfun-ai/GELab-Zero-4B-preview", family: "step_gui" },
@@ -409,7 +422,8 @@
       table: true,
     },
     rl: {
-      agents: AGENTS,
+      // only open-weight agents can be fine-tuned / reinforced — API models (gpt, claude) can't
+      agents: AGENTS.filter((a) => !a.api),
       envs: ["lite.osworld", "webgym", "cuagym", "cuaworld", "mobilegym"],
       table: false,
     },
