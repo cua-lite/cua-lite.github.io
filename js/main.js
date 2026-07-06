@@ -401,15 +401,16 @@
       table: true,
     },
     rl: {
+      // same environments as eval; RL only lists open/trainable models
       agents: [
         { model: "Qwen/Qwen3-VL-8B-Instruct", family: "qwen3_vl" },
         { model: "Qwen/Qwen3.5-4B", family: "qwen3_5" },
         { model: "Tongyi-MAI/MAI-UI-2B", family: "mai_ui" },
       ],
       support: {
-        "Qwen/Qwen3-VL-8B-Instruct": ["webgym", "screenspot_pro", "lite.osworld", "androidworld", "mobilegym"],
-        "Qwen/Qwen3.5-4B": ["webgym", "screenspot_pro", "lite.osworld", "androidworld", "mobilegym"],
-        "Tongyi-MAI/MAI-UI-2B": ["androidworld", "mobilegym"],
+        "Qwen/Qwen3-VL-8B-Instruct": ["osworld", "browsergym.webarena", "webharbor.webvoyager", "androidworld", "mobileworld", "cua.bench"],
+        "Qwen/Qwen3.5-4B": ["osworld", "browsergym.webarena", "webharbor.webvoyager", "androidworld", "mobileworld", "cua.bench"],
+        "Tongyi-MAI/MAI-UI-2B": ["androidworld", "mobileworld"],
       },
       table: false,
     },
