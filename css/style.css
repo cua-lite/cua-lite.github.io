@@ -23,8 +23,8 @@
   --text:    #453d33;                        /* soft warm taupe — low-contrast calm, not hard black */
   --muted:   #6f665a;
   --dim:     #a89e8c;
-  --accent:  #3f9a37;                       /* warmer grass green, harmonizes with cream */
-  --accent-dim: rgba(63,154,55,.55);
+  --accent:  #bd5a38;                       /* warm terracotta — harmonizes with cream, not eco-green */
+  --accent-dim: rgba(189,90,56,.5);
 
   --serif: 'Fraunces', Georgia, serif;
   --sans:  'Urbanist', -apple-system, system-ui, sans-serif;
@@ -46,7 +46,7 @@
   --term-text:  #ece6d4;
   --term-muted: #a49c88;
   --term-dim:   #6f6a58;
-  --term-green: #9ad46e;
+  --term-accent: #ef9d62;   /* warm amber-coral — the bright accent inside dark terminals */
 
   --maxw: 1180px;
 }
@@ -214,7 +214,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* ---------- terminal — stays dark on the cream page (the code/CRT identity) ---------- */
 .term { position: relative; background: var(--term-fill); color: var(--term-text); border: 1px solid var(--term-edge); border-radius: 8px; overflow: hidden;
   box-shadow: 0 20px 44px -26px rgba(40,30,15,.5);
-  --accent: var(--term-green); }   /* inside the dark terminal, green means the bright terminal green */
+  --accent: var(--term-accent); }   /* inside the dark terminal, accent is the bright warm terminal accent */
 .term::after {  /* faint CRT scanlines — the pixel-era heritage, whispered */
   content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
   background: repeating-linear-gradient(to bottom, rgba(255,255,255,.022) 0 1px, transparent 1px 3px);
@@ -225,7 +225,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .term-copy { margin-left: auto; font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
   color: var(--term-dim); background: transparent; border: 0; cursor: pointer; padding: 3px 4px; transition: color .12s ease; }
 .term-copy:hover { color: var(--term-text); }
-.term-copy.done { color: var(--term-green); }
+.term-copy.done { color: var(--term-accent); }
 .term-body { margin: 0; padding: 22px 24px; font-family: var(--mono); font-size: 13px; line-height: 1.8; color: var(--term-text); min-height: 356px; white-space: pre-wrap; word-break: break-word; }
 .term-body.static, .term-body.qs { min-height: 0; }
 .t-dim { color: var(--dim); }
@@ -477,14 +477,19 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* the rollout streams as a live log — the agent's run, line by line */
 /* reserve the tallest mode's height so cycling desktop/web/mobile never nudges
    the page below (web's 6-line trace is the max) — zero layout drift */
-.rollout { font-family: var(--mono); font-size: 14.5px; min-height: 238px; }
-.rl-cmd { font-size: 12.5px; line-height: 1.55; color: #9aa2ae; padding-bottom: 12px; border-bottom: 1px solid var(--line); word-break: break-word; }
-.rl-cmd .c-p { color: var(--accent); } .rl-cmd .c-flag { color: #7f8896; } .rl-cmd .c-val { color: #c8cfda; } .rl-cmd .c-env { color: var(--accent); }
+/* the rollout trace is a dark terminal log (like the page's other terminals) so it
+   stays legible on the cream page and reads as the machine's own output */
+.rollout { font-family: var(--mono); font-size: 14.5px; min-height: 238px; margin-top: 16px;
+  --accent: var(--term-accent);
+  background: var(--term-fill); color: var(--term-text); border: 1px solid var(--term-edge); border-radius: 8px;
+  padding: 18px 20px 16px; box-shadow: 0 20px 44px -26px rgba(40,30,15,.5); }
+.rl-cmd { font-size: 12.5px; line-height: 1.55; color: var(--term-muted); padding-bottom: 12px; border-bottom: 1px solid var(--term-edge); word-break: break-word; }
+.rl-cmd .c-p { color: var(--term-accent); } .rl-cmd .c-flag { color: var(--term-dim); } .rl-cmd .c-val { color: var(--term-text); } .rl-cmd .c-env { color: var(--term-accent); }
 .rl-log { margin-top: 12px; min-height: 120px; display: flex; flex-direction: column; gap: 9px; }
-.rl-line { display: flex; color: #cbd2dd; opacity: 0; transform: translateY(3px); animation: rlIn .22s ease forwards; }
-.rl-mark { color: #6b7480; margin-right: 10px; flex-shrink: 0; }
-.rl-lat { margin-left: auto; padding-left: 14px; color: #626b78; flex-shrink: 0; font-variant-numeric: tabular-nums; }
-.rl-line.think { color: #99a2b0; }
+.rl-line { display: flex; color: var(--term-text); opacity: 0; transform: translateY(3px); animation: rlIn .22s ease forwards; }
+.rl-mark { color: var(--term-dim); margin-right: 10px; flex-shrink: 0; }
+.rl-lat { margin-left: auto; padding-left: 14px; color: var(--term-dim); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.rl-line.think { color: var(--term-muted); }
 .rl-line.done { color: var(--accent); font-weight: 500; }
 .rl-line.done .rl-mark { color: var(--accent); }
 .rl-line.live .rl-mark::after { content: ""; }
