@@ -18,8 +18,8 @@
   const plats = [...document.querySelectorAll(".plat")];   // the lead words = the control
   const demoHint = document.getElementById("demo-hint");
   let hintDone = false;   // once you've edited a score, stop inviting
-  const showHint = () => { if (!hintDone && mode === "desktop") demoHint.classList.add("show"); };
-  const hideHint = () => demoHint.classList.remove("show");
+  const showHint = () => { if (demoHint && !hintDone && mode === "desktop") demoHint.classList.add("show"); };
+  const hideHint = () => { if (demoHint) demoHint.classList.remove("show"); };
 
   let timers = [];
   const at = (ms, fn) => timers.push(setTimeout(fn, ms));
