@@ -729,11 +729,13 @@
       { label: "Desktop", items: [["OSWorld", "https://github.com/xlang-ai/OSWorld"], ["Lite.OSWorld", RM+"lite/osworld/README.md"], ["OSWorld-2", "https://github.com/xlang-ai/OSWorld"], ["CUABench", "https://github.com/trycua/cua"]] },
       { label: "Web", items: [["WebGym", "https://github.com/microsoft/webgym"], ["WebVoyager", "https://github.com/MinorJerry/WebVoyager"], ["Online-Mind2Web", "https://github.com/OSU-NLP-Group/Online-Mind2Web"], ["MiniWoB", "https://github.com/Farama-Foundation/miniwob-plusplus"], ["WebArena", "https://github.com/web-arena-x/webarena"], ["VisualWebArena", "https://github.com/web-arena-x/visualwebarena"]] },
       { label: "Mobile", items: [["AndroidWorld", "https://github.com/google-research/android_world"], ["AndroidLab", "https://github.com/THUDM/Android-Lab"], ["MobileWorld", "https://github.com/Tongyi-MAI/MobileWorld"], ["MobileGym", RM+"mobilegym/README.md"]] } ] },
-    corpora: { cap: "10+ existing CUA datasets, preprocessed at scale — understanding · grounding · use", groups: [
-      { label: "One schema, on the Hub", items: [
-        ["Aguvis", DS+"Aguvis"], ["CAGUI", DS+"CAGUI"], ["GUI-360", DS+"GUI-360"], ["GUIAct", DS+"GUIAct"],
-        ["GUIOdyssey", DS+"GUIOdyssey"], ["Multimodal-Mind2Web", DS+"Multimodal-Mind2Web"],
-        ["OpenCUA", DS+"OpenCUA"], ["ScaleCUA", DS+"ScaleCUA"], ["UI-Genie-Agent", DS+"UI-Genie-Agent"] ] } ] },
+    datasets: { cap: "One schema, on the Hub — teacher rollouts (our focus) + preprocessed corpora, ready to SFT or RL any agent", groups: [
+      { label: "Rollouts", items: [
+        ["Lite.OSWorld", DS+"Lite.OSWorld"], ["WebGym", DS+"WebGym"], ["MobileGym", DS+"MobileGym"] ] },
+      { label: "Corpora", items: [
+        ["Aguvis", DS+"Aguvis"], ["ScaleCUA", DS+"ScaleCUA"], ["OpenCUA", DS+"OpenCUA"], ["GUIAct", DS+"GUIAct"],
+        ["GUIOdyssey", DS+"GUIOdyssey"], ["GUI-360", DS+"GUI-360"], ["Multimodal-Mind2Web", DS+"Multimodal-Mind2Web"],
+        ["CAGUI", DS+"CAGUI"], ["UI-Genie-Agent", DS+"UI-Genie-Agent"] ] } ] },
   };
   document.querySelectorAll(".stat-pop[data-pop]").forEach((pop) => {
     const d = POP[pop.dataset.pop]; if (!d) return;
