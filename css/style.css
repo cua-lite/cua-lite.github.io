@@ -46,7 +46,10 @@ html { scroll-behavior: smooth; scroll-padding-top: 92px; }
 body {
   margin: 0; background: var(--bg); color: var(--text);
   font-family: var(--sans); font-size: 16px; line-height: 1.65; font-weight: 450;
-  overflow-x: hidden; -webkit-font-smoothing: antialiased;
+  /* clip (not hidden): still contains stray horizontal overflow, but does NOT
+     create a scroll container — so the sticky nav keeps working in Safari.
+     'hidden' here is a known cause of broken position:sticky on iOS. */
+  overflow-x: clip; -webkit-font-smoothing: antialiased;
 }
 ::selection { background: var(--accent); color: #04140a; }
 a { color: var(--text); text-decoration: none; }
