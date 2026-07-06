@@ -10,10 +10,10 @@
 <link rel="preload" href="assets/fonts/Fraunces-Italic.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="assets/fonts/Urbanist.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="assets/fonts/GeistMono.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
-<link rel="icon" type="image/png" href="assets/favicon.png" />
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png?v=2" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png?v=2" />
+<link rel="icon" type="image/png" href="assets/favicon.png?v=2" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=2" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="CUA-Lite — Simple Computer Use Agents" />
 <meta property="og:description" content="One lightweight framework to evaluate, SFT, and RL any computer-use agent across Desktop, Web, and Mobile." />
@@ -62,6 +62,11 @@
         <li class="stat"><span class="stat-n">15+</span> benchmarks<span class="stat-pop" data-pop="benchmarks"></span></li>
         <li class="stat"><span class="stat-n">10+</span> corpora<span class="stat-pop" data-pop="corpora"></span></li>
       </ul>
+      <div class="hero-affil">
+        <span class="affil-label">Presented by</span>
+        <a href="https://www.berkeley.edu/" target="_blank" rel="noopener" aria-label="UC Berkeley"><img class="affil-logo affil-logo-berkeley" src="assets/logos/berkeley.svg" alt="UC Berkeley" /></a>
+        <a href="https://www.microsoft.com/research/" target="_blank" rel="noopener" aria-label="Microsoft"><img class="affil-logo affil-logo-ms" src="assets/logos/microsoft.svg" alt="Microsoft" /></a>
+      </div>
     </div>
 
     <div class="hero-demo">
@@ -151,7 +156,7 @@
                 </div>
                 <div class="ph-composer">
                   <span class="ph-input" data-t="name"><span class="mk-ph" id="mname">iMessage</span></span>
-                  <span class="ph-send" data-t="save" aria-label="Send">↑</span>
+                  <span class="ph-send" data-t="save" aria-label="Send"></span>
                 </div>
               </div>
               <span class="ph-home" aria-hidden="true"></span>
@@ -295,7 +300,7 @@
     <div class="cmdbuild reveal" data-cmd="sft" data-train-panel="sft">
       <div class="term">
         <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">run_sft.sh</span></div>
-        <div class="term-body static cb-body"><span class="t-dim"># --- host ---</span><br><span class="t-dim"># 1 · download the SFT corpus</span><br><span class="t-dim">$</span> python -m lite.data.hf.download <span class="cb-drv" data-drv="dataset"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--out</span> .data/hf/cua-lite/<span class="cb-drv" data-drv="dataset"></span><br><span class="t-dim"># 2 · export a model-ready SFT parquet</span><br><span class="t-dim">$</span> python -m lite.train.export.export_sft <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--config</span> scripts/configs/<span class="cb-drv" data-drv="family"></span>/default/<span class="cb-slot" data-slot="env"></span>.yaml <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--model-id</span> <span class="cb-slot" data-slot="agent"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--data-paths</span> .data/hf/cua-lite/<span class="cb-drv" data-drv="dataset"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--image-root</span> .data/hf <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">-o</span> .data/sft/<span class="cb-drv" data-drv="family"></span>/<span class="cb-drv" data-drv="env"></span>.parquet<br><span class="t-dim"># --- Slime container (see docs/slime.md) ---</span><br><span class="t-dim"># 3 · supervised fine-tune</span><br><span class="t-dim">$</span> <span class="cb-flag">MODEL_ID=</span><span class="cb-drv" data-drv="agent"></span> <span class="cb-flag">PROMPT_DATA=</span>.data/sft/<span class="cb-drv" data-drv="family"></span>/<span class="cb-drv" data-drv="env"></span>.parquet <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span>bash scripts/train/run_sft.sh</div>
+        <div class="term-body static cb-body"><span class="t-dim"># --- host ---</span><br><span class="t-dim"># 1 · download the SFT corpus</span><br><span class="t-dim">$</span> python -m lite.data.hf.download <span class="cb-drv" data-drv="dataset"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--out</span> .data/hf/cua-lite/<span class="cb-drv" data-drv="dataset"></span><br><br><span class="t-dim"># 2 · export a model-ready SFT parquet</span><br><span class="t-dim">$</span> python -m lite.train.export.export_sft <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--model-id</span> <span class="cb-slot" data-slot="agent"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--config</span> scripts/configs/<span class="cb-drv" data-drv="family"></span>/default/<span class="cb-slot" data-slot="env"></span>.yaml <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--data-paths</span> .data/hf/cua-lite/<span class="cb-drv" data-drv="dataset"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--image-root</span> .data/hf <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">-o</span> .data/sft/<span class="cb-drv" data-drv="family"></span>/<span class="cb-drv" data-drv="env"></span>.parquet<br><br><span class="t-dim"># --- Slime container (see docs/slime.md) ---</span><br><span class="t-dim"># 3 · supervised fine-tune</span><br><span class="t-dim">$</span> <span class="cb-flag">MODEL_ID=</span><span class="cb-drv" data-drv="agent"></span> <span class="cb-flag">PROMPT_DATA=</span>.data/sft/<span class="cb-drv" data-drv="family"></span>/<span class="cb-drv" data-drv="env"></span>.parquet <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span>bash scripts/train/run_sft.sh</div>
       </div>
     </div>
     <div class="cmdbuild reveal cb-hidden" data-cmd="rl" data-train-panel="rl">
@@ -326,7 +331,7 @@
       <a class="brand" href="#top"><span class="brand-plane"></span><span class="brand-name">CUA-Lite</span></a>
       <p class="foot-tag">Simple Computer Use Agents.<br />Eval, SFT, and RL any agent, anywhere, with any data.</p>
       <div class="foot-affil">
-        <span class="foot-affil-label">From researchers at</span>
+        <span class="foot-affil-label">Presented by</span>
         <a href="https://www.berkeley.edu/" target="_blank" rel="noopener" aria-label="UC Berkeley"><img class="foot-logo foot-logo-berkeley" src="assets/logos/berkeley.svg" alt="UC Berkeley" /></a>
         <a href="https://www.microsoft.com/research/" target="_blank" rel="noopener" aria-label="Microsoft"><img class="foot-logo foot-logo-ms" src="assets/logos/microsoft.svg" alt="Microsoft" height="16" /></a>
       </div>
