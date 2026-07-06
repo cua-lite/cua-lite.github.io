@@ -727,8 +727,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
    blocks), but expands wider + taller when the cursor moves into it — data gets room
    to breathe on engagement, no click needed; it eases back on leave */
 .hf-embed { transition: max-width .55s var(--ease); }
-.hf-embed:hover { max-width: 1000px; }
-.hf-embed:hover .hf-frame { height: 660px; }
+.hf-embed:hover { max-width: 1120px; }
+.hf-embed:hover .hf-frame { height: 780px; }
 
 /* footer */
 .footer { border-top: 1px solid var(--line); padding: 52px 0 48px; margin-top: 36px; }
