@@ -565,7 +565,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hf-url { flex: 1; min-width: 0; font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; }
 .hf-open { font-family: var(--mono); font-size: 12px; color: var(--accent); white-space: nowrap; transition: opacity .12s ease; }
 .hf-open:hover { opacity: .7; }
-.hf-frame { position: relative; height: 520px; background: var(--panel-fill); }
+.hf-frame { position: relative; height: 520px; background: var(--panel-fill); transition: height .5s var(--ease); }
 .hf-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; z-index: 1;
   opacity: 0; transition: opacity .45s ease; }
 .hf-frame.loaded iframe { opacity: 1; }
@@ -722,6 +722,12 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .section.centered .hf-embed { margin-left: auto; margin-right: auto; text-align: left; }
 /* short code lines look lost when stretched — keep the terminals compact */
 .start-term, .cmdbuild, .rows, .hf-embed { max-width: 660px; }
+/* the live data viewer sits at section width by default (consistent with the other
+   blocks), but expands wider + taller when the cursor moves into it — data gets room
+   to breathe on engagement, no click needed; it eases back on leave */
+.hf-embed { transition: max-width .55s var(--ease); }
+.hf-embed:hover { max-width: 1000px; }
+.hf-embed:hover .hf-frame { height: 660px; }
 
 /* footer */
 .footer { border-top: 1px solid var(--line); padding: 52px 0 48px; margin-top: 36px; }
