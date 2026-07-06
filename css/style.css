@@ -523,7 +523,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hf-caret { width: 6px; height: 6px; border-right: 1.5px solid var(--accent); border-bottom: 1.5px solid var(--accent);
   transform: translateY(-2px) rotate(45deg); transition: transform .22s var(--ease); }
 .hf-ds.open .hf-caret { transform: translateY(1px) rotate(-135deg); }
-.hf-menu { position: absolute; top: calc(100% + 10px); left: 0; z-index: 30; min-width: 260px; max-height: 366px; overflow-y: auto;
+.hf-menu { position: absolute; top: calc(100% + 10px); left: 0; z-index: 30; min-width: 260px; max-width: min(320px, 82vw); max-height: 366px; overflow-y: auto;
   background: var(--panel-fill); border: 2px solid var(--panel-edge); padding: 6px; box-shadow: 0 26px 60px -24px rgba(0,0,0,.95);
   opacity: 0; visibility: hidden; transform: translateY(-8px) scale(.99); transform-origin: top left;
   transition: opacity .2s var(--ease), transform .2s var(--ease), visibility 0s .2s; }
@@ -710,6 +710,18 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   .term-body { min-height: 300px; }
   .row { grid-template-columns: minmax(0,1fr) auto 28px; padding: 17px 18px; gap: 14px; }
   .r-desc { display: none; }
+}
+/* phones: keep the URL bar + menu inside the viewport */
+@media (max-width: 560px) {
+  .hf-url-host { display: none; }        /* show just cua-lite/<dataset> */
+  .hf-url { font-size: 12px; }
+  .hf-bar { gap: 10px; padding: 10px 12px; }
+  /* let the menu span the bar (relative to .hf-bar) instead of the mid-bar token */
+  .hf-ds { position: static; }
+  .hf-menu { left: 12px; right: 12px; width: auto; min-width: 0; max-width: none; }
+  .stat-pop { display: none; }   /* hover-only detail; the sections cover it on touch */
+  .cb-body { font-size: 13px; padding: 20px 16px; }
+  .section-lead { font-size: 15.5px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .typed.caret::after, .fly-plane, .crt-led, .spark,
