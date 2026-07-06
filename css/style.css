@@ -779,11 +779,18 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 /* footer */
 .footer { border-top: 1px solid var(--line); padding: 52px 0 48px; margin-top: 36px; }
 .footer-inner { display: flex; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+.foot-brand { max-width: 380px; }
 .foot-tag { color: var(--dim); font-size: 14px; margin: 14px 0 0; line-height: 1.7; }
-.footer-cols { display: flex; gap: 72px; flex-wrap: wrap; }
-.footer-col h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); margin: 0 0 14px; font-weight: 400; }
-.footer-col a { display: block; color: var(--muted); font-size: 14px; margin-bottom: 9px; transition: color .12s ease; }
-.footer-col a:hover { color: var(--accent); }
+.foot-affil { display: flex; align-items: center; gap: 16px; margin-top: 24px; }
+.foot-affil-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--dim); }
+.foot-affil a { display: inline-flex; align-items: center; opacity: .4; filter: grayscale(1); transition: opacity .16s var(--ease), filter .16s var(--ease); }
+.foot-affil a:hover { opacity: .85; filter: grayscale(0); }
+.foot-logo { display: block; width: auto; }
+.foot-logo-berkeley { height: 17px; }
+.foot-logo-ms { height: 15px; }
+.footer-links { display: flex; flex-direction: column; gap: 11px; }
+.footer-links a { color: var(--muted); font-size: 14px; transition: color .12s ease; }
+.footer-links a:hover { color: var(--accent); }
 .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
   margin-top: 46px; padding-top: 22px; border-top: 1px solid var(--line);
   font-family: var(--mono); font-size: 12px; letter-spacing: .2px; color: var(--dim); }
