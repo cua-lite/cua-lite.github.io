@@ -487,6 +487,7 @@
     if (!agentSlot || !envSlot) return;
     const drvFamily = cb.querySelectorAll('.cb-drv[data-drv="family"]');
     const drvEnv = cb.querySelectorAll('.cb-drv[data-drv="env"]');
+    const drvAgent = cb.querySelectorAll('.cb-drv[data-drv="agent"]');
     let agent = cfg.agents[0];
     const allowedEnvs = () => envsFor(agent, cfg.envs);
     let env = allowedEnvs()[0];
@@ -500,7 +501,7 @@
         r.classList.toggle("off", !allowed.has(envId));   // agent can't run this benchmark
       });
     };
-    const sync = () => { drvFamily.forEach((e) => (e.textContent = agent.family)); drvEnv.forEach((e) => (e.textContent = env)); if (cfg.table) { highlightBench(env); dimUnsupported(); } };
+    const sync = () => { drvFamily.forEach((e) => (e.textContent = agent.family)); drvEnv.forEach((e) => (e.textContent = env)); drvAgent.forEach((e) => (e.textContent = agent.model)); if (cfg.table) { highlightBench(env); dimUnsupported(); } };
 
     const PLAT_ORDER = { Grounding: 0, Desktop: 1, Web: 2, Mobile: 3 };
     function makeSlot(slot, getList, getLabel, curLabel, onPick, groupBy) {
@@ -542,6 +543,15 @@
     document.addEventListener("click", (e) => { if (!cb.contains(e.target)) closeAll(); });
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") document.querySelectorAll(".cb-slot.open").forEach((s) => s.classList.remove("open")); });
+
+  /* ---------- Train: SFT | RL toggle ---------- */
+  const trainTabs = document.querySelectorAll("#train .train-tab");
+  const trainPanels = document.querySelectorAll("#train [data-train-panel]");
+  trainTabs.forEach((t) => t.addEventListener("click", () => {
+    const which = t.dataset.train;
+    trainTabs.forEach((x) => { const on = x.dataset.train === which; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
+    trainPanels.forEach((p) => p.classList.toggle("cb-hidden", p.dataset.trainPanel !== which));
+  }));
 
   /* ---------- scroll reveal ---------- */
   // give the centered sections' headers the same fade-up as their blocks, so each

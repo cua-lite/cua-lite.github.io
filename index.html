@@ -286,7 +286,17 @@
     <p class="section-lead">SFT on the corpora, then reinforce in the gyms — GRPO and beyond, on
       <a href="https://github.com/THUDM/slime" target="_blank" rel="noopener">Slime</a>.
       Any <span class="lead-tok">open agent</span>, any <span class="lead-tok">gym</span>:</p>
-    <div class="cmdbuild reveal" data-cmd="rl">
+    <div class="train-tabs" role="tablist">
+      <button class="train-tab on" type="button" data-train="sft" role="tab" aria-selected="true">SFT</button>
+      <button class="train-tab" type="button" data-train="rl" role="tab" aria-selected="false">RL</button>
+    </div>
+    <div class="cmdbuild reveal" data-cmd="sft" data-train-panel="sft">
+      <div class="term">
+        <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">run_sft.sh</span></div>
+        <div class="term-body static cb-body"><span class="t-dim">$</span> <span class="cb-flag">python -m lite.train.export.export_sft</span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--model-id</span> <span class="cb-slot" data-slot="agent"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">--config</span> scripts/configs/<span class="cb-drv" data-drv="family"></span>/default/<span class="cb-slot" data-slot="env"></span>.yaml <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span><span class="cb-flag">-o</span> data/sft/<span class="cb-drv" data-drv="env"></span>.parquet<br><span class="t-dim">$</span> <span class="cb-flag">MODEL_ID=</span><span class="cb-drv" data-drv="agent"></span> <span class="cb-flag">PROMPT_DATA=</span>data/sft/<span class="cb-drv" data-drv="env"></span>.parquet <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-i"></span>bash scripts/train/run_sft.sh</div>
+      </div>
+    </div>
+    <div class="cmdbuild reveal cb-hidden" data-cmd="rl" data-train-panel="rl">
       <div class="term">
         <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">run_grpo.sh</span></div>
         <div class="term-body static cb-body"><span class="t-dim">$</span> <span class="cb-flag">MODEL_ID=</span><span class="cb-slot" data-slot="agent"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-flag">ENV_ID=</span><span class="cb-slot" data-slot="env"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-flag">CONFIG_PATH=</span>scripts/configs/<span class="cb-drv" data-drv="family"></span>/default/<span class="cb-drv" data-drv="env"></span>.yaml <span class="cb-cont">\</span><br><span class="cb-i"></span>bash scripts/train/run_grpo.sh</div>

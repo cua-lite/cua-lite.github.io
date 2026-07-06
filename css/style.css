@@ -463,7 +463,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .ph-who { font-family: var(--sans); font-weight: 600; font-size: 11.5px; color: #2a2e27; }
 .ph-thread { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 7px; padding: 14px 13px; }
 .ph-day { align-self: center; font-family: var(--sans); font-size: 9px; color: #9aa096; margin-bottom: 4px; }
-.ph-bub { max-width: 80%; font-size: 12.5px; line-height: 1.36; padding: 8px 12px; border-radius: 17px; }
+.ph-bub { flex-shrink: 0; max-width: 80%; font-size: 12.5px; line-height: 1.36; padding: 8px 12px; border-radius: 17px; }
 .ph-bub.them { align-self: flex-start; background: #e7e7ec; color: #2a2e27; border-bottom-left-radius: 5px; }
 /* the sent bubble grows its height as it appears, so the whole thread slides
    up smoothly (never a jump) — the classic silky messaging feel */
@@ -615,6 +615,16 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 .hf-skeleton span { height: 30px; background: linear-gradient(90deg, var(--panel-2) 25%, #fff 50%, var(--panel-2) 75%); background-size: 200% 100%; animation: hfShimmer 1.5s ease-in-out infinite; }
 .hf-skeleton span:nth-child(2) { width: 82%; } .hf-skeleton span:nth-child(3) { width: 64%; }
 @keyframes hfShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ---------- Train: SFT | RL toggle (pill tabs, mirrors .cov-tabs) ---------- */
+.train-tabs { display: inline-flex; gap: 2px; margin: 0 0 18px; padding: 4px;
+  background: var(--panel-2); border: 1px solid var(--panel-edge); border-radius: 999px; }
+.train-tab { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 8px 20px; cursor: pointer;
+  transition: color .16s ease, background .22s var(--ease), box-shadow .22s var(--ease); }
+.train-tab:hover { color: var(--text); }
+.train-tab.on { color: var(--accent); background: var(--panel-fill); box-shadow: 0 1px 3px rgba(40,30,15,.14); }
+.cb-hidden { display: none; }
 
 /* ---------- command builder: click a token, the command rebuilds ---------- */
 .cmdbuild { margin: 0 0 22px; }
