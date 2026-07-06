@@ -650,7 +650,12 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* benchmark rows — one pixel-panel listing */
 .rows { border: 2px solid var(--panel-edge); border-radius: 0; overflow: hidden; background: var(--panel-fill);
   box-shadow: inset 2px 2px 0 var(--panel-hi), inset -3px -3px 0 var(--panel-lo); }
-.row { display: grid; grid-template-columns: minmax(150px,auto) 1fr auto 30px; align-items: center; gap: 20px; padding: 18px 24px; border-top: 1px solid var(--panel-edge); font-family: var(--mono); transition: background .12s ease; }
+.row { display: grid; grid-template-columns: minmax(150px,auto) 1fr 24px; align-items: center; gap: 20px; padding: 13px 24px; border-top: 1px solid var(--panel-edge); font-family: var(--mono); transition: background .12s ease; }
+/* platform group header inside the coverage list */
+.rows-grp { font-family: var(--mono); font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--accent-dim);
+  padding: 15px 24px 5px; border-top: 1px solid var(--panel-edge); }
+.rows-grp:first-child { border-top: 0; padding-top: 18px; }
+.rows-grp + .row { border-top: 0; }
 .r-desc { font-family: var(--sans); font-size: 13.5px; color: var(--dim); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .row:hover .r-desc { color: var(--muted); }
 .row:first-child { border-top: none; }

@@ -380,44 +380,48 @@
   }
 
   /* ---------- command builders: the REAL rollout / run_grpo commands ----------
-     Grounded in scripts/configs. Picking an agent sets its model-id AND config
-     family; the env fills --env-id and the derived --config-path; the env list is
-     filtered to the configs that actually exist. Eval runs on any agent; RL only
-     on open, trainable models (no closed API models). Verified against README +
-     docs/grpo.md. */
+     Any agent × any env — the full matrix, not a curated subset. Model-ids and
+     config families are all real (scripts/configs); picking an agent updates its
+     --model-id AND the derived --config-path family. Eval envs = the benchmarks
+     (docs/eval.md); RL envs = the training gyms. Verified vs README + docs. */
+  const AGENTS = [
+    { model: "gpt-5.5", family: "gpt" },
+    { model: "claude-opus-4-6", family: "claude" },
+    { model: "Qwen/Qwen3-VL-8B-Instruct", family: "qwen3_vl" },
+    { model: "Qwen/Qwen3.5-4B", family: "qwen3_5" },
+    { model: "Qwen/Qwen2.5-VL-3B-Instruct", family: "qwen2_5_vl" },
+    { model: "ByteDance-Seed/UI-TARS-7B-DPO", family: "ui_tars" },
+    { model: "ByteDance-Seed/UI-TARS-1.5-7B", family: "ui_tars_15_v1" },
+    { model: "microsoft/Fara-7B", family: "fara" },
+    { model: "xlangai/OpenCUA-7B", family: "opencua" },
+    { model: "OpenGVLab/ScaleCUA-7B", family: "scalecua" },
+    { model: "Tongyi-MAI/MAI-UI-2B", family: "mai_ui" },
+    { model: "MarsXL/UI-Voyager", family: "ui_voyager" },
+    { model: "stepfun-ai/GELab-Zero-4B-preview", family: "step_gui" },
+  ];
   const CB_OPTS = {
     eval: {
-      agents: [
-        { model: "gpt-5.5", family: "gpt" },
-        { model: "Qwen/Qwen3-VL-8B-Instruct", family: "qwen3_vl" },
-        { model: "Qwen/Qwen3.5-4B", family: "qwen3_5" },
-        { model: "Tongyi-MAI/MAI-UI-2B", family: "mai_ui" },
-      ],
-      support: {
-        "gpt-5.5": ["osworld", "browsergym.webarena", "webharbor.webvoyager", "androidworld", "mobileworld", "cua.bench"],
-        "Qwen/Qwen3-VL-8B-Instruct": ["osworld", "browsergym.webarena", "webharbor.webvoyager", "androidworld", "mobileworld", "cua.bench"],
-        "Qwen/Qwen3.5-4B": ["osworld", "browsergym.webarena", "webharbor.webvoyager", "androidworld", "mobileworld", "cua.bench"],
-        "Tongyi-MAI/MAI-UI-2B": ["androidworld", "mobileworld"],
-      },
+      agents: AGENTS,
+      envs: ["osworld", "lite.osworld", "osworld_2", "cua.bench", "screenspot_pro", "osworld_g",
+             "webgym", "webharbor.webvoyager", "online_mind2web", "browsergym.miniwob",
+             "browsergym.webarena", "browsergym.visualwebarena",
+             "androidworld", "androidlab", "mobileworld", "mobilegym"],
       table: true,
     },
     rl: {
-      // same environments as eval; RL only lists open/trainable models
-      agents: [
-        { model: "Qwen/Qwen3-VL-8B-Instruct", family: "qwen3_vl" },
-        { model: "Qwen/Qwen3.5-4B", family: "qwen3_5" },
-        { model: "Tongyi-MAI/MAI-UI-2B", family: "mai_ui" },
-      ],
-      support: {
-        "Qwen/Qwen3-VL-8B-Instruct": ["osworld", "browsergym.webarena", "webharbor.webvoyager", "androidworld", "mobileworld", "cua.bench"],
-        "Qwen/Qwen3.5-4B": ["osworld", "browsergym.webarena", "webharbor.webvoyager", "androidworld", "mobileworld", "cua.bench"],
-        "Tongyi-MAI/MAI-UI-2B": ["androidworld", "mobileworld"],
-      },
+      agents: AGENTS,
+      envs: ["lite.osworld", "webgym", "cuagym", "cuaworld", "mobilegym"],
       table: false,
     },
   };
-  // real env-id -> the friendly benchmark row it maps to (for the table highlight)
-  const ENV2ROW = { "osworld": "osworld", "browsergym.webarena": "webarena", "webharbor.webvoyager": "webvoyager", "androidworld": "androidworld", "mobileworld": "mobileworld", "cua.bench": "cuabench" };
+  // real env-id -> the proper benchmark name in the coverage table (for the highlight)
+  const ENV2ROW = {
+    "osworld": "OSWorld", "lite.osworld": "Lite.OSWorld", "osworld_2": "OSWorld-2", "cua.bench": "CUABench",
+    "screenspot_pro": "ScreenSpot-Pro", "osworld_g": "OSWorld-G", "webgym": "WebGym",
+    "webharbor.webvoyager": "WebVoyager", "online_mind2web": "Online-Mind2Web", "browsergym.miniwob": "MiniWoB",
+    "browsergym.webarena": "WebArena", "browsergym.visualwebarena": "VisualWebArena",
+    "androidworld": "AndroidWorld", "androidlab": "AndroidLab", "mobileworld": "MobileWorld", "mobilegym": "MobileGym",
+  };
   const benchRows = document.querySelectorAll("#benchmarks .row");
   const highlightBench = (env) => { const nm = ENV2ROW[env] || env; benchRows.forEach((r) => { const n = r.querySelector(".r-name"); r.classList.toggle("hl", !!n && n.textContent.trim() === nm); }); };
 
@@ -430,7 +434,7 @@
     const drvFamily = cb.querySelectorAll('.cb-drv[data-drv="family"]');
     const drvEnv = cb.querySelectorAll('.cb-drv[data-drv="env"]');
     let agent = cfg.agents[0];
-    let env = cfg.support[agent.model][0];
+    let env = cfg.envs[0];
     const closeAll = (except) => cb.querySelectorAll(".cb-slot.open").forEach((s) => { if (s !== except) s.classList.remove("open"); });
     const swap = (slot) => { slot.classList.remove("swap"); void slot.offsetWidth; slot.classList.add("swap"); };
     const sync = () => { drvFamily.forEach((e) => (e.textContent = agent.family)); drvEnv.forEach((e) => (e.textContent = env)); if (cfg.table) highlightBench(env); };
@@ -458,11 +462,9 @@
     }
 
     makeSlot(agentSlot, () => cfg.agents, (a) => a.model, () => agent.model, (a) => {
-      agent = a; swap(agentSlot); agentSlot._render();
-      if (!cfg.support[agent.model].includes(env)) { env = cfg.support[agent.model][0]; swap(envSlot); }
-      envSlot._render(); sync();
+      agent = a; swap(agentSlot); agentSlot._render(); sync();
     });
-    makeSlot(envSlot, () => cfg.support[agent.model], (e) => e, () => env, (e) => {
+    makeSlot(envSlot, () => cfg.envs, (e) => e, () => env, (e) => {
       env = e; swap(envSlot); envSlot._render(); sync();
     });
     sync();
