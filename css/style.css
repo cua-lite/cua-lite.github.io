@@ -662,8 +662,9 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 /* the editable token — reads as a fill-in-the-blank you can click */
 .cb-slot { position: relative; display: inline-block; }
 .cb-tok { font-family: var(--mono); font-size: inherit; color: var(--accent); background: rgba(154,212,110,.09);
-  border: 0; border-bottom: 1px dashed var(--accent-dim); padding: 3px 8px; cursor: pointer;
+  border: 0; border-bottom: 1px dashed var(--accent-dim); padding: 3px 8px; cursor: pointer; white-space: nowrap;
   display: inline-flex; align-items: center; gap: 7px; transition: background .15s var(--ease), border-color .15s var(--ease); }
+.cb-tok .cb-txt { white-space: nowrap; }
 .cb-tok:hover { background: rgba(154,212,110,.17); border-bottom-color: var(--accent); }
 .cb-slot.open .cb-tok { background: rgba(154,212,110,.17); border-bottom-style: solid; border-bottom-color: var(--accent); }
 .cb-tcaret { width: 6px; height: 6px; border-right: 1.5px solid var(--accent); border-bottom: 1.5px solid var(--accent);
@@ -697,6 +698,7 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
   padding: 18px 20px; background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px;
   box-shadow: 0 1px 3px rgba(40,30,15,.06); }
 .sft-field { display: flex; flex-direction: column; gap: 8px; flex: 1 1 0; min-width: 0; }
+.sft-cfg .sft-field:last-of-type { flex-grow: 1.7; }   /* model names run longer than dataset names */
 .sft-field-label { display: flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10px;
   letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); }
 .sft-hf { font-size: 12px; letter-spacing: 0; }
