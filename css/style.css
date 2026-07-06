@@ -195,6 +195,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   filter: blur(28px); }
 .hero .lead { font-size: 17.5px; line-height: 1.62; color: var(--muted); max-width: 500px; margin: 0 0 36px; }
 .hero .lead b { color: var(--text); font-weight: 650; }
+.hero .lead .lc { color: var(--accent); font-weight: 650; }  /* the orange "computer-use" anchor */
 /* stats — concise by default, the full list on hover */
 /* one row so moving from any stat down into its hover panel never crosses another stat */
 .stats { position: relative; list-style: none; display: flex; flex-wrap: nowrap; align-items: baseline; gap: 0; padding: 0; margin: 46px 0 0;

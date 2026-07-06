@@ -80,8 +80,14 @@ def screencast(url: str, vw: int, vh: int, css: str, settle_ms: int, seconds: fl
     return meta, demo, stage
 
 
-def build(meta, fps, rect, vw, vh, margin, max_width, gif_out, mp4_out):
-    """Resample to an even fps, crop (+white margin, clamped), assemble native-res gif+mp4."""
+def build(meta, fps, rect, vw, vh, margin, max_width, gif_out, mp4_out, hold=0.0):
+    """Resample to an even fps, crop (+white margin, clamped), assemble native-res gif+mp4.
+
+    `hold` freezes the final frame for that many seconds before the loop restarts. The
+    screencast emits no frames while the demo is static, so the tour's *last* dwell (on
+    the finished mobile screen) isn't captured — we re-add it here as an explicit end
+    freeze, sized to match the tour's mid-holds so the loop rhythm stays even.
+    """
     x, y, w, h = rect
     x0, y0 = max(0.0, x - margin), max(0.0, y - margin)
     x1, y1 = min(vw, x + w + margin), min(vh, y + h + margin)
@@ -89,7 +95,7 @@ def build(meta, fps, rect, vw, vh, margin, max_width, gif_out, mp4_out):
     with tempfile.TemporaryDirectory() as td:
         fr = Path(td)
         t0 = meta[0][0]; ts = [t - t0 for t, _ in meta]
-        step = 1.0 / fps; n = int(ts[-1] / step)
+        step = 1.0 / fps; n = int((ts[-1] + hold) / step)  # + hold: freeze the last frame
         for k in range(n + 1):
             j = max(0, bisect.bisect_right(ts, k * step) - 1)
             Image.open(meta[j][1]).convert("RGB").crop(box).save(fr / f"f{k:04d}.png")
@@ -111,8 +117,9 @@ def main() -> None:
     ap.add_argument("--zoom", type=float, default=1.9, help="CSS zoom for the stacked crops; default 1.9")
     ap.add_argument("--zoom-side", type=float, default=1.5, help="CSS zoom for the side/landscape crop; default 1.5")
     ap.add_argument("--fps", type=float, default=30, help="output fps; higher = smoother transitions")
-    ap.add_argument("--seconds", type=float, default=14.5, help="one full desktop->web->mobile tour")
+    ap.add_argument("--seconds", type=float, default=16, help="one full tour: desktop->web->mobile fully done + a dwell before the loop restarts (settle at ~17.9s from load)")
     ap.add_argument("--settle-ms", type=int, default=1200)
+    ap.add_argument("--hold", type=float, default=1.4, help="freeze the final (finished-mobile) frame this long before the loop restarts; ~matches the tour's mid-holds")
     ap.add_argument("--margin", type=int, default=28, help="white margin around the demo, px")
     ap.add_argument("--max-width", type=int, default=1500, help="downscale a crop only if it exceeds this")
     ap.add_argument("--port", type=int, default=8971)
@@ -139,9 +146,9 @@ def main() -> None:
             meta, demo, stage = screencast(url, vw, vh, css, a.settle_ms, a.seconds, raw)
             print(f"  {len(meta)} frames @ {Image.open(meta[0][1]).size}")
             build(meta, a.fps, (stage["x"], stage["y"], stage["width"], stage["height"] + 20),
-                  vw, vh, a.margin, a.max_width, a.out / "demo.gif", a.out / "demo.mp4")
+                  vw, vh, a.margin, a.max_width, a.out / "demo.gif", a.out / "demo.mp4", hold=a.hold)
             build(meta, a.fps, (demo["x"], demo["y"], demo["width"], demo["height"]),
-                  vw, vh, a.margin, a.max_width, a.out / "demo-trace.gif", a.out / "demo-trace.mp4")
+                  vw, vh, a.margin, a.max_width, a.out / "demo-trace.gif", a.out / "demo-trace.mp4", hold=a.hold)
 
         # 3 — side layout: device + trace to its right
         vw, vh = 1900, 1120
@@ -159,7 +166,7 @@ def main() -> None:
             meta, demo, stage = screencast(url, vw, vh, css, a.settle_ms, a.seconds, raw)
             print(f"  {len(meta)} frames @ {Image.open(meta[0][1]).size}")
             build(meta, a.fps, (demo["x"], demo["y"], demo["width"], demo["height"]),
-                  vw, vh, a.margin, a.max_width, a.out / "demo-trace-side.gif", a.out / "demo-trace-side.mp4")
+                  vw, vh, a.margin, a.max_width, a.out / "demo-trace-side.gif", a.out / "demo-trace-side.mp4", hold=a.hold)
     finally:
         srv.terminate()
     print("done ->", a.out)
