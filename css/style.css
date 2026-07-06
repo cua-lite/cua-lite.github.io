@@ -196,10 +196,12 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hero .lead { font-size: 17.5px; line-height: 1.62; color: var(--muted); max-width: 500px; margin: 0 0 36px; }
 .hero .lead b { color: var(--text); font-weight: 650; }
 /* stats — concise by default, the full list on hover */
-.stats { position: relative; list-style: none; display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 0; padding: 0; margin: 46px 0 0;
-  font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
-.stat { position: static; cursor: default; display: inline-flex; align-items: baseline; gap: 6px; }
-.stat:not(:last-child)::after { content: "·"; margin: 0 18px; color: var(--dim); }
+/* one row so moving from any stat down into its hover panel never crosses another stat */
+.stats { position: relative; list-style: none; display: flex; flex-wrap: nowrap; align-items: baseline; gap: 0; padding: 0; margin: 46px 0 0;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.stat { position: static; cursor: default; display: inline-flex; align-items: baseline; gap: 5px; }
+.stat:not(:last-child)::after { content: "·"; margin: 0 12px; color: var(--dim); }
+.stat-n { font-size: 15px; }
 .stat-n { color: var(--accent); font-weight: 700; font-size: 16px; letter-spacing: 0; }
 /* one shared panel-slot below the row — hover fills the whitespace instead of a cramped tooltip above */
 .stat-pop { position: absolute; top: 100%; left: 0; margin-top: 18px; z-index: 30; width: max-content; max-width: min(470px, calc(100vw - 40px));

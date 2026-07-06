@@ -598,11 +598,13 @@
         ["GELab", "https://huggingface.co/stepfun-ai/GELab-Zero-4B-preview"] ] } ] },
     platforms: { cap: "One action + observation space across all three", groups: [
       { label: "", items: [["Desktop", "#benchmarks"], ["Web", "#benchmarks"], ["Mobile", "#benchmarks"]] } ] },
+    // hero benchmark links point to the OFFICIAL upstream repos (extracted from the env READMEs);
+    // cua-lite-native ones (Lite.OSWorld, MobileGym) point to the cua-lite env README.
     benchmarks: { cap: "One command evaluates any agent on any of these", groups: [
-      { label: "Grounding", items: [["OSWorld-G", RM+"osworld_g/README.md"], ["ScreenSpot-Pro", RM+"screenspot_pro/README.md"]] },
-      { label: "Desktop", items: [["OSWorld", RM+"osworld/README.md"], ["Lite.OSWorld", RM+"lite/osworld/README.md"], ["OSWorld-2", RM+"osworld_2/README.md"], ["CUABench", RM+"cua/README.md"]] },
-      { label: "Web", items: [["WebGym", RM+"webgym/README.md"], ["WebVoyager", RM+"webharbor/webvoyager/README.md"], ["Online-Mind2Web", RM+"online_mind2web/README.md"], ["MiniWoB", RM+"browsergym/README.md"], ["WebArena", RM+"browsergym/README.md"], ["VisualWebArena", RM+"browsergym/README.md"]] },
-      { label: "Mobile", items: [["AndroidWorld", RM+"androidworld/README.md"], ["AndroidLab", RM+"androidlab/README.md"], ["MobileWorld", RM+"mobileworld/README.md"], ["MobileGym", RM+"mobilegym/README.md"]] } ] },
+      { label: "Grounding", items: [["OSWorld-G", "https://github.com/xlang-ai/OSWorld-G"], ["ScreenSpot-Pro", "https://github.com/likaixin2000/ScreenSpot-Pro-GUI-Grounding"]] },
+      { label: "Desktop", items: [["OSWorld", "https://github.com/xlang-ai/OSWorld"], ["Lite.OSWorld", RM+"lite/osworld/README.md"], ["OSWorld-2", "https://github.com/xlang-ai/OSWorld"], ["CUABench", "https://github.com/trycua/cua"]] },
+      { label: "Web", items: [["WebGym", "https://github.com/microsoft/webgym"], ["WebVoyager", "https://github.com/MinorJerry/WebVoyager"], ["Online-Mind2Web", "https://github.com/OSU-NLP-Group/Online-Mind2Web"], ["MiniWoB", "https://github.com/Farama-Foundation/miniwob-plusplus"], ["WebArena", "https://github.com/web-arena-x/webarena"], ["VisualWebArena", "https://github.com/web-arena-x/visualwebarena"]] },
+      { label: "Mobile", items: [["AndroidWorld", "https://github.com/google-research/android_world"], ["AndroidLab", "https://github.com/THUDM/Android-Lab"], ["MobileWorld", "https://github.com/Tongyi-MAI/MobileWorld"], ["MobileGym", RM+"mobilegym/README.md"]] } ] },
     corpora: { cap: "10+ existing CUA datasets, preprocessed at scale — understanding · grounding · use", groups: [
       { label: "One schema, on the Hub", items: [
         ["Aguvis", DS+"Aguvis"], ["CAGUI", DS+"CAGUI"], ["GUI-360", DS+"GUI-360"], ["GUIAct", DS+"GUIAct"],
