@@ -431,7 +431,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* side buttons — volume rocker on the left rail, power on the right */
 .phone::before { content: ""; position: absolute; right: -2px; top: 112px; width: 2px; height: 46px; border-radius: 2px; background: var(--crt-lo); box-shadow: 1px 0 0 rgba(0,0,0,.55); }
 .phone::after  { content: ""; position: absolute; left: -2px; top: 86px; width: 2px; height: 48px; border-radius: 2px; background: var(--crt-lo); box-shadow: -1px 0 0 rgba(0,0,0,.55); }
-.ph-screen { position: relative; aspect-ratio: 9/19; overflow: hidden; border-radius: 31px; background: #f4f5f0; box-shadow: inset 0 0 0 1.5px #05070b; }
+.ph-screen { position: relative; aspect-ratio: 9/19; overflow: hidden; border-radius: 31px; background: #f4f5f0; box-shadow: inset 0 0 0 1.5px #05070b;
+  display: flex; flex-direction: column; }   /* status bar + chat stack without overflowing the screen */
 /* the Dynamic Island — the tell that says "iPhone" at a glance */
 .ph-island { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 54px; height: 15px; border-radius: 8px; background: #05070b; z-index: 13; }
 .ph-island::after { content: ""; position: absolute; right: 7px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; border-radius: 50%; background: #17252f; box-shadow: inset 0 0 0 1px #05070b; }
@@ -444,24 +445,25 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .ph-sig::after { content: ""; position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 2px; height: 4px; border-radius: 0 1.5px 1.5px 0; background: #9a9d93; }
 /* the Messages app — texting ZHZisZZ about why CUA-Lite is good */
 .ph-app { padding: 0; }
-.ph-chat { display: flex; flex-direction: column; height: 100%; }
+.ph-chat { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .ph-chead { position: relative; display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 3px 12px 11px; box-shadow: inset 0 -1px 0 #e3e5df; }
 .ph-back { position: absolute; left: 13px; top: 5px; font-size: 22px; line-height: 1; color: var(--pgreen-lo); }
 .ph-av { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: #d7dad1; }
 .ph-av.noimg { background: linear-gradient(140deg, #9aa79a, #66745f); }
 .ph-who { font-family: var(--sans); font-weight: 600; font-size: 11.5px; color: #2a2e27; }
-.ph-thread { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 7px; padding: 14px 13px; }
+.ph-thread { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 7px; padding: 14px 13px; }
 .ph-day { align-self: center; font-family: var(--sans); font-size: 9px; color: #9aa096; margin-bottom: 4px; }
 .ph-bub { max-width: 80%; font-size: 12.5px; line-height: 1.36; padding: 8px 12px; border-radius: 17px; }
 .ph-bub.them { align-self: flex-start; background: #e7e7ec; color: #2a2e27; border-bottom-left-radius: 5px; }
 /* the sent bubble grows its height as it appears, so the whole thread slides
    up smoothly (never a jump) — the classic silky messaging feel */
-.ph-bub.me { align-self: flex-end; background: var(--accent); color: #08240f; font-weight: 600; border-bottom-right-radius: 5px;
+.ph-bub.me { align-self: flex-end; background: #34c759; color: #fff; font-weight: 600; border-bottom-right-radius: 5px;
   max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; overflow: hidden; transform: translateY(7px) scale(.95); transform-origin: 100% 100%;
   transition: max-height .42s var(--ease), padding .42s var(--ease), opacity .3s ease, transform .42s cubic-bezier(.2,.9,.3,1.2); }
 .ph-bub.me.show { max-height: 80px; padding-top: 8px; padding-bottom: 8px; opacity: 1; transform: none; }
-.ph-composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px 30px; box-shadow: inset 0 1px 0 #e3e5df; }
-.ph-input { flex: 1; display: flex; align-items: center; font-size: 12.5px; color: #2a2e27; background: #fff; border-radius: 16px; box-shadow: inset 0 0 0 1.5px #d3d5ce; padding: 7px 13px; min-height: 18px; }
+.ph-composer { display: flex; align-items: center; gap: 8px; padding: 10px 12px 26px; background: #f4f5f0; box-shadow: inset 0 1px 0 #e3e5df; }
+.ph-input { flex: 1; display: flex; align-items: center; font-size: 12.5px; color: #2a2e27; background: #fff; border-radius: 16px; box-shadow: inset 0 0 0 1.5px #d3d5ce; padding: 7px 13px; height: 32px; white-space: nowrap; overflow: hidden; }
+.ph-input .mk-ph, .ph-input > span { overflow: hidden; text-overflow: clip; white-space: nowrap; }
 .ph-input.hot { box-shadow: inset 0 0 0 2px var(--pgreen-lo); }
 .ph-send { display: flex; align-items: center; justify-content: center; width: 27px; height: 27px; border-radius: 50%; background: #c8ccc4; color: #fff; font-size: 15px; font-weight: 800; flex-shrink: 0; transition: background .22s ease; }
 .ph-send.sent { background: var(--pgreen-lo); }
