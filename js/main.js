@@ -442,6 +442,12 @@
              "androidworld", "androidlab", "mobileworld", "mobilegym"],
       table: true,
     },
+    sft: {
+      // SFT fine-tunes any open-weight agent on the unified data (corpora + rollouts)
+      agents: AGENTS.filter((a) => !a.api),
+      envs: ["lite.osworld", "webgym", "mobilegym"],
+      table: false,
+    },
     rl: {
       // only open-weight agents can be fine-tuned / reinforced — API models (gpt, claude) can't
       agents: AGENTS.filter((a) => !a.api),
