@@ -458,7 +458,20 @@
     "androidworld": "AndroidWorld", "androidlab": "AndroidLab", "mobileworld": "MobileWorld", "mobilegym": "MobileGym",
   };
   const benchRows = document.querySelectorAll("#benchmarks .row");
-  const highlightBench = (env) => { const nm = ENV2ROW[env] || env; benchRows.forEach((r) => { const n = r.querySelector(".r-name"); r.classList.toggle("hl", !!n && n.textContent.trim() === nm); }); };
+  const covTabs = document.querySelectorAll("#benchmarks .cov-tab");
+  const covPanels = document.querySelectorAll("#benchmarks .cov-panel");
+  const showPlat = (plat) => {
+    covTabs.forEach((t) => t.classList.toggle("on", t.dataset.plat === plat));
+    covPanels.forEach((p) => p.classList.toggle("on", p.dataset.plat === plat));
+  };
+  covTabs.forEach((t) => t.addEventListener("click", () => showPlat(t.dataset.plat)));
+  const capPlat = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "");
+  const highlightBench = (env) => {
+    const nm = ENV2ROW[env] || env;
+    const plat = capPlat(ENV_PLAT[env]);
+    if (plat) showPlat(plat);   // jump the coverage to the env's platform tab
+    benchRows.forEach((r) => { const n = r.querySelector(".r-name"); r.classList.toggle("hl", !!n && n.textContent.trim() === nm); });
+  };
 
   document.querySelectorAll(".cmdbuild").forEach((cb) => {
     const cfg = CB_OPTS[cb.dataset.cmd];

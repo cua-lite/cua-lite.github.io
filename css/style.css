@@ -667,47 +667,42 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .js-reveal .card.in .cv-field:nth-child(2) { transition-delay: .11s; }
 .js-reveal .card.in .cv-field:nth-child(3) { transition-delay: .22s; }
 
-/* benchmark rows — one pixel-panel listing */
-/* two-column coverage grid — hairlines come from a 1px gap over the edge color */
-.rows { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--panel-edge);
-  border: 2px solid var(--panel-edge); border-radius: 0; overflow: hidden;
-  box-shadow: inset 2px 2px 0 var(--panel-hi), inset -3px -3px 0 var(--panel-lo); }
-.row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding: 12px 18px 13px;
-  background: var(--panel-fill); font-family: var(--mono); transition: background .12s ease; }
-/* platform group header spans the full width above its two-up rows */
-.rows-grp { grid-column: 1 / -1; background: var(--panel-fill);
-  font-family: var(--mono); font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--accent-dim);
-  padding: 13px 18px 4px; }
-.r-desc { flex: 1 0 100%; font-family: var(--sans); font-size: 12.5px; color: var(--dim); line-height: 1.35; min-width: 0; }
-.row:hover .r-desc { color: var(--muted); }
-/* the selected agent can't run this benchmark (platform mismatch) — quietly recede */
-.row.off { opacity: .32; filter: grayscale(1); }
-.row.off:hover { opacity: .5; }
-.row:first-child { border-top: none; }
-.row:hover { background: rgba(126,231,135,.06); }
-/* the row the eval builder currently targets — a quiet green marker */
-.row.hl { background: rgba(154,212,110,.06); box-shadow: inset 3px 0 0 var(--accent); }
-.r-name { display: flex; align-items: center; font-size: 14.5px; color: var(--text); }
-.row:hover .r-name { color: var(--accent); }
-/* a small device glyph per platform — the same three devices as the hero */
-.r-ico { display: inline-block; position: relative; margin-right: 12px; color: var(--dim); flex-shrink: 0; transition: color .12s ease; }
-.row:hover .r-ico { color: var(--accent); }
-.r-ico.desktop { width: 16px; height: 12px; box-shadow: inset 0 0 0 1.5px currentColor; }
-.r-ico.desktop::after { content: ""; position: absolute; left: 50%; bottom: -4px; transform: translateX(-50%); width: 6px; height: 3px; background: currentColor; }
-.r-ico.web { width: 16px; height: 13px; box-shadow: inset 0 0 0 1.5px currentColor; }
-.r-ico.web::after { content: ""; position: absolute; left: 1.5px; right: 1.5px; top: 3.5px; height: 1.5px; background: currentColor; }
-.r-ico.mobile { width: 9px; height: 15px; border-radius: 2px; box-shadow: inset 0 0 0 1.5px currentColor; }
-.r-ico.mobile::after { content: ""; position: absolute; left: 50%; bottom: 1.5px; transform: translateX(-50%); width: 4px; height: 1.5px; background: currentColor; }
-.r-ico.cross { width: 15px; height: 15px; }
-.r-ico.cross::before { content: ""; position: absolute; left: 0; top: 0; width: 9px; height: 9px; box-shadow: inset 0 0 0 1.5px currentColor; }
-.r-ico.cross::after { content: ""; position: absolute; right: 0; bottom: 0; width: 9px; height: 9px; box-shadow: inset 0 0 0 1.5px currentColor; background: var(--panel-fill); }
-/* an animated score bar — the section's concrete benchmark example */
-/* honest coverage, not invented scores: a quiet platform tag */
-.r-plat { font-family: var(--mono); font-size: 11px; letter-spacing: .6px; color: var(--dim); text-transform: uppercase;
-  justify-self: end; transition: color .12s ease; }
-.row:hover .r-plat, .row.hl .r-plat { color: var(--accent); }
-.r-arrow { display: none; }   /* the whole cell is the link — hover state is the affordance */
-.row:hover .r-arrow { color: var(--accent); transform: translate(2px,-2px); }
+/* ---------- benchmark coverage — a segmented control + one floating panel ----------
+   Breadth reads at a glance (count badges), never runs long (one platform shown),
+   and feels alive (cards stagger in on switch). Linked to the eval builder. */
+.cov { max-width: 640px; margin: 0 auto; }
+.cov-tabs { display: inline-flex; gap: 2px; margin: 0 0 20px; padding: 4px;
+  background: var(--panel-2); border: 1px solid var(--panel-edge); border-radius: 999px; }
+.cov-tab { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 8px 15px; cursor: pointer;
+  transition: color .16s ease, background .22s var(--ease), box-shadow .22s var(--ease); }
+.cov-tab:hover { color: var(--text); }
+.cov-tab.on { color: var(--accent); background: var(--panel-fill); box-shadow: 0 1px 3px rgba(40,30,15,.14); }
+.cov-n { font-family: var(--mono); font-size: 10px; color: var(--dim); font-variant-numeric: tabular-nums; }
+.cov-tab.on .cov-n { color: var(--accent-dim); }
+/* the floating panel — real depth, like the terminals + data viewer */
+.cov-body { position: relative; background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px;
+  box-shadow: 0 26px 50px -30px rgba(40,30,15,.4), 0 3px 8px -4px rgba(40,30,15,.16); padding: 9px; overflow: hidden; }
+.cov-panel { display: none; grid-template-columns: 1fr 1fr; gap: 3px; }
+.cov-panel.on { display: grid; }
+/* each benchmark — a quiet card; staggered reveal on switch, lifts on hover */
+.cov-panel .row { display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; border-radius: 10px;
+  text-decoration: none; opacity: 0; transform: translateY(9px);
+  transition: background .16s ease, transform .16s var(--ease); }
+.cov-panel.on .row { animation: covIn .44s var(--ease) forwards; }
+.cov-panel.on .row:nth-child(1){animation-delay:.03s} .cov-panel.on .row:nth-child(2){animation-delay:.07s}
+.cov-panel.on .row:nth-child(3){animation-delay:.11s} .cov-panel.on .row:nth-child(4){animation-delay:.15s}
+.cov-panel.on .row:nth-child(5){animation-delay:.19s} .cov-panel.on .row:nth-child(6){animation-delay:.23s}
+@keyframes covIn { to { opacity: 1; transform: none; } }
+.cov-panel .row:hover { background: var(--panel-2); transform: translateY(-2px); }
+.r-name { font-family: var(--mono); font-size: 14px; color: var(--text); transition: color .14s ease; }
+.cov-panel .row:hover .r-name { color: var(--accent); }
+.r-desc { font-family: var(--sans); font-size: 12.5px; color: var(--dim); line-height: 1.35; }
+/* the env the eval builder currently targets — a soft accent card */
+.cov-panel .row.hl { background: rgba(189,90,56,.09); box-shadow: inset 2.5px 0 0 var(--accent); }
+.cov-panel .row.hl .r-name { color: var(--accent); }
+/* the selected agent can't run this benchmark — recede (filter survives the reveal fade) */
+.cov-panel .row.off { filter: grayscale(1) opacity(.4); }
 
 /* quickstart */
 /* quickstart is the closing "get started" moment — centered as a focal block,
@@ -719,10 +714,13 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .section.centered .section-lead { margin-left: auto; margin-right: auto; }
 .section.centered .start-term,
 .section.centered .cmdbuild,
-.section.centered .rows,
+.section.centered .cov,
 .section.centered .hf-embed { margin-left: auto; margin-right: auto; text-align: left; }
+/* the tab bar is centered over the panel */
+.section.centered .cov { text-align: center; }
+.section.centered .cov-body { text-align: left; }
 /* short code lines look lost when stretched — keep the terminals compact */
-.start-term, .cmdbuild, .rows, .hf-embed { max-width: 660px; }
+.start-term, .cmdbuild, .hf-embed { max-width: 660px; }
 /* the live data viewer sits at section width by default (consistent with the other
    blocks), but expands wider + taller when the cursor moves into it — data gets room
    to breathe on engagement, no click needed; it eases back on leave */
@@ -754,8 +752,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   .divider { padding: 14px 0; }
   .section { padding: 54px 0 12px; }
   .term-body { min-height: 300px; }
-  .row { grid-template-columns: minmax(0,1fr) auto 28px; padding: 17px 18px; gap: 14px; }
-  .r-desc { display: none; }
+  .cov-tabs { flex-wrap: wrap; justify-content: center; }
+  .cov-panel { grid-template-columns: 1fr; }   /* single column on phones */
 }
 /* phones: keep the URL bar + menu inside the viewport */
 @media (max-width: 560px) {

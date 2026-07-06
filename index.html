@@ -234,27 +234,39 @@
         <div class="term-body static cb-body"><span class="t-dim">$</span> python scripts/rollout.py <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-flag">--model-id</span> <span class="cb-slot" data-slot="agent"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-flag">--env-id</span> <span class="cb-slot" data-slot="env"></span> <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-flag">--splits</span> eval <span class="cb-cont">\</span><br><span class="cb-i"></span><span class="cb-flag">--config-path</span> scripts/configs/<span class="cb-drv" data-drv="family"></span>/default/<span class="cb-drv" data-drv="env"></span>.yaml</div>
       </div>
     </div>
-    <div class="rows reveal">
-      <div class="rows-grp">Grounding</div>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/osworld_g/README.md" target="_blank" rel="noopener"><span class="r-name">OSWorld-G</span><span class="r-desc">desktop UI grounding</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/screenspot_pro/README.md" target="_blank" rel="noopener"><span class="r-name">ScreenSpot-Pro</span><span class="r-desc">high-res professional apps</span><span class="r-arrow">↗</span></a>
-      <div class="rows-grp">Desktop</div>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/osworld/README.md" target="_blank" rel="noopener"><span class="r-name">OSWorld</span><span class="r-desc">real Ubuntu desktop apps</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/lite/osworld/README.md" target="_blank" rel="noopener"><span class="r-name">Lite.OSWorld</span><span class="r-desc">lightweight OSWorld tasks</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/osworld_2/README.md" target="_blank" rel="noopener"><span class="r-name">OSWorld-2</span><span class="r-desc">capability-graded · partial credit</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/cua/README.md" target="_blank" rel="noopener"><span class="r-name">CUABench</span><span class="r-desc">computer-use · KiCad · workflows</span><span class="r-arrow">↗</span></a>
-      <div class="rows-grp">Web</div>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/webgym/README.md" target="_blank" rel="noopener"><span class="r-name">WebGym</span><span class="r-desc">web navigation</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/webharbor/webvoyager/README.md" target="_blank" rel="noopener"><span class="r-name">WebVoyager</span><span class="r-desc">live production websites</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/online_mind2web/README.md" target="_blank" rel="noopener"><span class="r-name">Online-Mind2Web</span><span class="r-desc">300 live web tasks</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/browsergym/README.md" target="_blank" rel="noopener"><span class="r-name">MiniWoB</span><span class="r-desc">mini web interactions</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/browsergym/README.md" target="_blank" rel="noopener"><span class="r-name">WebArena</span><span class="r-desc">self-hosted shop · forum · GitLab</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/browsergym/README.md" target="_blank" rel="noopener"><span class="r-name">VisualWebArena</span><span class="r-desc">visual web tasks</span><span class="r-arrow">↗</span></a>
-      <div class="rows-grp">Mobile</div>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/androidworld/README.md" target="_blank" rel="noopener"><span class="r-name">AndroidWorld</span><span class="r-desc">real Android apps</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/androidlab/README.md" target="_blank" rel="noopener"><span class="r-name">AndroidLab</span><span class="r-desc">9 offline Android apps</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/mobileworld/README.md" target="_blank" rel="noopener"><span class="r-name">MobileWorld</span><span class="r-desc">161 mobile tasks</span><span class="r-arrow">↗</span></a>
-      <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/mobilegym/README.md" target="_blank" rel="noopener"><span class="r-name">MobileGym</span><span class="r-desc">mobile navigation</span><span class="r-arrow">↗</span></a>
+    <div class="cov reveal">
+      <div class="cov-tabs" role="tablist">
+        <button class="cov-tab" type="button" data-plat="Grounding" role="tab">Grounding<span class="cov-n">2</span></button>
+        <button class="cov-tab on" type="button" data-plat="Desktop" role="tab">Desktop<span class="cov-n">4</span></button>
+        <button class="cov-tab" type="button" data-plat="Web" role="tab">Web<span class="cov-n">6</span></button>
+        <button class="cov-tab" type="button" data-plat="Mobile" role="tab">Mobile<span class="cov-n">4</span></button>
+      </div>
+      <div class="cov-body">
+        <div class="cov-panel" data-plat="Grounding">
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/osworld_g/README.md" target="_blank" rel="noopener"><span class="r-name">OSWorld-G</span><span class="r-desc">desktop UI grounding</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/screenspot_pro/README.md" target="_blank" rel="noopener"><span class="r-name">ScreenSpot-Pro</span><span class="r-desc">high-res professional apps</span></a>
+        </div>
+        <div class="cov-panel on" data-plat="Desktop">
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/osworld/README.md" target="_blank" rel="noopener"><span class="r-name">OSWorld</span><span class="r-desc">real Ubuntu desktop apps</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/lite/osworld/README.md" target="_blank" rel="noopener"><span class="r-name">Lite.OSWorld</span><span class="r-desc">lightweight OSWorld tasks</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/osworld_2/README.md" target="_blank" rel="noopener"><span class="r-name">OSWorld-2</span><span class="r-desc">capability-graded · partial credit</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/cua/README.md" target="_blank" rel="noopener"><span class="r-name">CUABench</span><span class="r-desc">computer-use · KiCad · workflows</span></a>
+        </div>
+        <div class="cov-panel" data-plat="Web">
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/webgym/README.md" target="_blank" rel="noopener"><span class="r-name">WebGym</span><span class="r-desc">web navigation</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/webharbor/webvoyager/README.md" target="_blank" rel="noopener"><span class="r-name">WebVoyager</span><span class="r-desc">live production websites</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/online_mind2web/README.md" target="_blank" rel="noopener"><span class="r-name">Online-Mind2Web</span><span class="r-desc">300 live web tasks</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/browsergym/README.md" target="_blank" rel="noopener"><span class="r-name">MiniWoB</span><span class="r-desc">mini web interactions</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/browsergym/README.md" target="_blank" rel="noopener"><span class="r-name">WebArena</span><span class="r-desc">self-hosted shop · forum · GitLab</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/browsergym/README.md" target="_blank" rel="noopener"><span class="r-name">VisualWebArena</span><span class="r-desc">visual web tasks</span></a>
+        </div>
+        <div class="cov-panel" data-plat="Mobile">
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/androidworld/README.md" target="_blank" rel="noopener"><span class="r-name">AndroidWorld</span><span class="r-desc">real Android apps</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/androidlab/README.md" target="_blank" rel="noopener"><span class="r-name">AndroidLab</span><span class="r-desc">9 offline Android apps</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/mobileworld/README.md" target="_blank" rel="noopener"><span class="r-name">MobileWorld</span><span class="r-desc">161 mobile tasks</span></a>
+          <a class="row" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/mobilegym/README.md" target="_blank" rel="noopener"><span class="r-name">MobileGym</span><span class="r-desc">mobile navigation</span></a>
+        </div>
+      </div>
     </div>
   </div>
 </section>
