@@ -412,6 +412,28 @@
     { model: "MarsXL/UI-Voyager", family: "ui_voyager" },
     { model: "stepfun-ai/GELab-Zero-4B-preview", family: "step_gui" },
   ];
+  // which platforms each family actually supports (from scripts/configs/<family>/default/*.yaml).
+  // A mobile-only model can't be paired with a desktop env — the env menu filters to these.
+  const ALL_PLATS = ["desktop", "web", "mobile", "grounding"];
+  const FAMILY_PLATS = {
+    gpt: ALL_PLATS, claude: ALL_PLATS, qwen3_vl: ALL_PLATS, qwen3_5: ALL_PLATS,
+    qwen2_5_vl: ["desktop", "grounding"],
+    fara: ["web", "grounding"],
+    ui_tars: ["desktop", "mobile", "grounding"], ui_tars_15_v1: ["desktop", "mobile", "grounding"],
+    scalecua: ["desktop", "grounding"], opencua: ["desktop", "grounding"], evocua: ["desktop", "grounding"],
+    mai_ui: ["mobile", "grounding"],
+    ui_voyager: ["mobile"], step_gui: ["mobile"],
+  };
+  // each env's platform (grounding benchmarks are cross-platform grounding tasks)
+  const ENV_PLAT = {
+    "osworld": "desktop", "lite.osworld": "desktop", "osworld_2": "desktop", "cua.bench": "desktop",
+    "cuagym": "desktop", "cuaworld": "desktop",
+    "screenspot_pro": "grounding", "osworld_g": "grounding",
+    "webgym": "web", "webharbor.webvoyager": "web", "online_mind2web": "web",
+    "browsergym.miniwob": "web", "browsergym.webarena": "web", "browsergym.visualwebarena": "web",
+    "androidworld": "mobile", "androidlab": "mobile", "mobileworld": "mobile", "mobilegym": "mobile",
+  };
+  const envsFor = (agent, envs) => envs.filter((e) => FAMILY_PLATS[agent.family].includes(ENV_PLAT[e]));
   const CB_OPTS = {
     eval: {
       agents: AGENTS,
@@ -448,10 +470,19 @@
     const drvFamily = cb.querySelectorAll('.cb-drv[data-drv="family"]');
     const drvEnv = cb.querySelectorAll('.cb-drv[data-drv="env"]');
     let agent = cfg.agents[0];
-    let env = cfg.envs[0];
+    const allowedEnvs = () => envsFor(agent, cfg.envs);
+    let env = allowedEnvs()[0];
     const closeAll = (except) => cb.querySelectorAll(".cb-slot.open").forEach((s) => { if (s !== except) s.classList.remove("open"); });
     const swap = (slot) => { slot.classList.remove("swap"); void slot.offsetWidth; slot.classList.add("swap"); };
-    const sync = () => { drvFamily.forEach((e) => (e.textContent = agent.family)); drvEnv.forEach((e) => (e.textContent = env)); if (cfg.table) highlightBench(env); };
+    const dimUnsupported = () => {
+      const allowed = new Set(allowedEnvs());
+      benchRows.forEach((r) => {
+        const nm = r.querySelector(".r-name").textContent.trim();
+        const envId = Object.keys(ENV2ROW).find((k) => ENV2ROW[k] === nm);
+        r.classList.toggle("off", !allowed.has(envId));   // agent can't run this benchmark
+      });
+    };
+    const sync = () => { drvFamily.forEach((e) => (e.textContent = agent.family)); drvEnv.forEach((e) => (e.textContent = env)); if (cfg.table) { highlightBench(env); dimUnsupported(); } };
 
     function makeSlot(slot, getList, getLabel, curLabel, onPick) {
       const tok = document.createElement("button");
@@ -476,9 +507,12 @@
     }
 
     makeSlot(agentSlot, () => cfg.agents, (a) => a.model, () => agent.model, (a) => {
-      agent = a; swap(agentSlot); agentSlot._render(); sync();
+      agent = a;
+      // the new agent may not support the current env — fall back to its first supported one
+      if (!allowedEnvs().includes(env)) { env = allowedEnvs()[0]; swap(envSlot); }
+      swap(agentSlot); agentSlot._render(); envSlot._render(); sync();
     });
-    makeSlot(envSlot, () => cfg.envs, (e) => e, () => env, (e) => {
+    makeSlot(envSlot, allowedEnvs, (e) => e, () => env, (e) => {
       env = e; swap(envSlot); envSlot._render(); sync();
     });
     sync();
