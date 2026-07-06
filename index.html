@@ -204,12 +204,11 @@
   <div class="container">
     <p class="eyebrow">01 · Unified data</p>
     <h2>One schema, <em>every agent.</em></h2>
-    <p class="section-lead">Every sample — from 10+ preprocessed
+    <p class="section-lead">Preprocessed
       <a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">corpora</a>
-      or distilled from any teacher via
-      <a href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">rollouts</a> —
-      lands in one format, <code>LiteSample</code>. Per-agent adapters postprocess it into each model's own
-      scaffolding, so any agent trains on the same data. Here it is, live on the Hub:</p>
+      and distilled
+      <a href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">rollouts</a>,
+      one format — <code>LiteSample</code>. Per-agent adapters do the rest. Live on the Hub:</p>
     <figure class="hf-embed reveal">
       <div class="hf-window">
         <div class="hf-bar">
@@ -230,8 +229,8 @@
   <div class="container">
     <p class="eyebrow">02 · Evaluate</p>
     <h2>Any agent, <em>any benchmark.</em></h2>
-    <p class="section-lead">One command evaluates any agent on any benchmark — one action space
-      everywhere. Mix any <span class="lead-tok">agent</span> with any <span class="lead-tok">env</span>:</p>
+    <p class="section-lead">One command, one action space everywhere. Mix any
+      <span class="lead-tok">agent</span> with any <span class="lead-tok">env</span>:</p>
     <div class="cmdbuild reveal" data-cmd="eval">
       <div class="term">
         <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">evaluate.sh</span></div>
@@ -268,10 +267,9 @@
   <div class="container">
     <p class="eyebrow">03 · Train</p>
     <h2>SFT &amp; RL, <em>any open agent.</em></h2>
-    <p class="section-lead">Fine-tune any open-weight agent on the unified corpora, then reinforce it on highly
-      optimized gym environments — GRPO and beyond, on top of
-      <a href="https://github.com/THUDM/slime" target="_blank" rel="noopener">Slime</a>. Same command shape —
-      any <span class="lead-tok">open agent</span>, any <span class="lead-tok">gym</span>:</p>
+    <p class="section-lead">SFT on the corpora, then reinforce in the gyms — GRPO and beyond, on
+      <a href="https://github.com/THUDM/slime" target="_blank" rel="noopener">Slime</a>.
+      Any <span class="lead-tok">open agent</span>, any <span class="lead-tok">gym</span>:</p>
     <div class="cmdbuild reveal" data-cmd="rl">
       <div class="term">
         <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">run_grpo.sh</span></div>
