@@ -106,7 +106,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .cta-row.center { justify-content: center; margin-top: 36px; }
 /* closing CTA — a quiet bookend to the hero */
 .closing { text-align: center; padding-top: 40px; }
-.closing-line { font-family: var(--serif); font-weight: 400; font-style: italic; font-size: clamp(28px, 3.2vw, 42px); letter-spacing: -0.01em; color: var(--text); margin: 0; }
+.closing-line { font-family: var(--serif); font-weight: 400; font-style: normal; font-size: clamp(28px, 3.2vw, 42px); letter-spacing: -0.01em; color: var(--text); margin: 0; }
+.closing-line em { font-style: italic; color: var(--accent); }
 
 /* ---------- nav ---------- */
 .nav { position: sticky; top: 0; z-index: 100; background: rgba(250,244,232,.72); backdrop-filter: blur(16px) saturate(1.15); border-bottom: 1px solid var(--line); }
@@ -532,6 +533,18 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .section-lead code { font-family: var(--mono); font-size: 13.5px; background: var(--panel-2); border: 1px solid var(--line); padding: 1px 6px; color: var(--text); }
 .section-lead a { color: var(--accent); }
 .section-lead a:hover { text-decoration: underline; }
+/* the two data sources — corpora (at scale) + rollouts (on demand) */
+.src-two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 660px; margin: 0 auto 26px; text-align: left; }
+.src { display: flex; flex-direction: column; gap: 8px; padding: 21px 23px 19px; border-radius: 13px; text-decoration: none;
+  background: var(--panel-fill); border: 1px solid var(--panel-edge);
+  box-shadow: 0 20px 38px -28px rgba(40,30,15,.32); transition: transform .18s var(--ease), box-shadow .22s var(--ease), border-color .18s ease; }
+.src:hover { transform: translateY(-3px); box-shadow: 0 26px 44px -26px rgba(40,30,15,.4); border-color: var(--accent-dim); }
+.src-k { font-family: var(--mono); font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--accent-dim); }
+.src-h { font-family: var(--sans); font-weight: 700; font-size: 18px; color: var(--text); letter-spacing: -0.01em; }
+.src-d { font-family: var(--sans); font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+.src-go { margin-top: 4px; font-family: var(--mono); font-size: 11.5px; color: var(--accent); transition: opacity .14s ease; }
+.src:hover .src-go { text-decoration: underline; }
+.src-cap { margin-bottom: 22px; }
 
 /* ---------- live HF dataset browser: a refined dropdown + framed viewer ---------- */
 .hf-embed { margin: 0; }
@@ -754,6 +767,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   .term-body { min-height: 300px; }
   .cov-tabs { flex-wrap: wrap; justify-content: center; }
   .cov-panel { grid-template-columns: 1fr; }   /* single column on phones */
+  .src-two { grid-template-columns: 1fr; }
 }
 /* phones: keep the URL bar + menu inside the viewport */
 @media (max-width: 560px) {
