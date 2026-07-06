@@ -454,6 +454,22 @@
       envs: ["lite.osworld", "webgym", "cuagym", "cuaworld", "mobilegym"],
       table: false,
     },
+    // the quickstart REPL: a taste of the API, not the whole matrix. Its env slot
+    // carries a third `task` slot ("<env>@<task>") — representative real task-ids
+    // per env (a trailing … signals "and many more"). No derived --flags, no table.
+    quickstart: {
+      agents: AGENTS,
+      envs: ["osworld", "lite.osworld", "webgym", "mobilegym"],
+      table: false,
+      tasks: {
+        "osworld": ["osworld_chrome_030eeff7", "osworld_libreoffice_calc_01b269ae",
+                    "osworld_gimp_045bf3ff", "osworld_vs_code_0512bb38", "osworld_multi_apps_00fa164e"],
+        "lite.osworld": ["osworld_libreoffice_writer_0810415c", "osworld_vlc_215dfd39",
+                         "osworld_thunderbird_08c73485", "osworld_os_13584542", "osworld_libreoffice_impress_04578141"],
+        "webgym": ["15", "17", "69059", "142359", "1"],
+        "mobilegym": ["clock.AddAlarm", "notes.PinNote", "ebay.SwitchTheme", "alipay.FindFriend", "map.SetMapNorthUp"],
+      },
+    },
   };
   // real env-id -> the proper benchmark name in the coverage table (for the highlight)
   const ENV2ROW = {
@@ -485,12 +501,17 @@
     const agentSlot = cb.querySelector('.cb-slot[data-slot="agent"]');
     const envSlot = cb.querySelector('.cb-slot[data-slot="env"]');
     if (!agentSlot || !envSlot) return;
+    // the quickstart REPL adds a third `task` slot rendered inline as "<env>@<task>";
+    // absent for the eval/sft/rl builders, whose behavior is unchanged.
+    const taskSlot = cfg.tasks ? cb.querySelector('.cb-slot[data-slot="task"]') : null;
     const drvFamily = cb.querySelectorAll('.cb-drv[data-drv="family"]');
     const drvEnv = cb.querySelectorAll('.cb-drv[data-drv="env"]');
     const drvAgent = cb.querySelectorAll('.cb-drv[data-drv="agent"]');
     let agent = cfg.agents[0];
     const allowedEnvs = () => envsFor(agent, cfg.envs);
     let env = allowedEnvs()[0];
+    let task = cfg.tasks ? cfg.tasks[env][0] : null;
+    const resetTask = () => { if (cfg.tasks) task = cfg.tasks[env][0]; };
     const closeAll = (except) => cb.querySelectorAll(".cb-slot.open").forEach((s) => { if (s !== except) s.classList.remove("open"); });
     const swap = (slot) => { slot.classList.remove("swap"); void slot.offsetWidth; slot.classList.add("swap"); };
     const dimUnsupported = () => {
@@ -533,12 +554,17 @@
     makeSlot(agentSlot, () => cfg.agents, (a) => a.model, () => agent.model, (a) => {
       agent = a;
       // the new agent may not support the current env — fall back to its first supported one
-      if (!allowedEnvs().includes(env)) { env = allowedEnvs()[0]; swap(envSlot); }
-      swap(agentSlot); agentSlot._render(); envSlot._render(); sync();
+      if (!allowedEnvs().includes(env)) { env = allowedEnvs()[0]; resetTask(); swap(envSlot); if (taskSlot) swap(taskSlot); }
+      swap(agentSlot); agentSlot._render(); envSlot._render(); if (taskSlot) taskSlot._render(); sync();
     });
     makeSlot(envSlot, allowedEnvs, (e) => e, () => env, (e) => {
-      env = e; swap(envSlot); envSlot._render(); sync();
+      // switching env resets the task to that env's first representative one
+      env = e; resetTask(); swap(envSlot); envSlot._render(); if (taskSlot) { taskSlot._render(); swap(taskSlot); } sync();
     }, (e) => capPlat(ENV_PLAT[e]));   // env menu grouped by platform, like the data viewer's dropdown
+    // the task slot lists the env's representative task-ids + a trailing … (a no-op sentinel)
+    if (taskSlot) makeSlot(taskSlot, () => [...cfg.tasks[env], "…"], (t) => t, () => task, (t) => {
+      if (t === "…") return; task = t; swap(taskSlot); taskSlot._render(); sync();
+    });
     sync();
     document.addEventListener("click", (e) => { if (!cb.contains(e.target)) closeAll(); });
   });
