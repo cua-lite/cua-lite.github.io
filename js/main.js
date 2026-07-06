@@ -433,13 +433,16 @@
     "androidworld": "mobile", "androidlab": "mobile", "mobileworld": "mobile", "mobilegym": "mobile",
   };
   const envsFor = (agent, envs) => envs.filter((e) => FAMILY_PLATS[agent.family].includes(ENV_PLAT[e]));
+  // the full benchmark env matrix — shared by the eval builder and the quickstart
+  // REPL so their env dropdowns stay identical (one source of truth).
+  const ALL_ENVS = ["osworld", "lite.osworld", "osworld_2", "cua.bench", "screenspot_pro", "osworld_g",
+                    "webgym", "webharbor.webvoyager", "online_mind2web", "browsergym.miniwob",
+                    "browsergym.webarena", "browsergym.visualwebarena",
+                    "androidworld", "androidlab", "mobileworld", "mobilegym"];
   const CB_OPTS = {
     eval: {
       agents: AGENTS,
-      envs: ["osworld", "lite.osworld", "osworld_2", "cua.bench", "screenspot_pro", "osworld_g",
-             "webgym", "webharbor.webvoyager", "online_mind2web", "browsergym.miniwob",
-             "browsergym.webarena", "browsergym.visualwebarena",
-             "androidworld", "androidlab", "mobileworld", "mobilegym"],
+      envs: ALL_ENVS,
       table: true,
     },
     sft: {
@@ -459,14 +462,31 @@
     // per env (a trailing … signals "and many more"). No derived --flags, no table.
     quickstart: {
       agents: AGENTS,
-      envs: ["osworld", "lite.osworld", "webgym", "mobilegym"],
+      envs: ALL_ENVS,   // same full matrix as the benchmark eval builder
       table: false,
+      // representative real task-ids per env (a trailing … signals "and many more").
+      // A few grounding/misc envs whose task lists ship on-demand (not in-repo) use
+      // format-faithful sample ids.
       tasks: {
         "osworld": ["osworld_chrome_030eeff7", "osworld_libreoffice_calc_01b269ae",
                     "osworld_gimp_045bf3ff", "osworld_vs_code_0512bb38", "osworld_multi_apps_00fa164e"],
         "lite.osworld": ["osworld_libreoffice_writer_0810415c", "osworld_vlc_215dfd39",
                          "osworld_thunderbird_08c73485", "osworld_os_13584542", "osworld_libreoffice_impress_04578141"],
+        "osworld_2": ["bb5e4c0d-f964-439c-97b6-bdb9747de3f4", "7b6c7e24-c58a-49fc-a5bb-d57b80e5b4c3",
+                      "06fe7178-4491-4589-810f-2e2bc9502122"],
+        "cua.bench": ["cua_0003", "cua_0021", "cua_0088"],
+        "screenspot_pro": ["screenspot_pro_0142", "screenspot_pro_0873", "screenspot_pro_1204"],
+        "osworld_g": ["osworld_g_0057", "osworld_g_0391", "osworld_g_0620"],
         "webgym": ["15", "17", "69059", "142359", "1"],
+        "webharbor.webvoyager": ["webvoyager.allrecipes.0", "webvoyager.allrecipes.1", "webvoyager.allrecipes.10"],
+        "online_mind2web": ["0059adc6b12a3822305deb68929b2de8", "005be9dd91c95669d6ddde9ae667125c",
+                            "0170ca95038b05fa58d463fe627ac605"],
+        "browsergym.miniwob": ["miniwob.click-dialog", "miniwob.click-button", "miniwob.enter-text", "miniwob.choose-list"],
+        "browsergym.webarena": ["webarena.0", "webarena.78", "webarena.201"],
+        "browsergym.visualwebarena": ["visualwebarena.0", "visualwebarena.132", "visualwebarena.298"],
+        "androidworld": ["AudioRecorderRecordAudio", "BrowserDraw", "BrowserMaze", "ContactsAddContact"],
+        "androidlab": ["bluecoins_1", "bluecoins_10", "bluecoins_11"],
+        "mobileworld": ["AcceptMeetingTask", "AddBusinessTripAskUserTask", "AdjustBrightnessMaximumTask"],
         "mobilegym": ["clock.AddAlarm", "notes.PinNote", "ebay.SwitchTheme", "alipay.FindFriend", "map.SetMapNorthUp"],
       },
     },
