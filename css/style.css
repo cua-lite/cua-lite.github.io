@@ -204,7 +204,11 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .stat-n { font-size: 15px; }
 .stat-n { color: var(--accent); font-weight: 700; font-size: 16px; letter-spacing: 0; }
 /* affiliation lockup, echoed from the footer — muted, non-distracting */
-.hero-affil { display: flex; align-items: center; gap: 14px; margin-top: 22px; }
+.hero-affil { display: flex; align-items: center; gap: 14px; margin-top: 22px; transition: opacity .18s var(--ease); }
+/* while a stat popover is open, hide the affiliation so it can't peek out beside the
+   panel. visibility (not opacity) — the heroIn entrance animation fill-freezes opacity
+   at 1 and would override a plain opacity:0. */
+.hero-head.stats-pop .hero-affil { visibility: hidden; }
 .affil-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--dim); }
 .hero-affil a { display: inline-flex; align-items: center; opacity: .42; filter: grayscale(1); transition: opacity .16s var(--ease), filter .16s var(--ease); }
 .hero-affil a:hover { opacity: .9; filter: grayscale(0); }
@@ -499,13 +503,13 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
    the page below (web's 6-line trace is the max) — zero layout drift */
 /* the rollout trace is a dark terminal log (like the page's other terminals) so it
    stays legible on the cream page and reads as the machine's own output */
-.rollout { font-family: var(--mono); font-size: 14.5px; min-height: 238px; margin-top: 16px;
+.rollout { font-family: var(--mono); font-size: 14.5px; min-height: 284px; margin-top: 16px;
   --accent: var(--term-accent);
   background: var(--term-fill); color: var(--term-text); border: 1px solid var(--term-edge); border-radius: 8px;
   padding: 18px 20px 16px; box-shadow: 0 20px 44px -26px rgba(40,30,15,.5); }
 .rl-cmd { font-size: 12.5px; line-height: 1.55; color: var(--term-muted); padding-bottom: 12px; border-bottom: 1px solid var(--term-edge); word-break: break-word; }
 .rl-cmd .c-p { color: var(--term-accent); } .rl-cmd .c-flag { color: var(--term-dim); } .rl-cmd .c-val { color: var(--term-text); } .rl-cmd .c-env { color: var(--term-accent); }
-.rl-log { margin-top: 12px; min-height: 120px; display: flex; flex-direction: column; gap: 9px; }
+.rl-log { margin-top: 12px; min-height: 190px; display: flex; flex-direction: column; gap: 9px; }
 .rl-line { display: flex; color: var(--term-text); opacity: 0; transform: translateY(3px); animation: rlIn .22s ease forwards; }
 .rl-mark { color: var(--term-dim); margin-right: 10px; flex-shrink: 0; }
 .rl-lat { margin-left: auto; padding-left: 14px; color: var(--term-dim); flex-shrink: 0; font-variant-numeric: tabular-nums; }
@@ -677,6 +681,10 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 @keyframes cbFlash { 0%,35% { background: var(--accent); color: var(--pgreen-ink); border-bottom-color: var(--accent); }
   100% { background: rgba(154,212,110,.09); color: var(--accent); } }
 @keyframes cbLift { 0% { transform: translateY(4px); opacity: .2; } 100% { transform: translateY(0); opacity: 1; } }
+/* derived spans (config-path family/env, dataset/slug…) pulse when a pick updates them */
+.cb-drv.drv-flash { animation: drvFlash .5s var(--ease); border-radius: 3px; }
+@keyframes drvFlash { 0%,30% { background: var(--accent); color: var(--term-fill); }
+  100% { background: transparent; color: var(--accent); } }
 /* the option menu */
 .cb-menu { position: absolute; top: calc(100% + 8px); left: 0; z-index: 30; min-width: 200px; max-height: 300px; overflow-y: auto; background: var(--panel-fill);
   border: 2px solid var(--panel-edge); padding: 5px; box-shadow: 0 22px 52px -22px rgba(0,0,0,.95);
@@ -704,13 +712,12 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 .sft-hf { font-size: 12px; letter-spacing: 0; }
 .sft-arrow { font-family: var(--mono); font-size: 15px; color: var(--dim); padding-bottom: 8px; user-select: none; }
 /* the tokens live on cream here (not in a dark term): full-width, panel-tinted chips */
-.sft-cfg .cb-slot { display: block; }
-.sft-cfg .cb-tok { width: 100%; justify-content: space-between; background: var(--panel-2);
-  border: 1px solid var(--panel-edge); border-radius: 8px; padding: 9px 12px; }
-.sft-cfg .cb-tok:hover { background: #fff; border-color: var(--accent-dim); }
-.sft-cfg .cb-slot.open .cb-tok { background: #fff; border-color: var(--accent); }
+/* match the site's inline dashed-underline token, not a boxed form select */
+.sft-cfg .cb-slot { display: inline-flex; max-width: 100%; }
+.sft-cfg .cb-tok { font-size: 14px; padding: 4px 9px; background: rgba(189,90,56,.08); }
+.sft-cfg .cb-tok:hover, .sft-cfg .cb-slot.open .cb-tok { background: rgba(189,90,56,.15); }
 .sft-cfg .cb-txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sft-cfg .cb-menu { min-width: 100%; }
+.sft-cfg .cb-menu { min-width: 220px; }
 
 .cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
 .card { min-width: 0; display: flex; flex-direction: column; background: var(--panel-fill); border: 2px solid var(--panel-edge); border-radius: 0;

@@ -568,19 +568,21 @@
       slot._render = render; render();
     }
 
+    // pulse the derived spans (config-path family/env, dataset…) when a pick updates them
+    const flashDrv = () => cb.querySelectorAll(".cb-drv").forEach((e) => { e.classList.remove("drv-flash"); void e.offsetWidth; e.classList.add("drv-flash"); });
     makeSlot(agentSlot, () => cfg.agents, (a) => a.model, () => agent.model, (a) => {
       agent = a;
       // the new agent may not support the current env — fall back to its first supported one
       if (!allowedEnvs().includes(env)) { env = allowedEnvs()[0]; resetTask(); swap(envSlot); if (taskSlot) swap(taskSlot); }
-      swap(agentSlot); agentSlot._render(); envSlot._render(); if (taskSlot) taskSlot._render(); sync();
+      swap(agentSlot); agentSlot._render(); envSlot._render(); if (taskSlot) taskSlot._render(); sync(); flashDrv();
     });
     makeSlot(envSlot, allowedEnvs, (e) => e, () => env, (e) => {
       // switching env resets the task to that env's first representative one
-      env = e; resetTask(); swap(envSlot); envSlot._render(); if (taskSlot) { taskSlot._render(); swap(taskSlot); } sync();
+      env = e; resetTask(); swap(envSlot); envSlot._render(); if (taskSlot) { taskSlot._render(); swap(taskSlot); } sync(); flashDrv();
     }, (e) => capPlat(ENV_PLAT[e]));   // env menu grouped by platform, like the data viewer's dropdown
     // the task slot lists the env's representative task-ids + a trailing … (a no-op sentinel)
     if (taskSlot) makeSlot(taskSlot, () => [...cfg.tasks[env], "…"], (t) => t, () => task, (t) => {
-      if (t === "…") return; task = t; swap(taskSlot); taskSlot._render(); sync();
+      if (t === "…") return; task = t; swap(taskSlot); taskSlot._render(); sync(); flashDrv();
     });
     sync();
     document.addEventListener("click", (e) => { if (!cb.contains(e.target)) closeAll(); });
@@ -647,8 +649,9 @@
       slot._render = render; render();
     }
 
-    build(dsSlot, SFT_DATASETS, () => dataset, (v) => { dataset = v; swap(dsSlot); dsSlot._render(); sync(); });
-    build(mdSlot, MODELS, () => model.model, (v) => { model = v; swap(mdSlot); mdSlot._render(); sync(); });
+    const flashDrv = () => panel.querySelectorAll(".cb-drv").forEach((e) => { e.classList.remove("drv-flash"); void e.offsetWidth; e.classList.add("drv-flash"); });
+    build(dsSlot, SFT_DATASETS, () => dataset, (v) => { dataset = v; swap(dsSlot); dsSlot._render(); sync(); flashDrv(); });
+    build(mdSlot, MODELS, () => model.model, (v) => { model = v; swap(mdSlot); mdSlot._render(); sync(); flashDrv(); });
     sync();
     document.addEventListener("click", (e) => { if (!panel.contains(e.target)) closeAll(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
@@ -754,10 +757,11 @@
     pop.innerHTML = h;
   });
   // hover-persist: open on enter, stay while over the stat OR the panel, close on leave (delayed to bridge the gap)
+  const heroHead = document.querySelector(".hero-head");
   document.querySelectorAll(".stat").forEach((stat) => {
     const pop = stat.querySelector(".stat-pop"); let t;
-    const open = () => { clearTimeout(t); document.querySelectorAll(".stat.pop-open").forEach((s) => { if (s !== stat) s.classList.remove("pop-open"); }); stat.classList.add("pop-open"); };
-    const close = () => { t = setTimeout(() => stat.classList.remove("pop-open"), 240); };
+    const open = () => { clearTimeout(t); document.querySelectorAll(".stat.pop-open").forEach((s) => { if (s !== stat) s.classList.remove("pop-open"); }); stat.classList.add("pop-open"); if (heroHead) heroHead.classList.add("stats-pop"); };
+    const close = () => { t = setTimeout(() => { stat.classList.remove("pop-open"); if (heroHead && !document.querySelector(".stat.pop-open")) heroHead.classList.remove("stats-pop"); }, 240); };
     stat.addEventListener("pointerenter", open);
     stat.addEventListener("pointerleave", close);
     if (pop) { pop.addEventListener("pointerenter", () => clearTimeout(t)); pop.addEventListener("pointerleave", close); }
