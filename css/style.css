@@ -200,16 +200,21 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .stat:not(:last-child)::after { content: "·"; margin: 0 18px; color: var(--dim); }
 .stat-n { color: var(--accent); font-weight: 700; font-size: 16px; letter-spacing: 0; }
 /* one shared panel-slot below the row — hover fills the whitespace instead of a cramped tooltip above */
-.stat-pop { position: absolute; top: 100%; left: 0; margin-top: 20px; z-index: 30; width: 100%; max-width: 430px;
-  background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 10px;
-  box-shadow: 0 22px 44px -26px rgba(40,30,15,.4);
-  padding: 14px 15px 15px; text-transform: none;
-  opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity .22s var(--ease), transform .22s var(--ease); }
-.stat-pop b { display: block; color: var(--accent); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
-.pop-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.pop-chips span { font-family: var(--mono); font-size: 11px; letter-spacing: .3px; color: var(--muted);
-  padding: 3px 8px; border: 1px solid var(--panel-edge); background: var(--panel-2); border-radius: 4px; }
-.stat:hover .stat-pop, .stat:focus-within .stat-pop { opacity: 1; transform: none; }
+.stat-pop { position: absolute; top: 100%; left: 0; margin-top: 18px; z-index: 30; width: max-content; max-width: min(470px, calc(100vw - 40px));
+  background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px;
+  box-shadow: 0 28px 52px -28px rgba(40,30,15,.46), 0 3px 8px -4px rgba(40,30,15,.16);
+  padding: 17px 19px 16px; text-transform: none; text-align: left;
+  opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity .2s var(--ease), transform .2s var(--ease); }
+.stat.pop-open .stat-pop, .stat:hover .stat-pop, .stat:focus-within .stat-pop { opacity: 1; transform: none; pointer-events: auto; }
+.stat-pop b { display: block; font-family: var(--sans); font-weight: 600; font-size: 12.5px; letter-spacing: 0; text-transform: none; color: var(--muted); line-height: 1.42; margin-bottom: 13px; }
+.pop-grp { display: block; margin-top: 13px; }
+.pop-grp:first-of-type { margin-top: 0; }
+.pop-cat { display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--accent-dim); margin-bottom: 7px; }
+.pop-list { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+.pop-item { display: inline-flex; align-items: center; gap: 5px; font-family: var(--sans); font-size: 13.5px; font-weight: 450; color: var(--text); text-decoration: none; padding: 2px 0; transition: color .14s ease; }
+.pop-item:hover { color: var(--accent); }
+.pop-x { font-size: 10px; color: var(--dim); transition: color .14s ease, transform .14s ease; }
+.pop-item:hover .pop-x { color: var(--accent); transform: translate(1px,-1px); }
 
 /* ---------- terminal — stays dark on the cream page (the code/CRT identity) ---------- */
 .term { position: relative; background: var(--term-fill); color: var(--term-text); border: 1px solid var(--term-edge); border-radius: 8px; overflow: hidden;

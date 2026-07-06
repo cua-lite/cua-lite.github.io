@@ -568,3 +568,65 @@
     });
   }
 })();
+
+/* ---------- hero stat popovers — rich, categorized, every item links out ---------- */
+(function () {
+  const RM = "https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/";
+  const DS = "https://huggingface.co/datasets/cua-lite/";
+  const POP = {
+    agents: { cap: "Proprietary &amp; open — drop in any of these", groups: [
+      { label: "Proprietary", items: [
+        ["GPT-5.5", "https://platform.openai.com/docs/guides/tools-computer-use"],
+        ["Claude", "https://docs.anthropic.com/en/docs/agents-and-tools/computer-use"] ] },
+      { label: "Open-weight", items: [
+        ["Qwen3-VL", "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct"],
+        ["Qwen3.5", "https://huggingface.co/Qwen/Qwen3.5-4B"],
+        ["Qwen2.5-VL", "https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct"],
+        ["UI-TARS", "https://huggingface.co/ByteDance-Seed/UI-TARS-7B-DPO"],
+        ["UI-TARS-1.5", "https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B"],
+        ["Fara", "https://huggingface.co/microsoft/Fara-7B"],
+        ["OpenCUA", "https://huggingface.co/xlangai/OpenCUA-7B"],
+        ["ScaleCUA", "https://huggingface.co/OpenGVLab/ScaleCUA-7B"],
+        ["EvoCUA", "https://huggingface.co/meituan/EvoCUA-8B-20260105"],
+        ["MAI-UI", "https://huggingface.co/Tongyi-MAI/MAI-UI-8B"],
+        ["UI-Voyager", "https://huggingface.co/MarsXL/UI-Voyager"],
+        ["GELab", "https://huggingface.co/stepfun-ai/GELab-Zero-4B-preview"] ] } ] },
+    platforms: { cap: "One action + observation space across all three", groups: [
+      { label: "", items: [["Desktop", "#benchmarks"], ["Web", "#benchmarks"], ["Mobile", "#benchmarks"]] } ] },
+    benchmarks: { cap: "One command evaluates any agent on any of these", groups: [
+      { label: "Grounding", items: [["OSWorld-G", RM+"osworld_g/README.md"], ["ScreenSpot-Pro", RM+"screenspot_pro/README.md"]] },
+      { label: "Desktop", items: [["OSWorld", RM+"osworld/README.md"], ["Lite.OSWorld", RM+"lite/osworld/README.md"], ["OSWorld-2", RM+"osworld_2/README.md"], ["CUABench", RM+"cua/README.md"]] },
+      { label: "Web", items: [["WebGym", RM+"webgym/README.md"], ["WebVoyager", RM+"webharbor/webvoyager/README.md"], ["Online-Mind2Web", RM+"online_mind2web/README.md"], ["MiniWoB", RM+"browsergym/README.md"], ["WebArena", RM+"browsergym/README.md"], ["VisualWebArena", RM+"browsergym/README.md"]] },
+      { label: "Mobile", items: [["AndroidWorld", RM+"androidworld/README.md"], ["AndroidLab", RM+"androidlab/README.md"], ["MobileWorld", RM+"mobileworld/README.md"], ["MobileGym", RM+"mobilegym/README.md"]] } ] },
+    corpora: { cap: "10+ existing CUA datasets, preprocessed at scale — understanding · grounding · use", groups: [
+      { label: "One schema, on the Hub", items: [
+        ["Aguvis", DS+"Aguvis"], ["CAGUI", DS+"CAGUI"], ["GUI-360", DS+"GUI-360"], ["GUIAct", DS+"GUIAct"],
+        ["GUIOdyssey", DS+"GUIOdyssey"], ["Multimodal-Mind2Web", DS+"Multimodal-Mind2Web"],
+        ["OpenCUA", DS+"OpenCUA"], ["ScaleCUA", DS+"ScaleCUA"], ["UI-Genie-Agent", DS+"UI-Genie-Agent"] ] } ] },
+  };
+  document.querySelectorAll(".stat-pop[data-pop]").forEach((pop) => {
+    const d = POP[pop.dataset.pop]; if (!d) return;
+    let h = `<b>${d.cap}</b>`;
+    d.groups.forEach((g) => {
+      h += '<span class="pop-grp">';
+      if (g.label) h += `<span class="pop-cat">${g.label}</span>`;
+      h += '<span class="pop-list">';
+      g.items.forEach(([name, href]) => {
+        const ext = !href.startsWith("#");
+        const attr = ext ? ' target="_blank" rel="noopener"' : "";
+        h += `<a class="pop-item" href="${href}"${attr}>${name}${ext ? '<span class="pop-x">↗</span>' : ""}</a>`;
+      });
+      h += "</span></span>";
+    });
+    pop.innerHTML = h;
+  });
+  // hover-persist: open on enter, stay while over the stat OR the panel, close on leave (delayed to bridge the gap)
+  document.querySelectorAll(".stat").forEach((stat) => {
+    const pop = stat.querySelector(".stat-pop"); let t;
+    const open = () => { clearTimeout(t); document.querySelectorAll(".stat.pop-open").forEach((s) => { if (s !== stat) s.classList.remove("pop-open"); }); stat.classList.add("pop-open"); };
+    const close = () => { t = setTimeout(() => stat.classList.remove("pop-open"), 240); };
+    stat.addEventListener("pointerenter", open);
+    stat.addEventListener("pointerleave", close);
+    if (pop) { pop.addEventListener("pointerenter", () => clearTimeout(t)); pop.addEventListener("pointerleave", close); }
+  });
+})();
