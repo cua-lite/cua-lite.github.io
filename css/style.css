@@ -121,9 +121,11 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .nav-links .btn-solid { color: #f6f2e8; }
 
 /* ---------- hero ---------- */
-.hero { padding: 60px 0 36px; position: relative; overflow: hidden; }
+/* overflow visible so the stat popovers can extend below the hero and layer on top
+   (the device animations + ambient wash are contained in their own boxes instead) */
+.hero { padding: 60px 0 36px; position: relative; overflow: visible; }
 .hero::before {  /* slow warm ambient wash — echoes microsoft.ai's flowing canvas, with a whisper of green */
-  content: ""; position: absolute; inset: -200px -140px 0 -160px; z-index: 0; pointer-events: none;
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
   background:
     radial-gradient(38% 46% at 20% 14%, rgba(126,231,135,.05), transparent 60%),
     radial-gradient(48% 54% at 80% 22%, rgba(243,198,179,.45), transparent 62%),
