@@ -158,9 +158,9 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
     radial-gradient(56% 62% at 50% 38%, rgba(154,212,110,.09), transparent 70%),
     radial-gradient(82% 96% at 50% 30%, rgba(120,150,200,.05), transparent 72%); }
 /* each device casts its own soft contact shadow onto that surface — grounded, real */
-.stage .device::after { content: ""; position: absolute; left: 50%; bottom: -11px; transform: translateX(-50%);
-  z-index: -1; pointer-events: none; filter: blur(11px);
-  background: radial-gradient(50% 50% at 50% 50%, rgba(0,0,0,.82), rgba(0,0,0,.4) 44%, transparent 74%); }
+.stage .device::after { content: ""; position: absolute; left: 50%; bottom: -15px; transform: translateX(-50%);
+  z-index: -1; pointer-events: none; filter: blur(13px);
+  background: radial-gradient(50% 50% at 50% 50%, rgba(40,30,15,.42), rgba(40,30,15,.2) 46%, transparent 74%); }
 .dev-desktop::after { width: 250px; height: 30px; }
 .dev-web::after     { width: 440px; height: 30px; }
 .dev-mobile::after  { width: 196px; height: 28px; }
@@ -336,11 +336,15 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 @keyframes dot { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
 .tb-clock { margin-left: auto; color: #8a93a2; }
 
-/* monitor neck + base — same casing material, clearly one object */
-.crt-neck { width: 66px; height: 20px; margin: 0 auto; background: var(--crt);
-  box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo); }
-.crt-base { width: 172px; height: 15px; margin: 5px auto 0; background: var(--crt);
-  box-shadow: inset 3px 3px 0 var(--crt-hi), inset -4px -4px 0 var(--crt-lo), var(--crt-rim); }
+/* monitor neck + base — a trapezoidal stand flaring into a splayed foot, like the
+   teaser: same silver casing, clearly one grounded object */
+.crt-neck { width: 92px; height: 22px; margin: -1px auto 0; background: var(--crt);
+  clip-path: polygon(28% 0, 72% 0, 88% 100%, 12% 100%);
+  box-shadow: inset 3px 2px 0 var(--crt-hi), inset -4px -5px 0 var(--crt-lo); }
+.crt-base { width: 216px; height: 22px; margin: 0 auto; background: var(--crt);
+  clip-path: polygon(9% 0, 91% 0, 100% 100%, 0 100%);
+  box-shadow: inset 3px 2px 0 var(--crt-hi), inset -4px -5px 0 var(--crt-lo);
+  filter: drop-shadow(0 2px 0 #2b2c33); }
 
 /* the platform words in the lead ARE the control — hover to switch the device.
    Distinct from the bold keywords: an underline that lights up, never bold. */
