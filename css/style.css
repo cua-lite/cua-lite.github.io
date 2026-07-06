@@ -23,8 +23,8 @@
   --text:    #26221a;
   --muted:   #6c6456;
   --dim:     #a89e89;
-  --accent:  #2f8a3e;                       /* grass green, readable on cream */
-  --accent-dim: rgba(47,138,62,.55);
+  --accent:  #3f9a37;                       /* warmer grass green, harmonizes with cream */
+  --accent-dim: rgba(63,154,55,.55);
 
   --serif: 'Fraunces', Georgia, serif;
   --sans:  'Urbanist', -apple-system, system-ui, sans-serif;
