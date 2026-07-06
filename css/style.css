@@ -110,7 +110,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* two-column hero: the pitch on the left, the live demo on the right — the
    device sits top-right as the focal object, its streaming trace directly
    beneath it. Not a stacked overflow; a deliberate side-by-side. */
-.hero-grid { display: grid; grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr); gap: 52px; align-items: start; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr); gap: 52px; align-items: center; }
 .hero-head { max-width: 560px; }
 .hero-demo { position: relative; display: flex; flex-direction: column; gap: 18px; }
 .hero-demo > * { min-width: 0; }
