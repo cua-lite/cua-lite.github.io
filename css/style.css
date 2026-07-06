@@ -9,7 +9,7 @@
 @font-face { font-family: 'Fraunces'; src: url('../assets/fonts/Fraunces.woff2') format('woff2'); font-weight: 300 700; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Fraunces'; src: url('../assets/fonts/Fraunces-Italic.woff2') format('woff2'); font-weight: 300 700; font-style: italic; font-display: swap; }
 @font-face { font-family: 'Urbanist'; src: url('../assets/fonts/Urbanist.woff2') format('woff2'); font-weight: 100 900; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Cascadia Code'; src: url('../assets/fonts/CascadiaCode.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Geist Mono'; src: url('../assets/fonts/GeistMono.woff2') format('woff2'); font-weight: 400 600; font-style: normal; font-display: swap; }
 
 :root {
   /* one signature easing across every motion — switch, cursor, bubbles, pages */
@@ -28,10 +28,9 @@
 
   --serif: 'Fraunces', Georgia, serif;
   --sans:  'Urbanist', -apple-system, system-ui, sans-serif;
-  /* Cascadia Code — Microsoft's own dev-tools font (VS Code / Windows Terminal),
-     self-hosted so every visitor gets the same nice code face; falls back to
-     VS Code's per-OS defaults (Menlo / Consolas / Droid Sans Mono) */
-  --mono:  'Cascadia Code', Menlo, Consolas, 'Droid Sans Mono', 'Courier New', monospace;
+  /* Geist Mono — Vercel's monospace: tighter and more refined than Cascadia,
+     at home in a warm editorial layout; self-hosted, with per-OS mono fallbacks */
+  --mono:  'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   /* light card material — near-ivory panel, soft warm edge (tables, popovers, menus) */
   --panel-fill: #fefaf0;
