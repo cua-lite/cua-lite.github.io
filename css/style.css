@@ -619,7 +619,9 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 @keyframes hfShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
 /* ---------- Train: SFT | RL toggle (pill tabs, mirrors .cov-tabs) ---------- */
-.train-tabs { display: inline-flex; gap: 2px; margin: 0 0 18px; padding: 4px;
+/* fit-content + auto side margins center the pill bar over the 660px terminal
+   (which is itself margin:auto within .container) — shares the same center line */
+.train-tabs { display: flex; width: fit-content; gap: 2px; margin: 0 auto 18px; padding: 4px;
   background: var(--panel-2); border: 1px solid var(--panel-edge); border-radius: 999px; }
 .train-tab { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
   color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 8px 20px; cursor: pointer;

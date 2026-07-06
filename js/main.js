@@ -507,6 +507,9 @@
     const drvFamily = cb.querySelectorAll('.cb-drv[data-drv="family"]');
     const drvEnv = cb.querySelectorAll('.cb-drv[data-drv="env"]');
     const drvAgent = cb.querySelectorAll('.cb-drv[data-drv="agent"]');
+    // the SFT builder derives the HF dataset name (env-id -> proper name) for the
+    // download step + --data-paths; absent (null-safe) for the other builders.
+    const drvDataset = cb.querySelectorAll('.cb-drv[data-drv="dataset"]');
     let agent = cfg.agents[0];
     const allowedEnvs = () => envsFor(agent, cfg.envs);
     let env = allowedEnvs()[0];
@@ -522,7 +525,7 @@
         r.classList.toggle("off", !allowed.has(envId));   // agent can't run this benchmark
       });
     };
-    const sync = () => { drvFamily.forEach((e) => (e.textContent = agent.family)); drvEnv.forEach((e) => (e.textContent = env)); drvAgent.forEach((e) => (e.textContent = agent.model)); if (cfg.table) { highlightBench(env); dimUnsupported(); } };
+    const sync = () => { drvFamily.forEach((e) => (e.textContent = agent.family)); drvEnv.forEach((e) => (e.textContent = env)); drvAgent.forEach((e) => (e.textContent = agent.model)); drvDataset.forEach((e) => (e.textContent = ENV2ROW[env] || env)); if (cfg.table) { highlightBench(env); dimUnsupported(); } };
 
     const PLAT_ORDER = { Grounding: 0, Desktop: 1, Web: 2, Mobile: 3 };
     function makeSlot(slot, getList, getLabel, curLabel, onPick, groupBy) {
