@@ -121,7 +121,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .nav-links .btn-solid { color: #f6f2e8; }
 
 /* ---------- hero ---------- */
-.hero { padding: 60px 0 64px; position: relative; overflow: hidden; }
+.hero { padding: 60px 0 36px; position: relative; overflow: hidden; }
 .hero::before {  /* slow warm ambient wash — echoes microsoft.ai's flowing canvas, with a whisper of green */
   content: ""; position: absolute; inset: -200px -140px 0 -160px; z-index: 0; pointer-events: none;
   background:
@@ -523,6 +523,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* ---------- sections ---------- */
 .section { padding: 132px 0 24px; }
+#start { padding-top: 78px; }   /* it already follows the hero's divider — don't double the gap */
 .section:last-of-type { padding-bottom: 44px; }
 
 /* cards — pixel-panel objects, not flat rectangles */
