@@ -350,8 +350,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* taskbar — the OS bar carries the live action */
 .taskbar { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; display: flex; align-items: center; gap: 9px;
   padding: 0 8px; background: #23272f; box-shadow: inset 0 2px 0 #3b424e; font-family: var(--mono); font-size: 10px; color: #c9cfda; z-index: 6; }
-.tb-start { display: flex; align-items: center; gap: 5px; color: var(--pgreen-ink); background: var(--pgreen); font-weight: 800;
-  box-shadow: inset -2px -2px 0 var(--pgreen-lo), inset 2px 2px 0 var(--pgreen-hi); padding: 3px 9px; }
+.tb-start { display: flex; align-items: center; gap: 5px; color: var(--text); background: var(--panel-fill); font-weight: 800;
+  box-shadow: inset -2px -2px 0 #e4dac6, inset 2px 2px 0 #fffdf8; padding: 3px 9px; }
 /* the exact CUA-Lite mark (terracotta + fold-seam), same as the header */
 .tb-logo { width: 14px; height: 14px; background: url('../assets/logo.svg') center/contain no-repeat; }
 .think { color: #8a93a2; }
@@ -690,6 +690,26 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 .cb-grp { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--accent-dim); padding: 10px 12px 3px; }
 .cb-grp:first-child { padding-top: 5px; }
 
+/* ---------- SFT configurator card: pick a dataset × a model (orthogonal) ----------
+   a clean bordered control panel above the run_sft terminal — reuses the native
+   .cb-tok/.cb-menu dropdowns, retinted from green-on-dark to sit on cream */
+.sft-cfg { display: flex; align-items: flex-end; gap: 16px; max-width: 660px; margin: 0 auto 16px;
+  padding: 18px 20px; background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(40,30,15,.06); }
+.sft-field { display: flex; flex-direction: column; gap: 8px; flex: 1 1 0; min-width: 0; }
+.sft-field-label { display: flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10px;
+  letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); }
+.sft-hf { font-size: 12px; letter-spacing: 0; }
+.sft-arrow { font-family: var(--mono); font-size: 15px; color: var(--dim); padding-bottom: 8px; user-select: none; }
+/* the tokens live on cream here (not in a dark term): full-width, panel-tinted chips */
+.sft-cfg .cb-slot { display: block; }
+.sft-cfg .cb-tok { width: 100%; justify-content: space-between; background: var(--panel-2);
+  border: 1px solid var(--panel-edge); border-radius: 8px; padding: 9px 12px; }
+.sft-cfg .cb-tok:hover { background: #fff; border-color: var(--accent-dim); }
+.sft-cfg .cb-slot.open .cb-tok { background: #fff; border-color: var(--accent); }
+.sft-cfg .cb-txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sft-cfg .cb-menu { min-width: 100%; }
+
 .cards { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
 .card { min-width: 0; display: flex; flex-direction: column; background: var(--panel-fill); border: 2px solid var(--panel-edge); border-radius: 0;
   box-shadow: inset 3px 3px 0 rgba(255,255,255,.06), inset -4px -4px 0 rgba(0,0,0,.55); padding: 26px 24px 22px;
@@ -839,6 +859,8 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
   .stat-pop { display: none; }   /* hover-only detail; the sections cover it on touch */
   .cb-body { font-size: 13px; padding: 20px 16px; }
   .section-lead { font-size: 15.5px; }
+  .sft-cfg { flex-direction: column; align-items: stretch; gap: 12px; }
+  .sft-arrow { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .typed.caret::after, .fly-plane, .crt-led, .spark, .hero::before,

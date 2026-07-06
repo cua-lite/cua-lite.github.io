@@ -300,7 +300,7 @@
     // the two README sources — a hardcoded snapshot that gets replaced live from
     // the real HF collections below, so the menu always matches what's on the Hub.
     let GROUPS = {
-      Rollouts: ["WebGym", "Lite.OSWorld", "CuaGymDesktopGPT55AuditV0"],
+      Rollouts: ["WebGym", "Lite.OSWorld", "MobileGym"],
       Corpora: ["Aguvis", "ScaleCUA", "OpenCUA", "GUIAct", "GUIOdyssey", "GUI-360",
                 "Multimodal-Mind2Web", "CAGUI", "UI-Genie-Agent"],
     };
@@ -445,12 +445,6 @@
       envs: ALL_ENVS,
       table: true,
     },
-    sft: {
-      // SFT fine-tunes any open-weight agent on the unified data (corpora + rollouts)
-      agents: AGENTS.filter((a) => !a.api),
-      envs: ["lite.osworld", "webgym", "mobilegym"],
-      table: false,
-    },
     rl: {
       // only open-weight agents can be fine-tuned / reinforced — API models (gpt, claude) can't
       agents: AGENTS.filter((a) => !a.api),
@@ -592,6 +586,73 @@
     document.addEventListener("click", (e) => { if (!cb.contains(e.target)) closeAll(); });
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") document.querySelectorAll(".cb-slot.open").forEach((s) => s.classList.remove("open")); });
+
+  /* ---------- SFT configurator: dataset × model (orthogonal) → the 3-step run_sft ----------
+     SFT is dataset + model driven, not env-driven (unlike RL's env+model). Two dropdowns —
+     a HF corpus/rollout and an open-weight student — live-derive the whole command: the
+     dataset drives hf.download + --data-paths + parquet slug; the model drives --model-id,
+     the model-recipe --config (scripts/configs/<family>/recipes/sft/default.yaml — a RECIPE,
+     not an env config) and step-3 MODEL_ID. They pair freely (no cross-filter). Dataset
+     universe mirrors the Data-section picker's GROUPS; models = the open-weight AGENTS. */
+  (function sftConfigurator() {
+    const panel = document.querySelector('[data-train-panel="sft"]');
+    if (!panel) return;
+    const SFT_DATASETS = {
+      Rollouts: ["Lite.OSWorld", "WebGym", "MobileGym"],
+      Corpora: ["ScaleCUA", "Aguvis", "OpenCUA", "GUIAct", "GUIOdyssey", "GUI-360",
+                "Multimodal-Mind2Web", "CAGUI", "UI-Genie-Agent"],
+    };
+    const MODELS = AGENTS.filter((a) => !a.api);   // only open-weight students can be fine-tuned
+    let dataset = "ScaleCUA";
+    let model = MODELS.find((m) => m.model === "Qwen/Qwen3-VL-8B-Instruct") || MODELS[0];
+
+    const dsSlot = panel.querySelector('.cb-slot[data-sft="dataset"]');
+    const mdSlot = panel.querySelector('.cb-slot[data-sft="model"]');
+    const drv = (name) => panel.querySelectorAll('.cb-drv[data-drv="' + name + '"]');
+    const closeAll = (except) => panel.querySelectorAll(".cb-slot.open").forEach((s) => { if (s !== except) s.classList.remove("open"); });
+    const swap = (slot) => { slot.classList.remove("swap"); void slot.offsetWidth; slot.classList.add("swap"); };
+    // dataset-slug = the dataset name lowercased (Lite.OSWorld -> lite.osworld, ScaleCUA -> scalecua)
+    const sync = () => {
+      drv("dataset").forEach((e) => (e.textContent = dataset));
+      drv("model").forEach((e) => (e.textContent = model.model));
+      drv("family").forEach((e) => (e.textContent = model.family));
+      drv("slug").forEach((e) => (e.textContent = dataset.toLowerCase()));
+    };
+
+    // reuse the site's native dropdown markup (.cb-tok/.cb-menu/.cb-opt/.cb-grp). `groups`
+    // is either a {group: [...]} object (grouped menu) or a flat array of agent objects.
+    function build(slot, groups, curLabel, onPick) {
+      const tok = document.createElement("button");
+      tok.className = "cb-tok"; tok.type = "button"; tok.setAttribute("aria-haspopup", "listbox"); tok.setAttribute("aria-expanded", "false");
+      tok.innerHTML = '<span class="cb-txt"></span><span class="cb-tcaret" aria-hidden="true"></span>';
+      const menu = document.createElement("span");
+      menu.className = "cb-menu" + (Array.isArray(groups) ? "" : " cb-menu-grp"); menu.setAttribute("role", "listbox");
+      function render() {
+        tok.querySelector(".cb-txt").textContent = curLabel();
+        menu.innerHTML = "";
+        const entries = Array.isArray(groups) ? [[null, groups]] : Object.entries(groups);
+        entries.forEach(([grp, list]) => {
+          if (grp) { const hd = document.createElement("span"); hd.className = "cb-grp"; hd.textContent = grp; menu.appendChild(hd); }
+          list.forEach((v) => {
+            const label = typeof v === "string" ? v : v.model;
+            const o = document.createElement("button");
+            o.className = "cb-opt" + (label === curLabel() ? " active" : ""); o.type = "button"; o.textContent = label; o.setAttribute("role", "option");
+            o.addEventListener("click", (e) => { e.stopPropagation(); slot.classList.remove("open"); tok.setAttribute("aria-expanded", "false"); if (label !== curLabel()) onPick(v); });
+            menu.appendChild(o);
+          });
+        });
+      }
+      tok.addEventListener("click", (e) => { e.stopPropagation(); const willOpen = !slot.classList.contains("open"); closeAll(slot); slot.classList.toggle("open", willOpen); tok.setAttribute("aria-expanded", String(willOpen)); });
+      slot.appendChild(tok); slot.appendChild(menu);
+      slot._render = render; render();
+    }
+
+    build(dsSlot, SFT_DATASETS, () => dataset, (v) => { dataset = v; swap(dsSlot); dsSlot._render(); sync(); });
+    build(mdSlot, MODELS, () => model.model, (v) => { model = v; swap(mdSlot); mdSlot._render(); sync(); });
+    sync();
+    document.addEventListener("click", (e) => { if (!panel.contains(e.target)) closeAll(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
+  })();
 
   /* ---------- Train: SFT | RL toggle ---------- */
   const trainTabs = document.querySelectorAll("#train .train-tab");
