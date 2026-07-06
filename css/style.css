@@ -14,16 +14,17 @@
 :root {
   /* one signature easing across every motion — switch, cursor, bubbles, pages */
   --ease: cubic-bezier(.33, 0, .15, 1);
-  --bg:      #000000;
-  --panel:   #0b0d11;
-  --panel-2: #10131a;
-  --line:    rgba(255,255,255,.09);
-  --line-2:  rgba(255,255,255,.16);
-  --text:    #f2f5f9;
-  --muted:   #9aa3b2;
-  --dim:     #5f6875;
-  --accent:  #9ad46e;
-  --accent-dim: rgba(154,212,110,.45);
+  /* warm cream canvas (microsoft.ai-inspired), warm near-black ink, ONE grass-green */
+  --bg:      #f3ede0;
+  --panel:   #ece4d3;
+  --panel-2: #e6ddc9;
+  --line:    rgba(40,35,25,.12);
+  --line-2:  rgba(40,35,25,.20);
+  --text:    #26221a;
+  --muted:   #6c6456;
+  --dim:     #a89e89;
+  --accent:  #2f8a3e;                       /* grass green, readable on cream */
+  --accent-dim: rgba(47,138,62,.55);
 
   --serif: 'Fraunces', Georgia, serif;
   --sans:  'Urbanist', -apple-system, system-ui, sans-serif;
@@ -32,11 +33,20 @@
      VS Code's per-OS defaults (Menlo / Consolas / Droid Sans Mono) */
   --mono:  'Cascadia Code', Menlo, Consolas, 'Droid Sans Mono', 'Courier New', monospace;
 
-  /* one reusable pixel-panel material — solid fill, hard bevel, chunky edge */
-  --panel-fill: #0f131a;
-  --panel-edge: #262c36;
-  --panel-hi: rgba(255,255,255,.055);
-  --panel-lo: rgba(0,0,0,.5);
+  /* light card material — soft cream panel, warm tan edge (tables, popovers, menus) */
+  --panel-fill: #fbf7ec;
+  --panel-edge: #e0d6c0;
+  --panel-hi: rgba(255,255,255,.75);
+  --panel-lo: rgba(40,35,25,.06);
+
+  /* dark terminal material — the code/CRT blocks stay dark on cream, bright green pops */
+  --term-bg:    #16140e;
+  --term-fill:  #1b1912;
+  --term-edge:  #322e22;
+  --term-text:  #ece6d4;
+  --term-muted: #a49c88;
+  --term-dim:   #6f6a58;
+  --term-green: #9ad46e;
 
   --maxw: 1180px;
 }
@@ -71,21 +81,22 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* primary CTA = the same pixel-green button the agent clicks in the demo */
 .btn-solid {
   display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--sans); font-weight: 750; font-size: 15px;
-  background: var(--accent); color: var(--pgreen-ink); padding: 12px 24px; border-radius: 0; border: 0;
-  box-shadow: inset 0 1.5px 0 var(--pgreen-hi), inset 0 -2px 0 var(--pgreen-lo);
-  transition: transform .12s var(--ease), filter .12s ease, box-shadow .18s var(--ease);
+  font-family: var(--sans); font-weight: 700; font-size: 15px;
+  background: var(--accent); color: #f6f2e8; padding: 12px 26px; border-radius: 999px; border: 0;
+  box-shadow: 0 8px 20px -12px rgba(47,138,62,.7);
+  transition: transform .14s var(--ease), filter .14s ease, box-shadow .2s var(--ease);
 }
-.btn-solid:hover { filter: brightness(1.05); transform: translateY(-2px); box-shadow: inset 0 1.5px 0 var(--pgreen-hi), inset 0 -2px 0 var(--pgreen-lo), 0 8px 24px -8px rgba(154,212,110,.45); }
+.btn-solid:hover { filter: brightness(1.04); transform: translateY(-2px); box-shadow: 0 12px 26px -12px rgba(47,138,62,.75); }
 .btn-solid:active { transform: translateY(0); }
-.btn-solid.sm { padding: 8px 16px; font-size: 13.5px; }
+.btn-solid.sm { padding: 8px 18px; font-size: 13.5px; }
 .btn-ghost {
   display: inline-flex; align-items: center; gap: 8px;
   font-family: var(--sans); font-weight: 600; font-size: 15px;
-  color: var(--text); padding: 12px 24px; border-radius: 0;
-  border: 2px solid var(--line-2); transition: border-color .12s ease, background .12s ease;
+  color: var(--text); padding: 12px 26px; border-radius: 999px;
+  border: 1px solid var(--panel-edge); background: var(--panel-fill);
+  transition: border-color .14s ease, background .14s ease, transform .14s var(--ease);
 }
-.btn-ghost:hover { border-color: var(--accent-dim); background: rgba(126,231,135,.05); }
+.btn-ghost:hover { border-color: var(--accent-dim); background: #fff; transform: translateY(-1px); }
 .cta-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
 .cta-row.center { justify-content: center; margin-top: 36px; }
 /* closing CTA — a quiet bookend to the hero */
@@ -93,15 +104,15 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .closing-line { font-family: var(--serif); font-weight: 400; font-style: italic; font-size: clamp(28px, 3.2vw, 42px); letter-spacing: -0.01em; color: var(--text); margin: 0; }
 
 /* ---------- nav ---------- */
-.nav { position: sticky; top: 0; z-index: 100; background: rgba(0,0,0,.72); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.nav { position: sticky; top: 0; z-index: 100; background: rgba(243,237,224,.78); backdrop-filter: blur(14px) saturate(1.1); border-bottom: 1px solid var(--line); }
 .nav-inner { max-width: var(--maxw); margin: 0 auto; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; }
 .brand { display: inline-flex; align-items: center; gap: 10px; }
-.brand-plane { width: 24px; height: 19px; background: url('../assets/pixel/airplane.png') center/contain no-repeat; }
+.brand-plane { width: 24px; height: 19px; background: url('../assets/pixel/airplane-dark.png') center/contain no-repeat; }
 .brand-name { font-family: var(--sans); font-weight: 750; font-size: 17px; letter-spacing: -0.01em; }
 .nav-links { display: flex; align-items: center; gap: 30px; }
 .nav-links a { color: var(--muted); font-size: 14.5px; font-weight: 550; transition: color .12s ease; }
 .nav-links a:hover { color: var(--text); }
-.nav-links .btn-solid { color: var(--pgreen-ink); }
+.nav-links .btn-solid { color: #f6f2e8; }
 
 /* ---------- hero ---------- */
 .hero { padding: 60px 0 64px; position: relative; overflow: hidden; }
@@ -179,31 +190,32 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .stat-n { color: var(--accent); font-weight: 700; font-size: 16px; letter-spacing: 0; }
 /* one shared panel-slot below the row — hover fills the whitespace instead of a cramped tooltip above */
 .stat-pop { position: absolute; top: 100%; left: 0; margin-top: 20px; z-index: 30; width: 100%; max-width: 430px;
-  background: var(--panel-fill); border: 2px solid var(--panel-edge);
-  box-shadow: inset 2px 2px 0 var(--panel-hi), inset -3px -3px 0 var(--panel-lo), 8px 10px 0 rgba(0,0,0,.4);
+  background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 10px;
+  box-shadow: 0 22px 44px -26px rgba(40,30,15,.4);
   padding: 14px 15px 15px; text-transform: none;
   opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity .22s var(--ease), transform .22s var(--ease); }
 .stat-pop b { display: block; color: var(--accent); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
 .pop-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .pop-chips span { font-family: var(--mono); font-size: 11px; letter-spacing: .3px; color: var(--muted);
-  padding: 3px 8px; border: 1px solid var(--panel-edge); background: rgba(255,255,255,.02); }
+  padding: 3px 8px; border: 1px solid var(--panel-edge); background: var(--panel-2); border-radius: 4px; }
 .stat:hover .stat-pop, .stat:focus-within .stat-pop { opacity: 1; transform: none; }
 
-/* ---------- terminal — a pixel-panel too ---------- */
-.term { position: relative; background: var(--panel-fill); border: 2px solid var(--panel-edge); border-radius: 0; overflow: hidden;
-  box-shadow: inset 2px 2px 0 var(--panel-hi), inset -3px -3px 0 var(--panel-lo); }
+/* ---------- terminal — stays dark on the cream page (the code/CRT identity) ---------- */
+.term { position: relative; background: var(--term-fill); color: var(--term-text); border: 1px solid var(--term-edge); border-radius: 8px; overflow: hidden;
+  box-shadow: 0 20px 44px -26px rgba(40,30,15,.5);
+  --accent: var(--term-green); }   /* inside the dark terminal, green means the bright terminal green */
 .term::after {  /* faint CRT scanlines — the pixel-era heritage, whispered */
   content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
   background: repeating-linear-gradient(to bottom, rgba(255,255,255,.022) 0 1px, transparent 1px 3px);
 }
-.term-bar { display: flex; align-items: center; gap: 7px; padding: 13px 16px; border-bottom: 1px solid var(--line); }
-.term-bar .d { width: 10px; height: 10px; border-radius: 0; background: #2b303a; }
-.term-title { margin-left: 10px; font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.term-bar { display: flex; align-items: center; gap: 7px; padding: 13px 16px; border-bottom: 1px solid var(--term-edge); }
+.term-bar .d { width: 10px; height: 10px; border-radius: 50%; background: #3a352a; }
+.term-title { margin-left: 10px; font-family: var(--mono); font-size: 12px; color: var(--term-dim); }
 .term-copy { margin-left: auto; font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--dim); background: transparent; border: 0; cursor: pointer; padding: 3px 4px; transition: color .12s ease; }
-.term-copy:hover { color: var(--text); }
-.term-copy.done { color: var(--accent); }
-.term-body { margin: 0; padding: 22px 24px; font-family: var(--mono); font-size: 13px; line-height: 1.8; color: #cdd5e0; min-height: 356px; white-space: pre-wrap; word-break: break-word; }
+  color: var(--term-dim); background: transparent; border: 0; cursor: pointer; padding: 3px 4px; transition: color .12s ease; }
+.term-copy:hover { color: var(--term-text); }
+.term-copy.done { color: var(--term-green); }
+.term-body { margin: 0; padding: 22px 24px; font-family: var(--mono); font-size: 13px; line-height: 1.8; color: var(--term-text); min-height: 356px; white-space: pre-wrap; word-break: break-word; }
 .term-body.static, .term-body.qs { min-height: 0; }
 .t-dim { color: var(--dim); }
 .t-kw  { color: #9ecbff; }
@@ -230,10 +242,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
    wallpaper + a pixel window; the paper airplane operates it.
    ============================================================ */
 :root {
-  --crt:   #2d343f; --crt-hi: #47515e; --crt-lo: #191e26; --ink: #07080a;
-  /* a rim of light catching the casing edge so the device reads as a solid
-     object on pure black instead of dissolving into it */
-  --crt-rim: 0 0 0 1px #0c0f14, 0 0 0 2.5px rgba(150,170,200,.10);
+  /* silver-grey plastic casing — the cua-lite teaser's retro CRT, at home on cream */
+  --crt:   #c7c9ce; --crt-hi: #e8eaee; --crt-lo: #9a9da5; --ink: #07080a;
+  /* a crisp dark pixel outline traces the casing (like the teaser) so it reads as a solid object */
+  --crt-rim: 0 0 0 2px #2b2c33;
   --win:   #f5f6f2; --win-bar: #dde1d7; --win-ink: #2a2e27; --win-sub: #8a8f86;
   --grass: #6db24b; --pgreen: #7ee787; --pgreen-lo: #3f9e57; --pgreen-hi: #b8f5bd; --pgreen-ink: #08240f;
 }
@@ -242,7 +254,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
    glass is the only bright thing, the stand is the same material. */
 .crt { position: relative; background: var(--crt); padding: 15px 15px 17px; box-shadow:
     inset 3px 3px 0 0 var(--crt-hi), inset -4px -4px 0 0 var(--crt-lo),
-    var(--crt-rim), 0 34px 70px -38px rgba(0,0,0,.95); }
+    var(--crt-rim), 0 30px 54px -34px rgba(40,30,15,.4); }
 
 .screen { position: relative; aspect-ratio: 16/10; overflow: hidden; background: #05070b;
   box-shadow: inset 0 0 0 3px #000, inset 0 0 0 6px #1b1f26; }
@@ -483,8 +495,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* the plane itself — glides from the left end of the path to the right, banking
    level, then settles into the teaser's gentle breathing bob. */
 .fly-plane { position: absolute; top: 50%; left: 50%; width: 30px; height: 24px; margin-top: -12px;
-  background: url('../assets/pixel/airplane.png') center/contain no-repeat;
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,.55)); }
+  background: url('../assets/pixel/airplane-dark.png') center/contain no-repeat;
+  filter: drop-shadow(0 2px 4px rgba(40,30,15,.25)); }
 .js-reveal .fly-plane { opacity: 0; }
 .js-reveal .divider.in .fly-plane { animation: fly-across 1.6s var(--ease) .1s forwards, plane-bob 3.4s ease-in-out 1.7s infinite; }
 @keyframes fly-across {
@@ -543,9 +555,9 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hf-opt:hover { background: var(--panel-2); color: var(--text); }
 .hf-opt.active { color: var(--accent); }
 .hf-opt.active::after { content: "✓"; font-size: 12px; }
-.hf-window { border: 2px solid var(--panel-edge); background: var(--panel-fill);
-  box-shadow: 0 40px 90px -55px rgba(0,0,0,.92); }
-.hf-bar { position: relative; z-index: 3; display: flex; align-items: center; gap: 14px; padding: 11px 16px; background: #0d1017; border-bottom: 2px solid var(--panel-edge); }
+.hf-window { border: 1px solid var(--panel-edge); background: var(--panel-fill);
+  box-shadow: 0 30px 60px -40px rgba(40,30,15,.4); }
+.hf-bar { position: relative; z-index: 3; display: flex; align-items: center; gap: 14px; padding: 11px 16px; background: var(--panel-2); border-bottom: 1px solid var(--panel-edge); }
 .hf-url { flex: 1; min-width: 0; font-family: var(--mono); font-size: 13px; color: var(--muted); white-space: nowrap; }
 .hf-open { font-family: var(--mono); font-size: 12px; color: var(--accent); white-space: nowrap; transition: opacity .12s ease; }
 .hf-open:hover { opacity: .7; }
@@ -560,7 +572,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hf-frame.loaded .hf-skeleton { opacity: 0; visibility: hidden; transition: opacity .45s ease, visibility 0s .45s; }
 .hf-skeleton::before { content: "Loading live from 🤗 Hugging Face…"; position: absolute; top: 16px; left: 28px;
   font-family: var(--mono); font-size: 12px; color: var(--dim); letter-spacing: .3px; }
-.hf-skeleton span { height: 30px; background: linear-gradient(90deg, var(--panel-2) 25%, #1b212b 50%, var(--panel-2) 75%); background-size: 200% 100%; animation: hfShimmer 1.5s ease-in-out infinite; }
+.hf-skeleton span { height: 30px; background: linear-gradient(90deg, var(--panel-2) 25%, #fff 50%, var(--panel-2) 75%); background-size: 200% 100%; animation: hfShimmer 1.5s ease-in-out infinite; }
 .hf-skeleton span:nth-child(2) { width: 82%; } .hf-skeleton span:nth-child(3) { width: 64%; }
 @keyframes hfShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
