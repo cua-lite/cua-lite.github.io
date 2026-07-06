@@ -405,7 +405,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* the three browser pages cross-fade like a real page load, never a hard cut */
 .gg-home, .gg-results, .gg-site { position: absolute; inset: 0; opacity: 0; visibility: hidden; transform: translateY(9px);
   transition: opacity .3s ease, transform .42s var(--ease), visibility 0s .42s; pointer-events: none; }
-.gg-home.show, .gg-results.show, .gg-site.show { opacity: 1; visibility: visible; transform: none;
+.gg-home.show, .gg-results.show, .gg-site.show { opacity: 1; visibility: visible; transform: none; pointer-events: auto;
   transition: opacity .34s ease, transform .44s var(--ease), visibility 0s 0s; }
 /* Google — home */
 .gg-home { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 0 28px; }

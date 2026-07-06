@@ -129,7 +129,7 @@
     mobile: {
       // texting ZHZisZZ about why CUA-Lite is good
       env: "androidworld",
-      instr: "text ZHZisZZ about cua-lite",
+      instr: "text about cua-lite",
       device: $(".dev-mobile"),
       reset() {
         mname.textContent = "iMessage"; mname.className = "mk-ph"; minput.classList.remove("hot");
