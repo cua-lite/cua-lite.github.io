@@ -623,7 +623,7 @@
   const POP = {
     agents: { cap: "Proprietary &amp; open — drop in any of these", groups: [
       { label: "Proprietary", items: [
-        ["GPT-5.5", "https://platform.openai.com/docs/guides/tools-computer-use"],
+        ["GPT", "https://platform.openai.com/docs/guides/tools-computer-use"],
         ["Claude", "https://docs.anthropic.com/en/docs/agents-and-tools/computer-use"] ] },
       { label: "Open-weight", items: [
         ["Qwen3-VL", "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct"],

@@ -209,7 +209,9 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   box-shadow: 0 28px 52px -28px rgba(40,30,15,.46), 0 3px 8px -4px rgba(40,30,15,.16);
   padding: 17px 19px 16px; text-transform: none; text-align: left;
   opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity .2s var(--ease), transform .2s var(--ease); }
-.stat.pop-open .stat-pop, .stat:hover .stat-pop, .stat:focus-within .stat-pop { opacity: 1; transform: none; pointer-events: auto; }
+/* JS `pop-open` (enforces one-at-a-time) is the sole hover driver; a bare
+   :hover rule here would bypass that exclusivity and let panels coexist. */
+.stat.pop-open .stat-pop, .stat:focus-within .stat-pop { opacity: 1; transform: none; pointer-events: auto; }
 .stat-pop b { display: block; font-family: var(--sans); font-weight: 600; font-size: 12.5px; letter-spacing: 0; text-transform: none; color: var(--muted); line-height: 1.42; margin-bottom: 13px; }
 .pop-grp { display: block; margin-top: 13px; }
 .pop-grp:first-of-type { margin-top: 0; }
