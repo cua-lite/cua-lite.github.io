@@ -596,7 +596,7 @@
         ["MAI-UI", "https://huggingface.co/Tongyi-MAI/MAI-UI-8B"],
         ["UI-Voyager", "https://huggingface.co/MarsXL/UI-Voyager"],
         ["GELab", "https://huggingface.co/stepfun-ai/GELab-Zero-4B-preview"] ] } ] },
-    platforms: { cap: "One action + observation space across all three", groups: [
+    platforms: { cap: "A unified action + observation space per platform", groups: [
       { label: "", items: [["Desktop", "#benchmarks"], ["Web", "#benchmarks"], ["Mobile", "#benchmarks"]] } ] },
     // hero benchmark links point to the OFFICIAL upstream repos (extracted from the env READMEs);
     // cua-lite-native ones (Lite.OSWorld, MobileGym) point to the cua-lite env README.
@@ -635,5 +635,39 @@
     stat.addEventListener("pointerenter", open);
     stat.addEventListener("pointerleave", close);
     if (pop) { pop.addEventListener("pointerenter", () => clearTimeout(t)); pop.addEventListener("pointerleave", close); }
+  });
+})();
+
+/* ---------- LiteSample hover popover — the schema + a tiny trajectory, to the right ---------- */
+(function () {
+  const chips = document.querySelectorAll("code.ls");
+  if (!chips.length) return;
+  const CODE =
+`<span class="t-dim"># LiteSample — one schema for all data</span>
+<span class="t-kw">@dataclass</span>
+<span class="t-kw">class</span> LiteSample:
+    metadata: LiteMetadata     <span class="t-dim"># platform · task_type</span>
+    images:   list[Image]      <span class="t-dim"># screenshots</span>
+    messages: list[Message]    <span class="t-dim"># user ⇄ assistant turns</span>
+
+<span class="t-dim"># one grounding step ↓</span>
+LiteSample(
+  metadata=LiteMetadata(platform=<span class="t-str">"desktop"</span>,
+                        task_type=<span class="t-str">"grounding.action"</span>),
+  messages=[
+    {<span class="t-str">"role"</span>: <span class="t-str">"user"</span>,      <span class="t-dim"># instruction + screenshot</span>
+     <span class="t-str">"content"</span>: [{<span class="t-str">"text"</span>: <span class="t-str">"Click Subscribe"</span>},
+                 {<span class="t-str">"image"</span>: 0}]},
+    {<span class="t-str">"role"</span>: <span class="t-str">"assistant"</span>, <span class="t-dim"># a tool call</span>
+     <span class="t-str">"tool_calls"</span>: [click(<span class="t-str">[455, 215]</span>)]},
+  ],
+)`;
+  chips.forEach((chip) => {
+    const pop = document.createElement("span");
+    pop.className = "ls-pop"; pop.setAttribute("aria-hidden", "true");
+    pop.innerHTML =
+      '<span class="ls-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="ls-t">LiteSample</span></span>' +
+      '<pre class="ls-code">' + CODE + "</pre>";
+    chip.appendChild(pop);
   });
 })();

@@ -183,7 +183,7 @@
     <p class="eyebrow">Quickstart</p>
     <h2>A trajectory <em>in five lines.</em></h2>
     <p class="section-lead">Sample a rollout with any computer-use agent. What comes back is a
-      <code>LiteSample</code> — ready to evaluate, SFT, or RL.</p>
+      <code class="ls" tabindex="0">LiteSample</code> — ready to evaluate, SFT, or RL.</p>
     <div class="term start-term reveal">
       <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">quick_start.py</span><button class="term-copy" id="term-copy" aria-label="Copy code">copy</button></div>
 <div class="term-body qs"><span class="qs-line"><span class="t-dim">$</span> uv sync --extra quick-start</span><span class="qs-line qs-gap"><span class="t-dim">&gt;&gt;&gt;</span> <span class="t-kw">import</span> lite.gym <span class="t-kw">as</span> gym, lite.agents <span class="t-kw">as</span> agents</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> env    = gym.make(<span class="t-str">"lite.demo@create_file"</span>, max_steps=10)</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> agent  = agents.make(<span class="t-str">"gpt-5.5"</span>, env=env)</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> result = <span class="t-kw">await</span> agent.sample(env)   <span class="t-dim"># → LiteSample</span><span class="qs-caret" aria-hidden="true"></span></span></div>
@@ -196,7 +196,7 @@
   <div class="container">
     <p class="eyebrow">01 · Unified data</p>
     <h2>One schema, <em>all data.</em></h2>
-    <p class="section-lead">One format — <code>LiteSample</code> — for all data, shared across every env, agent, and
+    <p class="section-lead">One format — <code class="ls" tabindex="0">LiteSample</code> — for all data, shared across every env, agent, and
       task type; per-agent adapters then postprocess it into each model's own scaffolding. It fills from two sources:</p>
     <div class="src-two reveal">
       <a class="src" href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">
@@ -233,7 +233,7 @@
   <div class="container">
     <p class="eyebrow">02 · Evaluate</p>
     <h2>Any agent, <em>any benchmark.</em></h2>
-    <p class="section-lead">One command, one action space everywhere. Mix any
+    <p class="section-lead">One command, a unified action space per platform. Mix any
       <span class="lead-tok">agent</span> with any <span class="lead-tok">env</span>:</p>
     <div class="cmdbuild reveal" data-cmd="eval">
       <div class="term">

@@ -554,6 +554,19 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .src-go { margin-top: 4px; font-family: var(--mono); font-size: 11.5px; color: var(--accent); transition: opacity .14s ease; }
 .src:hover .src-go { text-decoration: underline; }
 .src-cap { margin-bottom: 22px; }
+/* LiteSample chip — hover pops the schema + a tiny trajectory to the right */
+code.ls { position: relative; cursor: help; }
+.ls-pop { position: absolute; left: calc(100% + 14px); top: 50%; transform: translateY(-50%) translateX(-6px); z-index: 40;
+  width: 430px; max-width: min(430px, 46vw); text-align: left;
+  background: var(--term-fill); border: 1px solid var(--term-edge); border-radius: 11px;
+  box-shadow: 0 28px 54px -28px rgba(40,30,15,.5), 0 4px 10px -5px rgba(40,30,15,.2);
+  opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .2s var(--ease), transform .2s var(--ease); }
+code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opacity: 1; visibility: visible; transform: translateY(-50%); pointer-events: auto; }
+.ls-pop::before { content: ""; position: absolute; left: -16px; top: 0; bottom: 0; width: 16px; }   /* bridge the gap so it stays open */
+.ls-bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--term-edge); }
+.ls-bar .d { width: 9px; height: 9px; border-radius: 50%; background: #3a352a; }
+.ls-t { margin-left: 8px; font-family: var(--mono); font-size: 11px; color: var(--term-dim); }
+.ls-code { margin: 0; padding: 14px 16px; font-family: var(--mono); font-size: 11px; line-height: 1.62; color: var(--term-text); white-space: pre; overflow-x: auto; }
 
 /* ---------- live HF dataset browser: a refined dropdown + framed viewer ---------- */
 .hf-embed { margin: 0; }
