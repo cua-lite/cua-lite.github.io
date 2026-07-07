@@ -688,15 +688,16 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 /* ---------- SFT configurator card: pick a dataset × a model (orthogonal) ----------
    a clean bordered control panel above the run_sft terminal — reuses the native
    .cb-tok/.cb-menu dropdowns, retinted from green-on-dark to sit on cream */
-.sft-cfg { display: flex; align-items: flex-end; gap: 16px; max-width: 660px; margin: 0 auto 16px;
+.sft-cfg { display: flex; align-items: center; gap: 16px; max-width: 660px; margin: 0 auto 16px;
   padding: 18px 20px; background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px;
   box-shadow: 0 1px 3px rgba(40,30,15,.06); }
-.sft-field { display: flex; flex-direction: column; gap: 8px; flex: 1 1 0; min-width: 0; }
+/* label sits inline with its dropdown — "Dataset: <chip>" — not stacked above it */
+.sft-field { display: flex; flex-direction: row; align-items: center; gap: 8px; flex: 1 1 0; min-width: 0; }
 .sft-cfg .sft-field:last-of-type { flex-grow: 1.7; }   /* model names run longer than dataset names */
-.sft-field-label { display: flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10px;
+.sft-field-label { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto; font-family: var(--mono); font-size: 10px;
   letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); }
 .sft-hf { font-size: 12px; letter-spacing: 0; }
-.sft-arrow { font-family: var(--mono); font-size: 15px; color: var(--dim); padding-bottom: 8px; user-select: none; }
+.sft-arrow { font-family: var(--mono); font-size: 15px; color: var(--dim); user-select: none; }
 /* the tokens live on cream here (not in a dark term): full-width, panel-tinted chips */
 /* match the site's inline dashed-underline token, not a boxed form select */
 .sft-cfg .cb-slot { display: inline-flex; max-width: 100%; }

@@ -159,7 +159,19 @@ def main() -> None:
                "flex-direction:row !important;align-items:flex-start !important;gap:30px !important;width:max-content !important}"
                ".stage{flex:0 0 auto !important;width:470px !important;min-height:0 !important;height:470px !important}"
                ".stage .device{justify-content:flex-start !important}"
-               ".rollout{flex:0 0 auto !important;width:430px !important;margin:0 !important}")
+               ".rollout{flex:0 0 auto !important;width:430px !important;margin:0 !important}"
+               # top-aligning the device (flex-start above) leaves the stage's floor shadows
+               # — anchored to the 470px stage BOTTOM — orphaned far below the shorter monitor
+               # and browser (the tall phone nearly reaches them, so it looked fine). The soft
+               # tabletop glow also bands into faint rings under GIF quantization. So: drop both
+               # stage-anchored shadows and re-ground just the monitor on its own base; the
+               # browser and phone already carry their own drop-shadow.
+               ".stage::after,.stage .device::after{display:none !important}"
+               ".stage .crt-base{position:relative !important}"
+               ".stage .crt-base::after{content:'' !important;position:absolute !important;left:50% !important;"
+               "bottom:-13px !important;transform:translateX(-50%) !important;z-index:-1 !important;"
+               "pointer-events:none !important;filter:blur(13px) !important;width:210px !important;height:22px !important;"
+               "background:radial-gradient(50% 50% at 50% 50%,rgba(40,30,15,.42),rgba(40,30,15,.2) 46%,transparent 74%) !important}")
         with tempfile.TemporaryDirectory() as td:
             raw = Path(td) / "raw"; raw.mkdir()
             print("capturing side layout ...")
