@@ -696,10 +696,11 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 .sft-cfg .sft-field:last-of-type { flex-grow: 1.7; }   /* model names run longer than dataset names */
 .sft-field-label { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto; font-family: var(--mono); font-size: 10px;
   letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); }
-/* desaturate the HF smiley to a neutral cue (like the muted Berkeley/Microsoft
+.sft-hf { font-size: 12px; letter-spacing: 0; }
+/* desaturate every HF smiley to a neutral cue (like the muted Berkeley/Microsoft
    logos) so the terracotta brand accents stay dominant; color restored on hover */
-.sft-hf { font-size: 12px; letter-spacing: 0; filter: grayscale(1); opacity: .55; transition: opacity .16s var(--ease), filter .16s var(--ease); }
-.sft-field:hover .sft-hf { opacity: .9; filter: grayscale(0); }
+.hf-mark { display: inline-block; filter: grayscale(1); opacity: .55; transition: opacity .16s var(--ease), filter .16s var(--ease); }
+.sft-field:hover .hf-mark, .src:hover .hf-mark { opacity: .9; filter: grayscale(0); }
 .sft-arrow { font-family: var(--mono); font-size: 15px; color: var(--dim); user-select: none; }
 /* the tokens live on cream here (not in a dark term): full-width, panel-tinted chips */
 /* match the site's inline dashed-underline token, not a boxed form select */
