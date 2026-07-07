@@ -491,7 +491,7 @@
         "screenspot_pro": ["android_studio_macos_0", "android_studio_macos_1", "android_studio_macos_2"],
         "osworld_g": ["0FOB4CLBT2-0", "0FOB4CLBT2-1", "1GTGZ3A3V8-0"],
         "webgym": ["300971", "300813", "300524", "300927", "300643"],
-        "webharbor.webvoyager": ["webvoyager.allrecipes.0", "webvoyager.allrecipes.1", "webvoyager.allrecipes.10"],
+        "webharbor.webvoyager": ["allrecipes.0", "allrecipes.1", "allrecipes.10"],
         "online_mind2web": ["0059adc6b12a3822305deb68929b2de8", "005be9dd91c95669d6ddde9ae667125c",
                             "0170ca95038b05fa58d463fe627ac605"],
         "browsergym.miniwob": ["click-dialog", "click-button", "ascending-numbers", "book-flight"],
