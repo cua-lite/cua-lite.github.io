@@ -808,17 +808,3 @@ LiteSample(
     chip.appendChild(pop);
   });
 })();
-
-/* ---------- copy the BibTeX citation ---------- */
-(function () {
-  const btn = document.querySelector(".cite-copy");
-  const pre = document.querySelector(".cite-code");
-  if (!btn || !pre) return;
-  btn.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(pre.textContent.trim() + "\n");
-      btn.classList.add("copied"); btn.textContent = "Copied";
-      setTimeout(() => { btn.classList.remove("copied"); btn.textContent = "Copy"; }, 1600);
-    } catch (e) { /* clipboard blocked — no-op */ }
-  });
-})();
