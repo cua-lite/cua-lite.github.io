@@ -643,6 +643,9 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
    must NOT, or the token dropdown menu gets clipped to the terminal box */
 .cmdbuild .term { overflow: visible; }
 .lead-tok { color: var(--accent); border-bottom: 1px dashed var(--accent-dim); padding-bottom: 1px; }
+/* the two group-hinges in the hero lead ("for", "across") recede so the bold
+   clusters — substrate / workflow / platforms — read as distinct groups */
+.lead .hinge { color: var(--dim); font-style: italic; }
 /* the builder IS a .term (same shell as the quickstart), with editable tokens.
    term-body gives the shared code aesthetic; we only loosen the line-height so
    the clickable token chips have room to breathe. */
