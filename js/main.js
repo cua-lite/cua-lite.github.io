@@ -7,6 +7,33 @@
    Shared engine: think → move → act, GPU-composited cursor.
    Reduced motion: the desktop finished frame, held still.
    ============================================================ */
+
+/* ---------- HF datasets: ONE live source of truth for every surface ----------
+   The Hub collections (cua-lite/rollouts, cua-lite/corpora) are the authority for
+   which datasets exist. A hardcoded snapshot renders instantly (and covers offline),
+   then a single fetch replaces it live. Every surface that lists datasets — the Data
+   browser, the SFT picker, the hero-stat popover — subscribes to this ONE source, so
+   none can drift from the Hub or from each other. Lives at file scope so all three
+   IIFEs below close over it. */
+let DATASET_GROUPS = {
+  Rollouts: ["WebGym", "Lite.OSWorld", "MobileGym"],
+  Corpora: ["Aguvis", "ScaleCUA", "OpenCUA", "GUIAct", "GUIOdyssey", "GUI-360",
+            "Multimodal-Mind2Web", "CAGUI", "UI-Genie-Agent"],
+};
+const _dsSubs = [];
+const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // call now + on every live update
+(async () => {
+  try {
+    const parse = async (slug) => {
+      const r = await fetch("https://huggingface.co/api/collections/cua-lite/" + slug);
+      if (!r.ok) throw new Error(slug);
+      return (await r.json()).items.filter((i) => i.type === "dataset").map((i) => i.id.split("/").pop());
+    };
+    const [rol, cor] = await Promise.all([parse("rollouts"), parse("corpora")]);
+    if (rol.length && cor.length) { DATASET_GROUPS = { Rollouts: rol, Corpora: cor }; _dsSubs.forEach((fn) => fn(DATASET_GROUPS)); }
+  } catch (e) { /* offline / API change → subscribers keep the snapshot */ }
+})();
+
 (function () {
   "use strict";
   const stage = document.getElementById("stage");
@@ -318,13 +345,7 @@
   /* ---------- the live HF dataset browser: one quiet dropdown swaps the viewer ---------- */
   const hfFrame = document.getElementById("hf-frame");
   if (hfFrame) {
-    // the two README sources — a hardcoded snapshot that gets replaced live from
-    // the real HF collections below, so the menu always matches what's on the Hub.
-    let GROUPS = {
-      Rollouts: ["WebGym", "Lite.OSWorld", "MobileGym"],
-      Corpora: ["Aguvis", "ScaleCUA", "OpenCUA", "GUIAct", "GUIOdyssey", "GUI-360",
-                "Multimodal-Mind2Web", "CAGUI", "UI-Genie-Agent"],
-    };
+    let GROUPS;   // filled from the shared source below (snapshot now, live on fetch)
     const sel = document.getElementById("hf-select");
     const trigger = document.getElementById("hf-trigger");
     const menu = document.getElementById("hf-menu");
@@ -372,25 +393,12 @@
     trigger.addEventListener("click", (e) => { e.stopPropagation(); sel.classList.contains("open") ? close() : open(); });
     document.addEventListener("click", (e) => { if (!sel.contains(e.target)) close(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
-    buildMenu();
-
-    // rebuild the menu from the live HF collections — never let it drift from the Hub
-    (async () => {
-      try {
-        const parse = async (slug) => {
-          const r = await fetch("https://huggingface.co/api/collections/cua-lite/" + slug);
-          if (!r.ok) throw new Error(slug);
-          const d = await r.json();
-          return d.items.filter((i) => i.type === "dataset").map((i) => i.id.split("/").pop());
-        };
-        const [rol, cor] = await Promise.all([parse("rollouts"), parse("corpora")]);
-        if (rol.length && cor.length) {
-          GROUPS = { Rollouts: rol, Corpora: cor };
-          if (!rol.includes(ds) && !cor.includes(ds)) { ds = rol[0]; nameEl.textContent = ds; if (started) load(ds); }
-          buildMenu();
-        }
-      } catch (e) { /* offline / API change → keep the hardcoded snapshot */ }
-    })();
+    // subscribe to the shared source: render now with the snapshot, rebuild live on fetch
+    onDatasetGroups((g) => {
+      GROUPS = g;
+      if (!g.Rollouts.includes(ds) && !g.Corpora.includes(ds)) { ds = g.Rollouts[0]; nameEl.textContent = ds; if (started) load(ds); }
+      buildMenu();
+    });
 
     const start = () => { if (!started) { started = true; load(ds); } };
     if ("IntersectionObserver" in window) {
@@ -619,15 +627,10 @@
      dataset drives hf.download + --data-paths + parquet slug; the model drives --model-id,
      the model-recipe --config (scripts/configs/<family>/recipes/sft/default.yaml — a RECIPE,
      not an env config) and step-3 MODEL_ID. They pair freely (no cross-filter). Dataset
-     universe mirrors the Data-section picker's GROUPS; models = the open-weight AGENTS. */
+     universe = the shared live HF source (same one the Data browser uses); models = the open-weight AGENTS. */
   (function sftConfigurator() {
     const panel = document.querySelector('[data-train-panel="sft"]');
     if (!panel) return;
-    const SFT_DATASETS = {
-      Rollouts: ["Lite.OSWorld", "WebGym", "MobileGym"],
-      Corpora: ["ScaleCUA", "Aguvis", "OpenCUA", "GUIAct", "GUIOdyssey", "GUI-360",
-                "Multimodal-Mind2Web", "CAGUI", "UI-Genie-Agent"],
-    };
     const MODELS = AGENTS.filter((a) => !a.api);   // only open-weight students can be fine-tuned
     let dataset = "ScaleCUA";
     let model = MODELS.find((m) => m.model === "Qwen/Qwen3-VL-8B-Instruct") || MODELS[0];
@@ -675,7 +678,13 @@
 
     // flash only the fields the changed selector drives: dataset -> dataset/slug, model -> model/family
     const flashDrv = (names) => names.forEach((nm) => panel.querySelectorAll('.cb-drv[data-drv="' + nm + '"]').forEach((e) => { e.classList.remove("drv-flash"); void e.offsetWidth; e.classList.add("drv-flash"); }));
-    build(dsSlot, SFT_DATASETS, () => dataset, (v) => { dataset = v; swap(dsSlot); dsSlot._render(); sync(); flashDrv(["dataset", "slug"]); });
+    // dataset dropdown subscribes to the shared source — rebuilt in place when the live list arrives
+    onDatasetGroups((g) => {
+      if (!g.Rollouts.includes(dataset) && !g.Corpora.includes(dataset)) dataset = g.Corpora[0] || g.Rollouts[0];
+      dsSlot.innerHTML = "";
+      build(dsSlot, g, () => dataset, (v) => { dataset = v; swap(dsSlot); dsSlot._render(); sync(); flashDrv(["dataset", "slug"]); });
+      sync();
+    });
     build(mdSlot, MODELS, () => model.model, (v) => { model = v; swap(mdSlot); mdSlot._render(); sync(); flashDrv(["model", "family"]); });
     sync();
     document.addEventListener("click", (e) => { if (!panel.contains(e.target)) closeAll(); });
@@ -763,15 +772,10 @@
       { label: "Desktop", items: [["OSWorld", "https://github.com/xlang-ai/OSWorld"], ["Lite.OSWorld", RM+"lite/osworld/README.md"], ["OSWorld-2", "https://github.com/xlang-ai/OSWorld"], ["CUABench", "https://github.com/trycua/cua"]] },
       { label: "Web", items: [["WebGym", "https://github.com/microsoft/webgym"], ["WebVoyager", "https://github.com/MinorJerry/WebVoyager"], ["Online-Mind2Web", "https://github.com/OSU-NLP-Group/Online-Mind2Web"], ["MiniWoB", "https://github.com/Farama-Foundation/miniwob-plusplus"], ["WebArena", "https://github.com/web-arena-x/webarena"], ["VisualWebArena", "https://github.com/web-arena-x/visualwebarena"]] },
       { label: "Mobile", items: [["AndroidWorld", "https://github.com/google-research/android_world"], ["AndroidLab", "https://github.com/THUDM/Android-Lab"], ["MobileWorld", "https://github.com/Tongyi-MAI/MobileWorld"], ["MobileGym", "https://github.com/Purewhiter/mobilegym"]] } ] },
-    datasets: { cap: "One schema, on the Hub — teacher rollouts + preprocessed corpora, ready to SFT or RL any agent", groups: [
-      { label: "Rollouts", items: [
-        ["Lite.OSWorld", DS+"Lite.OSWorld"], ["WebGym", DS+"WebGym"] ] },
-      { label: "Corpora", items: [
-        ["Aguvis", DS+"Aguvis"], ["ScaleCUA", DS+"ScaleCUA"], ["OpenCUA", DS+"OpenCUA"], ["GUIAct", DS+"GUIAct"],
-        ["GUIOdyssey", DS+"GUIOdyssey"], ["GUI-360", DS+"GUI-360"], ["Multimodal-Mind2Web", DS+"Multimodal-Mind2Web"],
-        ["CAGUI", DS+"CAGUI"], ["UI-Genie-Agent", DS+"UI-Genie-Agent"] ] } ] },
+    // groups filled live from the shared HF source below (same one the Data/Train pickers use)
+    datasets: { cap: "One schema, on the Hub — teacher rollouts + preprocessed corpora, ready to SFT or RL any agent", groups: [] },
   };
-  document.querySelectorAll(".stat-pop[data-pop]").forEach((pop) => {
+  const renderPop = (pop) => {
     const d = POP[pop.dataset.pop]; if (!d) return;
     let h = `<b>${d.cap}</b>`;
     d.groups.forEach((g) => {
@@ -786,6 +790,16 @@
       h += "</span></span>";
     });
     pop.innerHTML = h;
+  };
+  document.querySelectorAll(".stat-pop[data-pop]").forEach(renderPop);
+  // the datasets popover mirrors the same live HF source as the Data/Train pickers
+  const dsPop = document.querySelector('.stat-pop[data-pop="datasets"]');
+  if (dsPop) onDatasetGroups((g) => {
+    POP.datasets.groups = [
+      { label: "Rollouts", items: g.Rollouts.map((n) => [n, DS + n]) },
+      { label: "Corpora", items: g.Corpora.map((n) => [n, DS + n]) },
+    ];
+    renderPop(dsPop);
   });
   // hover-persist: open on enter, stay while over the stat OR the panel, close on leave (delayed to bridge the gap)
   const heroHead = document.querySelector(".hero-head");
