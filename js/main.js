@@ -45,7 +45,11 @@
   function centerOf(ctx, t) {
     const el = ctx.screen.querySelector(`[data-t="${t}"]`); if (!el) return null;
     const sr = ctx.screen.getBoundingClientRect(), r = el.getBoundingClientRect();
-    return { x: r.left - sr.left + r.width / 2, y: r.top - sr.top + r.height / 2, el };
+    // getBoundingClientRect is post-CSS-zoom, but translate3d()/left (used by
+    // place() + the click spark) are layout px that zoom then re-scales — so divide
+    // the zoom back out here, or the pointer lands zoom× too far in the zoomed GIF.
+    const z = ctx.screen.offsetWidth ? sr.width / ctx.screen.offsetWidth : 1;
+    return { x: (r.left - sr.left + r.width / 2) / z, y: (r.top - sr.top + r.height / 2) / z, el };
   }
   function moveTo(ctx, t) {
     const c = centerOf(ctx, t); if (!c) return;
@@ -66,10 +70,20 @@
   // matches the pointer instead of being a hand-picked (and drifting) guess.
   const RES = { desktop: [1280, 800], web: [1280, 768], mobile: [1080, 2340] };
   function coordCap(m, ctx, t) {
-    const c = centerOf(ctx, t); if (!c) return "";
-    const sr = ctx.screen.getBoundingClientRect(), [VW, VH] = RES[m];
-    const x = Math.round((c.x / sr.width) * VW), y = Math.round((c.y / sr.height) * VH);
+    const c = centerOf(ctx, t); if (!c) return "";   // c is layout px (zoom already divided out)
+    const [VW, VH] = RES[m];
+    const x = Math.round((c.x / ctx.screen.offsetWidth) * VW), y = Math.round((c.y / ctx.screen.offsetHeight) * VH);
     return (m === "mobile" ? "tap" : "click") + "([" + x + ", " + y + "])";
+  }
+  // keep an opened dropdown menu inside the viewport — on a narrow phone a menu
+  // anchored (left:0) to a right-side token would otherwise spill off the right edge.
+  // A no-op on desktop, where there's always room.
+  function clampMenu(slot) {
+    const menu = slot.querySelector(".cb-menu"); if (!menu) return;
+    menu.style.left = "";                                   // reset to the CSS default (left:0)
+    const r = menu.getBoundingClientRect(), margin = 10;
+    const over = r.right - (document.documentElement.clientWidth - margin);
+    if (over > 0) menu.style.left = -Math.min(over, r.left - margin) + "px";
   }
   function typeInto(el, baseCls, text) {
     const base = baseCls ? baseCls + " " : "";
@@ -167,7 +181,7 @@
     steps.forEach((s) => {
       const tt = t;
       if (s.done) { at(tt, () => logLine(typeof s.cap === "function" ? s.cap() : s.cap, "done", ts(tt))); t += 480; return; }
-      const isClick = s.t && !s.noClick;   // click/tap steps get their coordinate from the live cursor position
+      const isClick = s.t && !s.cap;   // a click/tap step has no caption (type/key steps carry their own); log its live coordinate
       at(tt, () => { moveTo(ctx, s.t); logLine(isClick ? coordCap(mode, ctx, s.t) : s.cap, "live", ts(tt)); });
       at(tt + 380, () => { if (!s.noClick) click(ctx, s.t); s.onAct && s.onAct(); });
       t += 380 + (s.typeLen ? s.typeLen * 30 + 170 : 150) + 170;
@@ -570,7 +584,7 @@
           menu.appendChild(o);
         });
       }
-      tok.addEventListener("click", (e) => { e.stopPropagation(); const willOpen = !slot.classList.contains("open"); closeAll(slot); slot.classList.toggle("open", willOpen); tok.setAttribute("aria-expanded", String(willOpen)); });
+      tok.addEventListener("click", (e) => { e.stopPropagation(); const willOpen = !slot.classList.contains("open"); closeAll(slot); slot.classList.toggle("open", willOpen); if (willOpen) clampMenu(slot); tok.setAttribute("aria-expanded", String(willOpen)); });
       slot.appendChild(tok); slot.appendChild(menu);
       slot._render = render; render();
     }
@@ -655,7 +669,7 @@
           });
         });
       }
-      tok.addEventListener("click", (e) => { e.stopPropagation(); const willOpen = !slot.classList.contains("open"); closeAll(slot); slot.classList.toggle("open", willOpen); tok.setAttribute("aria-expanded", String(willOpen)); });
+      tok.addEventListener("click", (e) => { e.stopPropagation(); const willOpen = !slot.classList.contains("open"); closeAll(slot); slot.classList.toggle("open", willOpen); if (willOpen) clampMenu(slot); tok.setAttribute("aria-expanded", String(willOpen)); });
       slot.appendChild(tok); slot.appendChild(menu);
       slot._render = render; render();
     }
