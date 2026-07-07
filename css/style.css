@@ -772,12 +772,15 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 .hf-embed:hover { max-width: 1120px; }
 .hf-embed:hover .hf-frame { height: 780px; }
 
-/* citation — a quiet prose line in the body voice (no boxed block), deliberately recessive */
-.cite-sec { padding: 40px 0 0; }
-.cite-line { max-width: 620px; margin: 0 auto; text-align: center; font-size: 13px; line-height: 1.65; color: var(--dim); }
-.cite-line em { font-style: italic; color: var(--muted); }
-.cite-line a { color: var(--accent); white-space: nowrap; }
-.cite-line a:hover { text-decoration: underline; }
+/* citation — quiet, multi-line, body voice (no boxed block); title · authors · meta stacked */
+.cite-sec { padding: 44px 0 0; }
+.cite-line { max-width: 600px; margin: 0 auto; text-align: center; }
+.cite-eyebrow { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--dim); margin-bottom: 13px; }
+.cite-title { margin: 0; font-size: 15px; font-style: italic; color: var(--muted); }
+.cite-authors { margin: 7px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--dim); }
+.cite-meta { margin: 9px 0 0; font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+.cite-meta a { color: var(--accent); white-space: nowrap; }
+.cite-meta a:hover { text-decoration: underline; }
 
 /* footer */
 .footer { border-top: 1px solid var(--line); padding: 52px 0 48px; margin-top: 36px; }
