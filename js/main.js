@@ -691,6 +691,10 @@
     trainTabs.forEach((x) => { const on = x.dataset.train === which; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
     trainPanels.forEach((p) => p.classList.toggle("cb-hidden", p.dataset.trainPanel !== which));
   }));
+  // the data section's "ready to SFT" link jumps to #train — force the SFT tab open
+  // (not whatever was last selected) so it lands on the fine-tune flow.
+  document.querySelectorAll("[data-goto-sft]").forEach((a) =>
+    a.addEventListener("click", () => document.querySelector('#train .train-tab[data-train="sft"]')?.click()));
 
   /* ---------- scroll reveal ---------- */
   // give the centered sections' headers the same fade-up as their blocks, so each

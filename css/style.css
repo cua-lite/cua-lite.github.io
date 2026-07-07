@@ -695,6 +695,9 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 /* ---------- SFT configurator card: pick a dataset × a model (orthogonal) ----------
    a clean bordered control panel above the run_sft terminal — reuses the native
    .cb-tok/.cb-menu dropdowns, retinted from green-on-dark to sit on cream */
+/* a quiet sub-caption inside a train panel — explains that panel's flow without
+   loading it into the shared section lead */
+.panel-note { max-width: 600px; margin: 0 auto 18px; text-align: center; color: var(--muted); font-size: 14.5px; line-height: 1.55; }
 .sft-cfg { display: flex; align-items: center; gap: 16px; max-width: 660px; margin: 0 auto 16px;
   padding: 18px 20px; background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px;
   box-shadow: 0 1px 3px rgba(40,30,15,.06); }
