@@ -833,7 +833,11 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
   .stat-pop, .ls-pop { display: none; }   /* hover-only detail; the sections cover it on touch (and it can't overflow the viewport) */
   .cb-body { font-size: 13px; padding: 20px 16px; }
   .section-lead { font-size: 15.5px; }
-  .sft-cfg { flex-direction: column; align-items: stretch; gap: 12px; }
+  /* stack the two fields but keep their dropdowns left-aligned: a 2-col grid
+     (label | dropdown) with the fields flattened in via display:contents, so
+     "Dataset:" and "Model:" share a column regardless of their differing widths */
+  .sft-cfg { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 11px 12px; }
+  .sft-field { display: contents; }
   .sft-arrow { display: none; }
   /* stop the hero overflowing the viewport on phones: let the grid column shrink
      below its content's min-width, and let the one-row stats wrap instead of
