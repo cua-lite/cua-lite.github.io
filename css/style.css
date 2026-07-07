@@ -188,12 +188,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .stage.snappy .device.active { transition: opacity .28s ease, transform .36s var(--ease), visibility 0s 0s; }
 .stage.snappy .device.exit { transition: opacity .26s ease, transform .34s var(--ease), visibility 0s .34s; }
 .dev-desktop > .crt, .dev-web > .browser { width: 100%; }
-/* A landscape monitor at this column width is inherently shorter than the portrait
-   phone. Scale the screen up from its base (3:2 stays locked — no distortion) so its
-   top rises to meet the phone/browser; the stand stays put (a bigger screen on a
-   slim stand reads as realistic), the monitor stays grounded, and the cursor scales
-   with the screen so coords (read from layout offsetWidth) remain exact. */
-.dev-desktop > .crt { transform: scale(1.08); transform-origin: 50% 100%; }
 /* a soft ambient behind the CRT — a screen lit in a dark room, restrained */
 .hero-demo::before { content: ""; position: absolute; left: 30%; top: 50%; width: 62%; height: 108%;
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
@@ -294,7 +288,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .crt { position: relative; padding: 8px 8px 9px; border-radius: 13px;
   background: linear-gradient(177deg, #35353d 0%, #24242a 62%, #1d1d22 100%);
   box-shadow: inset 0 1.5px 0 rgba(255,255,255,.09), 0 1.5px 3px rgba(0,0,0,.34), 0 34px 52px -30px rgba(40,30,15,.42); }
-.screen { position: relative; aspect-ratio: 3/2; overflow: hidden; border-radius: 5px; background: #24303f;
+.screen { position: relative; aspect-ratio: 16/10; overflow: hidden; border-radius: 5px; background: #24303f;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,.55); }
 /* a clean, calm desktop backdrop — no pixel wallpaper */
 .wall { position: absolute; inset: 0; background: linear-gradient(150deg, #37556b 0%, #4d6b7a 48%, #6c7f84 100%); }
@@ -816,9 +810,6 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
   .nav-links a:not(.btn-solid) { display: none; }
   .hero { padding: 68px 0 40px; }
   .hero-grid { grid-template-columns: 1fr; gap: 34px; }
-  /* the monitor over-scale is a 2-column refinement (the grid gap absorbs its
-     overflow); once stacked full-width it would spill past the viewport, so drop it */
-  .dev-desktop > .crt { transform: none; }
   .hero-head { max-width: none; }
   .divider { padding: 14px 0; }
   .section { padding: 54px 0 12px; }
