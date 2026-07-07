@@ -799,7 +799,7 @@
   const chips = document.querySelectorAll("code.ls");
   if (!chips.length) return;
   const CODE =
-`<span class="t-dim"># LiteSample — one schema for all data</span>
+`<span class="t-dim"># LiteSample — one schema for any data</span>
 <span class="t-kw">@dataclass</span>
 <span class="t-kw">class</span> LiteSample:
     metadata: LiteMetadata     <span class="t-dim"># platform · task_type</span>
