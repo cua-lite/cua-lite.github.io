@@ -99,7 +99,7 @@
   const $ = (s) => document.querySelector(s);
   // desktop
   const fbar = $("#fbar"), total = $("#total");
-  const cells = ["b2", "b3", "b4"].map((id) => document.getElementById(id));
+  const cells = ["b2", "b3", "b4", "b5", "b6", "b7"].map((id) => document.getElementById(id));
   const numOf = (el) => parseInt((el.textContent || "").replace(/[^0-9]/g, ""), 10) || 0;
   const fmt = (n) => n.toLocaleString("en-US");
   const sum = () => cells.reduce((a, e) => a + numOf(e), 0);
@@ -125,11 +125,11 @@
       steps: [
         { t: "cell", onAct: () => total.classList.add("sel") },
         { t: "fbar", onAct: () => {} },
-        { t: "fbar", noClick: true, cap: 'type("=AVERAGE(B2:B4)")', typeLen: 15, onAct: () => typeInto(fbar, "sh-formula", "=AVERAGE(B2:B4)") },
+        { t: "fbar", noClick: true, cap: 'type("=AVERAGE(B2:B7)")', typeLen: 15, onAct: () => typeInto(fbar, "sh-formula", "=AVERAGE(B2:B7)") },
         { t: "fbar", noClick: true, cap: 'key(["enter"])', onAct: () => at(120, () => { total.textContent = avg().toFixed(1); total.classList.add("filled"); }) },
         { done: true, cap: 'terminate("success")' },
       ],
-      finished() { fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B4)"; total.textContent = avg().toFixed(1); total.classList.add("filled", "sel"); },
+      finished() { fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B7)"; total.textContent = avg().toFixed(1); total.classList.add("filled", "sel"); },
     },
     web: {
       // Google → search "cua-lite" → open this very homepage
@@ -218,7 +218,7 @@
     MODES.desktop.finished();
     logClear();
     logLine("thinking", "think", "0.2s");
-    [[coordCap("desktop", ctx, "cell"), "0.6s"], ['type("=AVERAGE(B2:B4)")', "1.1s"], ['key(["enter"])', "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
+    [[coordCap("desktop", ctx, "cell"), "0.6s"], ['type("=AVERAGE(B2:B7)")', "1.1s"], ['key(["enter"])', "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
     logLine('terminate("success")', "done", "2.0s");
     requestAnimationFrame(() => { ctx.cursor.style.transition = "none"; const c = centerOf(ctx, "fbar"); if (c) place(ctx, c.x, c.y); });
   }
@@ -260,7 +260,7 @@
   function recompute() {
     clearAll(); running = true;
     logClear();
-    fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B4)";
+    fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B7)";
     total.textContent = ""; total.classList.remove("filled"); total.classList.add("sel");
     at(60, () => logLine('key(["enter"])', "live", "0.1s"));
     at(520, () => { total.textContent = avg().toFixed(1); total.classList.add("filled"); });
