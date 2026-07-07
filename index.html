@@ -192,7 +192,7 @@
     <div class="cmdbuild" data-cmd="quickstart">
     <div class="term start-term reveal">
       <div class="term-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="term-title">quick_start.py</span><button class="term-copy" id="term-copy" aria-label="Copy code">copy</button></div>
-<div class="term-body qs"><span class="qs-line"><span class="t-dim">$</span> uv sync --extra quick-start</span><span class="qs-line qs-gap"><span class="t-dim">&gt;&gt;&gt;</span> <span class="t-kw">import</span> lite.gym <span class="t-kw">as</span> gym, lite.agents <span class="t-kw">as</span> agents</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> env    = gym.make(<span class="t-str">"</span><span class="cb-slot" data-slot="env"></span><span class="t-str">@</span><span class="cb-slot" data-slot="task"></span><span class="t-str">"</span>, max_steps=10)</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> agent  = agents.make(<span class="t-str">"</span><span class="cb-slot" data-slot="agent"></span><span class="t-str">"</span>, env=env)</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> result = <span class="t-kw">await</span> agent.sample(env)   <span class="t-dim"># → LiteSample</span><span class="qs-caret" aria-hidden="true"></span></span></div>
+<div class="term-body qs"><span class="qs-line"><span class="t-dim">$</span> uv sync --extra quick-start</span><span class="qs-line qs-gap"><span class="t-dim">&gt;&gt;&gt;</span> <span class="t-kw">import</span> lite.gym <span class="t-kw">as</span> gym, lite.agents <span class="t-kw">as</span> agents</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> env    = gym.make(<span class="t-str">"</span><span class="cb-slot" data-slot="env"></span><span class="t-str">@</span><span class="cb-slot" data-slot="task"></span><span class="t-str">"</span>)</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> agent  = agents.make(<span class="t-str">"</span><span class="cb-slot" data-slot="agent"></span><span class="t-str">"</span>, env=env)</span><span class="qs-line"><span class="t-dim">&gt;&gt;&gt;</span> result = <span class="t-kw">await</span> agent.sample(env)   <span class="t-dim"># → LiteSample</span><span class="qs-caret" aria-hidden="true"></span></span></div>
     </div>
     </div>
   </div>
@@ -214,7 +214,7 @@
       </a>
       <a class="src" href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">
         <span class="src-k">SFT data on demand</span>
-        <span class="src-h">🤗 Rollouts</span>
+        <span class="src-h"><span class="src-ico" aria-hidden="true"></span>Rollouts</span>
         <span class="src-d">Roll out any teacher (GPT-5.5, Claude…) into the same format and distill into any student. We ship the pipeline, not just the data.</span>
         <span class="src-go">Browse collection ↗</span>
       </a>

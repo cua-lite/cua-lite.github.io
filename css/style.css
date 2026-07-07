@@ -555,6 +555,10 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .src:hover { transform: translateY(-3px); box-shadow: 0 26px 44px -26px rgba(40,30,15,.4); border-color: var(--accent-dim); }
 .src-k { font-family: var(--mono); font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--accent-dim); }
 .src-h { font-family: var(--sans); font-weight: 700; font-size: 18px; color: var(--text); letter-spacing: -0.01em; }
+/* OpenAI mark on the Rollouts card — masked so it inherits the heading ink; the
+   Rollouts are teacher-model (GPT/Claude…) generations, not just HF-hosted data */
+.src-ico { display: inline-block; width: 16px; height: 16px; vertical-align: -3px; margin-right: 7px;
+  background: currentColor; -webkit-mask: url('../assets/logos/openai.svg') center/contain no-repeat; mask: url('../assets/logos/openai.svg') center/contain no-repeat; }
 .src-d { font-family: var(--sans); font-size: 13.5px; line-height: 1.5; color: var(--muted); }
 .src-go { margin-top: 4px; font-family: var(--mono); font-size: 11.5px; color: var(--accent); transition: opacity .14s ease; }
 .src:hover .src-go { text-decoration: underline; }
