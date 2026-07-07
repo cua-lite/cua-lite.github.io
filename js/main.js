@@ -15,10 +15,10 @@
    browser, the SFT picker, the hero-stat popover — subscribes to this ONE source, so
    none can drift from the Hub or from each other. Lives at file scope so all three
    IIFEs below close over it. */
-let DATASET_GROUPS = {
-  Rollouts: ["WebGym", "Lite.OSWorld", "MobileGym"],
-  Corpora: ["Aguvis", "ScaleCUA", "OpenCUA", "GUIAct", "GUIOdyssey", "GUI-360",
-            "Multimodal-Mind2Web", "CAGUI", "UI-Genie-Agent"],
+let DATASET_GROUPS = {   // mirrors the public HF collections so offline == the first live paint (no flip)
+  Rollouts: ["Lite.OSWorld", "WebGym", "CUAGym_V0", "CUAGym_V1", "CUAGym_V2"],
+  Corpora: ["Aguvis", "CAGUI", "GUI-360", "GUIAct", "GUIOdyssey",
+            "Multimodal-Mind2Web", "OpenCUA", "ScaleCUA", "UI-Genie-Agent"],
 };
 const _dsSubs = [];
 const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // call now + on every live update
