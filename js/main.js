@@ -60,6 +60,17 @@
     ctx.spark.classList.remove("go"); void ctx.spark.offsetWidth; ctx.spark.classList.add("go");
     c.el.classList.add("press"); at(150, () => c.el.classList.remove("press"));
   }
+  // Each mockup stands in for a real screen at this virtual resolution (aspect-matched
+  // to the device). The logged click([x,y]) is DERIVED from where the cursor actually
+  // lands — a fraction of the screen × this resolution — so the coordinate always
+  // matches the pointer instead of being a hand-picked (and drifting) guess.
+  const RES = { desktop: [1280, 800], web: [1280, 768], mobile: [1080, 2340] };
+  function coordCap(m, ctx, t) {
+    const c = centerOf(ctx, t); if (!c) return "";
+    const sr = ctx.screen.getBoundingClientRect(), [VW, VH] = RES[m];
+    const x = Math.round((c.x / sr.width) * VW), y = Math.round((c.y / sr.height) * VH);
+    return (m === "mobile" ? "tap" : "click") + "([" + x + ", " + y + "])";
+  }
   function typeInto(el, baseCls, text) {
     const base = baseCls ? baseCls + " " : "";
     el.className = base + "typed caret"; let i = 0;
@@ -98,8 +109,8 @@
         total.textContent = ""; total.classList.remove("filled", "sel");
       },
       steps: [
-        { t: "cell", cap: "click([812, 648])", onAct: () => total.classList.add("sel") },
-        { t: "fbar", cap: "click([430, 128])", onAct: () => {} },
+        { t: "cell", onAct: () => total.classList.add("sel") },
+        { t: "fbar", onAct: () => {} },
         { t: "fbar", noClick: true, cap: 'type("=AVERAGE(B2:B4)")', typeLen: 15, onAct: () => typeInto(fbar, "sh-formula", "=AVERAGE(B2:B4)") },
         { t: "fbar", noClick: true, cap: 'key(["enter"])', onAct: () => at(120, () => { total.textContent = avg().toFixed(1); total.classList.add("filled"); }) },
         { done: true, cap: 'terminate("success")' },
@@ -118,10 +129,10 @@
         bwHost.textContent = "google.com";
       },
       steps: [
-        { t: "search", cap: "click([500, 470])", onAct: () => wfield.classList.add("hot") },
+        { t: "search", onAct: () => wfield.classList.add("hot") },
         { t: "search", cap: 'type("cua-lite")', typeLen: 8, onAct: () => typeInto(wq, "", "cua-lite") },
-        { t: "go", cap: "click([434, 566])", onAct: () => { ggHome.classList.remove("show"); ggResults.classList.add("show"); bwHost.textContent = "google.com/search?q=cua-lite"; } },
-        { t: "open", cap: "click([286, 292])", onAct: () => { ggResults.classList.remove("show"); ggSite.classList.add("show"); bwHost.textContent = "cua-lite.github.io"; } },
+        { t: "go", onAct: () => { ggHome.classList.remove("show"); ggResults.classList.add("show"); bwHost.textContent = "google.com/search?q=cua-lite"; } },
+        { t: "open", onAct: () => { ggResults.classList.remove("show"); ggSite.classList.add("show"); bwHost.textContent = "cua-lite.github.io"; } },
         { done: true, cap: 'terminate("success")' },
       ],
       finished() { wq.textContent = "cua-lite"; wq.className = "typed"; ggHome.classList.remove("show"); ggResults.classList.remove("show"); ggSite.classList.add("show"); bwHost.textContent = "cua-lite.github.io"; },
@@ -136,9 +147,9 @@
         msent.classList.remove("show"); msave.classList.remove("sent");
       },
       steps: [
-        { t: "name", cap: "tap([432, 900])", onAct: () => minput.classList.add("hot") },
+        { t: "name", onAct: () => minput.classList.add("hot") },
         { t: "name", cap: 'type("yep — desktop, web & mobile")', typeLen: 26, onAct: () => typeInto(mname, "", "yep — desktop, web & mobile 🚀") },
-        { t: "save", cap: "tap([928, 904])", onAct: () => at(120, () => { msent.classList.add("show"); msave.classList.add("sent"); mname.textContent = "iMessage"; mname.className = "mk-ph"; minput.classList.remove("hot"); }) },
+        { t: "save", onAct: () => at(120, () => { msent.classList.add("show"); msave.classList.add("sent"); mname.textContent = "iMessage"; mname.className = "mk-ph"; minput.classList.remove("hot"); }) },
         { done: true, cap: 'terminate("success")' },
       ],
       finished() { msent.classList.add("show"); msave.classList.add("sent"); mname.textContent = "iMessage"; mname.className = "mk-ph"; },
@@ -156,7 +167,8 @@
     steps.forEach((s) => {
       const tt = t;
       if (s.done) { at(tt, () => logLine(typeof s.cap === "function" ? s.cap() : s.cap, "done", ts(tt))); t += 480; return; }
-      at(tt, () => { moveTo(ctx, s.t); logLine(s.cap, "live", ts(tt)); });
+      const isClick = s.t && !s.noClick;   // click/tap steps get their coordinate from the live cursor position
+      at(tt, () => { moveTo(ctx, s.t); logLine(isClick ? coordCap(mode, ctx, s.t) : s.cap, "live", ts(tt)); });
       at(tt + 380, () => { if (!s.noClick) click(ctx, s.t); s.onAct && s.onAct(); });
       t += 380 + (s.typeLen ? s.typeLen * 30 + 170 : 150) + 170;
     });
@@ -192,7 +204,7 @@
     MODES.desktop.finished();
     logClear();
     logLine("thinking", "think", "0.2s");
-    [['click([812, 648])', "0.6s"], ['type("=AVERAGE(B2:B4)")', "1.1s"], ['key(["enter"])', "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
+    [[coordCap("desktop", ctx, "cell"), "0.6s"], ['type("=AVERAGE(B2:B4)")', "1.1s"], ['key(["enter"])', "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
     logLine('terminate("success")', "done", "2.0s");
     requestAnimationFrame(() => { ctx.cursor.style.transition = "none"; const c = centerOf(ctx, "fbar"); if (c) place(ctx, c.x, c.y); });
   }
