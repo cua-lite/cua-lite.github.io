@@ -180,8 +180,10 @@
       const tt = t;
       if (s.done) { at(tt, () => logLine(typeof s.cap === "function" ? s.cap() : s.cap, "done", ts(tt))); t += 480; return; }
       const isClick = s.t && !s.cap;   // a click/tap step has no caption (type/key steps carry their own); log its live coordinate
-      at(tt, () => { moveTo(ctx, s.t); logLine(isClick ? coordCap(mode, ctx, s.t) : s.cap, "live", ts(tt)); });
-      at(tt + 380, () => { if (!s.noClick) click(ctx, s.t); s.onAct && s.onAct(); });
+      // The cursor sets off now; the trace line + the act (spark/typing) land together
+      // 380ms later — so the log is time-aligned with the visible action, not ahead of it.
+      at(tt, () => { moveTo(ctx, s.t); const p = rlLog.querySelector(".rl-line.live"); if (p) p.classList.remove("live"); });
+      at(tt + 380, () => { if (!s.noClick) click(ctx, s.t); logLine(isClick ? coordCap(mode, ctx, s.t) : s.cap, "live", ts(tt + 380)); s.onAct && s.onAct(); });
       t += 380 + (s.typeLen ? s.typeLen * 30 + 170 : 150) + 170;
     });
     at(t, onFinish);
