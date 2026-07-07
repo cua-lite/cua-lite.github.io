@@ -64,15 +64,13 @@
     ctx.spark.classList.remove("go"); void ctx.spark.offsetWidth; ctx.spark.classList.add("go");
     c.el.classList.add("press"); at(150, () => c.el.classList.remove("press"));
   }
-  // Each mockup stands in for a real screen at this virtual resolution (aspect-matched
-  // to the device). The logged click([x,y]) is DERIVED from where the cursor actually
-  // lands — a fraction of the screen × this resolution — so the coordinate always
-  // matches the pointer instead of being a hand-picked (and drifting) guess.
-  const RES = { desktop: [1280, 800], web: [1280, 768], mobile: [1080, 2340] };
+  // The logged click([x,y]) is DERIVED from where the cursor actually lands (a fraction
+  // of the screen), normalized to a 0-1000 grid — the LiteDesktop/LiteMobile action-space
+  // convention (resolution-independent) — so the coordinate always matches the pointer
+  // instead of being a hand-picked (and drifting) guess.
   function coordCap(m, ctx, t) {
     const c = centerOf(ctx, t); if (!c) return "";   // c is layout px (zoom already divided out)
-    const [VW, VH] = RES[m];
-    const x = Math.round((c.x / ctx.screen.offsetWidth) * VW), y = Math.round((c.y / ctx.screen.offsetHeight) * VH);
+    const x = Math.round((c.x / ctx.screen.offsetWidth) * 1000), y = Math.round((c.y / ctx.screen.offsetHeight) * 1000);
     return (m === "mobile" ? "tap" : "click") + "([" + x + ", " + y + "])";
   }
   // keep an opened dropdown menu inside the viewport — on a narrow phone a menu
@@ -99,7 +97,7 @@
   const $ = (s) => document.querySelector(s);
   // desktop
   const fbar = $("#fbar"), total = $("#total");
-  const cells = ["b2", "b3", "b4", "b5", "b6", "b7"].map((id) => document.getElementById(id));
+  const cells = ["b2", "b3", "b4", "b5"].map((id) => document.getElementById(id));
   const numOf = (el) => parseInt((el.textContent || "").replace(/[^0-9]/g, ""), 10) || 0;
   const fmt = (n) => n.toLocaleString("en-US");
   const sum = () => cells.reduce((a, e) => a + numOf(e), 0);
@@ -125,11 +123,11 @@
       steps: [
         { t: "cell", onAct: () => total.classList.add("sel") },
         { t: "fbar", onAct: () => {} },
-        { t: "fbar", noClick: true, cap: 'type("=AVERAGE(B2:B7)")', typeLen: 15, onAct: () => typeInto(fbar, "sh-formula", "=AVERAGE(B2:B7)") },
+        { t: "fbar", noClick: true, cap: 'type("=AVERAGE(B2:B5)")', typeLen: 15, onAct: () => typeInto(fbar, "sh-formula", "=AVERAGE(B2:B5)") },
         { t: "fbar", noClick: true, cap: 'key(["enter"])', onAct: () => at(120, () => { total.textContent = avg().toFixed(1); total.classList.add("filled"); }) },
         { done: true, cap: 'terminate("success")' },
       ],
-      finished() { fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B7)"; total.textContent = avg().toFixed(1); total.classList.add("filled", "sel"); },
+      finished() { fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B5)"; total.textContent = avg().toFixed(1); total.classList.add("filled", "sel"); },
     },
     web: {
       // Google → search "cua-lite" → open this very homepage
@@ -218,7 +216,7 @@
     MODES.desktop.finished();
     logClear();
     logLine("thinking", "think", "0.2s");
-    [[coordCap("desktop", ctx, "cell"), "0.6s"], ['type("=AVERAGE(B2:B7)")', "1.1s"], ['key(["enter"])', "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
+    [[coordCap("desktop", ctx, "cell"), "0.6s"], ['type("=AVERAGE(B2:B5)")', "1.1s"], ['key(["enter"])', "1.6s"]].forEach(([l, tt]) => logLine(l, "past", tt));
     logLine('terminate("success")', "done", "2.0s");
     requestAnimationFrame(() => { ctx.cursor.style.transition = "none"; const c = centerOf(ctx, "fbar"); if (c) place(ctx, c.x, c.y); });
   }
@@ -260,7 +258,7 @@
   function recompute() {
     clearAll(); running = true;
     logClear();
-    fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B7)";
+    fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B5)";
     total.textContent = ""; total.classList.remove("filled"); total.classList.add("sel");
     at(60, () => logLine('key(["enter"])', "live", "0.1s"));
     at(520, () => { total.textContent = avg().toFixed(1); total.classList.add("filled"); });
