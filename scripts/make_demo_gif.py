@@ -50,7 +50,16 @@ def _run(cmd: list[str]) -> None:
 
 
 def screencast(url: str, vw: int, vh: int, css: str, settle_ms: int, seconds: float, raw: Path):
-    """Screencast the viewport; return (frames meta, hero-demo bbox, stage bbox) in css px."""
+    """Screencast the viewport; return (frames meta, hero-demo bbox, stage bbox, top).
+
+    `top` is the highest y (css px) any device reaches when ACTIVE. Devices are
+    absolute + bottom-aligned in the stage, so the tall portrait phone overflows
+    ABOVE the stage box — if the crop starts at the stage/demo top it clips the
+    phone. The active vs inactive states position a device differently (not just the
+    transform), so we must actually toggle each device .active to read its true
+    on-tour top, then restore the live state. The minimum lets the caller start the
+    crop high enough to keep the phone whole.
+    """
     meta: list[tuple[float, Path]] = []
     with sync_playwright() as p:
         browser = p.chromium.launch()
@@ -60,6 +69,22 @@ def screencast(url: str, vw: int, vh: int, css: str, settle_ms: int, seconds: fl
         page.wait_for_timeout(settle_ms)  # skip the entrance; the tour is starting
         demo = page.query_selector(".hero-demo").bounding_box()
         stage = page.query_selector(".stage").bounding_box()
+        # Force each device active (with a beat to let its crossfade position settle — the
+        # active position differs from inactive and settles via a transition) and read its
+        # true top; the tall phone sits highest. One tour interval is >1s, so the tour's own
+        # timer won't fire during this ~0.6s probe — we restore the live classes afterward.
+        saved = page.evaluate("() => [...document.querySelectorAll('.stage .device')].map(d => d.className)")
+        top = float("inf")
+        for cls, inner in (("dev-desktop", ".crt"), ("dev-web", ".browser"), ("dev-mobile", ".phone")):
+            page.evaluate(
+                "(cls) => document.querySelectorAll('.stage .device').forEach(d => {"
+                " d.classList.remove('exit'); d.classList.toggle('active', d.classList.contains(cls)); })",
+                cls,
+            )
+            page.wait_for_timeout(200)
+            t = page.evaluate(f"() => document.querySelector('.{cls} {inner}').getBoundingClientRect().top")
+            top = min(top, t)
+        page.evaluate("(s) => document.querySelectorAll('.stage .device').forEach((d, i) => d.className = s[i])", saved)
         cdp = page.context.new_cdp_session(page)
         idx = [0]
 
@@ -77,7 +102,7 @@ def screencast(url: str, vw: int, vh: int, css: str, settle_ms: int, seconds: fl
         page.wait_for_timeout(int(seconds * 1000))
         cdp.send("Page.stopScreencast"); page.wait_for_timeout(200)
         browser.close()
-    return meta, demo, stage
+    return meta, demo, stage, top
 
 
 def build(meta, fps, rect, vw, vh, margin, max_width, gif_out, mp4_out, hold=0.0):
@@ -143,11 +168,15 @@ def main() -> None:
         with tempfile.TemporaryDirectory() as td:
             raw = Path(td) / "raw"; raw.mkdir()
             print("capturing stacked layout ...")
-            meta, demo, stage = screencast(url, vw, vh, css, a.settle_ms, a.seconds, raw)
-            print(f"  {len(meta)} frames @ {Image.open(meta[0][1]).size}")
-            build(meta, a.fps, (stage["x"], stage["y"], stage["width"], stage["height"] + 20),
+            meta, demo, stage, top = screencast(url, vw, vh, css, a.settle_ms, a.seconds, raw)
+            print(f"  {len(meta)} frames @ {Image.open(meta[0][1]).size}; tallest device top={top:.0f} (stage top={stage['y']:.0f})")
+            # start each crop at the highest device top (the phone overflows above the
+            # stage/demo box) so the phone's top never clips; extend height to the box bottom.
+            s_top = min(stage["y"], top)
+            build(meta, a.fps, (stage["x"], s_top, stage["width"], stage["y"] + stage["height"] + 20 - s_top),
                   vw, vh, a.margin, a.max_width, a.out / "demo.gif", a.out / "demo.mp4", hold=a.hold)
-            build(meta, a.fps, (demo["x"], demo["y"], demo["width"], demo["height"]),
+            d_top = min(demo["y"], top)
+            build(meta, a.fps, (demo["x"], d_top, demo["width"], demo["y"] + demo["height"] - d_top),
                   vw, vh, a.margin, a.max_width, a.out / "demo-trace.gif", a.out / "demo-trace.mp4", hold=a.hold)
 
         # 3 — side layout: device + trace to its right
@@ -175,9 +204,10 @@ def main() -> None:
         with tempfile.TemporaryDirectory() as td:
             raw = Path(td) / "raw"; raw.mkdir()
             print("capturing side layout ...")
-            meta, demo, stage = screencast(url, vw, vh, css, a.settle_ms, a.seconds, raw)
-            print(f"  {len(meta)} frames @ {Image.open(meta[0][1]).size}")
-            build(meta, a.fps, (demo["x"], demo["y"], demo["width"], demo["height"]),
+            meta, demo, stage, top = screencast(url, vw, vh, css, a.settle_ms, a.seconds, raw)
+            print(f"  {len(meta)} frames @ {Image.open(meta[0][1]).size}; tallest device top={top:.0f} (demo top={demo['y']:.0f})")
+            d_top = min(demo["y"], top)
+            build(meta, a.fps, (demo["x"], d_top, demo["width"], demo["y"] + demo["height"] - d_top),
                   vw, vh, a.margin, a.max_width, a.out / "demo-trace-side.gif", a.out / "demo-trace-side.mp4", hold=a.hold)
     finally:
         srv.terminate()
