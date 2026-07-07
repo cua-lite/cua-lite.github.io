@@ -114,14 +114,14 @@ def build(meta, fps, rect, vw, vh, margin, max_width, gif_out, mp4_out, hold=0.0
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Render the hero demo to GIF + MP4 (3 versions).")
-    ap.add_argument("--zoom", type=float, default=1.9, help="CSS zoom for the stacked crops; default 1.9")
-    ap.add_argument("--zoom-side", type=float, default=1.5, help="CSS zoom for the side/landscape crop; default 1.5")
-    ap.add_argument("--fps", type=float, default=30, help="output fps; higher = smoother transitions")
+    ap.add_argument("--zoom", type=float, default=2.4, help="CSS zoom for the stacked crops; default 1.9")
+    ap.add_argument("--zoom-side", type=float, default=2.0, help="CSS zoom for the side/landscape crop; default 1.5")
+    ap.add_argument("--fps", type=float, default=50, help="output fps; higher = smoother transitions")
     ap.add_argument("--seconds", type=float, default=16, help="one full tour: desktop->web->mobile fully done + a dwell before the loop restarts (settle at ~17.9s from load)")
     ap.add_argument("--settle-ms", type=int, default=1200)
     ap.add_argument("--hold", type=float, default=1.4, help="freeze the final (finished-mobile) frame this long before the loop restarts; ~matches the tour's mid-holds")
     ap.add_argument("--margin", type=int, default=28, help="white margin around the demo, px")
-    ap.add_argument("--max-width", type=int, default=1500, help="downscale a crop only if it exceeds this")
+    ap.add_argument("--max-width", type=int, default=2600, help="downscale a crop only if it exceeds this")
     ap.add_argument("--port", type=int, default=8971)
     ap.add_argument("--out", type=Path, default=ROOT / "assets")
     a = ap.parse_args()
@@ -138,7 +138,7 @@ def main() -> None:
         # 1 & 2 — stacked layout: device-only (crop the stage) + device+trace (crop hero-demo).
         # pin the demo to its natural design width (547px) then zoom, so proportions match the
         # site and the rollout command wraps normally instead of overflowing/clipping.
-        vw, vh = 1240, 1680
+        vw, vh = 1600, 2300
         css = f".hero-demo{{width:547px !important;zoom:{a.zoom} !important;margin:20px auto !important}}"
         with tempfile.TemporaryDirectory() as td:
             raw = Path(td) / "raw"; raw.mkdir()
@@ -151,7 +151,7 @@ def main() -> None:
                   vw, vh, a.margin, a.max_width, a.out / "demo-trace.gif", a.out / "demo-trace.mp4", hold=a.hold)
 
         # 3 — side layout: device + trace to its right
-        vw, vh = 1900, 1120
+        vw, vh = 2520, 1320
         # top-align device + trace: the stage normally parks the device at its bottom
         # (justify-content:flex-end) leaving empty space on top; move it to the top and
         # pin a height that fits the tallest device (the phone) so nothing clips.
