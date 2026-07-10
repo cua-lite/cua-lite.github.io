@@ -720,7 +720,7 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 /* ---------- benchmark coverage — a segmented control + one floating panel ----------
    Breadth reads at a glance (count badges), never runs long (one platform shown),
    and feels alive (cards stagger in on switch). Linked to the eval builder. */
-.cov { max-width: 640px; margin: 0 auto; }
+.cov { max-width: 660px; margin: 0 auto; }   /* the section's shared column width — same as .cmdbuild / .lb */
 .cov-tabs { display: inline-flex; gap: 2px; margin: 0 0 20px; padding: 4px;
   background: var(--panel-2); border: 1px solid var(--panel-edge); border-radius: 999px; }
 .cov-tab { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 11px; letter-spacing: 1px;

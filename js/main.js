@@ -22,6 +22,12 @@ let DATASET_GROUPS = {   // mirrors the public HF collections so offline == the 
 };
 const _dsSubs = [];
 const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // call now + on every live update
+
+/* The selected benchmark env is ONE state with three views: the eval builder's
+   --env-id, the highlighted coverage card, and the leaderboard. The builder and
+   the cards both steer it; the leaderboard IIFE registers itself here so the
+   builder (which lives in another IIFE) can swap the board too. */
+let lbFollowEnv = null;
 (async () => {
   try {
     const parse = async (slug) => {
@@ -535,6 +541,7 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
     const plat = capPlat(ENV_PLAT[env]);
     if (plat) showPlat(plat);   // jump the coverage to the env's platform tab
     benchRows.forEach((r) => { const n = r.querySelector(".r-name"); r.classList.toggle("hl", !!n && n.textContent.trim() === nm); });
+    if (lbFollowEnv) lbFollowEnv(env);   // the leaderboard shows the same env
   };
 
   document.querySelectorAll(".cmdbuild").forEach((cb) => {
@@ -837,7 +844,7 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
 
   let manifest = null;   // env-id -> "<commit-dir>/run_<n>.json" (null until loaded)
   const runs = {};       // env-id -> fetched run payload
-  let cur = "osworld_g";
+  let cur = "osworld";   // matches the eval builder's default env, so the two never disagree on first paint
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   function render(data) {
@@ -914,6 +921,8 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
     e.preventDefault();
     if (c.dataset.env !== cur) show(c.dataset.env);
   }));
+  // …and so does the eval builder's --env-id (registered at file scope for the builder's IIFE)
+  lbFollowEnv = (envId) => { if (envId !== cur) show(envId); };
   show(cur);
 })();
 
