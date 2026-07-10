@@ -32,6 +32,55 @@
 .post-links { font-family: var(--mono); font-size: 12.5px; margin: 0 0 22px; }
 .post-links a { color: var(--accent); }
 .post-close { border-top: 1px solid var(--line); margin-top: 40px; padding-top: 24px; }
+/* ---- animated flow figures: chips light up, a wire draws the pairing, the real command follows ---- */
+.flow-demo { margin: 6px 0 20px; background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 20px 20px 16px; }
+.pair-board { display: grid; grid-template-columns: 1fr 96px 1fr; position: relative; }
+.pair-board[data-board="data"] { grid-template-columns: 1fr 132px 1fr; }
+.pair-col { display: flex; flex-direction: column; gap: 9px; }
+.pair-k { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 2px; }
+.pair-chip { font-family: var(--mono); font-size: 12px; color: var(--muted); background: var(--panel-2); border: 1px solid var(--panel-edge);
+  border-radius: 999px; padding: 6px 13px; white-space: nowrap; align-self: flex-start; transition: color .25s ease, border-color .25s ease, background .25s ease; }
+.pair-right .pair-chip { align-self: flex-end; }
+.pair-chip.on { color: var(--accent); border-color: var(--accent-dim); background: rgba(189,90,56,.08); }
+/* the target chip lights as the wire reaches it, not before */
+[data-board="data"] .pair-right .pair-chip.on { transition-delay: .85s; }
+[data-board="pair"] .pair-right .pair-chip.on { transition-delay: .5s; }
+.pair-mid { display: flex; align-items: center; justify-content: center; }
+.pair-node { font-family: var(--mono); font-size: 12px; color: var(--text); background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 8px; padding: 7px 10px; z-index: 2; }
+.pair-node code { background: none; border: 0; padding: 0; font-size: 12px; }
+.pair-wire { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.pair-wire path { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 400; opacity: 0; }
+.pair-wire path.draw { animation: wireDraw 1s var(--ease) forwards; }
+.pair-wire .w2.draw { animation-delay: .4s; }
+@keyframes wireDraw { 0% { stroke-dashoffset: 400; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
+.pair-cmd { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; line-height: 1.6; }
+.pair-cmd .c-p { color: var(--dim); }
+.pair-cmd b { color: var(--accent); font-weight: 500; }
+.pair-cmd b, .pair-cmd .nb { white-space: nowrap; }  /* ids wrap as a unit, never mid-token */
+@media (prefers-reduced-motion: reduce) {
+  .pair-wire path.draw { animation: none; stroke-dashoffset: 0; opacity: 1; }
+  .pair-chip.on { transition-delay: 0s; }
+}
+@media (max-width: 560px) {
+  .pair-board { grid-template-columns: 1fr 34px 1fr; }
+  .pair-board[data-board="data"] { grid-template-columns: 1fr 88px 1fr; }
+  .pair-chip { font-size: 10.5px; padding: 5px 10px; }
+  .pair-node, .pair-node code { font-size: 10.5px; }
+}
+@media (max-width: 430px) {  /* keep the node clear of the chips on small phones */
+  .pair-board { grid-template-columns: 1fr 24px 1fr; }
+  .pair-board[data-board="data"] { grid-template-columns: 1fr 78px 1fr; }
+  .pair-chip { font-size: 10px; padding: 4px 8px; }
+  .pair-node { padding: 5px 8px; }
+  .pair-node, .pair-node code { font-size: 10px; }
+  .flow-demo { padding: 14px 14px 12px; }
+}
+@media (max-width: 360px) {
+  .pair-chip { font-size: 9.5px; padding: 3px 7px; }
+  .pair-node { padding: 4px 7px; }
+  .pair-node, .pair-node code { font-size: 9.5px; }
+}
+@media (max-width: 340px) { .flow-demo { margin-left: -8px; margin-right: -8px; } }
 .blog-foot { max-width: 680px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 12px; color: var(--dim); }
 .blog-foot a { color: var(--dim); }
 .blog-foot a:hover { color: var(--text); }
@@ -47,7 +96,8 @@
       <a href="/#data">Data</a>
       <a href="/#benchmarks">Eval</a>
       <a href="/#train">Train</a>
-      <span class="nav-cta"><a class="btn-ghost sm" href="/blog/" aria-current="page">Blog</a><a class="btn-solid sm" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a></span>
+      <a href="/blog/" aria-current="page">Blog</a>
+      <span class="nav-cta"><a class="btn-ghost sm" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a><a class="btn-solid sm" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Get the data</a></span>
     </nav>
   </div>
 </header>
@@ -56,30 +106,71 @@
   <p class="post-meta">2026-07-10 · The CUA-Lite team</p>
   <h1>Why CUA-Lite — and a call for <em>contributors.</em></h1>
 
-  <p>CUA-Lite exists to democratize computer-use agents: everything an agent needs —
-  data, benchmarks, training — made <b>open to share</b> and <b>simple to run</b>.
-  The platform is the <i>where</i>; the framework is the <i>how</i>. Both grow by
-  contribution, and here is where a pull request lands hardest:</p>
+  <p>Computer-use agent research is fragmented. Every benchmark ships its own
+  harness, its own action space, its own data format. Every dataset picks its own
+  schema, so data collected for one agent can't train another. Every lab rebuilds
+  the same plumbing — screenshot loops, VM setup, eval scripts — before running a
+  single experiment.</p>
+
+  <p>CUA-Lite is one data platform plus one framework, built to democratize this
+  work: <b>one schema</b> for data, <b>one action space</b> for benchmarks, one
+  command for any agent — desktop, web, and mobile. Here is how each kind of
+  contribution compounds:</p>
 
   <h2>Datasets</h2>
-  <p>Convert a dataset to <code>LiteSample</code> and everyone training a computer-use
-  agent can train on it — every agent, every training stack, one pull request. For
-  dataset authors, that means users and citations far beyond a standalone release.
-  And for everyone who wants to train but has no data: it's already here, free on
-  Hugging Face — 10+ datasets plus a growing set of GPT-5.5 rollouts.</p>
-  <p class="post-links"><a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">browse the corpora ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/tree/main/lite/data/preproc" target="_blank" rel="noopener">preprocessing guide ↗</a></p>
+  <p>Convert a dataset to <code>LiteSample</code> once and <b>every agent can train
+  on it</b> — today's and tomorrow's. No data of your own? It's all free on
+  Hugging&nbsp;Face.</p>
+  <figure class="flow-demo" aria-label="Any dataset, converted once, trains any agent">
+    <div class="pair-board" data-board="data">
+      <div class="pair-col">
+        <span class="pair-k">Datasets</span>
+        <span class="pair-chip" data-id="Multimodal-Mind2Web">Mind2Web</span>
+        <span class="pair-chip" data-id="GUIOdyssey">GUIOdyssey</span>
+        <span class="pair-chip" data-id="Aguvis">Aguvis</span>
+        <span class="pair-chip" data-id="YourDataset">yours next</span>
+      </div>
+      <div class="pair-mid"><span class="pair-node"><code>LiteSample</code></span></div>
+      <div class="pair-col pair-right">
+        <span class="pair-k">Agents</span>
+        <span class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct">Qwen3-VL-8B</span>
+        <span class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B">UI-TARS-1.5</span>
+        <span class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B">MAI-UI-8B</span>
+        <span class="pair-chip" data-id="Qwen/Qwen3.5-9B">Qwen3.5-9B</span>
+      </div>
+      <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
+    </div>
+    <div class="pair-cmd" data-cmd-line></div>
+  </figure>
+  <p class="post-links"><a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">browse the corpora ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">preprocessing guide ↗</a></p>
 
-  <h2>Benchmarks</h2>
-  <p>Every env here speaks the same action space, so a benchmark integrated once runs
-  every agent — today's and tomorrow's. And even without integrating anything, an eval
-  you already ran is worth submitting: scores land on the leaderboard as committed,
-  reproducible JSON.</p>
-  <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/tree/main/lite/gym/envs" target="_blank" rel="noopener">env guide ↗</a> &nbsp;·&nbsp; <a href="/#benchmarks">the leaderboard ↗</a></p>
-
-  <h2>Agents</h2>
-  <p>A new model needs one small adapter to become evaluable and trainable on everything
-  above. The building blocks are small and documented.</p>
-  <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">agent building blocks ↗</a></p>
+  <h2>Benchmarks &amp; agents</h2>
+  <p>One action space: integrate a benchmark once and <b>every agent runs it</b>;
+  write one small adapter and <b>a new model runs every benchmark</b>. Scores land
+  on the leaderboard as committed, plain JSON — and an eval you already ran is
+  worth submitting.</p>
+  <figure class="flow-demo" aria-label="Any agent paired with any benchmark, one command">
+    <div class="pair-board" data-board="pair">
+      <div class="pair-col">
+        <span class="pair-k">Agents</span>
+        <span class="pair-chip" data-id="gpt-5.5">gpt-5.5</span>
+        <span class="pair-chip" data-id="claude-opus-4-7">claude-opus-4-7</span>
+        <span class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct">Qwen3-VL-8B</span>
+        <span class="pair-chip" data-id="Qwen/Qwen3.5-9B">Qwen3.5-9B</span>
+      </div>
+      <div class="pair-mid"></div>
+      <div class="pair-col pair-right">
+        <span class="pair-k">Benchmarks</span>
+        <span class="pair-chip" data-id="osworld">OSWorld</span>
+        <span class="pair-chip" data-id="browsergym.webarena">WebArena</span>
+        <span class="pair-chip" data-id="androidworld">AndroidWorld</span>
+        <span class="pair-chip" data-id="webgym">WebGym</span>
+      </div>
+      <svg class="pair-wire" aria-hidden="true"><path class="w1"/></svg>
+    </div>
+    <div class="pair-cmd" data-cmd-line></div>
+  </figure>
+  <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">env guide ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">agent building blocks ↗</a> &nbsp;·&nbsp; <a href="/#leaderboard">the leaderboard ↗</a></p>
 
   <p class="post-close">Open an issue, send a PR, or just tell us what's missing —
   <a href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a> ·
@@ -92,5 +183,66 @@
   <a href="/blog/">← All posts</a>
 </footer>
 
+<script>
+(function () {
+  "use strict";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function runBoard(fig, mkCmd) {
+    const board = fig.querySelector(".pair-board");
+    const left = [...board.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
+    const right = [...board.querySelectorAll(".pair-right .pair-chip")];
+    const node = board.querySelector(".pair-node");
+    const svg = board.querySelector(".pair-wire");
+    const paths = svg.querySelectorAll("path");
+    const cmd = fig.querySelector("[data-cmd-line]");
+    const seq = [[0, 0], [1, 0], [1, 1], [2, 1], [2, 2], [3, 2], [3, 3], [0, 3]];
+    let i = 0, cur = [0, 0];
+    const so = () => (innerWidth <= 430 ? 2 : 5);  // wire standoff from the chip edge
+    const pt = (el, side) => { const b = el.getBoundingClientRect(), s = svg.getBoundingClientRect();
+      return [side === "r" ? b.right - s.left + so() : b.left - s.left - so(), b.top + b.height / 2 - s.top]; };
+    const curve = ([x1, y1], [x2, y2]) => { const mx = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
+    const redraw = (p) => { p.classList.remove("draw"); void p.getBoundingClientRect(); p.classList.add("draw"); };
+    function wires(a, e) {
+      if (node && paths.length > 1) {
+        paths[0].setAttribute("d", curve(pt(left[a], "r"), pt(node, "l")));
+        paths[1].setAttribute("d", curve(pt(node, "r"), pt(right[e], "l")));
+      } else {
+        paths[0].setAttribute("d", curve(pt(left[a], "r"), pt(right[e], "l")));
+      }
+    }
+    function step(a, e) {
+      cur = [a, e];
+      left.forEach((c, k) => c.classList.toggle("on", k === a));
+      right.forEach((c, k) => c.classList.toggle("on", k === e));
+      wires(a, e);
+      paths.forEach(redraw);
+      cmd.innerHTML = mkCmd(left[a].dataset.id, right[e].dataset.id);
+    }
+    // reserve the height of the tallest command so the figure never jumps between pairs
+    function reserve() {
+      const keep = cmd.innerHTML;
+      cmd.style.minHeight = "";
+      let max = 0;
+      seq.forEach(([a, e]) => { cmd.innerHTML = mkCmd(left[a].dataset.id, right[e].dataset.id); max = Math.max(max, cmd.offsetHeight); });
+      cmd.innerHTML = keep;
+      cmd.style.minHeight = max + "px";
+    }
+    step(0, 0); reserve();
+    if (!reduce) setInterval(() => { i = (i + 1) % seq.length; step(seq[i][0], seq[i][1]); }, 2200);
+    return () => { reserve(); wires(cur[0], cur[1]); };  // re-anchor without replaying the draw
+  }
+  const boards = [];
+  const dataFig = document.querySelector('[data-board="data"]');
+  if (dataFig) boards.push(runBoard(dataFig.closest(".flow-demo"), (ds, m) =>
+    `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>${ds.split("/").pop()}</b></span> <span class="nb">--model-id</span> <b>${m}</b>`));
+  const pairFig = document.querySelector('[data-board="pair"]');
+  if (pairFig) boards.push(runBoard(pairFig.closest(".flow-demo"), (a, e) =>
+    `<span class="c-p">$</span> rollout.py <span class="nb">--model-id</span> <b>${a}</b> <span class="nb">--env-id</span> <b>${e}</b>`));
+  // wires are measured from live geometry — re-anchor after web fonts land and on resize
+  const sync = () => boards.forEach((fn) => fn());
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
+  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(sync, 120); });
+})();
+</script>
 </body>
 </html>
