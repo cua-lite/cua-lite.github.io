@@ -850,7 +850,9 @@ let lbFollowEnv = null;
   function render(data) {
     const rows = (data.results || [])
       .filter((r) => r.status !== "empty" && r.mean_episode_return != null)
-      .sort((a, b) => (a.status === b.status ? b.mean_episode_return - a.mean_episode_return : a.status === "complete" ? -1 : 1));
+      // one ranking, by score — a 115/116 partial is comparable to a complete run, so it
+      // ranks in place (dimmed + tooltip-flagged) rather than being bucketed to the bottom
+      .sort((a, b) => b.mean_episode_return - a.mean_episode_return);
     if (!rows.length) return renderGhost("empty");
     // scale to a round ceiling with headroom, so the leader never hits the wall
     const axis = Math.min(100, Math.ceil((Math.max(...rows.map((r) => r.mean_episode_return * 100)) + 4) / 10) * 10);
