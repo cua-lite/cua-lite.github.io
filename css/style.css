@@ -754,6 +754,82 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 /* the selected agent can't run this benchmark — recede (filter survives the reveal fade) */
 .cov-panel .row.off { filter: grayscale(1) opacity(.4); }
 
+/* ---------- leaderboard — success rates read live from the repo's committed run JSONs ----------
+   A quiet ranked bar chart in the site's own materials: one terracotta series
+   (magnitude is the bar's length, not its color), values as direct labels in
+   ink, no legend (single measure), rows staggered in like the coverage cards. */
+.lb-cap { margin: 58px auto 22px; }
+.lb { max-width: 660px; margin: 0 auto; }
+.section.centered .lb { margin-left: auto; margin-right: auto; text-align: left; }
+.lb-card { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; overflow: hidden;
+  box-shadow: 0 26px 50px -30px rgba(40,30,15,.4), 0 3px 8px -4px rgba(40,30,15,.16); }
+.lb-bar { display: flex; align-items: center; gap: 14px; padding: 11px 18px; background: var(--panel-2); border-bottom: 1px solid var(--panel-edge); }
+.lb-title { font-family: var(--mono); font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--dim); }
+.lb-tabs { display: inline-flex; flex-wrap: wrap; gap: 2px; }
+.lb-tab { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted);
+  background: transparent; border: 0; border-radius: 999px; padding: 4px 12px; cursor: pointer;
+  transition: color .16s ease, background .22s var(--ease), box-shadow .22s var(--ease); }
+.lb-tab:hover { color: var(--text); }
+.lb-tab.on { color: var(--accent); background: var(--panel-fill); box-shadow: 0 1px 3px rgba(40,30,15,.14); }
+/* secondary tabs — one env's config settings (default · som · ...); only shown when there are several */
+.lb-cfgs { display: inline-flex; align-items: center; gap: 12px; margin-left: 10px; }
+.lb-cfgs:not(:empty)::before { content: ""; width: 1px; height: 14px; background: var(--line-2); margin-right: 2px; }
+.lb-cfg { font-family: var(--mono); font-size: 10.5px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--dim);
+  background: transparent; border: 0; padding: 3px 1px; cursor: pointer; box-shadow: inset 0 -1px 0 transparent;
+  transition: color .14s ease, box-shadow .14s ease; }
+.lb-cfg:hover { color: var(--text); }
+.lb-cfg.on { color: var(--accent); box-shadow: inset 0 -1.5px 0 var(--accent); }
+.lb-open { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--accent); white-space: nowrap; }
+.lb-open:hover { text-decoration: underline; }
+.lb-body { padding: 10px 14px 8px; }
+.lb-row { display: grid; grid-template-columns: 24px minmax(120px, 246px) 1fr 56px; grid-template-areas: "rank model track val";
+  align-items: center; gap: 0 12px; padding: 6.5px 6px; border-radius: 8px; transition: background .14s ease; }
+.lb-row:hover { background: rgba(60,48,36,.05); }
+.lb-rank { grid-area: rank; font-family: var(--mono); font-size: 11px; color: var(--dim); text-align: right; font-variant-numeric: tabular-nums; }
+.lb-model { grid-area: model; font-family: var(--mono); font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lb-org { color: var(--dim); }
+/* the mark: a thin baseline-anchored bar with a 4px rounded data-end, on a faint full-scale track */
+.lb-track { grid-area: track; position: relative; height: 10px; border-radius: 2px 4px 4px 2px; background: rgba(60,48,36,.06); }
+.lb-fill { position: absolute; top: 0; bottom: 0; left: 0; width: calc(var(--w) * 100%);
+  background: var(--accent); border-radius: 2px 4px 4px 2px; transform-origin: left center; }
+.lb-val { grid-area: val; font-family: var(--mono); font-size: 12px; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+.lb-unit { color: var(--dim); font-size: 10px; margin-left: 1px; }
+/* the leader — the same soft accent wash the coverage table uses for its highlighted env */
+.lb-row.top { background: rgba(189,90,56,.07); }
+.lb-row.top .lb-rank { color: var(--accent); font-weight: 600; }
+.lb-row.top .lb-val { font-weight: 600; }
+/* a partial run (not every task scored yet) recedes; its tooltip says why */
+.lb-row.part { opacity: .55; }
+/* no committed run yet — a quiet ghost of the board, with the reason on top */
+.lb-none { position: relative; }
+.lb-row.ghost .lb-fill { background: rgba(60,48,36,.10); }
+.lb-gname { grid-area: model; height: 11px; width: calc(52% + var(--i) * 4%); border-radius: 4px; background: var(--panel-2); }
+.lb-gval { grid-area: val; height: 11px; width: 30px; margin-left: auto; border-radius: 4px; background: var(--panel-2); }
+.lb-none-msg { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
+  text-align: center; padding: 0 24px; background: linear-gradient(180deg, rgba(254,250,240,.55), rgba(254,250,240,.88) 45%, rgba(254,250,240,.55)); }
+.lb-none-t { font-family: var(--mono); font-size: 11px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--muted); }
+.lb-none-d { font-family: var(--sans); font-size: 13px; line-height: 1.5; color: var(--dim); max-width: 420px; }
+.lb-none-d a { color: var(--accent); white-space: nowrap; }
+.lb-none-d a:hover { text-decoration: underline; }
+/* while the run JSON is in flight, the ghost shimmers (same pulse as the HF skeleton) */
+.lb-none.loading .lb-gname, .lb-none.loading .lb-gval { background: linear-gradient(90deg, var(--panel-2) 25%, #fff 50%, var(--panel-2) 75%);
+  background-size: 200% 100%; animation: hfShimmer 1.5s ease-in-out infinite; }
+/* entrance: rows settle in staggered, then each bar grows from the baseline */
+.js-reveal .lb .lb-row { opacity: 0; }
+.js-reveal .lb.in .lb-row { animation: covIn .4s var(--ease) forwards; animation-delay: calc(.035s * var(--i)); }
+.js-reveal .lb .lb-fill { transform: scaleX(0); }
+.js-reveal .lb.in .lb-fill { animation: lbGrow .6s var(--ease) forwards; animation-delay: calc(.12s + .04s * var(--i)); }
+@keyframes lbGrow { to { transform: scaleX(1); } }
+.lb-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; padding: 11px 18px 12px; border-top: 1px solid var(--line);
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .4px; color: var(--dim); }
+.lb-foot span + span::before { content: "·"; margin-right: 10px; }
+.lb-foot a { color: var(--accent); }
+.lb-foot a:hover { text-decoration: underline; }
+/* phones: the name gets the full line, the bar takes its own row beneath */
+@media (max-width: 560px) {
+  .lb-row { grid-template-columns: 20px minmax(0, 1fr) 56px; grid-template-areas: "rank model val" "rank track track"; row-gap: 6px; padding: 8px 6px; }
+}
+
 /* quickstart */
 /* quickstart is the closing "get started" moment — centered as a focal block,
    heading/terminal/CTA aligned, instead of a left heading + centered terminal */
