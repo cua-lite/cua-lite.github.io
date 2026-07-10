@@ -51,7 +51,10 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+html { scroll-behavior: smooth; scroll-padding-top: 92px;
+  /* always reserve the scrollbar gutter — short pages (blog) must not re-center
+     the layout relative to long ones on classic-scrollbar browsers */
+  overflow-y: scroll; scrollbar-gutter: stable; }
 body {
   margin: 0; color: var(--text);
   /* soft warm peach washes over ivory — microsoft.ai's ambient warmth, viewport-fixed */
