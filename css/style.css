@@ -126,7 +126,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .nav-links .btn-solid { color: #f6f2e8; }
 .nav-links .btn-ghost { color: var(--text); background: transparent; border-color: var(--line-2); }   /* outline-only on the cream nav — panel-edge is too faint here */
 .nav-links .btn-ghost.sm, .nav-links .btn-solid.sm { min-width: 78px; justify-content: center; }   /* equal-width pills — "Blog" doesn't run narrower than "GitHub" */
-.nav-links .btn-ico { min-width: 0; padding: 5px 11px; font-size: 16px; line-height: 1.6; }   /* the 🤗 pill — the data platform's home, compact next to GitHub */
 .nav-links .btn-ghost:hover { background: #fff; }
 .nav-links .btn-ghost[aria-current="page"] { border-color: var(--accent-dim); background: #fff; }   /* the filled pill marks "you are here" */
 .nav-cta { display: flex; align-items: center; gap: 12px; }   /* the two pills read as one action cluster, tighter than the link run */
