@@ -210,10 +210,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   border: 1px solid var(--accent-dim); border-radius: 999px; padding: 7px 15px; margin-bottom: 22px; transition: background .14s ease; }
 .hero-chip:hover { background: #fff; }
 .chip-dot { width: 6px; height: 6px; background: var(--accent); }
-.cta-more { font-family: var(--mono); font-size: 12.5px; letter-spacing: .3px; color: var(--accent); }   /* the quiet text actions */
+.cta-more { font-family: var(--mono); font-size: 12.5px; letter-spacing: .3px; color: var(--accent); margin-left: 4px; }   /* the quiet third action */
 .cta-more:hover { text-decoration: underline; }
-.cta-links { flex-basis: 100%; display: flex; gap: 24px; margin-top: 2px; }   /* buttons row, then a quiet links row — no orphan wrapping */
-.cta-row.center .cta-links { justify-content: center; }
 .hero .lead { font-size: 17.5px; line-height: 1.62; color: var(--muted); max-width: 500px; margin: 0 0 18px; }
 .nb { white-space: nowrap; }   /* glue for phrases that must not break mid-unit */
 /* the two deliverables — a labeled list, so the parallel structure is visible before it is
