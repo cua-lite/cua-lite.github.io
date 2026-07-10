@@ -129,6 +129,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .nav-links .btn-ghost:hover { background: #fff; }
 .nav-links .btn-ghost[aria-current="page"] { border-color: var(--accent-dim); background: #fff; }   /* the filled pill marks "you are here" */
 .nav-cta { display: flex; align-items: center; gap: 12px; }   /* the two pills read as one action cluster, tighter than the link run */
+.nav-sep { width: 1px; height: 15px; background: var(--line-2); }   /* groups the nav: in-page sections │ site pages │ the product's homes */
 
 /* ---------- hero ---------- */
 /* overflow visible so the stat popovers can extend below the hero and layer on top
@@ -913,7 +914,7 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 
 /* ---------- responsive ---------- */
 @media (max-width: 940px) {
-  .nav-links a:not(.btn-solid):not(.btn-ghost) { display: none; }   /* narrow screens keep only the pills */
+  .nav-links a:not(.btn-solid):not(.btn-ghost), .nav-sep { display: none; }   /* narrow screens keep only the pills */
   .nav-cta { gap: 8px; }
   .nav-links .btn-ghost.sm, .nav-links .btn-solid.sm { min-width: 0; }   /* let the pills shrink so the brand never crowds */
   .hero { padding: 68px 0 40px; }
