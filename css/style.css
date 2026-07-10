@@ -212,7 +212,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .chip-dot { width: 6px; height: 6px; background: var(--accent); }
 .cta-more { font-family: var(--mono); font-size: 12.5px; letter-spacing: .3px; color: var(--accent); margin-left: 4px; }   /* the quiet third action */
 .cta-more:hover { text-decoration: underline; }
-.hero .lead { font-size: 17.5px; line-height: 1.62; color: var(--muted); max-width: 500px; margin: 0 0 18px; }
+.hero .lead { font-size: 17.5px; line-height: 1.62; color: var(--muted); max-width: 560px; margin: 0 0 18px; }
 .nb { white-space: nowrap; }   /* glue for phrases that must not break mid-unit */
 /* the two deliverables — a labeled list, so the parallel structure is visible before it is
    read; platform before framework, mirroring the pillar order (01 Data → 02 Eval → 03 Train) */
