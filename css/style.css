@@ -52,9 +52,10 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 92px;
-  /* always reserve the scrollbar gutter — short pages (blog) must not re-center
-     the layout relative to long ones on classic-scrollbar browsers */
-  overflow-y: scroll; scrollbar-gutter: stable; }
+  /* reserve the scrollbar gutter — short pages (blog) must not re-center the layout
+     relative to long ones on classic-scrollbar browsers. NOT overflow-y: scroll,
+     which breaks Chromium's smooth on-load scroll to #hash anchors. */
+  scrollbar-gutter: stable; }
 body {
   margin: 0; color: var(--text);
   /* soft warm peach washes over ivory — microsoft.ai's ambient warmth, viewport-fixed */
@@ -118,13 +119,14 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .nav-inner { max-width: var(--maxw); margin: 0 auto; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; }
 .brand { display: inline-flex; align-items: center; gap: 10px; }
 .brand-plane { width: 22px; height: 22px; background: url('../assets/logo.svg') center/contain no-repeat; }
-.brand-name { font-family: var(--sans); font-weight: 750; font-size: 17px; letter-spacing: -0.01em; }
+.brand-name { font-family: var(--sans); font-weight: 750; font-size: 17px; letter-spacing: -0.01em; white-space: nowrap; }
 .nav-links { display: flex; align-items: center; gap: 30px; }
 .nav-links a { color: var(--muted); font-size: 14.5px; font-weight: 550; transition: color .12s ease; }
 .nav-links a:hover { color: var(--text); }
 .nav-links .btn-solid { color: #f6f2e8; }
 .nav-links .btn-ghost { color: var(--text); background: transparent; border-color: var(--line-2); }   /* outline-only on the cream nav — panel-edge is too faint here */
 .nav-links .btn-ghost.sm, .nav-links .btn-solid.sm { min-width: 78px; justify-content: center; }   /* equal-width pills — "Blog" doesn't run narrower than "GitHub" */
+.nav-links .btn-ico { min-width: 0; padding: 5px 11px; font-size: 16px; line-height: 1.6; }   /* the 🤗 pill — the data platform's home, compact next to GitHub */
 .nav-links .btn-ghost:hover { background: #fff; }
 .nav-links .btn-ghost[aria-current="page"] { border-color: var(--accent-dim); background: #fff; }   /* the filled pill marks "you are here" */
 .nav-cta { display: flex; align-items: center; gap: 12px; }   /* the two pills read as one action cluster, tighter than the link run */
@@ -208,22 +210,23 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   border: 1px solid var(--accent-dim); border-radius: 999px; padding: 7px 15px; margin-bottom: 22px; transition: background .14s ease; }
 .hero-chip:hover { background: #fff; }
 .chip-dot { width: 6px; height: 6px; background: var(--accent); }
-.cta-more { font-family: var(--mono); font-size: 12.5px; letter-spacing: .3px; color: var(--accent); margin-left: 4px; }   /* the quiet third action */
+.cta-more { font-family: var(--mono); font-size: 12.5px; letter-spacing: .3px; color: var(--accent); }   /* the quiet text actions */
 .cta-more:hover { text-decoration: underline; }
+.cta-links { flex-basis: 100%; display: flex; gap: 24px; margin-top: 2px; }   /* buttons row, then a quiet links row — no orphan wrapping */
+.cta-row.center .cta-links { justify-content: center; }
 .hero .lead { font-size: 17.5px; line-height: 1.62; color: var(--muted); max-width: 500px; margin: 0 0 18px; }
+.nb { white-space: nowrap; }   /* glue for phrases that must not break mid-unit */
 /* the two deliverables — a labeled list, so the parallel structure is visible before it is
    read; platform before framework, mirroring the pillar order (01 Data → 02 Eval → 03 Train) */
-.lead-claims { list-style: none; margin: 0 0 36px; padding: 0; display: grid; gap: 16px; max-width: 540px; }
-.lead-claims li { display: grid; grid-template-columns: 104px 1fr; gap: 14px; align-items: baseline; }   /* hanging labels — the two claims read as one small table */
-.claim-k { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
-.claim-k::before { content: ""; display: inline-block; width: 7px; height: 7px; background: var(--accent); margin-right: 9px; }   /* pixel bullet */
-.claim-t { color: var(--muted); font-size: 16.5px; line-height: 1.6; }
+.lead-claims { list-style: none; margin: 0 0 36px; padding: 0; display: grid; gap: 14px; max-width: 500px; }
+.lead-claims li { display: grid; grid-template-columns: 16px 1fr; align-items: start; }   /* hanging pixel bullet; the bolded first words are the labels */
+.lead-claims li::before { content: ""; width: 7px; height: 7px; background: var(--accent); margin-top: 10px; }
+.claim-t { color: var(--muted); font-size: 16.5px; line-height: 1.6; text-wrap: balance; }   /* no one-word orphan lines */
 .lead-claims b { color: var(--text); font-weight: 650; }
 .lead-claims .lc { color: var(--accent); font-weight: 650; white-space: nowrap; }
 .lead-claims .hinge { color: var(--dim); font-style: italic; }
 .lead-claims a { color: var(--accent); border-bottom: 1px solid var(--accent-dim); padding-bottom: 1px; white-space: nowrap; }   /* never split a link across lines */
 .lead-claims a:hover { border-bottom-color: var(--accent); }
-@media (max-width: 560px) { .lead-claims li { grid-template-columns: 1fr; gap: 6px; } }
 /* (the intro lead itself carries no links — claim links are styled above) */
 .hero .lead b { color: var(--text); font-weight: 650; }
 .hero .lead .lc { color: var(--accent); font-weight: 650; white-space: nowrap; }  /* the orange "computer-use" anchor — never split at its hyphen */
@@ -913,7 +916,9 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 
 /* ---------- responsive ---------- */
 @media (max-width: 940px) {
-  .nav-links a:not(.btn-solid):not(.btn-ghost) { display: none; }   /* narrow screens keep only the two pills */
+  .nav-links a:not(.btn-solid):not(.btn-ghost) { display: none; }   /* narrow screens keep only the pills */
+  .nav-cta { gap: 8px; }
+  .nav-links .btn-ghost.sm, .nav-links .btn-solid.sm { min-width: 0; }   /* let the pills shrink so the brand never crowds */
   .hero { padding: 68px 0 40px; }
   .hero-grid { grid-template-columns: 1fr; gap: 34px; }
   .hero-head { max-width: none; }
