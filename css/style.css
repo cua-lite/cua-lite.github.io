@@ -199,7 +199,29 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
   background: radial-gradient(46% 48% at 50% 50%, rgba(126,231,135,.07), rgba(90,150,230,.035) 55%, transparent 72%);
   filter: blur(28px); }
-.hero .lead { font-size: 17.5px; line-height: 1.62; color: var(--muted); max-width: 500px; margin: 0 0 36px; }
+/* announcement chip — a temporary slot above the eyebrow for time-boxed news
+   (releases etc.); currently unused. Evergreen links belong in the CTA row instead. */
+.hero-chip { display: inline-flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: 12px; color: var(--accent);
+  border: 1px solid var(--accent-dim); border-radius: 999px; padding: 7px 15px; margin-bottom: 22px; transition: background .14s ease; }
+.hero-chip:hover { background: #fff; }
+.chip-dot { width: 6px; height: 6px; background: var(--accent); }
+.cta-more { font-family: var(--mono); font-size: 12.5px; letter-spacing: .3px; color: var(--accent); margin-left: 4px; }   /* the quiet third action */
+.cta-more:hover { text-decoration: underline; }
+.hero .lead { font-size: 17.5px; line-height: 1.62; color: var(--muted); max-width: 500px; margin: 0 0 18px; }
+/* the two deliverables — a labeled list, so the parallel structure is visible before it is
+   read; platform before framework, mirroring the pillar order (01 Data → 02 Eval → 03 Train) */
+.lead-claims { list-style: none; margin: 0 0 36px; padding: 0; display: grid; gap: 16px; max-width: 540px; }
+.lead-claims li { display: grid; grid-template-columns: 104px 1fr; gap: 14px; align-items: baseline; }   /* hanging labels — the two claims read as one small table */
+.claim-k { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.claim-k::before { content: ""; display: inline-block; width: 7px; height: 7px; background: var(--accent); margin-right: 9px; }   /* pixel bullet */
+.claim-t { color: var(--muted); font-size: 16.5px; line-height: 1.6; }
+.lead-claims b { color: var(--text); font-weight: 650; }
+.lead-claims .lc { color: var(--accent); font-weight: 650; white-space: nowrap; }
+.lead-claims .hinge { color: var(--dim); font-style: italic; }
+.lead-claims a { color: var(--accent); border-bottom: 1px solid var(--accent-dim); padding-bottom: 1px; white-space: nowrap; }   /* never split a link across lines */
+.lead-claims a:hover { border-bottom-color: var(--accent); }
+@media (max-width: 560px) { .lead-claims li { grid-template-columns: 1fr; gap: 6px; } }
+/* (the intro lead itself carries no links — claim links are styled above) */
 .hero .lead b { color: var(--text); font-weight: 650; }
 .hero .lead .lc { color: var(--accent); font-weight: 650; white-space: nowrap; }  /* the orange "computer-use" anchor — never split at its hyphen */
 /* stats — concise by default, the full list on hover */
@@ -383,7 +405,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 /* the platform words in the lead ARE the control — hover to switch the device.
    Distinct from the bold keywords: an underline that lights up, never bold. */
 .plat { color: var(--text); cursor: pointer; padding-bottom: 1px; white-space: nowrap;
-  box-shadow: inset 0 -1.5px 0 var(--accent-dim); transition: color .16s ease, box-shadow .16s ease; }
+  box-shadow: inset 0 -1.5px 0 var(--line-2); transition: color .25s ease, box-shadow .25s ease; }   /* quiet until active — the orange visibly travels with the demo */
 .plat:hover, .plat.on { color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); }
 
 /* ---------- WEB: a classic browser, standalone (no monitor) ----------
@@ -555,7 +577,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .section-lead a:hover { text-decoration: underline; }
 /* the two data sources — corpora (at scale) + rollouts (on demand) */
 .src-two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 660px; margin: 0 auto 26px; text-align: left; }
-.src { display: flex; flex-direction: column; gap: 8px; padding: 21px 23px 19px; border-radius: 13px; text-decoration: none;
+.src { display: flex; flex-direction: column; gap: 8px; padding: 21px 23px 19px; border-radius: 14px; text-decoration: none;
   background: var(--panel-fill); border: 1px solid var(--panel-edge);
   box-shadow: 0 20px 38px -28px rgba(40,30,15,.32); transition: transform .18s var(--ease), box-shadow .22s var(--ease), border-color .18s ease; }
 .src:hover { transform: translateY(-3px); box-shadow: 0 26px 44px -26px rgba(40,30,15,.4); border-color: var(--accent-dim); }
@@ -566,13 +588,16 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .src-ico { display: inline-block; width: 16px; height: 16px; vertical-align: -3px; margin-right: 7px;
   background: currentColor; -webkit-mask: url('../assets/logos/openai.svg') center/contain no-repeat; mask: url('../assets/logos/openai.svg') center/contain no-repeat; }
 .src-d { font-family: var(--sans); font-size: 13.5px; line-height: 1.5; color: var(--muted); }
-.src-go { margin-top: 4px; font-family: var(--mono); font-size: 11.5px; color: var(--accent); transition: opacity .14s ease; }
+.src-go { margin-top: 4px; font-family: var(--mono); font-size: 12px; color: var(--accent); transition: opacity .14s ease; }
 .src:hover .src-go { text-decoration: underline; }
+.src-contrib { font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin: -4px auto 30px; text-align: center; }
+.src-contrib a { color: var(--accent); }
+.src-contrib a:hover { text-decoration: underline; }
 /* LiteSample chip — hover pops the schema + a tiny trajectory to the right */
 code.ls { position: relative; cursor: help; }
 .ls-pop { position: absolute; left: calc(100% + 14px); top: 50%; transform: translateY(-50%) translateX(-6px); z-index: 40;
   width: 430px; max-width: min(430px, 46vw); text-align: left;
-  background: var(--term-fill); border: 1px solid var(--term-edge); border-radius: 11px;
+  background: var(--term-fill); border: 1px solid var(--term-edge); border-radius: 14px;
   box-shadow: 0 28px 54px -28px rgba(40,30,15,.5), 0 4px 10px -5px rgba(40,30,15,.2);
   opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .2s var(--ease), transform .2s var(--ease); }
 code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opacity: 1; visibility: visible; transform: translateY(-50%); pointer-events: auto; }
@@ -709,14 +734,13 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 /* label sits inline with its dropdown — "Dataset: <chip>" — not stacked above it */
 .sft-field { display: flex; flex-direction: row; align-items: center; gap: 8px; flex: 1 1 0; min-width: 0; }
 .sft-cfg .sft-field:last-of-type { flex-grow: 1.7; }   /* model names run longer than dataset names */
-.sft-field-label { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto; font-family: var(--mono); font-size: 10px;
-  letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); }
-.sft-hf { font-size: 12px; letter-spacing: 0; }
+.sft-field-label { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto; font-family: var(--mono); font-size: 11px;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }   /* same register as the hero claim labels */
 .sft-arrow { font-family: var(--mono); font-size: 15px; color: var(--dim); user-select: none; }
 /* the tokens live on cream here (not in a dark term): full-width, panel-tinted chips */
 /* match the site's inline dashed-underline token, not a boxed form select */
 .sft-cfg .cb-slot { display: inline-flex; max-width: 100%; }
-.sft-cfg .cb-tok { font-size: 14px; padding: 4px 9px; background: rgba(189,90,56,.08); }
+.sft-cfg .cb-tok { font-size: 13px; padding: 3px 8px; background: rgba(189,90,56,.08); }   /* one token size site-wide (matches the terminals) */
 .sft-cfg .cb-tok:hover, .sft-cfg .cb-slot.open .cb-tok { background: rgba(189,90,56,.15); }
 .sft-cfg .cb-txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sft-cfg .cb-menu { min-width: 220px; }
@@ -776,7 +800,7 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
   transition: color .16s ease, background .22s var(--ease), box-shadow .22s var(--ease); }
 .lb-tab:hover { color: var(--text); }
 .lb-tab.on { color: var(--accent); background: var(--panel-fill); box-shadow: 0 1px 3px rgba(40,30,15,.14); }
-.lb-open { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--accent); white-space: nowrap; }
+.lb-open { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--accent); white-space: nowrap; }
 .lb-open:hover { text-decoration: underline; }
 .lb-body { padding: 10px 14px 8px; }
 .lb-row { display: grid; grid-template-columns: 24px minmax(120px, 246px) 1fr 56px; grid-template-areas: "rank model track val";
@@ -869,7 +893,7 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 .foot-brand { max-width: 380px; }
 .foot-tag { color: var(--dim); font-size: 14px; margin: 14px 0 0; line-height: 1.7; }
 .foot-affil { display: flex; align-items: center; gap: 16px; margin-top: 24px; }
-.foot-affil-label { font-family: var(--mono); font-size: 10.5px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--dim); }
+.foot-affil-label { font-family: var(--mono); font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--dim); }
 .foot-affil a { display: inline-flex; align-items: center; opacity: .4; filter: grayscale(1); transition: opacity .16s var(--ease), filter .16s var(--ease); }
 .foot-affil a:hover { opacity: .85; filter: grayscale(0); }
 .foot-logo { display: block; width: auto; }
