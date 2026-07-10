@@ -24,10 +24,15 @@ const _dsSubs = [];
 const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // call now + on every live update
 
 /* The selected benchmark env is ONE state with three views: the eval builder's
-   --env-id, the highlighted coverage card, and the leaderboard. The builder and
-   the cards both steer it; the leaderboard IIFE registers itself here so the
-   builder (which lives in another IIFE) can swap the board too. */
-let lbFollowEnv = null;
+   --env-id, the highlighted coverage card, and the leaderboard. All three steer it,
+   in both directions; these file-scope hooks let the IIFEs reach each other. */
+let lbFollowEnv = null;      // leaderboard registers; builder + cards call it
+let builderSetEnv = null;    // eval builder registers; card clicks call it (no-op for envs the agent can't run)
+let builderPickPlat = null;  // eval builder registers; platform tabs call it (first runnable env of that platform)
+/* Same principle inside the Train section: SFT's "model" and RL's MODEL_ID are the one
+   choice ("which open model am I training") behind two tabs — keep them in lockstep. */
+let rlSetAgent = null;       // RL builder registers; the SFT model picker calls it
+let sftSetModel = null;      // SFT configurator registers; the RL agent picker calls it
 (async () => {
   try {
     const parse = async (slug) => {
@@ -534,7 +539,7 @@ let lbFollowEnv = null;
     covTabs.forEach((t) => t.classList.toggle("on", t.dataset.plat === plat));
     covPanels.forEach((p) => p.classList.toggle("on", p.dataset.plat === plat));
   };
-  covTabs.forEach((t) => t.addEventListener("click", () => showPlat(t.dataset.plat)));
+  covTabs.forEach((t) => t.addEventListener("click", () => { showPlat(t.dataset.plat); if (builderPickPlat) builderPickPlat(t.dataset.plat); }));
   const capPlat = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "");
   const highlightBench = (env) => {
     const nm = ENV2ROW[env] || env;
@@ -613,6 +618,7 @@ let lbFollowEnv = null;
       if (!allowedEnvs().includes(env)) { env = allowedEnvs()[0]; resetTask(); swap(envSlot); if (taskSlot) swap(taskSlot); envChanged = true; }
       swap(agentSlot); agentSlot._render(); envSlot._render(); if (taskSlot) taskSlot._render(); sync();
       flashDrv(envChanged ? ["family", "agent", "env"] : ["family", "agent"]);   // agent drives family + agent (+ env only if it had to fall back)
+      if (cb.dataset.cmd === "rl" && sftSetModel) sftSetModel(a.model);   // the SFT panel trains the same model
     });
     makeSlot(envSlot, allowedEnvs, (e) => e, () => env, (e) => {
       // switching env resets the task to that env's first representative one
@@ -623,6 +629,31 @@ let lbFollowEnv = null;
     if (taskSlot) makeSlot(taskSlot, () => [...cfg.tasks[env], "…"], (t) => t, () => task, (t) => {
       if (t === "…") return; task = t; swap(taskSlot); taskSlot._render(); sync();
     });
+    // the eval builder is steerable from the coverage table too (cards + platform tabs),
+    // so command ⇄ cards ⇄ leaderboard stay one state in both directions
+    if (cfg.table) {
+      builderSetEnv = (e) => {
+        if (e === env || !allowedEnvs().includes(e)) return;   // grayed-out cards don't build impossible commands
+        env = e; resetTask(); swap(envSlot); envSlot._render(); sync(); flashDrv(["env"]);
+      };
+      builderPickPlat = (plat) => {
+        if (capPlat(ENV_PLAT[env]) === plat) return;
+        const first = allowedEnvs().find((x) => capPlat(ENV_PLAT[x]) === plat);
+        if (first) builderSetEnv(first);
+      };
+    }
+    if (cb.dataset.cmd === "rl") {
+      // steered by the SFT panel's model picker (one training choice behind two tabs)
+      rlSetAgent = (modelId) => {
+        const a = cfg.agents.find((x) => x.model === modelId);
+        if (!a || a === agent) return;
+        agent = a;
+        let envChanged = false;
+        if (!allowedEnvs().includes(env)) { env = allowedEnvs()[0]; resetTask(); swap(envSlot); envChanged = true; }
+        swap(agentSlot); agentSlot._render(); envSlot._render(); sync();
+        flashDrv(envChanged ? ["family", "agent", "env"] : ["family", "agent"]);
+      };
+    }
     sync();
     document.addEventListener("click", (e) => { if (!cb.contains(e.target)) closeAll(); });
   });
@@ -692,7 +723,13 @@ let lbFollowEnv = null;
       build(dsSlot, g, () => dataset, (v) => { dataset = v; swap(dsSlot); dsSlot._render(); sync(); flashDrv(["dataset", "slug"]); });
       sync();
     });
-    build(mdSlot, MODELS, () => model.model, (v) => { model = v; swap(mdSlot); mdSlot._render(); sync(); flashDrv(["model", "family"]); });
+    build(mdSlot, MODELS, () => model.model, (v) => { model = v; swap(mdSlot); mdSlot._render(); sync(); flashDrv(["model", "family"]); if (rlSetAgent) rlSetAgent(v.model); });
+    // steered by the RL panel's MODEL_ID picker (one training choice behind two tabs)
+    sftSetModel = (modelId) => {
+      const m = MODELS.find((x) => x.model === modelId);
+      if (!m || m === model) return;
+      model = m; swap(mdSlot); mdSlot._render(); sync(); flashDrv(["model", "family"]);
+    };
     sync();
     document.addEventListener("click", (e) => { if (!panel.contains(e.target)) closeAll(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
@@ -922,6 +959,7 @@ let lbFollowEnv = null;
   cards.forEach((c) => c.addEventListener("click", (e) => {
     e.preventDefault();
     if (c.dataset.env !== cur) show(c.dataset.env);
+    if (builderSetEnv) builderSetEnv(c.dataset.env);   // …and the eval command follows the card
   }));
   // …and so does the eval builder's --env-id (registered at file scope for the builder's IIFE)
   lbFollowEnv = (envId) => { if (envId !== cur) show(envId); };
