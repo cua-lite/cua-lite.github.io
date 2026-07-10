@@ -83,15 +83,15 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 @keyframes blink { 50% { opacity: 0; } }
 
 /* ---------- buttons ---------- */
-/* primary CTA = the same pixel-green button the agent clicks in the demo */
+/* primary CTA — the one terracotta pill; its shadow is the accent's own warmth */
 .btn-solid {
   display: inline-flex; align-items: center; gap: 8px;
   font-family: var(--sans); font-weight: 700; font-size: 15px;
   background: var(--accent); color: #f6f2e8; padding: 12px 26px; border-radius: 999px; border: 0;
-  box-shadow: 0 8px 20px -12px rgba(47,138,62,.7);
+  box-shadow: 0 8px 20px -12px rgba(189,90,56,.65);
   transition: transform .14s var(--ease), filter .14s ease, box-shadow .2s var(--ease);
 }
-.btn-solid:hover { filter: brightness(1.04); transform: translateY(-2px); box-shadow: 0 12px 26px -12px rgba(47,138,62,.75); }
+.btn-solid:hover { filter: brightness(1.04); transform: translateY(-2px); box-shadow: 0 12px 26px -12px rgba(189,90,56,.7); }
 .btn-solid:active { transform: translateY(0); }
 .btn-solid.sm { padding: 8px 18px; font-size: 13.5px; }
 .btn-ghost {
@@ -102,6 +102,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   transition: border-color .14s ease, background .14s ease, transform .14s var(--ease);
 }
 .btn-ghost:hover { border-color: var(--accent-dim); background: #fff; transform: translateY(-1px); }
+.btn-ghost.sm { padding: 7px 17px; font-size: 13.5px; font-weight: 650; }   /* mirrors .btn-solid.sm; 1px less padding absorbs the border so both pills stand equally tall */
 .cta-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
 .cta-row.center { justify-content: center; margin-top: 36px; }
 /* closing CTA — a quiet bookend to the hero */
@@ -119,6 +120,11 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .nav-links a { color: var(--muted); font-size: 14.5px; font-weight: 550; transition: color .12s ease; }
 .nav-links a:hover { color: var(--text); }
 .nav-links .btn-solid { color: #f6f2e8; }
+.nav-links .btn-ghost { color: var(--text); background: transparent; border-color: var(--line-2); }   /* outline-only on the cream nav — panel-edge is too faint here */
+.nav-links .btn-ghost.sm, .nav-links .btn-solid.sm { min-width: 78px; justify-content: center; }   /* equal-width pills — "Blog" doesn't run narrower than "GitHub" */
+.nav-links .btn-ghost:hover { background: #fff; }
+.nav-links .btn-ghost[aria-current="page"] { border-color: var(--accent-dim); background: #fff; }   /* the filled pill marks "you are here" */
+.nav-cta { display: flex; align-items: center; gap: 12px; }   /* the two pills read as one action cluster, tighter than the link run */
 
 /* ---------- hero ---------- */
 /* overflow visible so the stat popovers can extend below the hero and layer on top
@@ -880,7 +886,7 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 
 /* ---------- responsive ---------- */
 @media (max-width: 940px) {
-  .nav-links a:not(.btn-solid) { display: none; }
+  .nav-links a:not(.btn-solid):not(.btn-ghost) { display: none; }   /* narrow screens keep only the two pills */
   .hero { padding: 68px 0 40px; }
   .hero-grid { grid-template-columns: 1fr; gap: 34px; }
   .hero-head { max-width: none; }
