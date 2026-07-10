@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Blog — CUA-Lite</title>
-<meta name="description" content="Announcements, engineering notes, and results from the CUA-Lite team." />
+<meta name="description" content="The CUA-Lite blog." />
 <link rel="preload" href="/assets/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/assets/fonts/Fraunces-Italic.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/assets/fonts/Urbanist.woff2" as="font" type="font/woff2" crossorigin />
@@ -14,7 +14,7 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=4" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Blog — CUA-Lite" />
-<meta property="og:description" content="Announcements, engineering notes, and results from the CUA-Lite team." />
+<meta property="og:description" content="The CUA-Lite blog." />
 <meta property="og:url" content="https://cua-lite.github.io/blog/" />
 <meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=3" />
 <link rel="stylesheet" href="/css/style.css" />
@@ -22,8 +22,7 @@
 /* blog-only layout — everything else (tokens, nav, pills, type) comes from the site stylesheet.
    Deliberately quieter than the landing page: one narrow column, no animation. */
 .blog-wrap { max-width: 720px; margin: 0 auto; padding: 84px 28px 72px; }
-.blog-wrap h1 { font-size: clamp(40px, 5vw, 60px); }
-.blog-lead { color: var(--muted); font-size: 17px; line-height: 1.62; max-width: 520px; margin: 0 0 46px; }
+.blog-wrap h1 { font-size: clamp(40px, 5vw, 60px); margin-bottom: 36px; }
 /* the post list, ready for real entries — today it holds ghosts of the posts to come */
 .postlist { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 10px 10px 0; }
 .ghost-post { display: flex; align-items: center; gap: 20px; padding: 20px 16px; border-radius: 10px; }
@@ -34,8 +33,7 @@
 .ghost-post:nth-child(2) { opacity: .6; }
 .ghost-post:nth-child(3) { opacity: .35; }
 .postlist-msg { text-align: center; padding: 30px 20px 36px; border-top: 1px solid var(--line); margin-top: 4px; }
-.postlist-msg .t { display: block; font-weight: 650; font-size: 15.5px; margin-bottom: 6px; }
-.postlist-msg .d { display: block; color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+.postlist-msg .t { display: block; font-weight: 650; font-size: 15.5px; margin-bottom: 12px; }
 .postlist-msg a { font-family: var(--mono); font-size: 12px; letter-spacing: .5px; color: var(--accent); }
 .postlist-msg a:hover { text-decoration: underline; }
 .blog-foot { max-width: 720px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 12px; color: var(--dim); }
@@ -59,9 +57,7 @@
 </header>
 
 <main class="blog-wrap">
-  <p class="eyebrow">CUA-Lite · Blog</p>
-  <h1>Notes &amp; <em>releases.</em></h1>
-  <p class="blog-lead">Announcements, engineering notes, and results from the team.</p>
+  <h1>Blog</h1>
 
   <section class="postlist" aria-label="Posts">
     <div class="ghost-post" aria-hidden="true"><span class="ghost-date">2026-··-··</span><span class="ghost-bar" style="width:62%"></span></div>
@@ -69,7 +65,6 @@
     <div class="ghost-post" aria-hidden="true"><span class="ghost-date">2026-··-··</span><span class="ghost-bar" style="width:53%"></span></div>
     <div class="postlist-msg">
       <span class="t">The first post is on its way.</span>
-      <span class="d">Until it lands, everything ships in the open — releases, new envs, results.</span>
       <a href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">watch the repo ↗</a>
     </div>
   </section>
