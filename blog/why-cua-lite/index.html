@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Why CUA-Lite — and a call for contributors</title>
+<meta name="description" content="Why CUA-Lite exists, and how it grows: datasets in one schema, benchmarks with reproducible runs, adapters for new agents." />
+<link rel="preload" href="/assets/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/fonts/Fraunces-Italic.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/fonts/Urbanist.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/fonts/GeistMono.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=3" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=3" />
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=4" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Why CUA-Lite — and a call for contributors" />
+<meta property="og:description" content="Why CUA-Lite exists, and how it grows: datasets in one schema, benchmarks with reproducible runs, adapters for new agents." />
+<meta property="og:url" content="https://cua-lite.github.io/blog/why-cua-lite/" />
+<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=4" />
+<link rel="stylesheet" href="/css/style.css" />
+<style>
+/* article layout — the quiet template: one narrow column, no animation */
+.post-wrap { max-width: 680px; margin: 0 auto; padding: 76px 28px 72px; }
+.post-meta { font-family: var(--mono); font-size: 11.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--dim); margin: 0 0 18px; }
+.post-wrap h1 { font-size: clamp(34px, 4.4vw, 52px); margin-bottom: 28px; }
+.post-wrap p { color: var(--muted); font-size: 16.5px; line-height: 1.7; margin: 0 0 22px; }
+.post-wrap p b { color: var(--text); font-weight: 650; }
+.post-wrap h2 { font-size: clamp(22px, 2.6vw, 28px); margin: 40px 0 14px; }
+.post-wrap a { color: var(--accent); }
+.post-wrap a:hover { text-decoration: underline; }
+.post-wrap code { font-family: var(--mono); font-size: 13.5px; background: var(--panel-2); border: 1px solid var(--line); padding: 1px 6px; color: var(--text); }
+.post-links { font-family: var(--mono); font-size: 12.5px; margin: 0 0 22px; }
+.post-links a { color: var(--accent); }
+.post-close { border-top: 1px solid var(--line); margin-top: 40px; padding-top: 24px; }
+.blog-foot { max-width: 680px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.blog-foot a { color: var(--dim); }
+.blog-foot a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/"><span class="brand-plane"></span><span class="brand-name">CUA-Lite</span></a>
+    <nav class="nav-links">
+      <a href="/#start">Quickstart</a>
+      <a href="/#data">Data</a>
+      <a href="/#benchmarks">Eval</a>
+      <a href="/#train">Train</a>
+      <span class="nav-cta"><a class="btn-ghost sm" href="/blog/" aria-current="page">Blog</a><a class="btn-solid sm" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a></span>
+    </nav>
+  </div>
+</header>
+
+<main class="post-wrap">
+  <p class="post-meta">2026-07-10 · The CUA-Lite team</p>
+  <h1>Why CUA-Lite — and a call for <em>contributors.</em></h1>
+
+  <p>CUA-Lite exists to democratize computer-use agents: everything an agent needs —
+  data, benchmarks, training — made <b>open to share</b> and <b>simple to run</b>.
+  The platform is the <i>where</i>; the framework is the <i>how</i>. Both grow by
+  contribution, and here is where a pull request lands hardest:</p>
+
+  <h2>Datasets</h2>
+  <p>Convert a dataset to <code>LiteSample</code> and everyone training a computer-use
+  agent can train on it — every agent, every training stack, one pull request. For
+  dataset authors, that means users and citations far beyond a standalone release.
+  And for everyone who wants to train but has no data: it's already here, free on
+  Hugging Face — 10+ datasets plus a growing set of GPT-5.5 rollouts.</p>
+  <p class="post-links"><a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">browse the corpora ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/tree/main/lite/data/preproc" target="_blank" rel="noopener">preprocessing guide ↗</a></p>
+
+  <h2>Benchmarks</h2>
+  <p>Every env here speaks the same action space, so a benchmark integrated once runs
+  every agent — today's and tomorrow's. And even without integrating anything, an eval
+  you already ran is worth submitting: scores land on the leaderboard as committed,
+  reproducible JSON.</p>
+  <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/tree/main/lite/gym/envs" target="_blank" rel="noopener">env guide ↗</a> &nbsp;·&nbsp; <a href="/#benchmarks">the leaderboard ↗</a></p>
+
+  <h2>Agents</h2>
+  <p>A new model needs one small adapter to become evaluable and trainable on everything
+  above. The building blocks are small and documented.</p>
+  <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">agent building blocks ↗</a></p>
+
+  <p class="post-close">Open an issue, send a PR, or just tell us what's missing —
+  <a href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a> ·
+  <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Hugging Face</a> ·
+  <a href="mailto:zhanhui@berkeley.edu">email</a>.</p>
+</main>
+
+<footer class="blog-foot">
+  <span>© 2026 CUA-Lite — any data, any agent, any computer.</span>
+  <a href="/blog/">← All posts</a>
+</footer>
+
+</body>
+</html>

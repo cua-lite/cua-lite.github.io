@@ -16,7 +16,7 @@
 <meta property="og:title" content="Blog — CUA-Lite" />
 <meta property="og:description" content="The CUA-Lite blog." />
 <meta property="og:url" content="https://cua-lite.github.io/blog/" />
-<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=3" />
+<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=4" />
 <link rel="stylesheet" href="/css/style.css" />
 <style>
 /* blog-only layout — everything else (tokens, nav, pills, type) comes from the site stylesheet.
@@ -24,18 +24,29 @@
 .blog-wrap { max-width: 720px; margin: 0 auto; padding: 84px 28px 72px; }
 .blog-wrap h1 { font-size: clamp(40px, 5vw, 60px); margin-bottom: 36px; }
 /* the post list, ready for real entries — today it holds ghosts of the posts to come */
-.postlist { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 10px 10px 0; }
-.ghost-post { display: flex; align-items: center; gap: 20px; padding: 20px 16px; border-radius: 10px; }
-.ghost-post + .ghost-post { border-top: 1px solid var(--line); border-radius: 0; }
+.postlist { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 10px; }
+.post-row { display: flex; align-items: center; gap: 20px; padding: 20px 16px; border-radius: 10px; transition: background .14s ease; }
+.post-row:hover { background: var(--panel-2); }
+.post-title { font-weight: 650; font-size: 16.5px; color: var(--text); }
+.post-row:hover .post-title { color: var(--accent); }
+.post-arrow { margin-left: auto; color: var(--dim); }
+.post-row:hover .post-arrow { color: var(--accent); }
 .ghost-date { font-family: var(--mono); font-size: 12px; letter-spacing: 1px; color: var(--dim); white-space: nowrap; }
-.ghost-bar { height: 11px; border-radius: 6px; background: var(--panel-edge); opacity: .55; }
-.ghost-post:nth-child(1) { opacity: .9; }
-.ghost-post:nth-child(2) { opacity: .6; }
-.ghost-post:nth-child(3) { opacity: .35; }
-.postlist-msg { text-align: center; padding: 30px 20px 36px; border-top: 1px solid var(--line); margin-top: 4px; }
-.postlist-msg .t { display: block; font-weight: 650; font-size: 15.5px; margin-bottom: 12px; }
-.postlist-msg a { font-family: var(--mono); font-size: 12px; letter-spacing: .5px; color: var(--accent); }
-.postlist-msg a:hover { text-decoration: underline; }
+/* the core post wears the site's highlight idiom — tint + accent inset, like the benchmark table */
+.post-row.featured { background: rgba(189,90,56,.07); box-shadow: inset 2.5px 0 0 var(--accent); }
+.post-badge { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent);
+  border: 1px solid var(--accent-dim); border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
+/* announced but unwritten — present, quiet, not clickable */
+.post-row.soon { opacity: .6; cursor: default; }
+.post-row.soon:hover { background: transparent; }
+.post-row.soon .post-title { color: var(--muted); font-weight: 550; }
+.post-row.soon:hover .post-title { color: var(--muted); }
+.post-soon-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-left: auto; white-space: nowrap; }
+.post-row + .post-row { border-top: 1px solid var(--line); border-top-left-radius: 0; border-top-right-radius: 0; }
+@media (max-width: 640px) {
+  .post-row { flex-wrap: wrap; row-gap: 8px; }
+  .post-title { order: 4; flex-basis: 100%; }   /* narrow screens: meta line first, title on its own full-width line */
+}
 .blog-foot { max-width: 720px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 12px; color: var(--dim); }
 .blog-foot a { color: var(--dim); }
 .blog-foot a:hover { color: var(--text); }
@@ -60,12 +71,16 @@
   <h1>Blog</h1>
 
   <section class="postlist" aria-label="Posts">
-    <div class="ghost-post" aria-hidden="true"><span class="ghost-date">2026-··-··</span><span class="ghost-bar" style="width:62%"></span></div>
-    <div class="ghost-post" aria-hidden="true"><span class="ghost-date">2026-··-··</span><span class="ghost-bar" style="width:44%"></span></div>
-    <div class="ghost-post" aria-hidden="true"><span class="ghost-date">2026-··-··</span><span class="ghost-bar" style="width:53%"></span></div>
-    <div class="postlist-msg">
-      <span class="t">The first post is on its way.</span>
-      <a href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">watch the repo ↗</a>
+    <a class="post-row featured" href="/blog/why-cua-lite/">
+      <span class="ghost-date">2026-07-10</span>
+      <span class="post-title">Why CUA-Lite — and a call for contributors</span>
+      <span class="post-badge">Start here</span>
+      <span class="post-arrow" aria-hidden="true">→</span>
+    </a>
+    <div class="post-row soon">
+      <span class="ghost-date">2026-··-··</span>
+      <span class="post-title">KVM-free OS at Scale with CUA-Lite</span>
+      <span class="post-soon-tag">coming soon</span>
     </div>
   </section>
 </main>
