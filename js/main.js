@@ -813,6 +813,110 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
   });
 })();
 
+/* ---------- benchmark leaderboard — scores served from this site's own assets ----------
+   Each eval run's compact snapshot (written by devs/exps/eval/utils/update_run_json.py)
+   is copied into assets/exps/eval/<env>/<commit-dir>/run_<n>.json, and
+   assets/exps/eval/manifest.json points at the newest one per env (regenerate it
+   with assets/exps/update_manifest.py after dropping in a new run). The benchmark
+   coverage cards above are the selector: clicking one switches the board — envs
+   with no committed run get a ghost placeholder. The header README link follows
+   the selected env (the cards' own hrefs, so the two can never drift). */
+(function () {
+  "use strict";
+  const body = document.getElementById("lb-body");
+  if (!body) return;
+  const foot = document.getElementById("lb-foot");
+  const envEl = document.getElementById("lb-env");
+  const openEl = document.getElementById("lb-open");
+
+  const ROOT = "assets/exps/eval/";
+  // the coverage cards are the single source of envs: id, proper name, README href
+  const cards = [...document.querySelectorAll("#benchmarks .cov-panel .row[data-env]")];
+  const ENVS = {};
+  cards.forEach((c) => { ENVS[c.dataset.env] = { name: c.querySelector(".r-name").textContent.trim(), readme: c.href }; });
+
+  let manifest = null;   // env-id -> "<commit-dir>/run_<n>.json" (null until loaded)
+  const runs = {};       // env-id -> fetched run payload
+  let cur = "osworld_g";
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  function render(data) {
+    const rows = (data.results || [])
+      .filter((r) => r.status !== "empty" && r.mean_episode_return != null)
+      .sort((a, b) => (a.status === b.status ? b.mean_episode_return - a.mean_episode_return : a.status === "complete" ? -1 : 1));
+    if (!rows.length) return renderGhost("empty");
+    // scale to a round ceiling with headroom, so the leader never hits the wall
+    const axis = Math.min(100, Math.ceil((Math.max(...rows.map((r) => r.mean_episode_return * 100)) + 4) / 10) * 10);
+    body.innerHTML = rows.map((r, i) => {
+      const pct = r.mean_episode_return * 100;
+      const cut = r.model.indexOf("/");
+      const org = cut > 0 ? r.model.slice(0, cut + 1) : "", name = cut > 0 ? r.model.slice(cut + 1) : r.model;
+      const part = r.status === "partial";
+      const tip = `${r.model} — ${r.num_valid}/${r.num_tasks} tasks · mean episode return ${(+r.mean_episode_return).toFixed(4)}${part ? " (partial run)" : ""}`;
+      return `<div class="lb-row${i === 0 ? " top" : ""}${part ? " part" : ""}" role="listitem" style="--w:${(pct / axis).toFixed(4)};--i:${i}" title="${esc(tip)}">` +
+        `<span class="lb-rank">${i + 1}</span>` +
+        `<span class="lb-model">${org ? `<span class="lb-org">${esc(org)}</span>` : ""}${esc(name)}</span>` +
+        `<span class="lb-track"><span class="lb-fill"></span></span>` +
+        `<span class="lb-val">${pct.toFixed(1)}<span class="lb-unit">%</span></span></div>`;
+    }).join("");
+    const jsonUrl = ROOT + data.env + "/" + manifest[data.env];
+    const dir = String(data.commit_dir || "");
+    const date = /^\d{4}-\d{2}-\d{2}/.test(dir) ? dir.slice(0, 10) : "";
+    const sha = (data.commit && data.commit.short_sha) || dir.split("_").pop() || "";
+    foot.innerHTML = `<span>${rows.length} agents</span><span>${Math.max(...rows.map((r) => r.num_tasks))} tasks</span>` +
+      `<span>success rate</span><span>${date ? esc(date) + " · " : ""}<a href="${esc(jsonUrl)}" target="_blank" rel="noopener">${esc((data.run_id || "run_0") + ".json @ " + sha.slice(0, 8))}</a></span>`;
+  }
+  // same card, no numbers yet — a quiet ghost of the board ("loading" shimmers, "empty" says why)
+  function renderGhost(kind) {
+    const widths = [0.86, 0.74, 0.63, 0.54, 0.46, 0.39];
+    body.innerHTML = `<div class="lb-none${kind === "loading" ? " loading" : ""}">` +
+      widths.map((w, i) => `<div class="lb-row ghost" style="--w:${w};--i:${i}" aria-hidden="true">` +
+        `<span class="lb-rank">${i + 1}</span><span class="lb-gname"></span>` +
+        `<span class="lb-track"><span class="lb-fill"></span></span><span class="lb-gval"></span></div>`).join("") +
+      (kind === "empty" ? `<div class="lb-none-msg"><span class="lb-none-t">No committed runs yet</span>` +
+        `<span class="lb-none-d">results land here as JSON once ${esc(ENVS[cur].name)} is evaluated — <a href="${esc(ENVS[cur].readme)}" target="_blank" rel="noopener">how to run it ↗</a></span></div>` : "") +
+      `</div>`;
+    foot.innerHTML = kind === "empty"
+      ? `<span>0 runs</span><span>eval pending</span>`
+      : `<span>loading committed run…</span>`;
+  }
+  function show(envId) {
+    if (!ENVS[envId]) return;
+    cur = envId;
+    envEl.textContent = ENVS[envId].name;
+    openEl.href = ENVS[envId].readme;
+    if (runs[envId]) return render(runs[envId]);
+    if (manifest && !manifest[envId]) return renderGhost("empty");
+    renderGhost("loading");   // manifest or run still in flight — resolved by load() below
+    load(envId);
+  }
+  async function load(envId) {
+    try {
+      if (!manifest) {
+        const m = await fetch(ROOT + "manifest.json");
+        manifest = m.ok ? await m.json() : {};
+      }
+      if (!manifest[envId]) { if (cur === envId) renderGhost("empty"); return; }
+      if (runs[envId]) { if (cur === envId) render(runs[envId]); return; }
+      const r = await fetch(ROOT + envId + "/" + manifest[envId]);
+      if (!r.ok) throw new Error(r.status);
+      const data = await r.json();
+      if (data && Array.isArray(data.results)) { runs[envId] = data; if (cur === envId) render(data); }
+      else if (cur === envId) renderGhost("empty");
+    } catch (e) {
+      if (!manifest) manifest = {};
+      if (cur === envId) renderGhost("empty");
+    }
+  }
+
+  // the coverage cards drive the board (their README stays reachable via the header link)
+  cards.forEach((c) => c.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (c.dataset.env !== cur) show(c.dataset.env);
+  }));
+  show(cur);
+})();
+
 /* ---------- LiteSample hover popover — the schema + a tiny trajectory, to the right ---------- */
 (function () {
   const chips = document.querySelectorAll("code.ls");
