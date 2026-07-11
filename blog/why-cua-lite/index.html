@@ -107,6 +107,8 @@
 /* fold moment: the hatched region grows in while the source screenshots (row above) gray out */
 .tape-row.born .tp.f { animation: foldIn .8s var(--ease) both; transform-origin: left; }
 @keyframes foldIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.tape-row.born .tp.f em { animation: labelIn .3s ease .8s both; }   /* the label waits out the squish */
+@keyframes labelIn { from { opacity: 0; } to { opacity: 1; } }
 .tape-row.foldsrc .tp.p, .tape-row.foldsrc .tp.d { filter: grayscale(1); opacity: .55; transition: filter .5s ease, opacity .5s ease; }
 /* merge moment: one sweep = the forward pass; then every response band pulses = the loss hits */
 .tape-row.keep .tape { position: relative; }
@@ -149,7 +151,7 @@
 .pair-cmd b, .pair-cmd .nb { white-space: nowrap; }  /* ids wrap as a unit, never mid-token */
 @media (prefers-reduced-motion: reduce) {
   .pair-wire path.draw { animation: none; stroke-dashoffset: 0; opacity: 1; }
-  .tape-row.born .tp.f, .tape-row.keep .tape::after, .tape-row.keep .tp.r { animation: none; }
+  .tape-row.born .tp.f, .tape-row.born .tp.f em, .tape-row.keep .tape::after, .tape-row.keep .tp.r { animation: none; }
   .pair-chip.on { transition-delay: 0s; }
   .mess .mw.draw, .mess-x.hit, .mess-why.hit, .pair-cmd .c-x.hit { animation: none; opacity: .85; }
 }
