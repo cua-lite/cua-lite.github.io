@@ -23,10 +23,10 @@ $ python -m lite.data.hf.upload ScaleCUA <span class="t-str">--org cua-lite</spa
       code:
 `<span class="t-dim"># the adapter — one per model family</span>
 <span class="t-kw">class</span> BaseAgentAdapter:
-    action_space: ActionSpace   <span class="t-dim"># its coordinate dialect</span>
-    protocol: Protocol          <span class="t-dim"># its history windowing</span>
-    <span class="t-kw">def</span> render_step(sample, k)  <span class="t-dim"># LiteSample → turn-k prompt</span>
-    <span class="t-kw">def</span> unroll(sample)          <span class="t-dim"># LiteSample → training sample</span>
+    action_space: BaseActionSpace  <span class="t-dim"># its coordinate dialect</span>
+    protocol: BaseProtocol         <span class="t-dim"># its history windowing</span>
+    <span class="t-kw">def</span> render_step(sample, k, processed)  <span class="t-dim"># → the turn-k prompt</span>
+    <span class="t-kw">def</span> unroll(sample)                     <span class="t-dim"># → AgentSample, all turns</span>
 
 <span class="t-dim"># the same adapter serves rollout and export_sft —</span>
 <span class="t-dim"># the SFT prompt matches what the model saw live</span>`,

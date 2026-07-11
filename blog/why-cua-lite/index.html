@@ -82,6 +82,23 @@
 .wire-stage { position: absolute; transform: translate(-50%, -50%); z-index: 2; cursor: help;
   font-family: var(--mono); font-size: 10px; letter-spacing: .5px; color: var(--muted); white-space: nowrap;
   background: #fff; border: 1px solid var(--accent-dim); border-radius: 6px; padding: 3px 8px; }
+/* the gym loop made tangible: a mini screen above the hub (the screenshot going up),
+   the hero demo's own cursor below it (the click coming down) */
+.gym-shot { position: absolute; transform: translate(-50%, -100%); z-index: 3; opacity: 0; transition: opacity .3s ease; pointer-events: none; }
+.gym-shot.show { opacity: 1; }
+.gym-shot .scr { display: none; }
+.gym-shot[data-plat="desktop"] .scr.desktop, .gym-shot[data-plat="web"] .scr.web, .gym-shot[data-plat="mobile"] .scr.mobile { display: block; }
+.scr.desktop { width: 58px; height: 40px; background: #3d5163; border: 2px solid #23272f; border-radius: 4px; position: relative; }
+.scr.desktop::after { content: ""; position: absolute; left: 8px; top: 7px; right: 8px; bottom: 9px; background: #f4f2ea; border: 1px solid #23272f; border-radius: 2px;
+  background-image: linear-gradient(#e7e2d2 0 6px, transparent 6px); }
+.scr.web { width: 58px; height: 40px; background: #f4f2ea; border: 2px solid #23272f; border-radius: 4px; position: relative; }
+.scr.web::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 9px; background: #e7e2d2; border-bottom: 1px solid #23272f; }
+.scr.web::after { content: ""; position: absolute; left: 5px; top: 2.5px; width: 26px; height: 4px; background: #fff; border-radius: 2px; border: .5px solid #b7ae98; }
+.scr.mobile { width: 24px; height: 42px; background: #f4f2ea; border: 2px solid #23272f; border-radius: 6px; position: relative; }
+.scr.mobile::after { content: ""; position: absolute; left: 6px; bottom: 2px; right: 6px; height: 2px; border-radius: 2px; background: #23272f; }
+.gym-cur { position: absolute; width: 14px; height: 21px; background: url('/assets/pixel/cursor.png') top left/contain no-repeat;
+  image-rendering: pixelated; filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); z-index: 3; opacity: 0; transition: opacity .3s ease; pointer-events: none; }
+.gym-cur.show { opacity: 1; }
 /* the landing pulse — the hero demo's green ring, marking where the payload arrives */
 .land-ring { position: absolute; width: 22px; height: 22px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(63,158,87,.7);
   transform: translate(-50%,-50%) scale(.35); opacity: 0; pointer-events: none; z-index: 3; }
@@ -163,6 +180,7 @@
   .pair-chip { font-size: 10.5px; padding: 5px 10px; }
   .chip-tag { font-size: 9px; }
   .wire-stage { display: none; }   /* the mid column is too tight for the stage labels */
+  .gym-shot, .gym-cur { display: none; }
   .pair-node { padding: 7px 9px 6px; }
   .pair-node, .pair-node code { font-size: 10.5px; }
   .node-sub { font-size: 7.5px; letter-spacing: 1px; margin-top: 3px; }
@@ -171,7 +189,7 @@
   .pair-board { grid-template-columns: minmax(0, 1fr) 84px minmax(0, 1fr); }   /* chips yield inward, never clip at the panel edge */
   .pair-chip { font-size: 10px; padding: 4px 8px; }
   .chip-tag { display: none; }   /* the hint yields before the id does */
-  .mess-why, .flow-lab { display: none; }
+  .mess-why, .flow-lab, .gym-shot, .gym-cur { display: none; }
   .pair-node { padding: 5px 8px; }
   .pair-node, .pair-node code { font-size: 10px; }
   .node-sub { display: none; }
@@ -396,10 +414,16 @@
     dot.className = "flow-dot";
     board.appendChild(dot);
     let labUp = null, labDown = null, pmark = null, amark = null;
+    let shot = null, gcur = null;
     if (mode === "loop") {   // the gym loop: observation up, action down
       labUp = document.createElement("span"); labUp.className = "flow-lab"; labUp.textContent = "screenshot";
       labDown = document.createElement("span"); labDown.className = "flow-lab"; labDown.textContent = "click([632, 375])";
       board.appendChild(labUp); board.appendChild(labDown);
+      shot = document.createElement("span"); shot.className = "gym-shot";
+      shot.innerHTML = '<span class="scr desktop"></span><span class="scr web"></span><span class="scr mobile"></span>';
+      board.appendChild(shot);
+      gcur = document.createElement("span"); gcur.className = "gym-cur";
+      board.appendChild(gcur);
     } else {                 // the pipeline: preproc into the schema, adapter out to each model
       pmark = document.createElement("span"); pmark.className = "wire-stage stage-preproc"; pmark.tabIndex = 0;
       pmark.textContent = "preproc";
@@ -426,7 +450,9 @@
       if (labUp) { const b = node.getBoundingClientRect(), sv = svg.getBoundingClientRect();
         const cx = b.left + b.width / 2 - sv.left;
         labUp.style.left = cx + "px"; labUp.style.top = (b.top - sv.top - 12) + "px";
-        labDown.style.left = cx + "px"; labDown.style.top = (b.bottom - sv.top + 12) + "px"; }
+        labDown.style.left = cx + "px"; labDown.style.top = (b.bottom - sv.top + 12) + "px";
+        shot.style.left = cx + "px"; shot.style.top = (b.top - sv.top - 24) + "px";
+        gcur.style.left = (cx + 68) + "px"; gcur.style.top = (b.bottom - sv.top + 9) + "px"; }
       if (amark) {   // fixed stage cards on the spine — they never move between beats
         const { y, pL, pR } = spine();
         pmark.style.left = pL[0] + "px"; pmark.style.top = y + "px";
@@ -466,12 +492,15 @@
         const pulse = (x, y) => { ring.style.left = x + "px"; ring.style.top = y + "px";
           void ring.getBoundingClientRect(); ring.classList.add("hit"); };
         if (mode === "loop") {   // wire lands, then the loop runs once: screenshot up, click comes down and lands
-          timers.push(setTimeout(() => { dot.classList.add("go"); labUp.classList.add("show"); }, 1700));
-          timers.push(setTimeout(() => { labUp.classList.remove("show");
+          const PLAT = { "osworld": "desktop", "browsergym.webarena": "web", "androidworld": "mobile", "webgym": "web" };
+          shot.dataset.plat = PLAT[left[a].dataset.id] || "desktop";
+          shot.classList.remove("show"); gcur.classList.remove("show");
+          timers.push(setTimeout(() => { dot.classList.add("go"); labUp.classList.add("show"); shot.classList.add("show"); }, 1700));
+          timers.push(setTimeout(() => { labUp.classList.remove("show"); shot.classList.remove("show");
             dot.classList.remove("go"); void dot.getBoundingClientRect();
-            dot.classList.add("back"); labDown.classList.add("show"); }, 3100));
+            dot.classList.add("back"); labDown.classList.add("show"); gcur.classList.add("show"); }, 3100));
           timers.push(setTimeout(() => { const [x, y] = pt(left[a], "r"); pulse(x, y); }, 4150));
-          timers.push(setTimeout(() => labDown.classList.remove("show"), 4500));
+          timers.push(setTimeout(() => { labDown.classList.remove("show"); gcur.classList.remove("show"); }, 4500));
         } else {                 // wire lands, then one sample flows in and reaches the model
           timers.push(setTimeout(() => dot.classList.add("go"), 1700));
           timers.push(setTimeout(() => { const [x, y] = pt(right[e], "l"); pulse(x, y); }, 2750));
