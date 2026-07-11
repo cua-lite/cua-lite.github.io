@@ -277,14 +277,14 @@
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
   <p><b>The <code>adapter</code> stage above is the agent harness doing double
-  duty: besides running a model live in the envs, it also converts
-  standardized <code class="ls" tabindex="0">LiteSample</code> rows into the
-  data format that harness needs.</b> This is where the training complexity
-  hides — Qwen3.5's harness, for example, keeps the last four screenshots,
-  collapses the older history to a fixed line of text, and radix-packs
-  prefix-extending steps into a single forward pass — exactly what the next
-  figure plays out. CUA-Lite ships every built-in model's harness ready to
-  use, plus the building blocks to compose a new one with ease.</p>
+  duty: it runs the model live in the envs, and it converts standardized
+  <code class="ls" tabindex="0">LiteSample</code> rows into the data format
+  that harness needs.</b> This is where the training complexity hides —
+  Qwen3.5's harness, for example, keeps the last four screenshots, collapses
+  the older history to a fixed line of text, and radix-packs prefix-extending
+  steps into a single forward pass; the next figure plays it out. CUA-Lite
+  ships every built-in model's harness ready to use, plus the building blocks
+  to compose a new one with ease.</p>
 
   <figure class="flow-demo pack" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
     <div class="tape-board" data-pack>
