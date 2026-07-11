@@ -225,8 +225,8 @@
   <p class="post-links"><a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">browse the corpora ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">preprocessing guide ↗</a></p>
 
   <h2>Environments &amp; agents</h2>
-  <p><b>Integrate an env once, and every agent can run it; integrate an agent
-  once, and it runs every env.</b> They meet in <code class="lg" tabindex="0">lite.gym</code> —
+  <p><b>Add an env, and every agent runs it; add an agent, and it runs every
+  env.</b> They meet in <code class="lg" tabindex="0">lite.gym</code> —
   screenshots flow up, actions flow down, in one action space plus each env's
   extra tools. The same loop serves eval and RL: every env ships eval
   tasks, and many add training splits with verifiable rewards. Scores land on
@@ -318,7 +318,7 @@
     const seg = ([x1, y1], [x2, y2]) => { const mx = (x1 + x2) / 2; return `C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
     // one continuous path chip → spine → (under the cards + hub) → chip, for the traveling payload
     const fullPath = (a, e) => { const p1 = pt(left[a], "r"), p2 = pt(right[e], "l");
-      if (mode === "data") { const { pL, pR } = spine();
+      if (hasSpine()) { const { pL, pR } = spine();
         return `${curve(p1, pL)} L ${pR[0]} ${pR[1]} ${seg(pR, p2)}`; }
       const h1 = ptN("l"), h2 = ptN("r");
       return `M ${p1[0]} ${p1[1]} ${seg(p1, h1)} L ${h2[0]} ${h2[1]} ${seg(h2, p2)}`; };
@@ -337,8 +337,9 @@
     const spine = () => { const nb = node.getBoundingClientRect(), sv = svg.getBoundingClientRect();
       const y = nb.top + nb.height / 2 - sv.top;
       return { y, pL: [nb.left - sv.left - 64, y], pR: [nb.right - sv.left + 64, y] }; };
+    const hasSpine = () => mode === "data" && innerWidth > 560;   // the stage cards hide below 560 — so does their spine
     function wires(a, e) {
-      if (mode === "data") {
+      if (hasSpine()) {
         const { pL, pR } = spine();
         const h1 = ptN("l"), h2 = ptN("r");
         paths[0].setAttribute("d", `${curve(pt(left[a], "r"), pL)} L ${h1[0]} ${h1[1]}`);
