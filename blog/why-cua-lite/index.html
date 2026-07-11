@@ -77,7 +77,7 @@
 .flow-lab.show { opacity: .9; }
 /* pipeline stages on the wires — mini siblings of the hub card (preproc in, adapter out) */
 .wire-stage { position: absolute; transform: translate(-50%, -50%); z-index: 2; pointer-events: none;
-  font-family: var(--mono); font-size: 9px; letter-spacing: .5px; color: var(--muted); white-space: nowrap;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .5px; color: var(--muted); white-space: nowrap;
   background: #fff; border: 1px solid var(--accent-dim); border-radius: 6px; padding: 3px 8px; }
 /* the landing pulse — the hero demo's green ring, marking where the payload arrives */
 .land-ring { position: absolute; width: 22px; height: 22px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(63,158,87,.7);
@@ -93,11 +93,11 @@
 .tape-row.absorbed { opacity: .25; }
 .tape-lab { font-family: var(--mono); font-size: 9.5px; color: var(--dim); text-align: right; }
 .tape-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 118px; align-items: center; gap: 8px; }
-.tape { display: flex; height: 18px; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden;
+.tape { display: flex; height: 20px; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden;
   background: var(--panel-fill); flex: none; transition: border-color .4s ease; }
 .tape-row.keep .tape { border-color: var(--accent); }
 .tp { height: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-.tp em { font-style: normal; font-family: var(--mono); font-size: 8px; letter-spacing: .3px; color: var(--dim); white-space: nowrap; }
+.tp em { font-style: normal; font-family: var(--mono); font-size: 10px; letter-spacing: .3px; color: var(--muted); white-space: nowrap; }
 .tp.r em { color: #fdf6e9; }
 .tp.p { background: var(--panel-2); }
 .tp.d { background: var(--panel-2); border-left: 1px solid var(--panel-fill); }
