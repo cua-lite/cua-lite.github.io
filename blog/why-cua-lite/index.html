@@ -303,7 +303,7 @@
   <p><b>The <code class="ad" tabindex="0">adapter</code> stage above is the agent harness doing double
   duty: it runs the model live in the envs, and it converts standardized
   <code class="ls" tabindex="0">LiteSample</code> rows into the data format
-  that harness needs for training.</b> This is where the training complexity hides —
+  the model needs for training.</b> This is where the training complexity hides —
   Qwen3.5's harness, for example, keeps the last four screenshots, collapses
   the older history to a fixed line of text, and radix-packs prefix-extending
   steps into a single forward pass; the next figure plays it out. CUA-Lite
