@@ -121,6 +121,7 @@
 .mess .pair-chip + .pair-k { margin-top: 12px; }   /* the left column stacks two groups */
 .mess .pair-chip.try { color: var(--text); border-color: var(--muted); }   /* ink, never accent — this board has no color */
 .mess .mw { fill: none; stroke: var(--dim); stroke-width: 1.6; stroke-linecap: round; opacity: 0; }
+.mess .mw.dead { opacity: .16; }   /* the junkyard: every failed attempt stays behind, faint */
 .mess-x { position: absolute; font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0; transform: translate(-50%,-56%); pointer-events: none; z-index: 3; }
 .mess-why { position: absolute; font-family: var(--mono); font-size: 9.5px; color: var(--dim); opacity: 0; transform: translate(-50%,0); white-space: nowrap; pointer-events: none; z-index: 3; }
 .pair-cmd .c-x { color: var(--text); opacity: 0; }
@@ -464,12 +465,20 @@
       return [side === "r" ? b.right - s.left + 4 : b.left - s.left - 4, b.top + b.height / 2 - s.top]; };
     const curve = ([x1, y1], [x2, y2]) => { const mid = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`; };
     const mkCmd = (t) => `<span class="c-x hit">✗ ${t.line}</span>`;
-    let k = 0;
+    let k = 0, lineT = 0;
+    const wreck = document.createElementNS("http://www.w3.org/2000/svg", "g");   // the junkyard of dead attempts
+    wreck.setAttribute("class", "mess-wreck");
+    svg.insertBefore(wreck, mw);
     function step(j) {
       k = j;
       const t = TRIES[j];
       left.forEach((c, m) => c.classList.toggle("try", m === t.l));
       right.forEach((c) => c.classList.remove("try"));   // the far side never receives
+      if (j === 0) wreck.innerHTML = "";                       // new cycle: clear the yard
+      else if (!reduce && mw.getAttribute("d")) {               // the last attempt stays behind, faded
+        const ghost = mw.cloneNode(); ghost.removeAttribute("class"); ghost.removeAttribute("id");
+        ghost.setAttribute("class", "mw dead"); wreck.appendChild(ghost);
+      }
       mw.classList.remove("draw"); mx.classList.remove("hit"); mwhy.classList.remove("hit");
       void mw.getBoundingClientRect();
       mw.setAttribute("d", curve(pt(left[t.l], "r"), pt(right[t.r], "l")));
@@ -486,7 +495,8 @@
       mwhy.style.top = (q.y + 14) + "px";
       mwhy.textContent = t.why;
       mx.classList.add("hit"); mwhy.classList.add("hit");
-      cmd.innerHTML = mkCmd(t);
+      clearTimeout(lineT);
+      lineT = setTimeout(() => { cmd.innerHTML = mkCmd(t); }, reduce ? 0 : 500);
     }
     function reserve() {
       const keep = cmd.innerHTML;
