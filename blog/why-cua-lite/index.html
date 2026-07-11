@@ -84,6 +84,39 @@
   transform: translate(-50%,-50%) scale(.35); opacity: 0; pointer-events: none; z-index: 3; }
 .land-ring.hit { animation: landHit .6s var(--ease) forwards; }
 @keyframes landHit { 0% { opacity: .9; transform: translate(-50%,-50%) scale(.35); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1); } }
+/* ---- the packing figure: each step's prompt is a tape that contains the previous one;
+   responses are the accent bands (the loss), folds are the hatched left region ---- */
+.tape-board { display: grid; gap: 7px; }
+.tape-row { display: grid; grid-template-columns: 44px 1fr; align-items: center; gap: 10px;
+  transition: opacity .5s ease; }
+.tape-row.future { opacity: .18; }
+.tape-row.absorbed { opacity: .25; }
+.tape-lab { font-family: var(--mono); font-size: 9.5px; color: var(--dim); text-align: right; }
+.tape-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 118px; align-items: center; gap: 8px; }
+.tape { display: flex; height: 18px; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden;
+  background: var(--panel-fill); flex: none; transition: border-color .4s ease; }
+.tape-row.keep .tape { border-color: var(--accent); }
+.tp { height: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.tp em { font-style: normal; font-family: var(--mono); font-size: 8px; letter-spacing: .3px; color: var(--dim); white-space: nowrap; }
+.tp.r em { color: #fdf6e9; }
+.tp.p { background: var(--panel-2); }
+.tp.d { background: var(--panel-2); border-left: 1px solid var(--panel-fill); }
+.tp.r { background: var(--accent); opacity: .8; }
+.tp.f { background: repeating-linear-gradient(45deg, transparent 0 3px, var(--line-2) 3px 5px); }
+.tape-note { font-family: var(--mono); font-size: 9.5px; color: var(--accent); white-space: nowrap; opacity: 0; transition: opacity .4s ease; }
+.tape-row.keep .tape-note { opacity: 1; }
+.tape-legend { margin-top: 12px; font-family: var(--mono); font-size: 9.5px; color: var(--dim); display: flex; align-items: center; gap: 6px; }
+.tp-sw { width: 12px; height: 8px; border-radius: 2px; display: inline-block; }
+.tp-sw.p { background: var(--panel-2); border: 1px solid var(--line-2); }
+.tp-sw.r { background: var(--accent); opacity: .8; margin-left: 10px; }
+.tp-sw.f { background: repeating-linear-gradient(45deg, transparent 0 3px, var(--line-2) 3px 5px); border: 1px solid var(--line-2); margin-left: 10px; }
+@media (max-width: 430px) {
+  .tape-row { grid-template-columns: 34px 1fr; gap: 6px; }
+  .tape-wrap { grid-template-columns: minmax(0, 1fr) 84px; gap: 5px; }
+  .tape-lab, .tape-note, .tape-legend { font-size: 8.5px; }
+  .tp em { display: none; }   /* inside labels need room; the legend still explains the colors */
+  .tape { height: 12px; }
+}
 /* ---- the before-board: same anatomy, but no hub and no color — attempts die mid-air ---- */
 .mess .pair-chip + .pair-k { margin-top: 12px; }   /* the left column stacks two groups */
 .mess .pair-chip.try { color: var(--text); border-color: var(--muted); }   /* ink, never accent — this board has no color */
@@ -222,6 +255,19 @@
     </div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
+  <p><b>What the adapter actually does: fold the window, pack the steps.</b>
+  Each model trains on its own view of the same rows. Qwen3.5 keeps the last
+  four screenshots and folds older ones to a fixed line of text; and while a
+  step's prompt only <em>extends</em> the previous one, consecutive steps
+  radix-pack into a single forward pass — the fold is exactly where a new
+  segment begins.</p>
+
+  <figure class="flow-demo pack" aria-label="A six-step trajectory in the Qwen3.5 view: screenshots fold past image_max, and prefix-extending steps pack into segments">
+    <div class="tape-board" data-pack></div>
+    <div class="tape-legend" aria-hidden="true"><i class="tp-sw p"></i>prompt<i class="tp-sw r"></i>response · loss<i class="tp-sw f"></i>folded screenshots</div>
+    <div class="pair-cmd" data-pack-line></div>
+  </figure>
+
   <p class="post-links"><a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">browse the corpora ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">preprocessing guide ↗</a></p>
 
   <h2>Environments &amp; agents</h2>
@@ -458,6 +504,61 @@
   const pairFig = document.querySelector('[data-board="pair"]');
   if (pairFig) boards.push(runBoard(pairFig.closest(".flow-demo"), (e, a) =>   // environments sit on the left
     `<span class="c-p">$</span> rollout.py <span class="nb">--model-id</span> <b>${a}</b> <span class="nb">--env-id</span> <b>${e}</b>`, "loop"));
+  // the packing figure: each step's prompt tape contains the previous one (token-level
+  // prefix); at step 5 image_max=4 folds the oldest screenshots and the prefix breaks —
+  // so steps 1-4 collapse into one forward, steps 5-6 into another
+  // (lite/agents/models/qwen3_5/protocol.py; lite/train/rollout/core/segmenter.py)
+  const packFig = document.querySelector("[data-pack]");
+  if (packFig) (function () {
+    const U = 44;   // token-units of the widest tape (step 4)
+    const P = (w, t) => ({ c: "p", w, t }), D = (w, t) => ({ c: "d", w, t }),
+          R = (w, t) => ({ c: "r", w, t }), F = (w, t) => ({ c: "f", w, t });
+    const grow = (prev, k) => [...prev, D(6, "img" + k), R(4, "act" + k)];
+    const r1 = [P(10, "instr · img1"), R(4, "act1")];
+    const r2 = grow(r1, 2), r3 = grow(r2, 3), r4 = grow(r3, 4);
+    const r5 = [F(8, "folded ×4"), D(6, "img5"), R(4, "act5")];
+    const r6 = grow(r5, 6);
+    const ROWS = [r1, r2, r3, r4, r5, r6];
+    const NOTE = { 3: "1 forward · loss ×4", 5: "1 forward · loss ×2" };   // rows 4 and 6 (0-based)
+    packFig.innerHTML = ROWS.map((regs, i) => {
+      const total = regs.reduce((a, r) => a + r.w, 0);
+      const spans = regs.map((r) =>
+        `<i class="tp ${r.c}" style="width:${(r.w / total * 100).toFixed(2)}%"><em>${r.t}</em></i>`).join("");
+      return `<div class="tape-row future" data-i="${i}">
+        <span class="tape-lab">step ${i + 1}</span>
+        <span class="tape-wrap"><span class="tape" style="width:${(total / U * 100).toFixed(2)}%">${spans}</span>
+        <span class="tape-note">${NOTE[i] || ""}</span></span></div>`;
+    }).join("");
+    const rows = [...packFig.querySelectorAll(".tape-row")];
+    const line = packFig.closest(".flow-demo").querySelector("[data-pack-line]");
+    const SCRIPT = [   // [ms, fn, narration]
+      [0,     () => rows.forEach((r) => r.className = "tape-row future"),
+              "one LiteSample trajectory, 6 steps — rendered as Qwen3.5 sees it"],
+      [1300,  () => rows[0].className = "tape-row",
+              "step 1 · prompt = instruction + img1, then act1"],
+      [2600,  () => rows[1].className = "tape-row",
+              "step 2 begins with every token of step 1 — a strict prefix extension"],
+      [3900,  () => rows[2].className = "tape-row", "step 3 · still extending"],
+      [5200,  () => rows[3].className = "tape-row",
+              "step 4 · still extending — act1…act4 all live inside this one tape"],
+      [6800,  () => rows[4].className = "tape-row",
+              "image_max=4: older screenshots fold to text — the prefix breaks here"],
+      [8100,  () => rows[5].className = "tape-row", "step 6 extends step 5"],
+      [9600,  () => { [0, 1, 2].forEach((i) => rows[i].className = "tape-row absorbed");
+                      rows[4].className = "tape-row absorbed";
+                      rows[3].className = "tape-row keep"; rows[5].className = "tape-row keep"; },
+              "prefix-extending steps collapse into their last tape: 6 steps, 2 forwards"],
+    ];
+    const CYCLE = 13600;
+    let max = 0;
+    SCRIPT.forEach(([, , t]) => { line.textContent = t; max = Math.max(max, line.offsetHeight); });
+    line.style.minHeight = max + "px";
+    function play() { SCRIPT.forEach(([ms, fn, t]) => setTimeout(() => { fn(); line.textContent = t; }, ms)); }
+    if (reduce) { const [, fn, t] = SCRIPT[SCRIPT.length - 1];
+      rows.forEach((r) => r.className = "tape-row"); fn(); line.textContent = t;
+    } else { play(); setInterval(play, CYCLE); }
+  })();
+
   // wires are measured from live geometry — re-anchor after web fonts land and on resize
   const sync = () => boards.forEach((fn) => fn());
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
