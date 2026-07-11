@@ -59,6 +59,9 @@
 .pair-node::before { left: -4px; }
 .pair-node::after { right: -4px; }
 .pair-node code { background: none; border: 0; padding: 0; font-size: 12.5px; }
+.pair-node:hover, .pair-node:focus-within { z-index: 30; }   /* the hover card must clear the sibling stage cards */
+.wire-stage:hover, .wire-stage:focus-within { z-index: 30; }
+.wire-stage:hover .ls-pop, .wire-stage:focus-within .ls-pop { opacity: 1; visibility: visible; transform: translateY(-50%); pointer-events: auto; }
 .node-sub { display: block; font-size: 8.5px; letter-spacing: 1.3px; text-transform: uppercase; color: var(--dim); margin-top: 4px; white-space: nowrap; }
 .pair-wire { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .pair-wire .w1, .pair-wire .w2 { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 400; opacity: 0; }
@@ -76,7 +79,7 @@
   transform: translate(-50%,-50%); white-space: nowrap; pointer-events: none; z-index: 3; transition: opacity .25s ease; }
 .flow-lab.show { opacity: .9; }
 /* pipeline stages on the wires — mini siblings of the hub card (preproc in, adapter out) */
-.wire-stage { position: absolute; transform: translate(-50%, -50%); z-index: 2; pointer-events: none;
+.wire-stage { position: absolute; transform: translate(-50%, -50%); z-index: 2; cursor: help;
   font-family: var(--mono); font-size: 10px; letter-spacing: .5px; color: var(--muted); white-space: nowrap;
   background: #fff; border: 1px solid var(--accent-dim); border-radius: 6px; padding: 3px 8px; }
 /* the landing pulse — the hero demo's green ring, marking where the payload arrives */
@@ -274,8 +277,8 @@
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
   <p><b>The <code>adapter</code> stage above is the agent harness at work: it
-  turns unified <code>LiteSample</code> rows into the training format each
-  model needs.</b> Every model speaks its own dialect — prompts, history
+  turns unified <code class="ls" tabindex="0">LiteSample</code> rows into the
+  training format each model needs.</b> Every model speaks its own dialect — prompts, history
   windows, action format — and the harness that runs a model live in the envs
   is the same code that does this conversion. For example, Qwen3.5's harness
   keeps the last four screenshots and collapses the older history to a fixed
@@ -400,10 +403,10 @@
       labDown = document.createElement("span"); labDown.className = "flow-lab"; labDown.textContent = "click([632, 375])";
       board.appendChild(labUp); board.appendChild(labDown);
     } else {                 // the pipeline: preproc into the schema, adapter out to each model
-      pmark = document.createElement("span"); pmark.className = "wire-stage";
+      pmark = document.createElement("span"); pmark.className = "wire-stage stage-preproc"; pmark.tabIndex = 0;
       pmark.textContent = "preproc";
       board.appendChild(pmark);
-      amark = document.createElement("span"); amark.className = "wire-stage";
+      amark = document.createElement("span"); amark.className = "wire-stage stage-adapter"; amark.tabIndex = 0;
       amark.textContent = "adapter";
       board.appendChild(amark);
     }

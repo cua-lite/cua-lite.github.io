@@ -5,7 +5,33 @@
 (function () {
   "use strict";
   const CARDS = {
-    ls: {
+    "span.stage-preproc": {
+      title: "preproc",
+      code:
+`<span class="t-dim"># preproc — a raw dataset becomes LiteSample, once</span>
+lite/data/preproc/&lt;dataset&gt;/
+    use.py · grounding-*.py     <span class="t-dim"># the converters</span>
+    coordinates → <span class="t-str">[0, 1000]</span>     <span class="t-dim"># normalized, always</span>
+    images → content-addressed store
+
+<span class="t-dim"># run it, then publish to the Hub ↓</span>
+$ bash lite/data/preproc/scalecua/scripts/process_data.sh
+$ python -m lite.data.hf.upload ScaleCUA <span class="t-str">--org cua-lite</span>`,
+    },
+    "span.stage-adapter": {
+      title: "adapter",
+      code:
+`<span class="t-dim"># the adapter — one per model family</span>
+<span class="t-kw">class</span> AgentAdapter:
+    action_space: ActionSpace   <span class="t-dim"># its coordinate dialect</span>
+    protocol: Protocol          <span class="t-dim"># its history windowing</span>
+    <span class="t-kw">def</span> render_step(sample, k)  <span class="t-dim"># LiteSample → turn-k prompt</span>
+    <span class="t-kw">def</span> unroll(sample)          <span class="t-dim"># LiteSample → training sample</span>
+
+<span class="t-dim"># the same adapter serves rollout and export_sft —</span>
+<span class="t-dim"># the SFT prompt matches what the model saw live</span>`,
+    },
+    "code.ls": {
       title: "LiteSample",
       code:
 `<span class="t-dim"># LiteSample — one schema for any data</span>
@@ -33,7 +59,7 @@ LiteSample(
     assistant(click(<span class="t-str">[320, 180]</span>), terminate()),
   ])`,
     },
-    lg: {
+    "code.lg": {
       title: "lite.gym",
       code:
 `<span class="t-dim"># lite.gym — every env behind one interface</span>
@@ -53,8 +79,8 @@ result.reward                       <span class="t-dim"># float | None</span>
 result.terminated, result.truncated`,
     },
   };
-  Object.entries(CARDS).forEach(([cls, card]) => {
-    document.querySelectorAll("code." + cls).forEach((chip) => {
+  Object.entries(CARDS).forEach(([sel, card]) => {
+    document.querySelectorAll(sel).forEach((chip) => {
       const pop = document.createElement("span");
       pop.className = "ls-pop"; pop.setAttribute("aria-hidden", "true");
       pop.innerHTML =
