@@ -104,6 +104,18 @@
 .tp.r { background: var(--accent); opacity: .8; }
 .tp.f { background: repeating-linear-gradient(45deg, transparent 0 3px, var(--line-2) 3px 5px); }
 .tape-note { font-family: var(--mono); font-size: 9.5px; color: var(--accent); white-space: nowrap; opacity: 0; transition: opacity .4s ease; }
+/* fold moment: the hatched region grows in while the source screenshots (row above) gray out */
+.tape-row.born .tp.f { animation: foldIn .8s var(--ease) both; transform-origin: left; }
+@keyframes foldIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.tape-row.foldsrc .tp.p, .tape-row.foldsrc .tp.d { filter: grayscale(1); opacity: .55; transition: filter .5s ease, opacity .5s ease; }
+/* merge moment: one sweep = the forward pass; then every response band pulses = the loss hits */
+.tape-row.keep .tape { position: relative; }
+.tape-row.keep .tape::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent);
+  transform: translateX(-110%); animation: fwdSweep 1.1s ease .2s forwards; }
+@keyframes fwdSweep { to { transform: translateX(110%); } }
+.tape-row.keep .tp.r { animation: lossPulse .5s ease 1.4s 2; }
+@keyframes lossPulse { 50% { filter: brightness(1.35); transform: scaleY(1.2); } }
 .tape-row.keep .tape-note { opacity: 1; }
 .tape-legend { margin-top: 12px; font-family: var(--mono); font-size: 9.5px; color: var(--dim); display: flex; align-items: center; gap: 6px; }
 .tp-sw { width: 12px; height: 8px; border-radius: 2px; display: inline-block; }
@@ -113,7 +125,9 @@
 @media (max-width: 430px) {
   .tape-row { grid-template-columns: 34px 1fr; gap: 6px; }
   .tape-wrap { grid-template-columns: minmax(0, 1fr) 84px; gap: 5px; }
-  .tape-lab, .tape-note, .tape-legend { font-size: 8.5px; }
+  .tape-lab, .tape-note, .tape-legend { font-size: 10px; }   /* content text keeps the legibility floor */
+  .tape-note { white-space: normal; line-height: 1.25; }
+  .tape-legend { flex-wrap: wrap; row-gap: 3px; }
   .tp em { display: none; }   /* inside labels need room; the legend still explains the colors */
   .tape { height: 12px; }
 }
@@ -135,6 +149,7 @@
 .pair-cmd b, .pair-cmd .nb { white-space: nowrap; }  /* ids wrap as a unit, never mid-token */
 @media (prefers-reduced-motion: reduce) {
   .pair-wire path.draw { animation: none; stroke-dashoffset: 0; opacity: 1; }
+  .tape-row.born .tp.f, .tape-row.keep .tape::after, .tape-row.keep .tp.r { animation: none; }
   .pair-chip.on { transition-delay: 0s; }
   .mess .mw.draw, .mess-x.hit, .mess-why.hit, .pair-cmd .c-x.hit { animation: none; opacity: .85; }
 }
@@ -258,14 +273,14 @@
   </figure>
   <p><b>Training formats are where the complexity hides — and the adapters
   ship with the platform.</b> Each model wants trajectories its own way. For
-  example, Qwen3.5 keeps the last four screenshots and folds older ones to a
-  fixed line of text; and while a step's prompt only <em>extends</em> the
+  example, Qwen3.5 keeps the last four screenshots and collapses the older
+  history to a fixed line of text; and while a step's prompt only <em>extends</em> the
   previous one, consecutive steps radix-pack into a single forward pass — the
   fold is exactly where a new segment begins. All of that comes pre-shipped
   for every built-in model, and a new agent assembles the same building
   blocks.</p>
 
-  <figure class="flow-demo pack" aria-label="A six-step trajectory in the Qwen3.5 view: screenshots fold past image_max, and prefix-extending steps pack into segments">
+  <figure class="flow-demo pack" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
     <div class="tape-board" data-pack>
       <div class="tape-row">
         <span class="tape-lab">step 1</span>
@@ -292,7 +307,7 @@
         <span class="tape-wrap"><span class="tape" style="width:63.64%"><i class="tp f" style="width:28.57%"><em>folded ×4</em></i><i class="tp d" style="width:21.43%"><em>img5</em></i><i class="tp r" style="width:14.29%"><em>act5</em></i><i class="tp d" style="width:21.43%"><em>img6</em></i><i class="tp r" style="width:14.29%"><em>act6</em></i></span>
         <span class="tape-note">1 forward · loss ×2</span></span></div>
     </div>
-    <div class="tape-legend" aria-hidden="true"><i class="tp-sw p"></i>prompt<i class="tp-sw r"></i>response · loss<i class="tp-sw f"></i>folded screenshots</div>
+    <div class="tape-legend" aria-hidden="true"><i class="tp-sw p"></i>prompt<i class="tp-sw r"></i>response · loss<i class="tp-sw f"></i>folded history</div>
     <div class="pair-cmd" data-pack-line></div>
   </figure>
 
@@ -312,7 +327,7 @@
         <a class="pair-chip" data-id="browsergym.webarena" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena<span class="chip-tag"> · web</span></a>
         <a class="pair-chip" data-id="androidworld" href="https://github.com/google-research/android_world" target="_blank" rel="noopener">AndroidWorld<span class="chip-tag"> · mobile</span></a>
         <a class="pair-chip" data-id="webgym" href="https://github.com/microsoft/webgym" target="_blank" rel="noopener">WebGym<span class="chip-tag"> · web</span></a>
-        <a class="pair-chip ghost" data-id="your-benchmark" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
+        <a class="pair-chip ghost" data-id="your-env" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
       </div>
       <div class="pair-mid"><span class="pair-node"><code class="lg" tabindex="0">lite.gym</code><span class="node-sub">one action space</span></span></div>
       <div class="pair-col pair-right">
@@ -567,9 +582,9 @@
       [5400,  () => rows[2].className = "tape-row", "step 3 · still extending"],
       [7200,  () => rows[3].className = "tape-row",
               "step 4 · acts 1–4 all live in this one tape"],
-      [9400,  () => rows[4].className = "tape-row",
-              "image_max=4 — older screenshots fold · the prefix breaks"],
-      [11600, () => rows[5].className = "tape-row", "step 6 extends step 5"],
+      [9400,  () => { rows[4].className = "tape-row born"; rows[3].className = "tape-row foldsrc"; },
+              "image_max=4 — the older history collapses to text · the prefix breaks"],
+      [11600, () => { rows[5].className = "tape-row"; rows[3].className = "tape-row"; }, "step 6 extends step 5"],
       [13400, () => { [0, 1, 2].forEach((i) => rows[i].className = "tape-row absorbed");
                       rows[4].className = "tape-row absorbed";
                       rows[3].className = "tape-row keep"; rows[5].className = "tape-row keep"; },
