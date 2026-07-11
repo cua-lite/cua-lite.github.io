@@ -256,15 +256,42 @@
     </div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
-  <p><b>What the adapter actually does: fold the window, pack the steps.</b>
-  Each model trains on its own view of the same rows. Qwen3.5 keeps the last
-  four screenshots and folds older ones to a fixed line of text; and while a
-  step's prompt only <em>extends</em> the previous one, consecutive steps
-  radix-pack into a single forward pass — the fold is exactly where a new
-  segment begins.</p>
+  <p><b>Training formats are where the complexity hides — and the adapters
+  ship with the platform.</b> Each model wants trajectories its own way. For
+  example, Qwen3.5 keeps the last four screenshots and folds older ones to a
+  fixed line of text; and while a step's prompt only <em>extends</em> the
+  previous one, consecutive steps radix-pack into a single forward pass — the
+  fold is exactly where a new segment begins. All of that comes pre-shipped
+  for every built-in model, and a new agent assembles the same building
+  blocks.</p>
 
   <figure class="flow-demo pack" aria-label="A six-step trajectory in the Qwen3.5 view: screenshots fold past image_max, and prefix-extending steps pack into segments">
-    <div class="tape-board" data-pack></div>
+    <div class="tape-board" data-pack>
+      <div class="tape-row">
+        <span class="tape-lab">step 1</span>
+        <span class="tape-wrap"><span class="tape" style="width:31.82%"><i class="tp p" style="width:71.43%"><em>instr · img1</em></i><i class="tp r" style="width:28.57%"><em>act1</em></i></span>
+        <span class="tape-note"></span></span></div>
+      <div class="tape-row">
+        <span class="tape-lab">step 2</span>
+        <span class="tape-wrap"><span class="tape" style="width:54.55%"><i class="tp p" style="width:41.67%"><em>instr · img1</em></i><i class="tp r" style="width:16.67%"><em>act1</em></i><i class="tp d" style="width:25.00%"><em>img2</em></i><i class="tp r" style="width:16.67%"><em>act2</em></i></span>
+        <span class="tape-note"></span></span></div>
+      <div class="tape-row">
+        <span class="tape-lab">step 3</span>
+        <span class="tape-wrap"><span class="tape" style="width:77.27%"><i class="tp p" style="width:29.41%"><em>instr · img1</em></i><i class="tp r" style="width:11.76%"><em>act1</em></i><i class="tp d" style="width:17.65%"><em>img2</em></i><i class="tp r" style="width:11.76%"><em>act2</em></i><i class="tp d" style="width:17.65%"><em>img3</em></i><i class="tp r" style="width:11.76%"><em>act3</em></i></span>
+        <span class="tape-note"></span></span></div>
+      <div class="tape-row">
+        <span class="tape-lab">step 4</span>
+        <span class="tape-wrap"><span class="tape" style="width:100.00%"><i class="tp p" style="width:22.73%"><em>instr · img1</em></i><i class="tp r" style="width:9.09%"><em>act1</em></i><i class="tp d" style="width:13.64%"><em>img2</em></i><i class="tp r" style="width:9.09%"><em>act2</em></i><i class="tp d" style="width:13.64%"><em>img3</em></i><i class="tp r" style="width:9.09%"><em>act3</em></i><i class="tp d" style="width:13.64%"><em>img4</em></i><i class="tp r" style="width:9.09%"><em>act4</em></i></span>
+        <span class="tape-note">1 forward · loss ×4</span></span></div>
+      <div class="tape-row">
+        <span class="tape-lab">step 5</span>
+        <span class="tape-wrap"><span class="tape" style="width:40.91%"><i class="tp f" style="width:44.44%"><em>folded ×4</em></i><i class="tp d" style="width:33.33%"><em>img5</em></i><i class="tp r" style="width:22.22%"><em>act5</em></i></span>
+        <span class="tape-note"></span></span></div>
+      <div class="tape-row">
+        <span class="tape-lab">step 6</span>
+        <span class="tape-wrap"><span class="tape" style="width:63.64%"><i class="tp f" style="width:28.57%"><em>folded ×4</em></i><i class="tp d" style="width:21.43%"><em>img5</em></i><i class="tp r" style="width:14.29%"><em>act5</em></i><i class="tp d" style="width:21.43%"><em>img6</em></i><i class="tp r" style="width:14.29%"><em>act6</em></i></span>
+        <span class="tape-note">1 forward · loss ×2</span></span></div>
+    </div>
     <div class="tape-legend" aria-hidden="true"><i class="tp-sw p"></i>prompt<i class="tp-sw r"></i>response · loss<i class="tp-sw f"></i>folded screenshots</div>
     <div class="pair-cmd" data-pack-line></div>
   </figure>
@@ -528,25 +555,6 @@
   // (lite/agents/models/qwen3_5/protocol.py; lite/train/rollout/core/segmenter.py)
   const packFig = document.querySelector("[data-pack]");
   if (packFig) (function () {
-    const U = 44;   // token-units of the widest tape (step 4)
-    const P = (w, t) => ({ c: "p", w, t }), D = (w, t) => ({ c: "d", w, t }),
-          R = (w, t) => ({ c: "r", w, t }), F = (w, t) => ({ c: "f", w, t });
-    const grow = (prev, k) => [...prev, D(6, "img" + k), R(4, "act" + k)];
-    const r1 = [P(10, "instr · img1"), R(4, "act1")];
-    const r2 = grow(r1, 2), r3 = grow(r2, 3), r4 = grow(r3, 4);
-    const r5 = [F(8, "folded ×4"), D(6, "img5"), R(4, "act5")];
-    const r6 = grow(r5, 6);
-    const ROWS = [r1, r2, r3, r4, r5, r6];
-    const NOTE = { 3: "1 forward · loss ×4", 5: "1 forward · loss ×2" };   // rows 4 and 6 (0-based)
-    packFig.innerHTML = ROWS.map((regs, i) => {
-      const total = regs.reduce((a, r) => a + r.w, 0);
-      const spans = regs.map((r) =>
-        `<i class="tp ${r.c}" style="width:${(r.w / total * 100).toFixed(2)}%"><em>${r.t}</em></i>`).join("");
-      return `<div class="tape-row future" data-i="${i}">
-        <span class="tape-lab">step ${i + 1}</span>
-        <span class="tape-wrap"><span class="tape" style="width:${(total / U * 100).toFixed(2)}%">${spans}</span>
-        <span class="tape-note">${NOTE[i] || ""}</span></span></div>`;
-    }).join("");
     const rows = [...packFig.querySelectorAll(".tape-row")];
     const line = packFig.closest(".flow-demo").querySelector("[data-pack-line]");
     const SCRIPT = [   // [ms, fn, narration] — each event holds long enough to read its line
