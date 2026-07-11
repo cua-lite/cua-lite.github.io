@@ -792,8 +792,7 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
    A quiet ranked bar chart in the site's own materials: one terracotta series
    (magnitude is the bar's length, not its color), values as direct labels in
    ink, no legend (single measure), rows staggered in like the coverage cards. */
-.lb-cap { margin: 58px auto 22px; }
-.lb { max-width: 660px; margin: 0 auto; }
+.lb { max-width: 660px; margin: 58px auto 0; }
 .section.centered .lb { margin-left: auto; margin-right: auto; text-align: left; }
 .lb-card { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; overflow: hidden;
   box-shadow: 0 26px 50px -30px rgba(40,30,15,.4), 0 3px 8px -4px rgba(40,30,15,.16); }
