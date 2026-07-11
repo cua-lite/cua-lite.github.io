@@ -18,7 +18,7 @@ lite/data/preproc/&lt;dataset&gt;/
 $ bash lite/data/preproc/scalecua/scripts/process_data.sh
 $ python -m lite.data.hf.upload ScaleCUA <span class="t-str">--org cua-lite</span>`,
     },
-    "span.stage-adapter": {
+    "span.stage-adapter, code.ad": {
       title: "adapter",
       code:
 `<span class="t-dim"># the adapter — one per model family</span>
