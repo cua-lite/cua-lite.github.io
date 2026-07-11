@@ -1,11 +1,13 @@
-/* ---------- LiteSample hover popover — the schema + a tiny trajectory ----------
-   Shared by every page: any `code.ls` chip grows the same terminal card on hover.
-   Styles live in css/style.css (.ls-pop); grounded in lite/types.py:352-386. */
+/* ---------- hover cards for the two hubs: LiteSample (code.ls) and lite.gym (code.lg) ----------
+   Shared by every page: one implementation, one look (styles in css/style.css, .ls-pop).
+   Grounded in the main repo: lite/types.py:352-386 (LiteSample), lite/gym/base.py:28-97 +
+   lite/gym/types.py:35-62 (LiteBaseEnv / observation / step result). */
 (function () {
   "use strict";
-  const chips = document.querySelectorAll("code.ls");
-  if (!chips.length) return;
-  const CODE =
+  const CARDS = {
+    ls: {
+      title: "LiteSample",
+      code:
 `<span class="t-dim"># LiteSample — one schema for any data</span>
 <span class="t-kw">@dataclass</span>
 <span class="t-kw">class</span> LiteSample:
@@ -29,13 +31,37 @@ LiteSample(
     assistant(type(<span class="t-str">"cua-lite"</span>)),
     user(img=1),                  <span class="t-dim"># result screenshot</span>
     assistant(click(<span class="t-str">[320, 180]</span>), terminate()),
-  ])`;
-  chips.forEach((chip) => {
-    const pop = document.createElement("span");
-    pop.className = "ls-pop"; pop.setAttribute("aria-hidden", "true");
-    pop.innerHTML =
-      '<span class="ls-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="ls-t">LiteSample</span></span>' +
-      '<pre class="ls-code">' + CODE + "</pre>";
-    chip.appendChild(pop);
+  ])`,
+    },
+    lg: {
+      title: "lite.gym",
+      code:
+`<span class="t-dim"># lite.gym — every env behind one interface</span>
+<span class="t-kw">class</span> LiteBaseEnv:
+    metadata: LiteMetadata     <span class="t-dim"># platform · extra tools</span>
+    <span class="t-kw">async def</span> reset()        <span class="t-dim"># first screenshot + task</span>
+    <span class="t-kw">async def</span> step(actions)  <span class="t-dim"># execute, observe, reward</span>
+    <span class="t-kw">async def</span> close()
+
+<span class="t-dim"># one step of the loop ↓</span>
+env = gym.make(<span class="t-str">"osworld@&lt;task_id&gt;"</span>)
+result = <span class="t-kw">await</span> env.step([
+  click(coordinate=<span class="t-str">[500, 400]</span>),  <span class="t-dim"># normalized [0, 1000]</span>
+])
+result.observation.screenshot_b64   <span class="t-dim"># base64 png, no prefix</span>
+result.reward                       <span class="t-dim"># float | None</span>
+result.terminated, result.truncated`,
+    },
+  };
+  Object.entries(CARDS).forEach(([cls, card]) => {
+    document.querySelectorAll("code." + cls).forEach((chip) => {
+      const pop = document.createElement("span");
+      pop.className = "ls-pop"; pop.setAttribute("aria-hidden", "true");
+      pop.innerHTML =
+        '<span class="ls-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="ls-t">' +
+        card.title + "</span></span>" +
+        '<pre class="ls-code">' + card.code + "</pre>";
+      chip.appendChild(pop);
+    });
   });
 })();

@@ -68,11 +68,11 @@
 /* data packets: the site's pixel square traveling the wire (screenshot up, action down) */
 .flow-dot { position: absolute; width: 7px; height: 7px; background: var(--accent); opacity: 0; z-index: 1; pointer-events: none;
   offset-rotate: 0deg; box-shadow: 0 0 0 2px var(--panel-fill); }   /* cream halo — reads against the same-color wire */
-.flow-dot.go { animation: dotGo .8s linear forwards; }
-.flow-dot.back { animation: dotBack .8s linear forwards; }
+.flow-dot.go { animation: dotGo 1.1s linear forwards; }
+.flow-dot.back { animation: dotBack 1.1s linear forwards; }
 @keyframes dotGo { 0% { offset-distance: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
 @keyframes dotBack { 0% { offset-distance: 100%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { offset-distance: 0%; opacity: 0; } }
-.flow-lab { position: absolute; font-family: var(--mono); font-size: 9px; letter-spacing: .5px; color: var(--dim); opacity: 0;
+.flow-lab { position: absolute; font-family: var(--mono); font-size: 10px; letter-spacing: .5px; color: var(--dim); opacity: 0;
   transform: translate(-50%,-50%); white-space: nowrap; pointer-events: none; z-index: 3; transition: opacity .25s ease; }
 .flow-lab.show { opacity: .9; }
 /* pipeline stages on the wires — mini siblings of the hub card (preproc in, adapter out) */
@@ -226,12 +226,12 @@
 
   <h2>Environments &amp; agents</h2>
   <p><b>Integrate an env once, and every agent can run it; integrate an agent
-  once, and it runs every env.</b> They meet in <code>lite.gym</code> —
+  once, and it runs every env.</b> They meet in <code class="lg" tabindex="0">lite.gym</code> —
   screenshots flow up, actions flow down, in one action space plus each env's
-  extra tools. The same loop serves eval and RL: OSWorld ships 369 eval tasks;
-  Lite.OSWorld adds 2,490 generated training tasks with verifiable rewards.
-  Scores land on the leaderboard as committed JSON — an eval you already ran is
-  worth submitting.</p>
+  extra tools. The same loop serves eval and RL: every env ships eval
+  tasks, and many add training splits with verifiable rewards. Scores land on
+  the leaderboard as committed JSON — an eval you already ran is worth
+  submitting.</p>
   <figure class="flow-demo" aria-label="Any environment paired with any agent through lite.gym: screenshots up, actions down">
     <div class="pair-board" data-board="pair">
       <div class="pair-col">
@@ -242,7 +242,7 @@
         <a class="pair-chip" data-id="webgym" href="https://github.com/microsoft/webgym" target="_blank" rel="noopener">WebGym<span class="chip-tag"> · web</span></a>
         <a class="pair-chip ghost" data-id="your-benchmark" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
       </div>
-      <div class="pair-mid"><span class="pair-node"><code>lite.gym</code><span class="node-sub">one action space</span></span></div>
+      <div class="pair-mid"><span class="pair-node"><code class="lg" tabindex="0">lite.gym</code><span class="node-sub">one action space</span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
         <a class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">gpt-5.5</a>
@@ -298,7 +298,7 @@
     let labUp = null, labDown = null, pmark = null, amark = null;
     if (mode === "loop") {   // the gym loop: observation up, action down
       labUp = document.createElement("span"); labUp.className = "flow-lab"; labUp.textContent = "screenshot";
-      labDown = document.createElement("span"); labDown.className = "flow-lab"; labDown.textContent = "action \u00b7 [0, 1000]";
+      labDown = document.createElement("span"); labDown.className = "flow-lab"; labDown.textContent = "click([632, 375])";
       board.appendChild(labUp); board.appendChild(labDown);
     } else {                 // the pipeline: preproc into the schema, adapter out to each model
       pmark = document.createElement("span"); pmark.className = "wire-stage";
@@ -316,24 +316,37 @@
       return [side === "r" ? b.right - s.left + 3 : b.left - s.left - 3, b.top + b.height / 2 - s.top]; };
     const curve = ([x1, y1], [x2, y2]) => { const mx = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
     const seg = ([x1, y1], [x2, y2]) => { const mx = (x1 + x2) / 2; return `C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
-    // one continuous path chip → port → (under the hub) → port → chip, for the traveling payload
-    const fullPath = (a, e) => { const p1 = pt(left[a], "r"), h1 = ptN("l"), h2 = ptN("r"), p2 = pt(right[e], "l");
+    // one continuous path chip → spine → (under the cards + hub) → chip, for the traveling payload
+    const fullPath = (a, e) => { const p1 = pt(left[a], "r"), p2 = pt(right[e], "l");
+      if (mode === "data") { const { pL, pR } = spine();
+        return `${curve(p1, pL)} L ${pR[0]} ${pR[1]} ${seg(pR, p2)}`; }
+      const h1 = ptN("l"), h2 = ptN("r");
       return `M ${p1[0]} ${p1[1]} ${seg(p1, h1)} L ${h2[0]} ${h2[1]} ${seg(h2, p2)}`; };
     function placeExtras(e) {
       if (labUp) { const b = node.getBoundingClientRect(), sv = svg.getBoundingClientRect();
         const cx = b.left + b.width / 2 - sv.left;
         labUp.style.left = cx + "px"; labUp.style.top = (b.top - sv.top - 12) + "px";
         labDown.style.left = cx + "px"; labDown.style.top = (b.bottom - sv.top + 12) + "px"; }
-      if (amark) {   // the wire runs in one side of each stage card, out the other
-        const La = paths[1].getTotalLength(), qa = paths[1].getPointAtLength(0.55 * La);
-        amark.style.left = qa.x + "px"; amark.style.top = qa.y + "px";
-        const Lp = paths[0].getTotalLength(), qp = paths[0].getPointAtLength(0.45 * Lp);
-        pmark.style.left = qp.x + "px"; pmark.style.top = qp.y + "px"; }
+      if (amark) {   // fixed stage cards on the spine — they never move between beats
+        const { y, pL, pR } = spine();
+        pmark.style.left = pL[0] + "px"; pmark.style.top = y + "px";
+        amark.style.left = pR[0] + "px"; amark.style.top = y + "px"; }
     }
     const redraw = (p) => { p.classList.remove("draw"); void p.getBoundingClientRect(); p.classList.add("draw"); };
+    // the fixed pipeline spine: stage cards sit level with the hub; every wire merges into it
+    const spine = () => { const nb = node.getBoundingClientRect(), sv = svg.getBoundingClientRect();
+      const y = nb.top + nb.height / 2 - sv.top;
+      return { y, pL: [nb.left - sv.left - 64, y], pR: [nb.right - sv.left + 64, y] }; };
     function wires(a, e) {
-      paths[0].setAttribute("d", curve(pt(left[a], "r"), ptN("l")));
-      paths[1].setAttribute("d", curve(ptN("r"), pt(right[e], "l")));
+      if (mode === "data") {
+        const { pL, pR } = spine();
+        const h1 = ptN("l"), h2 = ptN("r");
+        paths[0].setAttribute("d", `${curve(pt(left[a], "r"), pL)} L ${h1[0]} ${h1[1]}`);
+        paths[1].setAttribute("d", `M ${h2[0]} ${h2[1]} L ${pR[0]} ${pR[1]} ${seg(pR, pt(right[e], "l"))}`);
+      } else {
+        paths[0].setAttribute("d", curve(pt(left[a], "r"), ptN("l")));
+        paths[1].setAttribute("d", curve(ptN("r"), pt(right[e], "l")));
+      }
     }
     function step(a, e) {
       cur = [a, e];
@@ -351,16 +364,16 @@
         dot.style.offsetPath = `path("${fullPath(a, e)}")`;
         const pulse = (x, y) => { ring.style.left = x + "px"; ring.style.top = y + "px";
           void ring.getBoundingClientRect(); ring.classList.add("hit"); };
-        if (mode === "loop") {   // wire lands, then the loop runs once: screenshot up, action down, click lands
-          timers.push(setTimeout(() => { dot.classList.add("go"); labUp.classList.add("show"); }, 1400));
+        if (mode === "loop") {   // wire lands, then the loop runs once: screenshot up, click comes down and lands
+          timers.push(setTimeout(() => { dot.classList.add("go"); labUp.classList.add("show"); }, 1700));
           timers.push(setTimeout(() => { labUp.classList.remove("show");
             dot.classList.remove("go"); void dot.getBoundingClientRect();
-            dot.classList.add("back"); labDown.classList.add("show"); }, 2200));
-          timers.push(setTimeout(() => { labDown.classList.remove("show");
-            const [x, y] = pt(left[a], "r"); pulse(x, y); }, 2950));
+            dot.classList.add("back"); labDown.classList.add("show"); }, 3100));
+          timers.push(setTimeout(() => { const [x, y] = pt(left[a], "r"); pulse(x, y); }, 4150));
+          timers.push(setTimeout(() => labDown.classList.remove("show"), 4500));
         } else {                 // wire lands, then one sample flows in and reaches the model
-          timers.push(setTimeout(() => dot.classList.add("go"), 1400));
-          timers.push(setTimeout(() => { const [x, y] = pt(right[e], "l"); pulse(x, y); }, 2150));
+          timers.push(setTimeout(() => dot.classList.add("go"), 1700));
+          timers.push(setTimeout(() => { const [x, y] = pt(right[e], "l"); pulse(x, y); }, 2750));
         }
       }
     }
@@ -374,7 +387,7 @@
       cmd.style.minHeight = max + "px";
     }
     step(0, 0); reserve();
-    if (!reduce) setInterval(() => { i = (i + 1) % seq.length; step(seq[i][0], seq[i][1]); }, 3000);
+    if (!reduce) setInterval(() => { i = (i + 1) % seq.length; step(seq[i][0], seq[i][1]); }, 5200);
     // re-anchor the wires without replaying the draw
     return () => { reserve(); wires(cur[0], cur[1]); placeExtras(cur[1]); };
   }
@@ -437,7 +450,7 @@
       cmd.style.minHeight = max + "px";
     }
     step(0); reserve();
-    if (!reduce) setInterval(() => step((k + 1) % TRIES.length), 3000);
+    if (!reduce) setInterval(() => step((k + 1) % TRIES.length), 5200);
     boards.push(() => { reserve(); step(k); });
   })();
 
