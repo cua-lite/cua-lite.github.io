@@ -550,25 +550,25 @@
     }).join("");
     const rows = [...packFig.querySelectorAll(".tape-row")];
     const line = packFig.closest(".flow-demo").querySelector("[data-pack-line]");
-    const SCRIPT = [   // [ms, fn, narration]
+    const SCRIPT = [   // [ms, fn, narration] — each event holds long enough to read its line
       [0,     () => rows.forEach((r) => r.className = "tape-row future"),
-              "one LiteSample trajectory, 6 steps — rendered as Qwen3.5 sees it"],
-      [1300,  () => rows[0].className = "tape-row",
-              "step 1 · prompt = instruction + img1, then act1"],
-      [2600,  () => rows[1].className = "tape-row",
-              "step 2 begins with every token of step 1 — a strict prefix extension"],
-      [3900,  () => rows[2].className = "tape-row", "step 3 · still extending"],
-      [5200,  () => rows[3].className = "tape-row",
-              "step 4 · still extending — act1…act4 all live inside this one tape"],
-      [6800,  () => rows[4].className = "tape-row",
-              "image_max=4: older screenshots fold to text — the prefix breaks here"],
-      [8100,  () => rows[5].className = "tape-row", "step 6 extends step 5"],
-      [9600,  () => { [0, 1, 2].forEach((i) => rows[i].className = "tape-row absorbed");
+              "one trajectory, 6 steps — as Qwen3.5 sees it"],
+      [1800,  () => rows[0].className = "tape-row",
+              "step 1 · instr + img1 → act1"],
+      [3600,  () => rows[1].className = "tape-row",
+              "step 2 starts with all of step 1 — a strict prefix"],
+      [5400,  () => rows[2].className = "tape-row", "step 3 · still extending"],
+      [7200,  () => rows[3].className = "tape-row",
+              "step 4 · acts 1–4 all live in this one tape"],
+      [9400,  () => rows[4].className = "tape-row",
+              "image_max=4 — older screenshots fold · the prefix breaks"],
+      [11600, () => rows[5].className = "tape-row", "step 6 extends step 5"],
+      [13400, () => { [0, 1, 2].forEach((i) => rows[i].className = "tape-row absorbed");
                       rows[4].className = "tape-row absorbed";
                       rows[3].className = "tape-row keep"; rows[5].className = "tape-row keep"; },
-              "prefix-extending steps collapse into their last tape: 6 steps, 2 forwards"],
+              "prefix-extenders collapse into their last tape: 6 steps, 2 forwards"],
     ];
-    const CYCLE = 13600;
+    const CYCLE = 18200;
     let max = 0;
     SCRIPT.forEach(([, , t]) => { line.textContent = t; max = Math.max(max, line.offsetHeight); });
     line.style.minHeight = max + "px";
