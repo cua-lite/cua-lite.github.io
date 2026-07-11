@@ -100,6 +100,11 @@
 .gym-cur { position: absolute; width: 14px; height: 21px; background: url('/assets/pixel/cursor.png') top left/contain no-repeat;
   image-rendering: pixelated; filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); z-index: 3; opacity: 0; transition: opacity .3s ease; pointer-events: none; }
 .gym-cur.show { opacity: 1; }
+/* a phone is touch, not mouse (same rule as the hero demo): the tap is a finger ripple */
+.gym-cur.touch { background: none; filter: none; width: 18px; height: 18px; }
+.gym-cur.touch::after { content: ""; position: absolute; inset: 0; border-radius: 50%;
+  box-shadow: 0 0 0 2.5px rgba(63,158,87,.55); animation: tapRipple 1s var(--ease) infinite; }
+@keyframes tapRipple { 0% { transform: scale(.35); opacity: .9; } 100% { transform: scale(1.15); opacity: 0; } }
 /* the landing pulse — the hero demo's green ring, marking where the payload arrives */
 .land-ring { position: absolute; width: 22px; height: 22px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(63,158,87,.7);
   transform: translate(-50%,-50%) scale(.35); opacity: 0; pointer-events: none; z-index: 3; }
@@ -172,7 +177,7 @@
 .pair-cmd b, .pair-cmd .nb { white-space: nowrap; }  /* ids wrap as a unit, never mid-token */
 @media (prefers-reduced-motion: reduce) {
   .pair-wire path.draw { animation: none; stroke-dashoffset: 0; opacity: 1; }
-  .tape-row.born .tp.f, .tape-row.born .tp.f em, .tape-row.keep .tape::after, .tape-row.keep .tp.r { animation: none; }
+  .tape-row.born .tp.f, .tape-row.born .tp.f em, .tape-row.keep .tape::after, .tape-row.keep .tp.r, .gym-cur.touch::after { animation: none; }
   .pair-chip.on { transition-delay: 0s; }
   .mess .mw.draw, .mess-x.hit, .mess-why.hit, .pair-cmd .c-x.hit { animation: none; opacity: .85; }
 }
@@ -507,7 +512,10 @@
           void ring.getBoundingClientRect(); ring.classList.add("hit"); };
         if (mode === "loop") {   // wire lands, then the loop runs once: screenshot up, click comes down and lands
           const PLAT = { "osworld": "desktop", "browsergym.webarena": "web", "androidworld": "mobile", "webgym": "web" };
-          shot.dataset.plat = PLAT[left[a].dataset.id] || "desktop";
+          const plat = PLAT[left[a].dataset.id] || "desktop";
+          shot.dataset.plat = plat;
+          labDown.textContent = (plat === "mobile" ? "tap([632, 375])" : "click([632, 375])");
+          gcur.classList.toggle("touch", plat === "mobile");   // touch platforms tap, they don't click
           shot.classList.remove("show"); gcur.classList.remove("show");
           timers.push(setTimeout(() => { dot.classList.add("go"); labUp.classList.add("show"); shot.classList.add("show"); }, 1700));
           timers.push(setTimeout(() => { labUp.classList.remove("show"); shot.classList.remove("show");
