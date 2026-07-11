@@ -466,7 +466,7 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
   // each env's platform (grounding benchmarks are cross-platform grounding tasks)
   const ENV_PLAT = {
     "osworld": "desktop", "lite.osworld": "desktop", "osworld_2": "desktop", "cua.bench": "desktop",
-    "cuagym": "desktop", "cuaworld": "desktop",
+    "cuaworld": "desktop",
     "screenspot_pro": "grounding", "osworld_g": "grounding",
     "webgym": "web", "webharbor.webvoyager": "web", "online_mind2web": "web",
     "browsergym.miniwob": "web", "browsergym.webarena": "web", "browsergym.visualwebarena": "web",
@@ -488,7 +488,7 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
     rl: {
       // only open-weight agents can be fine-tuned / reinforced — API models (gpt, claude) can't
       agents: AGENTS.filter((a) => !a.api),
-      envs: ["lite.osworld", "webgym", "cuagym", "cuaworld", "mobilegym"],
+      envs: ["lite.osworld", "webgym", "cuaworld", "mobilegym"],
       table: false,
     },
     // the quickstart REPL: a taste of the API, not the whole matrix. Its env slot
@@ -966,41 +966,4 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
   show(cur);
 })();
 
-/* ---------- LiteSample hover popover — the schema + a tiny trajectory, to the right ---------- */
-(function () {
-  const chips = document.querySelectorAll("code.ls");
-  if (!chips.length) return;
-  const CODE =
-`<span class="t-dim"># LiteSample — one schema for any data</span>
-<span class="t-kw">@dataclass</span>
-<span class="t-kw">class</span> LiteSample:
-    metadata: LiteMetadata     <span class="t-dim"># platform · task_type</span>
-    messages: list[Message]    <span class="t-dim"># user ⇄ assistant turns</span>
-    images:   list[Image]      <span class="t-dim"># screenshots</span>
-
-<span class="t-dim"># a grounding step — one action ↓</span>
-LiteSample(
-  LiteMetadata(<span class="t-str">"desktop"</span>, <span class="t-str">"grounding.action"</span>),
-  messages=[
-    user(<span class="t-str">"Click Subscribe"</span>, img=0),
-    assistant(click(<span class="t-str">[455, 215]</span>)),
-  ])
-
-<span class="t-dim"># a rollout — a full trajectory, 2 steps ↓</span>
-LiteSample(
-  LiteMetadata(<span class="t-str">"web"</span>, <span class="t-str">"rollout"</span>),
-  messages=[
-    user(<span class="t-str">"Find cua-lite on GitHub"</span>, img=0),
-    assistant(type(<span class="t-str">"cua-lite"</span>)),
-    user(img=1),                  <span class="t-dim"># result screenshot</span>
-    assistant(click(<span class="t-str">[320, 180]</span>), terminate()),
-  ])`;
-  chips.forEach((chip) => {
-    const pop = document.createElement("span");
-    pop.className = "ls-pop"; pop.setAttribute("aria-hidden", "true");
-    pop.innerHTML =
-      '<span class="ls-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="ls-t">LiteSample</span></span>' +
-      '<pre class="ls-code">' + CODE + "</pre>";
-    chip.appendChild(pop);
-  });
-})();
+/* LiteSample hover popover lives in js/lspop.js — shared with the blog (one implementation). */
