@@ -57,6 +57,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 92px;
      which breaks Chromium's smooth on-load scroll to #hash anchors. */
   scrollbar-gutter: stable; }
 body {
+  overflow-x: clip;   /* absolutely-positioned hover cards never widen the page */
   margin: 0; color: var(--text);
   /* soft warm peach washes over ivory — microsoft.ai's ambient warmth, viewport-fixed */
   background:
@@ -916,6 +917,7 @@ code.lg:hover .ls-pop, code.lg:focus .ls-pop, code.lg:focus-within .ls-pop { opa
 /* ---------- responsive ---------- */
 @media (max-width: 940px) {
   .nav-links a:not(.btn-solid):not(.btn-ghost), .nav-sep { display: none; }   /* narrow screens keep only the pills */
+  .ls-pop { display: none; }   /* hover-only detail; below 940 the hidden card would push the page wider than the viewport */
   .nav-cta { gap: 8px; }
   .hero { padding: 68px 0 40px; }
   .hero-grid { grid-template-columns: 1fr; gap: 34px; }

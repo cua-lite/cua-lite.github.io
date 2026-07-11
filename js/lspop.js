@@ -62,6 +62,12 @@ result.terminated, result.truncated`,
         card.title + "</span></span>" +
         '<pre class="ls-code">' + card.code + "</pre>";
       chip.appendChild(pop);
+      // keep the card inside the viewport: shift it left when the anchor sits too far right
+      chip.addEventListener("pointerenter", () => {
+        pop.style.marginLeft = "";
+        const over = pop.getBoundingClientRect().right - (innerWidth - 10);
+        if (over > 0) pop.style.marginLeft = -over + "px";
+      });
     });
   });
 })();
