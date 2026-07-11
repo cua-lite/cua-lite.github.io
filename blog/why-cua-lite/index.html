@@ -237,7 +237,7 @@
 
   <h2>Why CUA-Lite</h2>
   <p><b>Computer-use agent research is fragmented.</b> Every benchmark ships its
-  own harness, its own action space, its own data format. Every dataset picks its
+  own runner, its own action space, its own data format. Every dataset picks its
   own schema, so data collected for one agent can't train another. Every lab
   rebuilds the same plumbing — screenshot loops, VM setup, eval scripts — before
   running a single experiment.</p>
@@ -330,14 +330,14 @@
         <span class="tape-note">1 forward · loss ×4</span></span></div>
       <div class="tape-row">
         <span class="tape-lab">step 5</span>
-        <span class="tape-wrap"><span class="tape" style="width:40.91%"><i class="tp f" style="width:44.44%"><em>folded ×4</em></i><i class="tp d" style="width:33.33%"><em>img5</em></i><i class="tp r" style="width:22.22%"><em>act5</em></i></span>
+        <span class="tape-wrap"><span class="tape" style="width:40.91%"><i class="tp f" style="width:44.44%"><em>collapsed ×4</em></i><i class="tp d" style="width:33.33%"><em>img5</em></i><i class="tp r" style="width:22.22%"><em>act5</em></i></span>
         <span class="tape-note"></span></span></div>
       <div class="tape-row">
         <span class="tape-lab">step 6</span>
-        <span class="tape-wrap"><span class="tape" style="width:63.64%"><i class="tp f" style="width:28.57%"><em>folded ×4</em></i><i class="tp d" style="width:21.43%"><em>img5</em></i><i class="tp r" style="width:14.29%"><em>act5</em></i><i class="tp d" style="width:21.43%"><em>img6</em></i><i class="tp r" style="width:14.29%"><em>act6</em></i></span>
+        <span class="tape-wrap"><span class="tape" style="width:63.64%"><i class="tp f" style="width:28.57%"><em>collapsed ×4</em></i><i class="tp d" style="width:21.43%"><em>img5</em></i><i class="tp r" style="width:14.29%"><em>act5</em></i><i class="tp d" style="width:21.43%"><em>img6</em></i><i class="tp r" style="width:14.29%"><em>act6</em></i></span>
         <span class="tape-note">1 forward · loss ×2</span></span></div>
     </div>
-    <div class="tape-legend" aria-hidden="true"><i class="tp-sw p"></i>prompt<i class="tp-sw r"></i>response · loss<i class="tp-sw f"></i>folded history</div>
+    <div class="tape-legend" aria-hidden="true"><i class="tp-sw p"></i>prompt<i class="tp-sw r"></i>response · loss<i class="tp-sw f"></i>collapsed history</div>
     <div class="pair-cmd" data-pack-line></div>
   </figure>
 
@@ -557,9 +557,9 @@
     // real frictions, no pretend commands — there is no shared command, and that is the point
     const TRIES = [
       { l: 0, r: 2, why: "its own schema",  line: "Mind2Web ships its own schema — UI-TARS-1.5 can't train on it" },
-      { l: 2, r: 1, why: "pixel actions",   line: "OSWorld executes pyautogui pixels — Qwen3-VL speaks another coordinate dialect" },
+      { l: 2, r: 1, why: "pixel actions",   line: "OSWorld executes pyautogui pixels — Qwen3-VL's coordinates don't match" },
       { l: 1, r: 0, why: "its own format",  line: "GUIOdyssey stores mobile traces its own way — no loader fits gpt-5.5" },
-      { l: 3, r: 2, why: "its own harness", line: "WebArena means five Docker containers and its own runner — rebuild it again" },
+      { l: 3, r: 2, why: "its own runner",  line: "WebArena means five Docker containers and its own runner — rebuild it again" },
     ];
     const left = [...messFig.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
     const right = [...messFig.querySelectorAll(".pair-right .pair-chip")];
@@ -645,7 +645,7 @@
       [13400, () => { [0, 1, 2].forEach((i) => rows[i].className = "tape-row absorbed");
                       rows[4].className = "tape-row absorbed";
                       rows[3].className = "tape-row keep"; rows[5].className = "tape-row keep"; },
-              "prefix-extenders collapse into their last tape: 6 steps, 2 forwards"],
+              "prefix-extenders pack into their last tape: 6 steps, 2 forwards"],
     ];
     const CYCLE = 18200;
     let max = 0;
