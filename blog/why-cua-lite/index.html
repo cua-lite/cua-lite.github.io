@@ -30,7 +30,7 @@
 .post-wrap p a:hover { text-decoration: underline; }
 .post-wrap code { font-family: var(--mono); font-size: 13.5px; background: var(--panel-2); border: 1px solid var(--line); padding: 1px 6px; color: var(--text); }
 .post-links { font-family: var(--mono); font-size: 12.5px; margin: 0 0 22px; }
-.post-links a { color: var(--accent); }
+.post-links a { color: var(--accent); white-space: nowrap; }   /* a link wraps as a unit, never mid-name */
 .post-close { border-top: 1px solid var(--line); margin-top: 40px; padding-top: 24px; }
 /* ---- animated flow figures: a pairing lights up and one wire plugs through the hub ---- */
 .flow-demo { margin: 6px 0 20px; background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 20px 20px 16px; }
@@ -248,9 +248,9 @@
 
   <h2>Datasets</h2>
   <p><b>Convert a dataset once, and every agent can train on it.</b>
-  <code class="ls" tabindex="0">LiteSample</code> is the one schema shared across every env, agent, and
-  task type; each agent's adapter then turns the same rows into that model's own
-  scaffolding. No data of your own? It's all free on Hugging&nbsp;Face.</p>
+  <code class="ls" tabindex="0">LiteSample</code> is the one schema, shared
+  across every env, agent, and task type. No data of your own? It's all free
+  on Hugging&nbsp;Face.</p>
   <figure class="flow-demo" aria-label="Any dataset, converted once, trains any agent">
     <div class="pair-board" data-board="data">
       <div class="pair-col">
@@ -315,7 +315,7 @@
     <div class="pair-cmd" data-pack-line></div>
   </figure>
 
-  <p class="post-links"><a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">browse the corpora ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">preprocessing guide ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/docs/sft.md" target="_blank" rel="noopener">SFT guide ↗</a></p>
+  <p class="post-links"><a href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">browse the corpora ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">preprocessing guide ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">agent harnesses ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/docs/sft.md" target="_blank" rel="noopener">SFT guide ↗</a></p>
 
   <h2>Environments &amp; agents</h2>
   <p><b>Add an env, and every agent runs it; add an agent, and it runs every
@@ -345,7 +345,7 @@
     </div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
-  <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">env guide ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">agent building blocks ↗</a> &nbsp;·&nbsp; <a href="/#leaderboard">the leaderboard ↗</a></p>
+  <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">env guide ↗</a> &nbsp;·&nbsp; <a href="/#leaderboard">the leaderboard ↗</a></p>
 
   <p class="post-close"><b>Bring a dataset, an env, or an agent — each one
   compounds.</b> Or just tell us what's missing —
