@@ -274,13 +274,15 @@
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
   <p><b>Training formats are where the complexity hides — CUA-Lite provides
-  the adapters.</b> Each model wants trajectories its own way. For
+  the agent harnesses.</b> Each model wants trajectories its own way. For
   example, Qwen3.5 keeps the last four screenshots and collapses the older
-  history to a fixed line of text; and while a step's prompt only <em>extends</em> the
-  previous one, consecutive steps radix-pack into a single forward pass — the
-  fold is exactly where a new segment begins. All of that comes pre-shipped
-  for every built-in model, and a new agent assembles the same building
-  blocks.</p>
+  history to a fixed line of text; and while a step's prompt only
+  <em>extends</em> the previous one, consecutive steps radix-pack into a single
+  forward pass — the fold is exactly where a new segment begins. Each harness
+  does both jobs: the same one that runs the model live in the envs also turns
+  the unified rows into that model's training format. And it's modular — the
+  building blocks are pre-implemented, so a new agent's harness is composed,
+  not rewritten.</p>
 
   <figure class="flow-demo pack" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
     <div class="tape-board" data-pack>
