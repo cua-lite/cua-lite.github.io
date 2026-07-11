@@ -488,7 +488,7 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
     rl: {
       // only open-weight agents can be fine-tuned / reinforced — API models (gpt, claude) can't
       agents: AGENTS.filter((a) => !a.api),
-      envs: ["lite.osworld", "webgym", "cuaworld", "mobilegym"],
+      envs: ["lite.osworld", "webgym", "androidworld", "mobilegym", "screenspot_pro"],   // the grpo.md-documented set
       table: false,
     },
     // the quickstart REPL: a taste of the API, not the whole matrix. Its env slot
