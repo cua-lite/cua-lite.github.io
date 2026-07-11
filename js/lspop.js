@@ -22,7 +22,7 @@ $ python -m lite.data.hf.upload ScaleCUA <span class="t-str">--org cua-lite</spa
       title: "adapter",
       code:
 `<span class="t-dim"># the adapter — one per model family</span>
-<span class="t-kw">class</span> AgentAdapter:
+<span class="t-kw">class</span> BaseAgentAdapter:
     action_space: ActionSpace   <span class="t-dim"># its coordinate dialect</span>
     protocol: Protocol          <span class="t-dim"># its history windowing</span>
     <span class="t-kw">def</span> render_step(sample, k)  <span class="t-dim"># LiteSample → turn-k prompt</span>
