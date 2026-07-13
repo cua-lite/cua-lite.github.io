@@ -19,7 +19,28 @@ BANNED = [
     (r"dies with the model", "unearned metaphor — say it plainly"),
 ]
 
+# type scale: every font-size is a role (var(--fs-*)), never a raw number — the
+# only literal px allowed are the body root and "scenography" (the depicted demo
+# screens / animated figures, drawn at reduced device scale). See the type-scale
+# comment block in css/style.css. This freezes the refactor so no one re-introduces
+# a by-eye size.
+SCENERY = re.compile(r'\.(win|sh|bw|gg|gs|ph|taskbar|tb|pair|chip-tag|node-sub|'
+                     r'flow-lab|wire-stage|tape|tp|mess)\b')
+CSS_SOURCES = [ROOT / "css/style.css", ROOT / "blog/why-cua-lite/index.html",
+               ROOT / "blog/index.html"]
 fail = 0
+for src in CSS_SOURCES:
+    css = src.read_text()
+    rel = src.relative_to(ROOT)
+    for sel, decl in re.findall(r'([^{}]+)\{([^{}]*)\}', css, re.S):
+        m = re.search(r'font-size:\s*[0-9.]+px', decl)
+        if not m:
+            continue
+        last = sel.strip().split("\n")[-1].strip()
+        if last == "body" or SCENERY.search(sel):
+            continue
+        print(f"{rel}: {last[:40]!r} sets a raw {m.group(0)} — use a var(--fs-*) role"); fail = 1
+
 for page in PAGES:
     s = page.read_text()
     body = s[s.index("<main"):s.index("</main>")] if "<main" in s else s

@@ -27,27 +27,27 @@
 .postlist { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 10px; }
 .post-row { display: flex; align-items: center; gap: 20px; padding: 20px 16px; border-radius: 10px; transition: background .14s ease; }
 .post-row:hover { background: var(--panel-2); }
-.post-title { font-weight: 650; font-size: 16.5px; color: var(--text); }
+.post-title { font-weight: 700; font-size: var(--fs-2xl); color: var(--text); }
 .post-row:hover .post-title { color: var(--accent); }
 .post-arrow { margin-left: auto; color: var(--dim); }
 .post-row:hover .post-arrow { color: var(--accent); }
-.ghost-date { font-family: var(--mono); font-size: 12px; letter-spacing: 1px; color: var(--dim); white-space: nowrap; }
+.ghost-date { font-family: var(--mono); font-size: var(--fs-sm); letter-spacing: 1px; color: var(--dim); white-space: nowrap; }
 /* the core post wears the site's highlight idiom — tint + accent inset, like the benchmark table */
 .post-row.featured { background: rgba(189,90,56,.07); box-shadow: inset 2.5px 0 0 var(--accent); }
-.post-badge { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent);
+.post-badge { font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent);
   border: 1px solid var(--accent-dim); border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
 /* announced but unwritten — present, quiet, not clickable */
 .post-row.soon { opacity: .6; cursor: default; }
 .post-row.soon:hover { background: transparent; }
 .post-row.soon .post-title { color: var(--muted); font-weight: 550; }
 .post-row.soon:hover .post-title { color: var(--muted); }
-.post-soon-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-left: auto; white-space: nowrap; }
+.post-soon-tag { font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-left: auto; white-space: nowrap; }
 .post-row + .post-row { border-top: 1px solid var(--line); border-top-left-radius: 0; border-top-right-radius: 0; }
 @media (max-width: 640px) {
   .post-row { flex-wrap: wrap; row-gap: 8px; }
   .post-title { order: 4; flex-basis: 100%; }   /* narrow screens: meta line first, title on its own full-width line */
 }
-.blog-foot { max-width: 720px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.blog-foot { max-width: 720px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); }
 .blog-foot a { color: var(--dim); }
 .blog-foot a:hover { color: var(--text); }
 </style>
