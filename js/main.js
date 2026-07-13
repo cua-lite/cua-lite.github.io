@@ -22,6 +22,17 @@ let DATASET_GROUPS = {   // mirrors the public HF collections so offline == the 
 };
 const _dsSubs = [];
 const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // call now + on every live update
+
+/* The selected benchmark env is ONE state with three views: the eval builder's
+   --env-id, the highlighted coverage card, and the leaderboard. All three steer it,
+   in both directions; these file-scope hooks let the IIFEs reach each other. */
+let lbFollowEnv = null;      // leaderboard registers; builder + cards call it
+let builderSetEnv = null;    // eval builder registers; card clicks call it (no-op for envs the agent can't run)
+let builderPickPlat = null;  // eval builder registers; platform tabs call it (first runnable env of that platform)
+/* Same principle inside the Train section: SFT's "model" and RL's MODEL_ID are the one
+   choice ("which open model am I training") behind two tabs — keep them in lockstep. */
+let rlSetAgent = null;       // RL builder registers; the SFT model picker calls it
+let sftSetModel = null;      // SFT configurator registers; the RL agent picker calls it
 (async () => {
   try {
     const parse = async (slug) => {
@@ -455,7 +466,7 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
   // each env's platform (grounding benchmarks are cross-platform grounding tasks)
   const ENV_PLAT = {
     "osworld": "desktop", "lite.osworld": "desktop", "osworld_2": "desktop", "cua.bench": "desktop",
-    "cuagym": "desktop", "cuaworld": "desktop",
+    "cuaworld": "desktop",
     "screenspot_pro": "grounding", "osworld_g": "grounding",
     "webgym": "web", "webharbor.webvoyager": "web", "online_mind2web": "web",
     "browsergym.miniwob": "web", "browsergym.webarena": "web", "browsergym.visualwebarena": "web",
@@ -477,7 +488,7 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
     rl: {
       // only open-weight agents can be fine-tuned / reinforced — API models (gpt, claude) can't
       agents: AGENTS.filter((a) => !a.api),
-      envs: ["lite.osworld", "webgym", "cuagym", "cuaworld", "mobilegym"],
+      envs: ["lite.osworld", "webgym", "androidworld", "mobilegym", "screenspot_pro"],   // the grpo.md-documented set
       table: false,
     },
     // the quickstart REPL: a taste of the API, not the whole matrix. Its env slot
@@ -528,13 +539,14 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
     covTabs.forEach((t) => t.classList.toggle("on", t.dataset.plat === plat));
     covPanels.forEach((p) => p.classList.toggle("on", p.dataset.plat === plat));
   };
-  covTabs.forEach((t) => t.addEventListener("click", () => showPlat(t.dataset.plat)));
+  covTabs.forEach((t) => t.addEventListener("click", () => { showPlat(t.dataset.plat); if (builderPickPlat) builderPickPlat(t.dataset.plat); }));
   const capPlat = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "");
   const highlightBench = (env) => {
     const nm = ENV2ROW[env] || env;
     const plat = capPlat(ENV_PLAT[env]);
     if (plat) showPlat(plat);   // jump the coverage to the env's platform tab
     benchRows.forEach((r) => { const n = r.querySelector(".r-name"); r.classList.toggle("hl", !!n && n.textContent.trim() === nm); });
+    if (lbFollowEnv) lbFollowEnv(env);   // the leaderboard shows the same env
   };
 
   document.querySelectorAll(".cmdbuild").forEach((cb) => {
@@ -606,6 +618,7 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
       if (!allowedEnvs().includes(env)) { env = allowedEnvs()[0]; resetTask(); swap(envSlot); if (taskSlot) swap(taskSlot); envChanged = true; }
       swap(agentSlot); agentSlot._render(); envSlot._render(); if (taskSlot) taskSlot._render(); sync();
       flashDrv(envChanged ? ["family", "agent", "env"] : ["family", "agent"]);   // agent drives family + agent (+ env only if it had to fall back)
+      if (cb.dataset.cmd === "rl" && sftSetModel) sftSetModel(a.model);   // the SFT panel trains the same model
     });
     makeSlot(envSlot, allowedEnvs, (e) => e, () => env, (e) => {
       // switching env resets the task to that env's first representative one
@@ -616,6 +629,31 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
     if (taskSlot) makeSlot(taskSlot, () => [...cfg.tasks[env], "…"], (t) => t, () => task, (t) => {
       if (t === "…") return; task = t; swap(taskSlot); taskSlot._render(); sync();
     });
+    // the eval builder is steerable from the coverage table too (cards + platform tabs),
+    // so command ⇄ cards ⇄ leaderboard stay one state in both directions
+    if (cfg.table) {
+      builderSetEnv = (e) => {
+        if (e === env || !allowedEnvs().includes(e)) return;   // grayed-out cards don't build impossible commands
+        env = e; resetTask(); swap(envSlot); envSlot._render(); sync(); flashDrv(["env"]);
+      };
+      builderPickPlat = (plat) => {
+        if (capPlat(ENV_PLAT[env]) === plat) return;
+        const first = allowedEnvs().find((x) => capPlat(ENV_PLAT[x]) === plat);
+        if (first) builderSetEnv(first);
+      };
+    }
+    if (cb.dataset.cmd === "rl") {
+      // steered by the SFT panel's model picker (one training choice behind two tabs)
+      rlSetAgent = (modelId) => {
+        const a = cfg.agents.find((x) => x.model === modelId);
+        if (!a || a === agent) return;
+        agent = a;
+        let envChanged = false;
+        if (!allowedEnvs().includes(env)) { env = allowedEnvs()[0]; resetTask(); swap(envSlot); envChanged = true; }
+        swap(agentSlot); agentSlot._render(); envSlot._render(); sync();
+        flashDrv(envChanged ? ["family", "agent", "env"] : ["family", "agent"]);
+      };
+    }
     sync();
     document.addEventListener("click", (e) => { if (!cb.contains(e.target)) closeAll(); });
   });
@@ -685,7 +723,13 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
       build(dsSlot, g, () => dataset, (v) => { dataset = v; swap(dsSlot); dsSlot._render(); sync(); flashDrv(["dataset", "slug"]); });
       sync();
     });
-    build(mdSlot, MODELS, () => model.model, (v) => { model = v; swap(mdSlot); mdSlot._render(); sync(); flashDrv(["model", "family"]); });
+    build(mdSlot, MODELS, () => model.model, (v) => { model = v; swap(mdSlot); mdSlot._render(); sync(); flashDrv(["model", "family"]); if (rlSetAgent) rlSetAgent(v.model); });
+    // steered by the RL panel's MODEL_ID picker (one training choice behind two tabs)
+    sftSetModel = (modelId) => {
+      const m = MODELS.find((x) => x.model === modelId);
+      if (!m || m === model) return;
+      model = m; swap(mdSlot); mdSlot._render(); sync(); flashDrv(["model", "family"]);
+    };
     sync();
     document.addEventListener("click", (e) => { if (!panel.contains(e.target)) closeAll(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAll(); });
@@ -839,7 +883,7 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
   let manifest = null;   // env-id -> { config -> "<commit-dir>/run_<n>[_<config>].json" }
   let manifestP = null;  // its in-flight fetch (fetched once)
   const runs = {};       // "env/config" -> fetched run payload
-  let cur = "osworld_g", cfg = "default";
+  let cur = "osworld", cfg = "default";   // env matches the eval builder's default, so the two never disagree on first paint
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   // each model name links to the YAML it was rolled out with, in the main repo:
@@ -864,10 +908,10 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
   }
 
   function render(data, rel) {
-    // partial runs (a few tasks still unscored) rank by score like everyone else;
-    // their tooltip carries the valid/total count and a "(partial run)" note
     const rows = (data.results || [])
       .filter((r) => r.status !== "empty" && r.mean_episode_return != null)
+      // one ranking, by score — a 115/116 partial is comparable to a complete run, so it
+      // ranks in place (dimmed + tooltip-flagged) rather than being bucketed to the bottom
       .sort((a, b) => b.mean_episode_return - a.mean_episode_return);
     if (!rows.length) return renderGhost("empty");
     // scale to a round ceiling with headroom, so the leader never hits the wall
@@ -883,7 +927,7 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
       const model = path
         ? `<a href="${esc(CFG_REPO + path)}" target="_blank" rel="noopener" title="${esc("agent config — scripts/configs/" + path)}">${label}</a>`
         : label;
-      return `<div class="lb-row${i === 0 ? " top" : ""}" role="listitem" style="--w:${(pct / axis).toFixed(4)};--i:${i}" title="${esc(tip)}">` +
+      return `<div class="lb-row${i === 0 ? " top" : ""}${part ? " part" : ""}" role="listitem" style="--w:${(pct / axis).toFixed(4)};--i:${i}" title="${esc(tip)}">` +
         `<span class="lb-rank">${i + 1}</span>` +
         `<span class="lb-model">${model}</span>` +
         `<span class="lb-track"><span class="lb-fill"></span></span>` +
@@ -966,45 +1010,11 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
   cards.forEach((c) => c.addEventListener("click", (e) => {
     e.preventDefault();
     if (c.dataset.env !== cur) show(c.dataset.env);
+    if (builderSetEnv) builderSetEnv(c.dataset.env);   // …and the eval command follows the card
   }));
+  // …and so does the eval builder's --env-id (registered at file scope for the builder's IIFE)
+  lbFollowEnv = (envId) => { if (envId !== cur) show(envId); };
   show(cur);
 })();
 
-/* ---------- LiteSample hover popover — the schema + a tiny trajectory, to the right ---------- */
-(function () {
-  const chips = document.querySelectorAll("code.ls");
-  if (!chips.length) return;
-  const CODE =
-`<span class="t-dim"># LiteSample — one schema for any data</span>
-<span class="t-kw">@dataclass</span>
-<span class="t-kw">class</span> LiteSample:
-    metadata: LiteMetadata     <span class="t-dim"># platform · task_type</span>
-    messages: list[Message]    <span class="t-dim"># user ⇄ assistant turns</span>
-    images:   list[Image]      <span class="t-dim"># screenshots</span>
-
-<span class="t-dim"># a grounding step — one action ↓</span>
-LiteSample(
-  LiteMetadata(<span class="t-str">"desktop"</span>, <span class="t-str">"grounding.action"</span>),
-  messages=[
-    user(<span class="t-str">"Click Subscribe"</span>, img=0),
-    assistant(click(<span class="t-str">[455, 215]</span>)),
-  ])
-
-<span class="t-dim"># a rollout — a full trajectory, 2 steps ↓</span>
-LiteSample(
-  LiteMetadata(<span class="t-str">"web"</span>, <span class="t-str">"rollout"</span>),
-  messages=[
-    user(<span class="t-str">"Find cua-lite on GitHub"</span>, img=0),
-    assistant(type(<span class="t-str">"cua-lite"</span>)),
-    user(img=1),                  <span class="t-dim"># result screenshot</span>
-    assistant(click(<span class="t-str">[320, 180]</span>), terminate()),
-  ])`;
-  chips.forEach((chip) => {
-    const pop = document.createElement("span");
-    pop.className = "ls-pop"; pop.setAttribute("aria-hidden", "true");
-    pop.innerHTML =
-      '<span class="ls-bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="ls-t">LiteSample</span></span>' +
-      '<pre class="ls-code">' + CODE + "</pre>";
-    chip.appendChild(pop);
-  });
-})();
+/* LiteSample hover popover lives in js/lspop.js — shared with the blog (one implementation). */

@@ -46,10 +46,10 @@ h1{font-family:'Fraunces';font-style:italic;color:var(--accent);
 </style></head><body>
 <div class="brand"><span class="plane"></span><span class="name">CUA-Lite</span></div>
 <h1>Any agent,<br>any computer.</h1>
-<p class="lead">One lightweight framework to standardize <span class="lc">computer-use</span> <b>agents</b>, <b>data</b>, <b>evaluation</b>, <b>SFT</b>, and <b>RL</b> across desktop, web, and mobile.</p>
+<p class="lead">One open platform of unified data for <span class="lc">computer-use</span> agents — and one framework to <b>eval</b>, <b>SFT</b>, and <b>RL</b> any agent across desktop, web, and mobile.</p>
 <div class="spacer"></div>
 <div class="foot">
-  <div class="stats"><b>10+</b> agents <i>·</i> <b>3</b> platforms <i>·</i> <b>15+</b> benchmarks <i>·</i> <b>10+</b> datasets</div>
+  <div class="stats"><b>10+</b> datasets <i>·</i> <b>10+</b> agents <i>·</i> <b>15+</b> benchmarks <i>·</i> <b>3</b> platforms</div>
   <div class="url">cua-lite.github.io</div>
 </div>
 </body></html>"""
