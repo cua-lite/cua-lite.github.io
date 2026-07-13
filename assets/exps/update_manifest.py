@@ -1,11 +1,14 @@
-"""Regenerate eval/manifest.json — the leaderboard's pointer to each env's newest run.
+"""Regenerate eval/manifest.json — the leaderboard's pointer to each env's newest runs.
 
-Drop a run snapshot into assets/exps/eval/<env>/<commit-dir>/run_<n>.json
+Drop a run snapshot into assets/exps/eval/<env>/<commit-dir>/run_<n>[_<config>].json
 (copied from the cua-lite repo's devs/exps/eval/<env>/logs/...), then:
 
     python3 assets/exps/update_manifest.py
 
-Newest run per env wins: by the commit-dir's date prefix when it has one
+An env can ship several config settings side by side (run_0_default.json,
+run_0_som.json, ...) — each becomes a manifest entry, and the leaderboard shows
+them as secondary tabs. A bare run_<n>.json is the "default" config. Newest run
+per config wins: by the commit-dir's date prefix when it has one
 (2026-07-06T20-34_<sha>), otherwise by file mtime.
 """
 
@@ -38,17 +41,29 @@ def is_run_json(path: Path) -> bool:
     return True
 
 
+RUN_RE = re.compile(r"^run_\d+(?:_(?P<cfg>.+))?\.json$")
+
+
 def main() -> None:
-    manifest: dict[str, str] = {}
+    manifest: dict[str, dict[str, str]] = {}
     for env_dir in sorted(p for p in EVAL.iterdir() if p.is_dir()):
-        runs = sorted((p for p in env_dir.glob("*/run_*.json") if is_run_json(p)), key=sort_key)
-        if runs:
-            manifest[env_dir.name] = runs[-1].relative_to(env_dir).as_posix()
+        by_cfg: dict[str, Path] = {}   # config -> newest run file
+        for path in env_dir.glob("*/run_*.json"):
+            m = RUN_RE.match(path.name)
+            if not m or not is_run_json(path):
+                continue
+            cfg = m.group("cfg") or "default"
+            if cfg not in by_cfg or sort_key(path) > sort_key(by_cfg[cfg]):
+                by_cfg[cfg] = path
+        if by_cfg:
+            ordered = sorted(by_cfg, key=lambda c: (c != "default", c))   # default first, then a-z
+            manifest[env_dir.name] = {c: by_cfg[c].relative_to(env_dir).as_posix() for c in ordered}
     out = EVAL / "manifest.json"
-    out.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    # no sort_keys: envs are inserted sorted, but config order (default first) must survive
+    out.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(f"wrote {out.relative_to(Path.cwd()) if out.is_relative_to(Path.cwd()) else out} ({len(manifest)} envs)")
-    for env, rel in manifest.items():
-        print(f"  {env}: {rel}")
+    for env, cfgs in manifest.items():
+        print(f"  {env}: " + " · ".join(f"{c} = {rel}" for c, rel in cfgs.items()))
 
 
 if __name__ == "__main__":

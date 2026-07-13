@@ -1,10 +1,33 @@
 {
-  "androidlab": "d6f368e4ff/run_0.json",
-  "androidworld": "03fc490a07/run_0.json",
-  "browsergym.miniwob": "f57d3cbb92/run_0.json",
-  "lite.osworld": "8ad4aaa03c/run_0.json",
-  "mobilegym": "2a40f5258e/run_0.json",
-  "osworld_g": "d30ef912ca/run_0.json",
-  "screenspot_pro": "5b887a39c1/run_0.json",
-  "webharbor.webvoyager": "c1001a613c/run_0_default.json"
+  "androidlab": {
+    "default": "d6f368e4ff/run_0.json"
+  },
+  "androidworld": {
+    "default": "03fc490a07/run_0.json"
+  },
+  "browsergym.miniwob": {
+    "default": "f57d3cbb92/run_0.json"
+  },
+  "lite.osworld": {
+    "default": "4a6cb49b0d/run_0.json"
+  },
+  "mobilegym": {
+    "default": "2a40f5258e/run_0.json"
+  },
+  "mobileworld": {
+    "default": "651af22040/run_0.json"
+  },
+  "osworld": {
+    "default": "651af22040/run_0.json"
+  },
+  "osworld_g": {
+    "default": "d30ef912ca/run_0.json"
+  },
+  "screenspot_pro": {
+    "default": "5b887a39c1/run_0.json"
+  },
+  "webharbor.webvoyager": {
+    "default": "c1001a613c/run_0_default.json",
+    "som": "c1001a613c/run_0_som.json"
+  }
 }

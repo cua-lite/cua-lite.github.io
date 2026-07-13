@@ -871,6 +871,7 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
   if (!body) return;
   const foot = document.getElementById("lb-foot");
   const envEl = document.getElementById("lb-env");
+  const cfgsEl = document.getElementById("lb-cfgs");
   const openEl = document.getElementById("lb-open");
 
   const ROOT = "assets/exps/eval/";
@@ -879,12 +880,34 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
   const ENVS = {};
   cards.forEach((c) => { ENVS[c.dataset.env] = { name: c.querySelector(".r-name").textContent.trim(), readme: c.href }; });
 
-  let manifest = null;   // env-id -> "<commit-dir>/run_<n>.json" (null until loaded)
-  const runs = {};       // env-id -> fetched run payload
-  let cur = "osworld";   // matches the eval builder's default env, so the two never disagree on first paint
+  let manifest = null;   // env-id -> { config -> "<commit-dir>/run_<n>[_<config>].json" }
+  let manifestP = null;  // its in-flight fetch (fetched once)
+  const runs = {};       // "env/config" -> fetched run payload
+  let cur = "osworld", cfg = "default";   // env matches the eval builder's default, so the two never disagree on first paint
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  function render(data) {
+  // each model name links to the YAML it was rolled out with, in the main repo:
+  // scripts/configs/<family>/default/<env>.yaml — or, for envs whose configs are a
+  // directory of variants, .../<env>/<config>.yaml (the board's active config)
+  const CFG_REPO = "https://github.com/cua-lite/cua-lite/blob/main/scripts/configs/";
+  const CFG_DIR_ENVS = new Set(["browsergym.miniwob", "browsergym.visualwebarena", "browsergym.webarena",
+                                "cua.bench", "webgym", "webharbor.webvoyager"]);
+  // model-id -> config family, mirroring lite/agents/factory.py (first match wins,
+  // so the more specific patterns sit above the generic ones)
+  const FAMILY_RULES = [
+    [/^gpt/i, "gpt"], [/^claude/i, "claude"],
+    [/Qwen3\.5/, "qwen3_5"], [/Qwen3-VL/, "qwen3_vl"], [/Qwen2\.5-VL/, "qwen2_5_vl"],
+    [/UI-TARS-1\.5/, "ui_tars_15_v1"], [/UI-TARS-2/, "ui_tars_15_v2"], [/UI-TARS/, "ui_tars"],
+    [/Fara/i, "fara"], [/OpenCUA/i, "opencua"], [/ScaleCUA/i, "scalecua"], [/EvoCUA/i, "evocua"],
+    [/MAI-UI/, "mai_ui"], [/UI-Voyager/, "ui_voyager"], [/GELab/, "step_gui"],
+  ];
+  function cfgPath(model, env, cfgId) {
+    const rule = FAMILY_RULES.find(([re]) => re.test(model));
+    if (!rule) return null;   // unknown family — leave the name unlinked
+    return rule[1] + "/default/" + (CFG_DIR_ENVS.has(env) ? env + "/" + cfgId + ".yaml" : env + ".yaml");
+  }
+
+  function render(data, rel) {
     const rows = (data.results || [])
       .filter((r) => r.status !== "empty" && r.mean_episode_return != null)
       // one ranking, by score — a 115/116 partial is comparable to a complete run, so it
@@ -899,18 +922,23 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
       const org = cut > 0 ? r.model.slice(0, cut + 1) : "", name = cut > 0 ? r.model.slice(cut + 1) : r.model;
       const part = r.status === "partial";
       const tip = `${r.model} — ${r.num_valid}/${r.num_tasks} tasks · mean episode return ${(+r.mean_episode_return).toFixed(4)}${part ? " (partial run)" : ""}`;
+      const path = cfgPath(r.model, data.env, cfg);
+      const label = `${org ? `<span class="lb-org">${esc(org)}</span>` : ""}${esc(name)}`;
+      const model = path
+        ? `<a href="${esc(CFG_REPO + path)}" target="_blank" rel="noopener" title="${esc("agent config — scripts/configs/" + path)}">${label}</a>`
+        : label;
       return `<div class="lb-row${i === 0 ? " top" : ""}${part ? " part" : ""}" role="listitem" style="--w:${(pct / axis).toFixed(4)};--i:${i}" title="${esc(tip)}">` +
         `<span class="lb-rank">${i + 1}</span>` +
-        `<span class="lb-model">${org ? `<span class="lb-org">${esc(org)}</span>` : ""}${esc(name)}</span>` +
+        `<span class="lb-model">${model}</span>` +
         `<span class="lb-track"><span class="lb-fill"></span></span>` +
         `<span class="lb-val">${pct.toFixed(1)}<span class="lb-unit">%</span></span></div>`;
     }).join("");
-    const jsonUrl = ROOT + data.env + "/" + manifest[data.env];
+    const jsonUrl = ROOT + data.env + "/" + rel;
     const dir = String(data.commit_dir || "");
     const date = /^\d{4}-\d{2}-\d{2}/.test(dir) ? dir.slice(0, 10) : "";
     const sha = (data.commit && data.commit.short_sha) || dir.split("_").pop() || "";
     foot.innerHTML = `<span>${rows.length} agents</span><span>${Math.max(...rows.map((r) => r.num_tasks))} tasks</span>` +
-      `<span>success rate</span><span>${date ? esc(date) + " · " : ""}<a href="${esc(jsonUrl)}" target="_blank" rel="noopener">${esc((data.run_id || "run_0") + ".json @ " + sha.slice(0, 8))}</a></span>`;
+      `<span>success rate</span><span>${date ? esc(date) + " · " : ""}<a href="${esc(jsonUrl)}" target="_blank" rel="noopener">${esc(rel.split("/").pop() + " @ " + sha.slice(0, 8))}</a></span>`;
   }
   // same card, no numbers yet — a quiet ghost of the board ("loading" shimmers, "empty" says why)
   function renderGhost(kind) {
@@ -926,33 +954,56 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
       ? `<span>0 runs</span><span>eval pending</span>`
       : `<span>loading committed run…</span>`;
   }
-  function show(envId) {
+  function getManifest() {
+    return manifestP || (manifestP = fetch(ROOT + "manifest.json")
+      .then((r) => (r.ok ? r.json() : {})).catch(() => ({}))
+      .then((m) => {
+        manifest = {};
+        // tolerate the older flat form ("<env>": "<path>") as a lone default config
+        for (const k in m) manifest[k] = typeof m[k] === "string" ? { default: m[k] } : m[k];
+        return manifest;
+      }));
+  }
+  // secondary tabs — the env's config settings (default · som · ...); hidden when there's only one
+  function renderCfgTabs() {
+    const list = manifest && manifest[cur] ? Object.keys(manifest[cur]) : [];
+    cfgsEl.innerHTML = "";
+    if (list.length < 2) return;
+    list.forEach((c) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "lb-cfg" + (c === cfg ? " on" : ""); b.textContent = c;
+      b.addEventListener("click", () => { if (c !== cfg) show(cur, c); });
+      cfgsEl.appendChild(b);
+    });
+  }
+  function show(envId, cfgId) {
     if (!ENVS[envId]) return;
     cur = envId;
     envEl.textContent = ENVS[envId].name;
     openEl.href = ENVS[envId].readme;
-    if (runs[envId]) return render(runs[envId]);
-    if (manifest && !manifest[envId]) return renderGhost("empty");
-    renderGhost("loading");   // manifest or run still in flight — resolved by load() below
-    load(envId);
-  }
-  async function load(envId) {
-    try {
-      if (!manifest) {
-        const m = await fetch(ROOT + "manifest.json");
-        manifest = m.ok ? await m.json() : {};
-      }
-      if (!manifest[envId]) { if (cur === envId) renderGhost("empty"); return; }
-      if (runs[envId]) { if (cur === envId) render(runs[envId]); return; }
-      const r = await fetch(ROOT + envId + "/" + manifest[envId]);
-      if (!r.ok) throw new Error(r.status);
-      const data = await r.json();
-      if (data && Array.isArray(data.results)) { runs[envId] = data; if (cur === envId) render(data); }
-      else if (cur === envId) renderGhost("empty");
-    } catch (e) {
-      if (!manifest) manifest = {};
-      if (cur === envId) renderGhost("empty");
+    if (!manifest) {   // first paint: the manifest is still in flight — re-enter once it lands
+      cfgsEl.innerHTML = "";
+      renderGhost("loading");
+      getManifest().then(() => { if (cur === envId) show(envId, cfgId); });
+      return;
     }
+    const cfgs = manifest[envId] || {};
+    const list = Object.keys(cfgs);
+    cfg = list.includes(cfgId) ? cfgId : list.includes("default") ? "default" : list[0];
+    renderCfgTabs();
+    if (!list.length) return renderGhost("empty");
+    const key = envId + "/" + cfg, rel = cfgs[cfg];
+    const fresh = () => cur === envId && envId + "/" + cfg === key;   // ignore stale fetches after another switch
+    if (runs[key]) return render(runs[key], rel);
+    renderGhost("loading");
+    fetch(ROOT + envId + "/" + rel)
+      .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then((data) => {
+        if (!data || !Array.isArray(data.results)) throw new Error("bad payload");
+        runs[key] = data;
+        if (fresh()) render(data, rel);
+      })
+      .catch(() => { if (fresh()) renderGhost("empty"); });
   }
 
   // the coverage cards drive the board (their README stays reachable via the header link)

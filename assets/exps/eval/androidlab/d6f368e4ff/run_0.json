@@ -8,9 +8,9 @@
     "subject": "Correct WebHarbor WebVoyager run_0"
   },
   "artifact_root": ".exps/eval/androidlab/2026-07-09T05-10_d6f368e4ff/run_0",
-  "result_count": 14,
+  "result_count": 15,
   "status_counts": {
-    "complete": 14,
+    "complete": 15,
     "partial": 0,
     "empty": 0
   },
@@ -170,6 +170,19 @@
       "mean_episode_return": 0.32608695652173914,
       "summary_path": ".exps/eval/androidlab/2026-07-09T05-10_d6f368e4ff/run_0/Qwen_Qwen3.5-9B/summary.json",
       "artifact_path": ".exps/eval/androidlab/2026-07-09T05-10_d6f368e4ff/run_0/Qwen_Qwen3.5-9B"
+    },
+    {
+      "model": "Tongyi-MAI/MAI-UI-8B",
+      "slug": "Tongyi-MAI_MAI-UI-8B",
+      "base_slug": "Tongyi-MAI_MAI-UI-8B",
+      "config_id": "default",
+      "status": "complete",
+      "num_valid": 138,
+      "num_tasks": 138,
+      "num_samples": 138,
+      "mean_episode_return": 0.32608695652173914,
+      "summary_path": ".exps/eval/androidlab/2026-07-09T05-10_d6f368e4ff/run_0/Tongyi-MAI_MAI-UI-8B/summary.json",
+      "artifact_path": ".exps/eval/androidlab/2026-07-09T05-10_d6f368e4ff/run_0/Tongyi-MAI_MAI-UI-8B"
     },
     {
       "model": "MarsXL/UI-Voyager",
