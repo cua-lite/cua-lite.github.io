@@ -788,6 +788,10 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 .lb-rank { grid-area: rank; font-family: var(--mono); font-size: 11px; color: var(--dim); text-align: right; font-variant-numeric: tabular-nums; }
 .lb-model { grid-area: model; font-family: var(--mono); font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lb-org { color: var(--dim); }
+/* the name links to the agent's YAML config in the main repo */
+.lb-model a { color: inherit; transition: color .14s ease; }
+.lb-model a:hover { color: var(--accent); text-decoration: underline dashed 1px; text-underline-offset: 3px; }
+.lb-model a:hover .lb-org { color: var(--accent-dim); }
 /* the mark: a thin baseline-anchored bar with a 4px rounded data-end, on a faint full-scale track */
 .lb-track { grid-area: track; position: relative; height: 10px; border-radius: 2px 4px 4px 2px; background: rgba(60,48,36,.06); }
 .lb-fill { position: absolute; top: 0; bottom: 0; left: 0; width: calc(var(--w) * 100%);
@@ -798,8 +802,6 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
 .lb-row.top { background: rgba(189,90,56,.07); }
 .lb-row.top .lb-rank { color: var(--accent); font-weight: 600; }
 .lb-row.top .lb-val { font-weight: 600; }
-/* a partial run (not every task scored yet) recedes; its tooltip says why */
-.lb-row.part { opacity: .55; }
 /* no committed run yet — a quiet ghost of the board, with the reason on top */
 .lb-none { position: relative; }
 .lb-row.ghost .lb-fill { background: rgba(60,48,36,.10); }
@@ -816,7 +818,10 @@ code.ls:hover .ls-pop, code.ls:focus .ls-pop, code.ls:focus-within .ls-pop { opa
   background-size: 200% 100%; animation: hfShimmer 1.5s ease-in-out infinite; }
 /* entrance: rows settle in staggered, then each bar grows from the baseline */
 .js-reveal .lb .lb-row { opacity: 0; }
-.js-reveal .lb.in .lb-row { animation: covIn .4s var(--ease) forwards; animation-delay: calc(.035s * var(--i)); }
+/* own keyframes (not covIn): the forwards fill must land on the row's OWN resting
+   opacity — a partial run settles at .55, not covIn's hardcoded 1 */
+.js-reveal .lb.in .lb-row { animation: lbIn .4s var(--ease) forwards; animation-delay: calc(.035s * var(--i)); }
+@keyframes lbIn { to { opacity: var(--o, 1); transform: none; } }
 .js-reveal .lb .lb-fill { transform: scaleX(0); }
 .js-reveal .lb.in .lb-fill { animation: lbGrow .6s var(--ease) forwards; animation-delay: calc(.12s + .04s * var(--i)); }
 @keyframes lbGrow { to { transform: scaleX(1); } }
