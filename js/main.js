@@ -842,10 +842,33 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
   let cur = "osworld_g", cfg = "default";
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
+  // each model name links to the YAML it was rolled out with, in the main repo:
+  // scripts/configs/<family>/default/<env>.yaml — or, for envs whose configs are a
+  // directory of variants, .../<env>/<config>.yaml (the board's active config)
+  const CFG_REPO = "https://github.com/cua-lite/cua-lite/blob/main/scripts/configs/";
+  const CFG_DIR_ENVS = new Set(["browsergym.miniwob", "browsergym.visualwebarena", "browsergym.webarena",
+                                "cua.bench", "webgym", "webharbor.webvoyager"]);
+  // model-id -> config family, mirroring lite/agents/factory.py (first match wins,
+  // so the more specific patterns sit above the generic ones)
+  const FAMILY_RULES = [
+    [/^gpt/i, "gpt"], [/^claude/i, "claude"],
+    [/Qwen3\.5/, "qwen3_5"], [/Qwen3-VL/, "qwen3_vl"], [/Qwen2\.5-VL/, "qwen2_5_vl"],
+    [/UI-TARS-1\.5/, "ui_tars_15_v1"], [/UI-TARS-2/, "ui_tars_15_v2"], [/UI-TARS/, "ui_tars"],
+    [/Fara/i, "fara"], [/OpenCUA/i, "opencua"], [/ScaleCUA/i, "scalecua"], [/EvoCUA/i, "evocua"],
+    [/MAI-UI/, "mai_ui"], [/UI-Voyager/, "ui_voyager"], [/GELab/, "step_gui"],
+  ];
+  function cfgPath(model, env, cfgId) {
+    const rule = FAMILY_RULES.find(([re]) => re.test(model));
+    if (!rule) return null;   // unknown family — leave the name unlinked
+    return rule[1] + "/default/" + (CFG_DIR_ENVS.has(env) ? env + "/" + cfgId + ".yaml" : env + ".yaml");
+  }
+
   function render(data, rel) {
+    // partial runs (a few tasks still unscored) rank by score like everyone else;
+    // their tooltip carries the valid/total count and a "(partial run)" note
     const rows = (data.results || [])
       .filter((r) => r.status !== "empty" && r.mean_episode_return != null)
-      .sort((a, b) => (a.status === b.status ? b.mean_episode_return - a.mean_episode_return : a.status === "complete" ? -1 : 1));
+      .sort((a, b) => b.mean_episode_return - a.mean_episode_return);
     if (!rows.length) return renderGhost("empty");
     // scale to a round ceiling with headroom, so the leader never hits the wall
     const axis = Math.min(100, Math.ceil((Math.max(...rows.map((r) => r.mean_episode_return * 100)) + 4) / 10) * 10);
@@ -855,9 +878,14 @@ const onDatasetGroups = (fn) => { _dsSubs.push(fn); fn(DATASET_GROUPS); };   // 
       const org = cut > 0 ? r.model.slice(0, cut + 1) : "", name = cut > 0 ? r.model.slice(cut + 1) : r.model;
       const part = r.status === "partial";
       const tip = `${r.model} — ${r.num_valid}/${r.num_tasks} tasks · mean episode return ${(+r.mean_episode_return).toFixed(4)}${part ? " (partial run)" : ""}`;
-      return `<div class="lb-row${i === 0 ? " top" : ""}${part ? " part" : ""}" role="listitem" style="--w:${(pct / axis).toFixed(4)};--i:${i}" title="${esc(tip)}">` +
+      const path = cfgPath(r.model, data.env, cfg);
+      const label = `${org ? `<span class="lb-org">${esc(org)}</span>` : ""}${esc(name)}`;
+      const model = path
+        ? `<a href="${esc(CFG_REPO + path)}" target="_blank" rel="noopener" title="${esc("agent config — scripts/configs/" + path)}">${label}</a>`
+        : label;
+      return `<div class="lb-row${i === 0 ? " top" : ""}" role="listitem" style="--w:${(pct / axis).toFixed(4)};--i:${i}" title="${esc(tip)}">` +
         `<span class="lb-rank">${i + 1}</span>` +
-        `<span class="lb-model">${org ? `<span class="lb-org">${esc(org)}</span>` : ""}${esc(name)}</span>` +
+        `<span class="lb-model">${model}</span>` +
         `<span class="lb-track"><span class="lb-fill"></span></span>` +
         `<span class="lb-val">${pct.toFixed(1)}<span class="lb-unit">%</span></span></div>`;
     }).join("");
