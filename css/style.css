@@ -66,6 +66,20 @@
   --fs-xl:  16.5px;
   --fs-2xl: 17.5px;
 
+  /* ---------- display sizes — the serif heading ladder ----------
+     Fluid clamp() steps, shared by the blog AND the weekly-update report so the
+     two never drift. Pick a ROLE, never a number (same rule as --fs above).
+     (The landing h1/h2 keep their own larger bespoke clamps — see .type roles.)
+       --t-title    Title       serif 350  the page/post title — blog "Why CUA-Lite …",
+                                            report "Weekly update"                     (L1)
+       --t-section  Section     serif 370  a section — blog "Why CUA-Lite" (h2),
+                                            report "1 CUA-Lite"                          (L2)
+       --t-sub      Subsection  serif 420  a subsection — report "1.1"                  (L3)
+     Below L3, sub-parts reuse the Eyebrow role (--fs-xs, mono) — no new size. */
+  --t-title:   clamp(34px, 4.4vw, 52px);
+  --t-section: clamp(22px, 2.6vw, 28px);
+  --t-sub:     clamp(19px, 2vw,   23px);
+
   /* light card material — near-ivory panel, soft warm edge (tables, popovers, menus) */
   --panel-fill: #fefaf0;
   --panel-edge: #e7ddc9;
@@ -118,6 +132,19 @@ a:focus-visible, button:focus-visible, .plat:focus-visible { outline: 2px solid 
 h1 { font-family: var(--serif); font-weight: 350; font-variation-settings: 'opsz' 144, 'wght' 350, 'SOFT' 0, 'WONK' 0; font-size: clamp(44px, 5.4vw, 76px); line-height: 1.0; letter-spacing: -0.025em; margin: 0 0 26px; text-wrap: balance; }
 h2 { font-family: var(--serif); font-weight: 370; font-variation-settings: 'opsz' 144, 'wght' 370, 'SOFT' 0, 'WONK' 0; font-size: clamp(34px, 4.6vw, 60px); line-height: 1.04; letter-spacing: -0.02em; margin: 0 0 26px; }
 h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 0, 'WONK' 0; }
+
+/* ---------- blog / report heading ladder ----------
+   The editorial (non-landing) heading roles. Every post and the weekly report
+   share these, so a title reads the same everywhere. Sizes come from the display
+   tokens above; family/weight inherit from the base serif h1/h2/h3.
+     .post-wrap h1  Title       (L1) — the one page/post title
+     .post-wrap h2  Section     (L2) — a numbered/named section
+     .post-wrap h3  Subsection  (L3) — a sub-part inside a section */
+.post-wrap h1 { font-size: var(--t-title);   margin: 0 0 28px; }
+.post-wrap h2 { font-size: var(--t-section); margin: 40px 0 14px; }
+.post-wrap h3 { font-family: var(--serif); font-weight: 420;
+  font-variation-settings: 'opsz' 144, 'wght' 420, 'SOFT' 0, 'WONK' 0;
+  font-size: var(--t-sub); line-height: 1.14; letter-spacing: -0.015em; margin: 30px 0 10px; }
 
 @keyframes blink { 50% { opacity: 0; } }
 
