@@ -299,11 +299,15 @@
         <div class="lb-bar">
           <span class="lb-title">Leaderboard</span>
           <span class="lb-tabs" id="lb-tabs"><span class="lb-tab on" id="lb-env">OSWorld</span><span class="lb-cfgs" id="lb-cfgs"></span></span>
+          <button class="lb-info" id="lb-info" type="button" aria-label="Benchmark composition"><svg class="lb-info-i" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.3"></circle><circle cx="8" cy="4.7" r="1" fill="currentColor"></circle><rect x="7.2" y="6.9" width="1.6" height="5" rx=".8" fill="currentColor"></rect></svg><span class="lb-info-t">composition</span></button>
           <a class="lb-open" id="lb-open" href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/osworld/README.md" target="_blank" rel="noopener">README&nbsp;↗</a>
         </div>
         <div class="lb-body" id="lb-body" role="list"></div>
         <div class="lb-foot" id="lb-foot"></div>
       </div>
+      <!-- hover panels, anchored to .lb (outside the card's overflow:hidden clip) -->
+      <div class="lb-pop lb-comp" id="lb-comp" role="tooltip" aria-hidden="true"></div>
+      <div class="lb-pop lb-rowpop" id="lb-rowpop" role="tooltip" aria-hidden="true"></div>
     </div>
   </div>
 </section>

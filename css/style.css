@@ -856,7 +856,7 @@ code.ad:hover .ls-pop, code.ad:focus .ls-pop, code.ad:focus-within .ls-pop { opa
    A quiet ranked bar chart in the site's own materials: one terracotta series
    (magnitude is the bar's length, not its color), values as direct labels in
    ink, no legend (single measure), rows staggered in like the coverage cards. */
-.lb { max-width: 660px; margin: 58px auto 0; }
+.lb { max-width: 660px; margin: 58px auto 0; position: relative; }
 .section.centered .lb { margin-left: auto; margin-right: auto; text-align: left; }
 .lb-card { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; overflow: hidden;
   box-shadow: 0 26px 50px -30px rgba(40,30,15,.4), 0 3px 8px -4px rgba(40,30,15,.16); }
@@ -876,7 +876,19 @@ code.ad:hover .ls-pop, code.ad:focus .ls-pop, code.ad:focus-within .ls-pop { opa
   transition: color .14s ease, box-shadow .14s ease; }
 .lb-cfg:hover { color: var(--text); }
 .lb-cfg.on { color: var(--accent); box-shadow: inset 0 -1.5px 0 var(--accent); }
-.lb-open { margin-left: auto; font-family: var(--mono); font-size: var(--fs-sm); color: var(--accent); white-space: nowrap; }
+/* a config with no committed run yet — dimmed, prefixed by a small hollow status dot */
+.lb-cfg.pending { opacity: .55; }
+.lb-cfg.pending.on { opacity: .85; }
+.lb-cfg.pending::before { content: ""; display: inline-block; width: 4px; height: 4px; margin-right: 5px;
+  border: 1px solid currentColor; border-radius: 50%; vertical-align: middle; opacity: .8; }
+/* the "composition" chip — box 1's trigger; margin-left:auto floats it (and README) right */
+/* now just a label for the resident composition panel (box 1); on narrow screens the panel
+   hides and this chip's title tooltip becomes the fallback, so it turns into a help cursor there */
+.lb-info { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; cursor: default;
+  background: none; border: 0; padding: 3px 4px; font-family: var(--mono); font-size: var(--fs-2xs);
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); }
+.lb-info-i { flex: none; opacity: .85; }
+.lb-open { font-family: var(--mono); font-size: var(--fs-sm); color: var(--accent); white-space: nowrap; }
 .lb-open:hover { text-decoration: underline; }
 .lb-body { padding: 10px 14px 8px; }
 .lb-row { display: grid; grid-template-columns: 24px minmax(120px, 246px) 1fr 56px; grid-template-areas: "rank model track val";
@@ -899,8 +911,11 @@ code.ad:hover .ls-pop, code.ad:focus .ls-pop, code.ad:focus-within .ls-pop { opa
 .lb-row.top { background: rgba(189,90,56,.07); }
 .lb-row.top .lb-rank { color: var(--accent); font-weight: 600; }
 .lb-row.top .lb-val { font-weight: 600; }
-/* a partial run (a few tasks still unscored) ranks in place but recedes; its tooltip says why */
+/* a partial run (a few tasks still unscored) ranks in place but recedes; box 2 says why on hover */
 .lb-row.part { opacity: .55; --o: .55; }
+/* hover brings a receded partial run forward while its detail panel is up.
+   !important beats the entrance animation's forwards-fill, which otherwise pins opacity at .55 */
+.lb-row.part:hover { opacity: 1 !important; }
 /* no committed run yet — a quiet ghost of the board, with the reason on top */
 .lb-none { position: relative; }
 .lb-row.ghost .lb-fill { background: rgba(60,48,36,.10); }
@@ -929,6 +944,44 @@ code.ad:hover .ls-pop, code.ad:focus .ls-pop, code.ad:focus-within .ls-pop { opa
 .lb-foot span + span::before { content: "·"; margin-right: 10px; }
 .lb-foot a { color: var(--accent); }
 .lb-foot a:hover { text-decoration: underline; }
+/* ---- hover panels (box 1 · composition, box 2 · row detail) ----
+   Anchored to .lb so they escape the card's overflow:hidden clip, and float in the
+   whitespace to the card's right. Shared shell; each variant sets its own vertical anchor. */
+.lb-pop { position: absolute; left: 100%; margin-left: 16px; z-index: 20; width: 280px; text-align: left;
+  background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px;
+  box-shadow: 0 28px 52px -28px rgba(40,30,15,.46), 0 3px 8px -4px rgba(40,30,15,.16);
+  padding: 15px 17px 16px; opacity: 0; pointer-events: none;
+  transition: opacity .2s var(--ease), transform .2s var(--ease); }
+.lb-comp { top: 0; opacity: 1; pointer-events: auto; transform: none; }   /* resident — always shown */
+.lb-rowpop { transform: translateX(-8px); }   /* JS sets top: stacked just beneath box 1 */
+.lb.rowpop-open .lb-rowpop { opacity: 1; pointer-events: auto; transform: translateX(0); }
+/* panel content */
+.lb-pop-k { font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent-dim); margin-bottom: 6px; }
+.lb-pop-h { font-family: var(--mono); font-size: var(--fs-sm); color: var(--text); word-break: break-word; }
+.lb-pop-h .lb-org { color: var(--dim); }
+.lb-pop-sum { font-family: var(--sans); font-size: var(--fs-sm); line-height: 1.5; color: var(--muted); margin: 8px 0 0; }
+.lb-tally { margin-top: 12px; display: flex; flex-direction: column; gap: 5px; }
+.lb-tl-r { display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); }
+.lb-tl-l { color: var(--dim); }
+.lb-tl-n { display: block; font-size: var(--fs-2xs); letter-spacing: .2px; color: var(--dim); opacity: .8; margin-top: 1px; }
+.lb-tl-v { color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lb-tl-r.sub .lb-tl-v { color: var(--dim); }
+.lb-tl-r.tot { margin-top: 3px; padding-top: 7px; border-top: 1px solid var(--line); }
+.lb-tl-r.tot .lb-tl-l { color: var(--muted); }
+.lb-tl-r.tot .lb-tl-v { color: var(--accent); font-weight: 600; }
+/* composition box: the divider sits between summary and breakdown, not inside the tally */
+#lb-comp .lb-tally { padding-top: 13px; border-top: 1px solid var(--line); }
+#lb-comp .lb-tl-r.tot { margin-top: 0; padding-top: 0; border-top: none; }
+.lb-pop-d { font-family: var(--sans); font-size: var(--fs-xs); line-height: 1.5; color: var(--dim); margin: 12px 0 0; }
+.lb-pop-f { font-family: var(--sans); font-size: var(--fs-xs); line-height: 1.5; color: var(--muted); margin: 12px 0 0;
+  padding-left: 10px; border-left: 2px solid var(--accent-dim); }
+.lb-pop-run { display: inline-block; margin-top: 13px; padding: 3px 9px; border-radius: 999px;
+  background: var(--panel-2); border: 1px solid var(--line); font-family: var(--mono); font-size: var(--fs-2xs);
+  letter-spacing: .3px; color: var(--muted); }
+.lb-pop-note { font-family: var(--sans); font-size: var(--fs-xs); line-height: 1.5; color: var(--accent); margin: 12px 0 0; }
+/* no room for a right-hand rail (or no hover at all) — fall back to the native title tooltip */
+@media (max-width: 1279px) { .lb-pop { display: none; } .lb-info { cursor: help; } }
 /* phones: the name gets the full line, the bar takes its own row beneath */
 @media (max-width: 560px) {
   .lb-row { grid-template-columns: 20px minmax(0, 1fr) 56px; grid-template-areas: "rank model val" "rank track track"; row-gap: 6px; padding: 8px 6px; }
