@@ -1,4 +1,5 @@
 {
+  "_comment": "Hand-maintained leaderboard manifest — the single source of truth for which run each board shows. Each key is an env id (matching a coverage card's data-env in index.html); its value maps a secondary-tab label -> either a run path relative to the env dir ('<commit-dir>/run_<n>[_cfg].json') or the literal 'pending' for a coming-soon placeholder tab. Tab order follows key order; an env with one config shows no tabs. Labels are free text (e.g. 'w/ mcp'). To add/update a board: drop the run JSON under assets/exps/eval/<env>/<commit-dir>/ and point its label here. This '_comment' key is ignored by the site.",
   "androidlab": {
     "default": "d6f368e4ff/run_0.json"
   },
@@ -6,22 +7,41 @@
     "default": "03fc490a07/run_0.json"
   },
   "browsergym.miniwob": {
-    "default": "f57d3cbb92/run_0.json"
+    "default": "f28f81402b/run_0_default.json"
+  },
+  "browsergym.webarena":{
+    "default": "pending",
+    "som": "pending",
+    "text_only": "pending"
+  },
+  "browsergym.visualwebarena":{
+    "default": "pending",
+    "som": "pending",
+    "goal_image": "pending"
+  },
+  "cua.bench":{
+    "basic": "pending",
+    "kicad": "pending",
+    "workflows": "pending"
   },
   "lite.osworld": {
-    "default": "4a6cb49b0d/run_0.json"
+    "default": "0cde57702f/run_0.json"
   },
   "mobilegym": {
     "default": "2a40f5258e/run_0.json"
   },
   "mobileworld": {
-    "default": "651af22040/run_0.json"
+    "w/o mcp": "651af22040/run_0.json",
+    "w/ mcp": "pending"
   },
   "osworld": {
-    "default": "651af22040/run_0.json"
+    "default": "65ea6496ef/run_0.json"
   },
   "osworld_g": {
     "default": "d30ef912ca/run_0.json"
+  },
+  "osworld_2":{
+    "defualt": "0cde57702f/run_0.json"
   },
   "screenspot_pro": {
     "default": "5b887a39c1/run_0.json"

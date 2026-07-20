@@ -859,12 +859,13 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
 
 /* ---------- benchmark leaderboard — scores served from this site's own assets ----------
    Each eval run's compact snapshot (written by devs/exps/eval/utils/update_run_json.py)
-   is copied into assets/exps/eval/<env>/<commit-dir>/run_<n>.json, and
-   assets/exps/eval/manifest.json points at the newest one per env (regenerate it
-   with assets/exps/update_manifest.py after dropping in a new run). The benchmark
-   coverage cards above are the selector: clicking one switches the board — envs
-   with no committed run get a ghost placeholder. The header README link follows
-   the selected env (the cards' own hrefs, so the two can never drift). */
+   is copied into assets/exps/eval/<env>/<commit-dir>/run_<n>[_cfg].json, and the
+   hand-maintained assets/exps/eval/manifest.json maps each env (and secondary-tab
+   config) to its run path — or "pending" for a coming-soon tab; see the "_comment"
+   at the top of that file for the schema. The benchmark coverage cards above are the
+   selector: clicking one switches the board — envs with no committed run get a ghost
+   placeholder. The header README link follows the selected env (the cards' own hrefs,
+   so the two can never drift). */
 (function () {
   "use strict";
   const body = document.getElementById("lb-body");
@@ -873,6 +874,11 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
   const envEl = document.getElementById("lb-env");
   const cfgsEl = document.getElementById("lb-cfgs");
   const openEl = document.getElementById("lb-open");
+  const lbEl = document.getElementById("lb");
+  const infoEl = document.getElementById("lb-info");     // the "composition" chip (box 1 trigger)
+  const compEl = document.getElementById("lb-comp");     // box 1: benchmark composition panel
+  const rowPopEl = document.getElementById("lb-rowpop"); // box 2: per-model detail panel
+  let curRows = [];   // the rows most recently rendered — box 2 reads back by data-idx
 
   const ROOT = "assets/exps/eval/";
   // the coverage cards are the single source of envs: id, proper name, README href
@@ -907,6 +913,85 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
     return rule[1] + "/default/" + (CFG_DIR_ENVS.has(env) ? env + "/" + cfgId + ".yaml" : env + ".yaml");
   }
 
+  // ---- box 1 · benchmark composition ---------------------------------------
+  // The "why 321?" breakdown behind each board — refined from the devs' filter notes.
+  // Keyed by env id (same ids as the coverage cards). To add an env or a new mode,
+  // drop in another entry; the panel renders whatever fields are present:
+  //   summary  — one-line what-it-is
+  //   tally[]  — { label, n, op?: "sub", note?, total?: true }
+  //                op:"sub"  → an excluded count, shown as −n and struck toward dim
+  //                total:true → the final scored count, emphasized with a rule above it
+
+
+  const COMPOSITION = {
+    osworld_g: { summary: "Single-step click grounding.",
+      tally: [{ label: "upstream", n: 564 }, { label: "refusal", n: 54, op: "sub" }, { label: "scored", n: 510, total: true }]},
+    screenspot_pro: { summary: "Single-step click grounding on professional high-resolution screens.",
+      tally: [{ label: "tasks", n: "~1581", total: true }]},
+    osworld: { summary: "OSWorld — 10 real Ubuntu desktop apps.",
+      tally: [{ label: "upstream", n: 369 }, { label: "excluded", n: 48, op: "sub", note: "infeasible / broken evaluator" }, { label: "scored", n: 321, total: true }]},
+    "lite.osworld": { summary: "Lightweight OSWorld tasks across 10 desktop apps.",
+      tally: [{ label: "upstream", n: 369 }, { label: "excluded", n: 48, op: "sub", note: "infeasible / broken evaluator" }, { label: "scored", n: 321, total: true }],},
+    osworld_2: { summary: "Capability-graded tasks with float / partial-credit scoring — a separate benchmark from v1.",
+      tally: [{ label: "upstream", n: 108 }, { label: "excluded", n: 26, op: "sub", note: "gitlab · human_in_the_loop · multi_phase · volume" }, { label: "scored", n: 82, total: true }],},
+    "cua.bench": { summary: "Computer-use tasks, scored by cua-bench's own evaluator.",
+      tally: [{ label: "basic", n: 68 }, { label: "kicad", n: 25 }, { label: "workflows", n: 52 }, { label: "total", n: 145, total: true }],},
+    webgym: { summary: "Web information-retrieval tasks (Microsoft OmniBoxes).",
+      tally: [{ label: "tasks", n: "292k+", total: true }] },
+    "webharbor.webvoyager": { summary: "WebVoyager tasks against WebHarbor self-hosted mirrors.",
+      tally: [{ label: "tasks", n: 643, total: true }]},
+    online_mind2web: { summary: "Live tasks from 136 popular websites across many domains.",
+      tally: [{ label: "tasks", n: 300, total: true }]},
+    "browsergym.miniwob": { summary: "Tasks over 100 web-interaction environments (MiniWoB++).",
+      tally: [{ label: "tasks", n: 125, total: true }]},
+    "browsergym.webarena": { summary: "Long-horizon tasks over a self-hosted shop, forum and GitLab.",
+      tally: [{ label: "tasks", n: 812, total: true }]},
+    "browsergym.visualwebarena": { summary: "Visual web tasks across Classifieds, Shopping and Reddit.",
+      tally: [{ label: "tasks", n: 910, total: true }] },
+    androidworld: { summary: "The official AndroidWorld task suite.",
+      tally: [{ label: "tasks", n: 116, total: true }]},
+    androidlab: { summary: "Multi-step tasks across 9 offline Android apps.",
+      tally: [{ label: "tasks", n: 138, total: true }]},
+    mobileworld: { summary: "The MobileWorld suite — 115 GUI-only + 46 agent-user-interaction tasks.",
+      tally: [{ label: "upstream", n: 201 }, { label: "excluded", n: 40, op: "sub", note: "agent-mcp" }, { label: "scored", n: 161, total: true }]},
+    mobilegym: { summary: "Parameterized tasks across 28 simulated mobile apps. Reward is progress rate (0–1).",
+      tally: [{ label: "eval", n: 256 }, { label: "train", n: 160 }, { label: "total", n: 416, total: true }],
+},
+  };
+  const tallyRow = (label, val, opts = {}) =>
+    `<div class="lb-tl-r${opts.total ? " tot" : ""}${opts.sub ? " sub" : ""}">` +
+    `<span class="lb-tl-l">${esc(label)}${opts.note ? `<span class="lb-tl-n">${esc(opts.note)}</span>` : ""}</span>` +
+    `<span class="lb-tl-v">${esc(val)}</span></div>`;
+  // paint box 1 for the active env (called on every env switch, so it's ready before hover)
+  function renderComp() {
+    const c = COMPOSITION[cur];
+    if (!compEl) return;
+    if (!c) { compEl.innerHTML = ""; if (infoEl) infoEl.hidden = true; return; }
+    if (infoEl) { infoEl.hidden = false; infoEl.title = c.summary; }
+    let h = `<div class="lb-pop-k">Composition</div><div class="lb-pop-h">${esc(ENVS[cur].name)}</div>`;
+    h += `<p class="lb-pop-sum">${esc(c.summary)}</p>`;
+    h += `<div class="lb-tally">` + c.tally.map((t) =>
+      tallyRow(t.label, (t.op === "sub" ? "−" : "") + t.n, { total: t.total, sub: t.op === "sub", note: t.note })).join("") + `</div>`;
+    if (c.detail) h += `<p class="lb-pop-d">${esc(c.detail)}</p>`;
+    if (c.filter) h += `<p class="lb-pop-f">${esc(c.filter)}</p>`;
+    if (c.runtime) h += `<div class="lb-pop-run">${esc(c.runtime)}</div>`;
+    compEl.innerHTML = h;
+  }
+  // paint box 2 for one model row (content mirrors the row's title, but expansible)
+  function renderRowPop(r, i) {
+    const cut = r.model.indexOf("/");
+    const org = cut > 0 ? r.model.slice(0, cut + 1) : "", name = cut > 0 ? r.model.slice(cut + 1) : r.model;
+    const part = r.status === "partial", left = r.num_tasks - r.num_valid;
+    let h = `<div class="lb-pop-h">${org ? `<span class="lb-org">${esc(org)}</span>` : ""}${esc(name)}</div>`;
+    h += `<div class="lb-tally">` +
+      tallyRow("Rank", "#" + (i + 1)) +
+      tallyRow("Score", (r.mean_episode_return * 100).toFixed(1) + "%") +
+      tallyRow("Tasks", r.num_valid + " / " + r.num_tasks, { sub: part }) +
+      tallyRow("Mean return", (+r.mean_episode_return).toFixed(4), { total: true }) + `</div>`;
+    if (part) h += `<p class="lb-pop-note">Partial run — ${left} task${left === 1 ? "" : "s"} still unscored.</p>`;
+    rowPopEl.innerHTML = h;
+  }
+
   function render(data, rel) {
     const rows = (data.results || [])
       .filter((r) => r.status !== "empty" && r.mean_episode_return != null)
@@ -916,6 +1001,7 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
     if (!rows.length) return renderGhost("empty");
     // scale to a round ceiling with headroom, so the leader never hits the wall
     const axis = Math.min(100, Math.ceil((Math.max(...rows.map((r) => r.mean_episode_return * 100)) + 4) / 10) * 10);
+    curRows = rows;   // the hover detail panel (box 2) reads back into this by data-idx
     body.innerHTML = rows.map((r, i) => {
       const pct = r.mean_episode_return * 100;
       const cut = r.model.indexOf("/");
@@ -927,7 +1013,7 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
       const model = path
         ? `<a href="${esc(CFG_REPO + path)}" target="_blank" rel="noopener" title="${esc("agent config — scripts/configs/" + path)}">${label}</a>`
         : label;
-      return `<div class="lb-row${i === 0 ? " top" : ""}${part ? " part" : ""}" role="listitem" style="--w:${(pct / axis).toFixed(4)};--i:${i}" title="${esc(tip)}">` +
+      return `<div class="lb-row${i === 0 ? " top" : ""}${part ? " part" : ""}" role="listitem" data-idx="${i}" style="--w:${(pct / axis).toFixed(4)};--i:${i}" title="${esc(tip)}">` +
         `<span class="lb-rank">${i + 1}</span>` +
         `<span class="lb-model">${model}</span>` +
         `<span class="lb-track"><span class="lb-fill"></span></span>` +
@@ -940,18 +1026,25 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
     foot.innerHTML = `<span>${rows.length} agents</span><span>${Math.max(...rows.map((r) => r.num_tasks))} tasks</span>` +
       `<span>success rate</span><span>${date ? esc(date) + " · " : ""}<a href="${esc(jsonUrl)}" target="_blank" rel="noopener">${esc(rel.split("/").pop() + " @ " + sha.slice(0, 8))}</a></span>`;
   }
-  // same card, no numbers yet — a quiet ghost of the board ("loading" shimmers, "empty" says why)
+  // same card, no numbers yet — a quiet ghost of the board. "loading" shimmers; "empty" says the
+  // env has no run at all; "pending" is a declared config tab whose run hasn't been committed yet.
   function renderGhost(kind) {
     const widths = [0.86, 0.74, 0.63, 0.54, 0.46, 0.39];
+    const msg = kind === "empty"
+      ? `<span class="lb-none-t">No committed runs yet</span>` +
+        `<span class="lb-none-d">results land here as JSON once ${esc(ENVS[cur].name)} is evaluated — <a href="${esc(ENVS[cur].readme)}" target="_blank" rel="noopener">how to run it ↗</a></span>`
+      : kind === "pending"
+      ? `<span class="lb-none-t">${esc(cfg)} · coming soon</span>` +
+        `<span class="lb-none-d">this ${esc(ENVS[cur].name)} configuration hasn't been evaluated yet — its scores will appear here once committed.</span>`
+      : "";
     body.innerHTML = `<div class="lb-none${kind === "loading" ? " loading" : ""}">` +
       widths.map((w, i) => `<div class="lb-row ghost" style="--w:${w};--i:${i}" aria-hidden="true">` +
         `<span class="lb-rank">${i + 1}</span><span class="lb-gname"></span>` +
         `<span class="lb-track"><span class="lb-fill"></span></span><span class="lb-gval"></span></div>`).join("") +
-      (kind === "empty" ? `<div class="lb-none-msg"><span class="lb-none-t">No committed runs yet</span>` +
-        `<span class="lb-none-d">results land here as JSON once ${esc(ENVS[cur].name)} is evaluated — <a href="${esc(ENVS[cur].readme)}" target="_blank" rel="noopener">how to run it ↗</a></span></div>` : "") +
+      (msg ? `<div class="lb-none-msg">${msg}</div>` : "") +
       `</div>`;
-    foot.innerHTML = kind === "empty"
-      ? `<span>0 runs</span><span>eval pending</span>`
+    foot.innerHTML = kind === "empty" ? `<span>0 runs</span><span>eval pending</span>`
+      : kind === "pending" ? `<span>eval pending</span><span>${esc(cfg)}</span>`
       : `<span>loading committed run…</span>`;
   }
   function getManifest() {
@@ -964,14 +1057,20 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
         return manifest;
       }));
   }
-  // secondary tabs — the env's config settings (default · som · ...); hidden when there's only one
+  // secondary tabs — the env's config settings (default · som · ...); hidden when there's only one.
+  // a "pending" config (no committed run yet) still gets a tab, dimmed, opening a coming-soon state.
   function renderCfgTabs() {
-    const list = manifest && manifest[cur] ? Object.keys(manifest[cur]) : [];
+    const cfgs = manifest && manifest[cur] ? manifest[cur] : {};
+    const list = Object.keys(cfgs);
     cfgsEl.innerHTML = "";
     if (list.length < 2) return;
     list.forEach((c) => {
+      const pending = cfgs[c] === "pending";
       const b = document.createElement("button");
-      b.type = "button"; b.className = "lb-cfg" + (c === cfg ? " on" : ""); b.textContent = c;
+      b.type = "button";
+      b.className = "lb-cfg" + (c === cfg ? " on" : "") + (pending ? " pending" : "");
+      b.textContent = c;
+      if (pending) b.title = "not evaluated yet — coming soon";
       b.addEventListener("click", () => { if (c !== cfg) show(cur, c); });
       cfgsEl.appendChild(b);
     });
@@ -989,10 +1088,17 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
     }
     const cfgs = manifest[envId] || {};
     const list = Object.keys(cfgs);
-    cfg = list.includes(cfgId) ? cfgId : list.includes("default") ? "default" : list[0];
+    const real = (c) => cfgs[c] && cfgs[c] !== "pending";   // a config with a committed run
+    // land on a config with results — never open on a pending (coming-soon) tab by default
+    cfg = list.includes(cfgId) ? cfgId
+      : real("default") ? "default"
+      : list.find(real) || list[0];
     renderCfgTabs();
+    renderComp();   // keep box 1 in sync with the active env
     if (!list.length) return renderGhost("empty");
-    const key = envId + "/" + cfg, rel = cfgs[cfg];
+    const rel = cfgs[cfg];
+    if (rel === "pending") return renderGhost("pending");   // placeholder tab — no run committed yet
+    const key = envId + "/" + cfg;
     const fresh = () => cur === envId && envId + "/" + cfg === key;   // ignore stale fetches after another switch
     if (runs[key]) return render(runs[key], rel);
     renderGhost("loading");
@@ -1014,6 +1120,34 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
   }));
   // …and so does the eval builder's --env-id (registered at file scope for the builder's IIFE)
   lbFollowEnv = (envId) => { if (envId !== cur) show(envId); };
+
+  // ---- box 2 · per-model detail (box 1 is resident; see renderComp) ---------
+  // Box 1 (composition) is always shown to the card's right. Box 2 opens on row
+  // hover and stacks just beneath it. A short close delay lets the pointer cross
+  // the gap into the panel without it collapsing. Touch/narrow screens hide both
+  // panels and fall back to the native title tooltip.
+  if (lbEl && rowPopEl) {
+    let rt, activeIdx = -1;   // box 2 close timer + which row it's showing
+    const rowShut = () => { rt = setTimeout(() => { lbEl.classList.remove("rowpop-open"); activeIdx = -1; }, 220); };
+    body.addEventListener("pointerover", (e) => {
+      const row = e.target.closest(".lb-row");
+      if (!row || row.classList.contains("ghost") || row.dataset.idx == null) return;
+      clearTimeout(rt);
+      const i = +row.dataset.idx, r = curRows[i];
+      if (!r) return;
+      if (i !== activeIdx) {   // moved to a new row — repaint and restack below box 1
+        activeIdx = i;
+        renderRowPop(r, i);
+        rowPopEl.style.top = ((compEl ? compEl.offsetHeight : 0) + 14) + "px";
+      }
+      lbEl.classList.add("rowpop-open");
+    });
+    body.addEventListener("pointerleave", rowShut);
+    rowPopEl.addEventListener("pointerenter", () => clearTimeout(rt));
+    rowPopEl.addEventListener("pointerleave", rowShut);
+  }
+
+  renderComp();   // populate box 1 for the default env before the manifest resolves
   show(cur);
 })();
 
