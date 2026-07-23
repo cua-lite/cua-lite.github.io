@@ -56,7 +56,11 @@
 .pair-chip[data-cat="model"] { --ic: url('/assets/icons/chip.svg'); }
 /* agents wear their maker's mark (grey via currentColor, brightening on hover/active), echoing the
    homepage's affiliation logos; MAI-UI has no brand mark so it keeps the generic chip glyph. */
-.pair-chip[data-logo]::before { width: 14px; height: 14px; vertical-align: -3.5px; }
+.pair-chip[data-logo]::before { width: 14px; height: 14px; vertical-align: -3.5px; opacity: .74; }   /* balanced below so dense marks don't read heavier than thin ones */
+.pair-chip[data-logo="qwen"]::before    { opacity: .6; }
+.pair-chip[data-logo="ui-tars"]::before { opacity: .5; }
+.pair-chip[data-logo="claude"]::before  { opacity: .66; }
+.pair-chip[data-logo].on::before        { opacity: 1; }   /* the active agent's mark goes full terracotta */
 .pair-chip[data-logo="openai"]  { --ic: url('/assets/logos/openai.svg'); }
 .pair-chip[data-logo="claude"]  { --ic: url('/assets/logos/claude.svg'); }
 .pair-chip[data-logo="qwen"]    { --ic: url('/assets/logos/qwen.svg'); }
@@ -64,14 +68,15 @@
 .pair-chip[data-logo="ui-tars"] { --ic: url('/assets/logos/ui-tars.png'); }
 .pair-chip[data-logo="kimi"]    { --ic: url('/assets/logos/kimi.svg'); }
 .chip-tag { color: var(--dim); font-size: 10px; transition: color .25s ease; }   /* dim platform hint: desktop / web / mobile */
-.pair-chip.ghost { border-style: dashed; background: transparent; color: var(--dim); }   /* the open slot — a contribution not yet made */
+.pair-chip.ghost { background: transparent; color: var(--dim); }   /* the open slot — solid border like the rest, just no fill */
 .pair-chip.on { color: var(--accent); border-color: var(--accent); background: rgba(189,90,56,.10); }
 .pair-chip.ghost.on { color: var(--accent); background: rgba(189,90,56,.06); }   /* the slot lights up, still dashed — yours to fill */
 .pair-chip.on .chip-tag { color: var(--accent-dim); }
 /* the target chip lights as the wire reaches it, not before */
 .pair-right .pair-chip.on { transition-delay: 1.2s; }   /* the target lights as the second wire segment lands (~1.4s) */
 .pair-right .pair-chip.on .chip-tag { transition-delay: 1.2s; }   /* the tag waits with its chip */
-.pair-mid { display: flex; align-items: center; justify-content: center; }
+.pair-mid { display: flex; align-items: center; justify-content: center; padding-top: 26px; }   /* the chip columns carry a label on top; match its offset so the hub lands on the 3rd (middle) capsule, not above it */
+[data-board="pair"] { grid-template-columns: 1.35fr 150px 1fr; }   /* env names are wide; nudge lite.gym right so its left/right margins balance (no adapter fills the right side here) */
 /* the hub reads as a hub: accent-edged card with pixel ports where the wires plug in */
 .pair-node { position: relative; z-index: 2; font-family: var(--mono); font-size: 12.5px; color: var(--text); text-align: center;
   background: #fff; border: 1px solid var(--accent-dim); border-radius: 10px; padding: 9px 13px 8px; }
@@ -175,7 +180,7 @@
 .tape-legend { margin-top: 12px; font-family: var(--mono); font-size: 9.5px; color: var(--dim); display: flex; align-items: center; gap: 6px; }
 /* the figure opens as LiteSample → adapter → Qwen3.5, then the overlay zooms out while the tape zooms in */
 .flow-demo.pack { position: relative; overflow: hidden; }   /* clips the zoom-scaled intro so it never widens the page */
-.pack-intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 11px; flex-wrap: wrap;
+.pack-intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 0 8%;
   background: var(--panel-fill); border-radius: 14px; z-index: 5; opacity: 0; transform: scale(1.3); pointer-events: none;
   transition: opacity .55s var(--ease), transform .55s var(--ease); font-family: var(--mono); }
 .pack.intro-on .pack-intro { opacity: 1; transform: scale(1); }
@@ -184,7 +189,11 @@
 .pack .tape-legend { transition: opacity .5s ease; }
 .pack.intro-on .tape-legend { opacity: 0; }
 .pack-adapter { font-size: 11px; background: #fff; border: 1px solid var(--accent-dim); border-radius: 6px; padding: 4px 11px; color: var(--muted); }
-.pack-arrow { color: var(--accent); font-size: 15px; }
+.pack-intro > span { position: relative; z-index: 1; }   /* components ride above the wire */
+.pack-intro-wire { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.piw { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 5 8; animation: introFlow .85s linear infinite; }   /* thick terracotta wire, dashes flow LiteSample → adapter → Qwen */
+@keyframes introFlow { to { stroke-dashoffset: -13; } }
+@media (prefers-reduced-motion: reduce) { .piw { animation: none; stroke-dasharray: none; } }
 /* the intro reuses the real figure components (hub card + plane + {} , adapter card, agent chip) so it matches figure 2 */
 .pack-intro .pair-node::before, .pack-intro .pair-node::after { display: none; }   /* no wires in the intro → no ports */
 .pack-intro .pair-chip { align-self: center; }
@@ -354,7 +363,7 @@
   The next figure plays out Qwen3.5's.</p>
 
   <figure class="flow-demo pack intro-on" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
-    <div class="pack-intro" aria-hidden="true"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><span>LiteSample</span><span class="node-glyph">{ }</span></span><span class="pack-arrow">→</span><span class="pack-adapter">adapter</span><span class="pack-arrow">→</span><span class="pair-chip" data-cat="model" data-logo="qwen">Qwen</span></div>
+    <div class="pack-intro" aria-hidden="true"><svg class="pack-intro-wire" aria-hidden="true"><path class="piw"/><path class="piw"/></svg><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><span>LiteSample</span><span class="node-glyph">{ }</span></span><span class="pack-adapter">adapter</span><span class="pair-chip" data-cat="model" data-logo="qwen">Qwen</span></div>
     <div class="tape-board" data-pack>
       <div class="tape-row">
         <span class="tape-lab">step 1</span>
@@ -647,6 +656,22 @@
     SCRIPT.forEach(([, , t]) => { line.textContent = t; max = Math.max(max, line.offsetHeight); });
     line.style.minHeight = max + "px";
     const fig = packFig.closest(".flow-demo");
+    const introSvg = fig.querySelector(".pack-intro-wire");
+    const drawIntroWire = () => {   // curve LiteSample → adapter → Qwen, measured from live geometry
+      if (!introSvg) return;
+      const s = introSvg.getBoundingClientRect(); if (!s.width) return;
+      const node = fig.querySelector(".pack-intro .pair-node"), adp = fig.querySelector(".pack-intro .pack-adapter"), qw = fig.querySelector(".pack-intro .pair-chip");
+      if (!node || !adp || !qw) return;
+      const cy = (el) => { const b = el.getBoundingClientRect(); return b.top + b.height / 2 - s.top; };
+      const rx = (el) => el.getBoundingClientRect().right - s.left, lx = (el) => el.getBoundingClientRect().left - s.left;
+      const curve = (x1, y1, x2, y2) => { const mx = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
+      const paths = introSvg.querySelectorAll(".piw");
+      paths[0].setAttribute("d", curve(rx(node) + 3, cy(node), lx(adp) - 3, cy(adp)));
+      paths[1].setAttribute("d", curve(rx(adp) + 3, cy(adp), lx(qw) - 3, cy(qw)));
+    };
+    drawIntroWire();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawIntroWire);
+    addEventListener("resize", () => setTimeout(drawIntroWire, 60));
     const INTRO = 3000;   // hold "LiteSample → adapter → Qwen3.5" long enough to read, then fade into the tape it produces
     function play() {
       fig.classList.add("intro-on");
