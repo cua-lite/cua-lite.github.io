@@ -25,7 +25,7 @@ BANNED = [
 # comment block in css/style.css. This freezes the refactor so no one re-introduces
 # a by-eye size.
 SCENERY = re.compile(r'\.(win|sh|bw|gg|gs|ph|taskbar|tb|pair|chip-tag|node-sub|node-glyph|'
-                     r'flow-lab|wire-stage|tape|tp|pack|mess)\b')
+                     r'flow-lab|wire-stage|tape|tp|pack|mess|col-seed|traj|ag-seed)\b')
 CSS_SOURCES = [ROOT / "css/style.css", ROOT / "blog/why-cua-lite/index.html",
                ROOT / "blog/index.html"]
 fail = 0
