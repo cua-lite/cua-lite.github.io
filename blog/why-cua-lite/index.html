@@ -54,6 +54,15 @@
 .pair-chip[data-cat="data"]  { --ic: url('/assets/icons/rows.svg'); }
 .pair-chip[data-cat="env"]   { --ic: url('/assets/icons/window.svg'); }
 .pair-chip[data-cat="model"] { --ic: url('/assets/icons/chip.svg'); }
+/* agents wear their maker's mark (grey via currentColor, brightening on hover/active), echoing the
+   homepage's affiliation logos; MAI-UI has no brand mark so it keeps the generic chip glyph. */
+.pair-chip[data-logo]::before { width: 14px; height: 14px; vertical-align: -3.5px; }
+.pair-chip[data-logo="openai"]  { --ic: url('/assets/logos/openai.svg'); }
+.pair-chip[data-logo="claude"]  { --ic: url('/assets/logos/claude.svg'); }
+.pair-chip[data-logo="qwen"]    { --ic: url('/assets/logos/qwen.svg'); }
+.pair-chip[data-logo="gemini"]  { --ic: url('/assets/logos/gemini.svg'); }
+.pair-chip[data-logo="ui-tars"] { --ic: url('/assets/logos/ui-tars.png'); }
+.pair-chip[data-logo="kimi"]    { --ic: url('/assets/logos/kimi.svg'); }
 .chip-tag { color: var(--dim); font-size: 10px; transition: color .25s ease; }   /* dim platform hint: desktop / web / mobile */
 .pair-chip.ghost { border-style: dashed; background: transparent; color: var(--dim); }   /* the open slot — a contribution not yet made */
 .pair-chip.on { color: var(--accent); border-color: var(--accent); background: rgba(189,90,56,.10); }
@@ -295,10 +304,10 @@
       <div></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a data-cat="model" class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
-        <a data-cat="model" class="pair-chip" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
-        <a data-cat="model" class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
-        <a data-cat="model" class="pair-chip" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
+        <a data-logo="openai" data-cat="model" class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
+        <a data-logo="claude" data-cat="model" class="pair-chip" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
+        <a data-logo="gemini" data-cat="model" class="pair-chip" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="mw"/></svg>
     </div>
@@ -328,10 +337,10 @@
       <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="ls" tabindex="0">LiteSample</code><span class="node-glyph">{ }</span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
-        <a data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
+        <a data-logo="ui-tars" data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
         <a data-cat="model" class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI</a>
-        <a data-cat="model" class="pair-chip" data-id="moonshotai/Kimi-VL-A3B-Instruct" href="https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct" target="_blank" rel="noopener">Kimi</a>
+        <a data-logo="kimi" data-cat="model" class="pair-chip" data-id="moonshotai/Kimi-VL-A3B-Instruct" href="https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct" target="_blank" rel="noopener">Kimi</a>
         <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours next</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
@@ -345,7 +354,7 @@
   The next figure plays out Qwen3.5's.</p>
 
   <figure class="flow-demo pack intro-on" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
-    <div class="pack-intro" aria-hidden="true"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><span>LiteSample</span><span class="node-glyph">{ }</span></span><span class="pack-arrow">→</span><span class="pack-adapter">adapter</span><span class="pack-arrow">→</span><span class="pair-chip" data-cat="model">Qwen</span></div>
+    <div class="pack-intro" aria-hidden="true"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><span>LiteSample</span><span class="node-glyph">{ }</span></span><span class="pack-arrow">→</span><span class="pack-adapter">adapter</span><span class="pack-arrow">→</span><span class="pair-chip" data-cat="model" data-logo="qwen">Qwen</span></div>
     <div class="tape-board" data-pack>
       <div class="tape-row">
         <span class="tape-lab">step 1</span>
@@ -402,10 +411,10 @@
       <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="lg" tabindex="0">lite.gym</code><span class="node-glyph node-loop" aria-hidden="true"></span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
-        <a data-cat="model" class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
-        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
-        <a data-cat="model" class="pair-chip" data-id="gemini-2.5" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
+        <a data-logo="openai" data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
+        <a data-logo="claude" data-cat="model" class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
+        <a data-logo="gemini" data-cat="model" class="pair-chip" data-id="gemini-2.5" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
         <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours next</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
