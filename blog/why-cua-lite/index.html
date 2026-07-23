@@ -72,6 +72,12 @@
 .pair-node code { background: none; border: 0; padding: 0; font-size: 12.5px; }
 /* the hub wears the CUA-Lite mark: everything converges into the paper plane = into CUA-Lite */
 .node-mark { display: block; width: 15px; height: 15px; margin: 0 auto 5px; background: url('/assets/logo.svg') center/contain no-repeat; }
+/* under the shared plane, a small glyph tells the two hubs apart: {} = the schema · ↻ = the gym loop */
+.node-glyph { display: block; font-family: var(--mono); font-size: 14px; line-height: 1; color: var(--accent); margin-top: 6px; }
+.node-loop { width: 14px; height: 14px; margin: 6px auto 0; background: var(--accent);
+  -webkit-mask: url('/assets/icons/loop.svg') center/contain no-repeat; mask: url('/assets/icons/loop.svg') center/contain no-repeat; }
+.pair-node { box-sizing: border-box; }
+@media (min-width: 561px) { .pair-node { min-width: 128px; } }   /* both hubs share one width on desktop; mobile shrinks naturally so it never covers the chips */
 .pair-node:hover, .pair-node:focus-within { z-index: 30; }   /* the hover card must clear the sibling stage cards */
 .wire-stage:hover, .wire-stage:focus-within { z-index: 30; }
 .wire-stage:hover .ls-pop, .wire-stage:focus-within .ls-pop { opacity: 1; visibility: visible; transform: translateY(-50%); pointer-events: auto; }
@@ -158,6 +164,20 @@
 @keyframes lossPulse { 50% { filter: brightness(1.35); transform: scaleY(1.2); } }
 .tape-row.keep .tape-note { opacity: 1; }
 .tape-legend { margin-top: 12px; font-family: var(--mono); font-size: 9.5px; color: var(--dim); display: flex; align-items: center; gap: 6px; }
+/* the figure opens as LiteSample → adapter → Qwen3.5, then the overlay zooms out while the tape zooms in */
+.flow-demo.pack { position: relative; overflow: hidden; }   /* clips the zoom-scaled intro so it never widens the page */
+.pack-intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 11px; flex-wrap: wrap;
+  background: var(--panel-fill); border-radius: 14px; z-index: 5; opacity: 0; transform: scale(1.3); pointer-events: none;
+  transition: opacity .55s var(--ease), transform .55s var(--ease); font-family: var(--mono); }
+.pack.intro-on .pack-intro { opacity: 1; transform: scale(1); }
+.pack .tape-board { transition: opacity .5s ease, transform .5s ease; }
+.pack.intro-on .tape-board { opacity: 0; transform: scale(.94); }
+.pack .tape-legend { transition: opacity .5s ease; }
+.pack.intro-on .tape-legend { opacity: 0; }
+.pack-ls { font-size: 13px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 3px 9px; color: var(--text); }
+.pack-adapter { font-size: 11px; background: #fff; border: 1px solid var(--accent-dim); border-radius: 6px; padding: 4px 11px; color: var(--muted); }
+.pack-arrow { color: var(--accent); font-size: 15px; }
+.pack-model { font-size: 13px; color: var(--text); }
 .tp-sw { width: 12px; height: 8px; border-radius: 2px; display: inline-block; }
 .tp-sw.p { background: var(--panel-2); border: 1px solid var(--line-2); }
 .tp-sw.r { background: var(--accent); opacity: .8; margin-left: 10px; }
@@ -247,13 +267,16 @@
              (the reach: every agent / every env, present AND future);
          (2) VALUE TO SELF — your data / env keeps working and never goes stale;
          (3) VALUE TO THE COMMUNITY — you grow the shared pool everyone else draws on.
-       The two calls are siblings: keep them parallel in shape and length. -->
+       The two calls are siblings: keep them parallel in shape and length.
+       PROSE HYGIENE (all paragraphs): no orphans — if a paragraph ends with a lone word or
+       short unit dangling on its last line, TRIM the copy until it wraps clean. Fix it by
+       cutting words, never with &nbsp; or text-wrap tricks (they only jag the right edge). -->
   <p class="post-meta">2026-07-10 · The CUA-Lite team</p>
   <h1>Why CUA-Lite — and a call for <em>contributors.</em></h1>
 
   <h2>Why CUA-Lite</h2>
   <p><b>Computer-use agent resources are fragmented.</b> Every benchmark ships its
-  own runner, its own action space, its own data format. Every dataset picks its
+  own runner, action space, and data format. Every dataset picks its
   own schema, so data collected for one agent can't train another. Every project
   rebuilds the same plumbing — screenshot loops, VM setup, eval scripts — before
   a single rollout runs.</p>
@@ -271,9 +294,9 @@
       <div></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a data-cat="model" class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">gpt-5.5</a>
-        <a data-cat="model" class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
-        <a data-cat="model" class="pair-chip" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS-1.5</a>
+        <a data-cat="model" class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
+        <a data-cat="model" class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3</a>
+        <a data-cat="model" class="pair-chip" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="mw"/></svg>
     </div>
@@ -289,24 +312,24 @@
   <h2>Datasets</h2>
   <p><b>Convert a dataset once, and every agent can train on it.</b>
   <code class="ls" tabindex="0">LiteSample</code> is the one schema, shared
-  across every env, agent, and task type — all of it free on Hugging&nbsp;Face.</p>
+  across every env, agent, and task type, free on Hugging&nbsp;Face.</p>
   <figure class="flow-demo" aria-label="Any dataset, converted once, trains any agent">
     <div class="pair-board" data-board="data">
       <div class="pair-col">
         <span class="pair-k">Datasets</span>
-        <a data-cat="data" class="pair-chip" data-id="Multimodal-Mind2Web" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web</a>
-        <a data-cat="data" class="pair-chip" data-id="GUIOdyssey" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey</a>
-        <a data-cat="data" class="pair-chip" data-id="ScaleCUA" href="https://huggingface.co/datasets/cua-lite/ScaleCUA" target="_blank" rel="noopener">ScaleCUA</a>
-        <a data-cat="data" class="pair-chip" data-id="OpenCUA" href="https://huggingface.co/datasets/cua-lite/OpenCUA" target="_blank" rel="noopener">OpenCUA</a>
+        <a data-cat="data" class="pair-chip" data-id="Multimodal-Mind2Web" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web<span class="chip-tag"> · web</span></a>
+        <a data-cat="data" class="pair-chip" data-id="GUIOdyssey" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey<span class="chip-tag"> · mobile</span></a>
+        <a data-cat="data" class="pair-chip" data-id="ScaleCUA" href="https://huggingface.co/datasets/cua-lite/ScaleCUA" target="_blank" rel="noopener">ScaleCUA<span class="chip-tag"> · all</span></a>
+        <a data-cat="data" class="pair-chip" data-id="OpenCUA" href="https://huggingface.co/datasets/cua-lite/OpenCUA" target="_blank" rel="noopener">OpenCUA<span class="chip-tag"> · desktop</span></a>
         <a data-cat="data" class="pair-chip ghost" data-id="YourDataset" href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">yours next</a>
       </div>
-      <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="ls" tabindex="0">LiteSample</code><span class="node-sub">one schema</span></span></div>
+      <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="ls" tabindex="0">LiteSample</code><span class="node-glyph">{ }</span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
-        <a data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS-1.5</a>
-        <a data-cat="model" class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI-8B</a>
-        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5-9B</a>
+        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3</a>
+        <a data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
+        <a data-cat="model" class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI</a>
+        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
@@ -319,6 +342,7 @@
   The next figure plays out Qwen3.5's.</p>
 
   <figure class="flow-demo pack" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
+    <div class="pack-intro" aria-hidden="true"><span class="pack-ls">LiteSample</span><span class="pack-arrow">→</span><span class="pack-adapter">adapter</span><span class="pack-arrow">→</span><span class="pack-model">Qwen3.5</span></div>
     <div class="tape-board" data-pack>
       <div class="tape-row">
         <span class="tape-lab">step 1</span>
@@ -349,11 +373,10 @@
     <div class="pair-cmd" data-pack-line></div>
   </figure>
 
-  <p class="post-call"><b class="call">Call for data contributors.</b> Most datasets
-  stop being used — collected for one agent, they can't train another. In
-  <code class="ls" tabindex="0">LiteSample</code> yours keeps working: every agent
-  trains on it, even models that don't exist yet. One conversion, and the whole
-  community can train on it — for good.</p>
+  <p class="post-call"><b class="call">Call for data contributors.</b> Data collected for
+  one agent won't train another out of the box. In <code class="ls" tabindex="0">LiteSample</code>
+  it trains every agent — even models that don't exist yet. One conversion, and the
+  whole community can train on it.</p>
 
   <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">Preprocessing guide ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">Agent harnesses ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/docs/sft.md" target="_blank" rel="noopener">SFT guide ↗</a></p>
 
@@ -373,13 +396,13 @@
         <a data-cat="env" class="pair-chip" data-id="webgym" href="https://github.com/microsoft/webgym" target="_blank" rel="noopener">WebGym<span class="chip-tag"> · web</span></a>
         <a data-cat="env" class="pair-chip ghost" data-id="your-env" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
       </div>
-      <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="lg" tabindex="0">lite.gym</code><span class="node-sub">one action space</span></span></div>
+      <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="lg" tabindex="0">lite.gym</code><span class="node-glyph node-loop" aria-hidden="true"></span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">gpt-5.5</a>
-        <a data-cat="model" class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">claude-opus-4-7</a>
-        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
-        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5-9B</a>
+        <a data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
+        <a data-cat="model" class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
+        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3</a>
+        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
@@ -449,10 +472,7 @@
       board.appendChild(shot);
       gcur = document.createElement("span"); gcur.className = "gym-cur";
       board.appendChild(gcur);
-    } else {                 // the pipeline: preproc into the schema, adapter out to each model
-      pmark = document.createElement("span"); pmark.className = "wire-stage stage-preproc"; pmark.tabIndex = 0;
-      pmark.textContent = "preproc";
-      board.appendChild(pmark);
+    } else {                 // the pipeline: the left plugs straight into the schema; the adapter converts a row to each model's format
       amark = document.createElement("span"); amark.className = "wire-stage stage-adapter"; amark.tabIndex = 0;
       amark.textContent = "adapter";
       board.appendChild(amark);
@@ -467,9 +487,9 @@
     const seg = ([x1, y1], [x2, y2]) => { const mx = (x1 + x2) / 2; return `C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
     // one continuous path chip → spine → (under the cards + hub) → chip, for the traveling payload
     const fullPath = (a, e) => { const p1 = pt(left[a], "r"), p2 = pt(right[e], "l");
-      if (hasSpine()) { const { pL, pR } = spine();
-        return `${curve(p1, pL)} L ${pR[0]} ${pR[1]} ${seg(pR, p2)}`; }
       const h1 = ptN("l"), h2 = ptN("r");
+      if (hasSpine()) { const { pR } = spine();   // left plugs straight in; right routes through the adapter (pR)
+        return `M ${p1[0]} ${p1[1]} ${seg(p1, h1)} L ${h2[0]} ${h2[1]} L ${pR[0]} ${pR[1]} ${seg(pR, p2)}`; }
       return `M ${p1[0]} ${p1[1]} ${seg(p1, h1)} L ${h2[0]} ${h2[1]} ${seg(h2, p2)}`; };
     function placeExtras(e) {
       if (labUp) { const b = node.getBoundingClientRect(), sv = svg.getBoundingClientRect();
@@ -478,9 +498,8 @@
         labDown.style.left = cx + "px"; labDown.style.top = (b.bottom - sv.top + 12) + "px";
         shot.style.left = cx + "px"; shot.style.top = (b.top - sv.top - 24) + "px";
         gcur.style.left = (cx + 68) + "px"; gcur.style.top = (b.bottom - sv.top + 9) + "px"; }
-      if (amark) {   // fixed stage cards on the spine — they never move between beats
-        const { y, pL, pR } = spine();
-        pmark.style.left = pL[0] + "px"; pmark.style.top = y + "px";
+      if (amark) {   // the adapter card sits on the right spine — it never moves between beats
+        const { y, pR } = spine();
         amark.style.left = pR[0] + "px"; amark.style.top = y + "px"; }
     }
     const redraw = (p) => { p.classList.remove("draw"); void p.getBoundingClientRect(); p.classList.add("draw"); };
@@ -491,9 +510,9 @@
     const hasSpine = () => mode === "data" && innerWidth > 560;   // the stage cards hide below 560 — so does their spine
     function wires(a, e) {
       if (hasSpine()) {
-        const { pL, pR } = spine();
-        const h1 = ptN("l"), h2 = ptN("r");
-        paths[0].setAttribute("d", `${curve(pt(left[a], "r"), pL)} L ${h1[0]} ${h1[1]}`);
+        const { pR } = spine();
+        const h2 = ptN("r");
+        paths[0].setAttribute("d", curve(pt(left[a], "r"), ptN("l")));   // left plugs straight into the hub (no preproc stage)
         paths[1].setAttribute("d", `M ${h2[0]} ${h2[1]} L ${pR[0]} ${pR[1]} ${seg(pR, pt(right[e], "l"))}`);
       } else {
         paths[0].setAttribute("d", curve(pt(left[a], "r"), ptN("l")));
@@ -555,7 +574,7 @@
   const boards = [];
   const dataFig = document.querySelector('[data-board="data"]');
   if (dataFig) boards.push(runBoard(dataFig.closest(".flow-demo"), (ds, m) =>
-    `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>${ds.split("/").pop()}</b></span> <span class="nb">--model-id</span> <b>${m}</b>`, "data", 1700));
+    `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>${ds.split("/").pop()}</b></span> <span class="nb">--model-id</span> <b>${m.split("/").pop()}</b>`, "data", 1700));
   // the before-board: no shared interface, so every dataset/benchmark must be wired to every
   // agent by hand — the full N×M tangle. The hub boards below route the same wires cleanly (N+M).
   const messFig = document.querySelector('[data-board="mess"]');
@@ -609,11 +628,18 @@
     let max = 0;
     SCRIPT.forEach(([, , t]) => { line.textContent = t; max = Math.max(max, line.offsetHeight); });
     line.style.minHeight = max + "px";
-    function play() { SCRIPT.forEach(([ms, fn, t]) => setTimeout(() => { fn(); line.textContent = t; }, ms)); }
+    const fig = packFig.closest(".flow-demo");
+    const INTRO = 1800;   // hold "LiteSample → adapter → Qwen3.5", then zoom into the tape it produces
+    function play() {
+      fig.classList.add("intro-on");
+      line.textContent = "the adapter · one LiteSample row → Qwen3.5's training tape";
+      setTimeout(() => fig.classList.remove("intro-on"), INTRO);
+      SCRIPT.forEach(([ms, fn, t]) => setTimeout(() => { fn(); line.textContent = t; }, ms + INTRO));
+    }
     if (reduce) { const [, fn, t] = SCRIPT[SCRIPT.length - 1];
       rows.forEach((r) => r.className = "tape-row"); fn(); line.textContent = t;
-    } else { const fig = packFig.closest(".flow-demo"); watch(fig);
-      play(); setInterval(() => { if (live(fig)) play(); }, CYCLE); }
+    } else { watch(fig);
+      play(); setInterval(() => { if (live(fig)) play(); }, CYCLE + INTRO); }
   })();
 
   // wires are measured from live geometry — re-anchor after web fonts land and on resize

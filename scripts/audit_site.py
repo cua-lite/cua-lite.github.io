@@ -24,8 +24,8 @@ BANNED = [
 # screens / animated figures, drawn at reduced device scale). See the type-scale
 # comment block in css/style.css. This freezes the refactor so no one re-introduces
 # a by-eye size.
-SCENERY = re.compile(r'\.(win|sh|bw|gg|gs|ph|taskbar|tb|pair|chip-tag|node-sub|'
-                     r'flow-lab|wire-stage|tape|tp|mess)\b')
+SCENERY = re.compile(r'\.(win|sh|bw|gg|gs|ph|taskbar|tb|pair|chip-tag|node-sub|node-glyph|'
+                     r'flow-lab|wire-stage|tape|tp|pack|mess)\b')
 CSS_SOURCES = [ROOT / "css/style.css", ROOT / "blog/why-cua-lite/index.html",
                ROOT / "blog/index.html"]
 fail = 0
