@@ -102,23 +102,23 @@
    datasets = three platform screenshot-trajectory stacks (recorded data); agents = a cursor (the actor).
    this is what tells figure "datasets→agents" apart from figure "environments→agents" at a glance. */
 .pair-col { position: relative; }
-.col-seed { position: absolute; left: 0; top: 0; bottom: 0; display: none; flex-direction: column; gap: 13px; justify-content: center; padding-top: 26px; z-index: 4; pointer-events: none; }   /* centred + the hub's 26px offset so the seed sits exactly at the hub's midline */
+.col-seed { position: absolute; left: 0; top: 0; bottom: 0; display: none; flex-direction: column; gap: 10px; justify-content: center; padding-top: 26px; z-index: 4; pointer-events: none; }   /* centred + the hub's 26px offset so the seed sits exactly at the hub's midline */
 .pair-right .col-seed { left: auto; right: 0; align-items: flex-end; }
 .seed-fold .col-seed { display: flex; opacity: 1; transition: opacity .32s var(--ease), transform .32s var(--ease); }
 .seed-fold.unfolded .col-seed { opacity: 0; transform: scale(.9); }   /* seeds clear FIRST, then the pills arrive — never both mid-fade in the same spot */
 /* screenshot-trajectory frames — real device proportions like the homepage demos: desktop/web landscape, mobile portrait */
 .traj { position: relative; }
-.traj.desktop, .traj.web { width: 93px; height: 40px; }
-.traj.desktop .fr, .traj.web .fr { width: 60px; height: 40px; border-radius: 5px; }
-.traj.mobile { width: 65px; height: 48px; }
-.traj.mobile .fr { width: 31px; height: 48px; border-radius: 8px; }
-.traj.single.desktop, .traj.single.web { width: 60px; }   /* one live screen, no stack */
-.traj.single.mobile { width: 31px; }
-.traj .fr { position: absolute; top: 0; overflow: hidden; background: #fff; border: 1px solid rgba(40,30,15,.22); box-shadow: 2px 2px 5px -3px rgba(40,30,15,.30); }
-.traj .fr .bar { display: block; height: 7px; }
-.traj .fr .ln { display: block; height: 3.5px; border-radius: 1px; margin: 3.5px 5px 0; background: #ddd3c0; }
+.traj.desktop, .traj.web { width: 127px; height: 52px; }
+.traj.desktop .fr, .traj.web .fr { width: 82px; height: 52px; border-radius: 6px; }
+.traj.mobile { width: 89px; height: 66px; }
+.traj.mobile .fr { width: 44px; height: 66px; border-radius: 10px; }
+.traj.single.desktop, .traj.single.web { width: 82px; }   /* one live screen, no stack */
+.traj.single.mobile { width: 44px; }
+.traj .fr { position: absolute; top: 0; overflow: hidden; background: #fff; border: 1px solid rgba(40,30,15,.22); box-shadow: 2px 3px 6px -3px rgba(40,30,15,.30); }
+.traj .fr .bar { display: block; height: 9px; }
+.traj .fr .ln { display: block; height: 4.5px; border-radius: 1px; margin: 6px 8px 0; background: #ddd3c0; }
 .traj .fr .ln.a { background: var(--accent); opacity: .88; }
-.traj.mobile .fr .ln { margin: 4px 4px 0; }
+.traj.mobile .fr .ln { margin: 6px 6px 0; }
 .traj.desktop .fr { background: #33475a; } .traj.desktop .fr .bar { background: #26313d; } .traj.desktop .fr .ln { background: #56687a; }
 .traj.web .fr .bar { background: #ece2d1; }
 .traj.mobile .fr { background: #fbf7ef; } .traj.mobile .fr .bar { background: #efe6d5; }
@@ -658,7 +658,7 @@
       const t = document.createElement("div"); t.className = "traj " + plat;
       for (let i = 0; i < 4; i++) {
         const fr = document.createElement("span"); fr.className = "fr";
-        fr.style.left = (i * 11) + "px"; fr.style.opacity = [".6", ".74", ".87", "1"][i]; fr.style.zIndex = i + 1;
+        fr.style.left = (i * 15) + "px"; fr.style.opacity = [".6", ".74", ".87", "1"][i]; fr.style.zIndex = i + 1;
         const front = plat === "mobile" ? '<span class="bar"></span><span class="ln"></span><span class="ln"></span><span class="ln a"></span>' : '<span class="bar"></span><span class="ln"></span><span class="ln a"></span>';
         fr.innerHTML = i === 3 ? front : '<span class="bar"></span>';
         t.appendChild(fr);
