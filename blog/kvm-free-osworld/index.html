@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KVM-free OS(World) at Scale</title>
+<meta name="description" content="Lite.OSWorld runs all 369 OSWorld desktop tasks in a plain Docker container — no KVM, no virtual machine — with the same tasks, graders, and scores. ~4.6× less memory and no KVM: the container trades a slightly slower per-step screenshot for a far smaller footprint, packing several times more rollouts per host." />
+<link rel="preload" href="/assets/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/fonts/Fraunces-Italic.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/fonts/Urbanist.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/fonts/GeistMono.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=3" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=3" />
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=4" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="KVM-free OS(World) at Scale" />
+<meta property="og:description" content="The same 369 OSWorld tasks and graders, in a plain Docker container instead of a KVM virtual machine — ~4.6× less memory per instance, same scores." />
+<meta property="og:url" content="https://cua-lite.github.io/blog/kvm-free-osworld/" />
+<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=4" />
+<link rel="stylesheet" href="/css/style.css" />
+<style>
+/* ============================================================
+   KVM-free OS(World) at Scale — a data-report post.
+   Tokens, nav, fonts, buttons all come from /css/style.css.
+   The report component classes (.report-*, .cmp, .rt, .lb, .tbl-*)
+   are ported from the weekly-update stylesheet so this post reads
+   exactly like report §1.1, adapted to the site's blog shell.
+   ============================================================ */
+:root { --ok: #5a7d4e; }   /* muted olive "done" — not in the site stylesheet */
+
+/* ---- article shell (mirrors .report-wrap) ---- */
+.report-wrap { max-width: 720px; margin: 0 auto; padding: 76px 28px 40px; }
+.report-wrap p.report-meta { font-family: var(--mono); font-size: 11.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--dim); margin: 0 0 18px; }
+.report-wrap h1 { font-size: var(--t-title); font-weight: 350; letter-spacing: -0.025em; line-height: 1.03; color: var(--text); margin: 0 0 20px; }
+.report-wrap h1 em { font-style: italic; color: var(--accent); }
+.report-lead { color: var(--muted); font-size: clamp(16.5px, 1.6vw, 18.5px); line-height: 1.62; margin: 0 0 6px; }
+.report-lead b { color: var(--text); font-weight: 600; }
+.report-sec { scroll-margin-top: 90px; }
+.report-h2 { font-family: var(--serif); font-weight: 370; font-size: var(--t-section); color: var(--text); letter-spacing: -0.02em; line-height: 1.1; margin: 58px 0 12px; }
+.report-h2 .n { font-weight: 400; color: var(--muted); margin-right: 12px; }
+.report-h3 { font-family: var(--serif); font-weight: 470; font-size: var(--t-sub); color: var(--text); letter-spacing: -0.012em; line-height: 1.16; margin: 42px 0 8px; scroll-margin-top: 90px; }
+.report-h3 .n { font-weight: 400; color: var(--muted); margin-right: 10px; }
+.report-h4 { font-family: var(--mono); font-weight: 600; font-size: 12px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--accent); margin: 40px 0 12px; scroll-margin-top: 90px; }
+.report-wrap p { color: var(--muted); font-size: 16.5px; line-height: 1.7; margin: 0 0 20px; }
+.report-wrap p b, .report-wrap li b { color: var(--text); font-weight: 650; }
+.report-wrap p a, .report-wrap li a { color: var(--accent); }
+.report-wrap p a:hover, .report-wrap li a:hover { text-decoration: underline; }
+.report-wrap ul { color: var(--muted); font-size: 16px; line-height: 1.55; padding-left: 20px; margin: 0 0 20px; }
+.report-wrap li { margin-bottom: 9px; }
+.report-wrap :not(pre) > code { font-family: var(--mono); font-size: 13.5px; background: var(--panel-2); border: 1px solid var(--line); padding: 1px 6px; border-radius: 5px; color: var(--text); }
+
+/* ---- table of contents ---- */
+.toc { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 18px 22px 20px; margin: 30px 0 8px; }
+.toc-t { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); margin: 0 0 10px; }
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.report-wrap .toc a { display: inline-flex; gap: 11px; color: var(--text); font-size: 15px; padding: 5px 0; font-weight: 550; }
+.toc a:hover { color: var(--accent); text-decoration: none; }
+.toc .tnum { font-family: var(--mono); font-size: 12.5px; color: var(--accent); min-width: 24px; }
+
+/* ---- bleed + table blocks ---- */
+.bleed { width: min(94vw, 1000px); position: relative; left: 50%; transform: translateX(-50%); margin: 26px 0; }
+div.bleed { width: min(90vw, 860px); margin: 22px 0; }
+.tbl-block { margin: 22px 0; }
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--panel-edge); border-radius: 12px; background: var(--panel-fill); }
+table.rt { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 460px; }
+table.rt th, table.rt td { text-align: left; padding: 11px 18px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.rt thead th { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--panel-2); }
+table.rt thead th.lite { color: var(--accent); }
+table.rt tbody tr:last-child td { border-bottom: 0; }
+table.rt td:first-child, table.rt th:first-child { color: var(--text); font-weight: 550; }
+table.rt tbody td { color: var(--muted); }
+table.rt tr.key td { background: rgba(189,90,56,.06); }
+table.rt td.col-lite { color: var(--text); font-weight: 550; }
+table.rt td.col-lift { color: var(--accent); font-weight: 700; }
+table.rt td .u { color: var(--dim); font-family: var(--mono); font-size: 12px; }
+
+/* ---- notes / callouts ---- */
+.report-note { border-left: 2px solid var(--line-2); padding: 3px 16px; margin: -4px 0 22px; color: var(--dim); font-size: 13.5px; line-height: 1.55; }
+.report-note b { color: var(--muted); }
+.report-note code { font-size: 12px !important; }
+.report-call { border-left: 3px solid var(--accent); background: rgba(189,90,56,.05); padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 0 0 22px; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.report-call b { color: var(--accent); }
+
+/* ---- video comparison cards (report §1.1 .cmp) ---- */
+.cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.cmp-card { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 12px; overflow: hidden; }
+.cmp-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12.5px; color: var(--text); }
+.cmp-bar .tag { margin-left: auto; font-size: 10px; letter-spacing: .5px; text-transform: uppercase; }
+.cmp-bar .kvm { color: #b06a3a; }
+.cmp-bar .free { color: var(--ok); }
+.cmp-card video, .cmp-card img { display: block; width: 100%; height: auto; background: #111; aspect-ratio: 16 / 10; object-fit: cover; }
+.cmp-cap { text-align: center; font-family: var(--sans); font-size: 16px; color: var(--muted); margin-top: 14px; line-height: 1.6; }
+.tag { font-family: var(--mono); font-size: 11px; letter-spacing: .5px; color: var(--muted); background: var(--panel-lo); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; }
+
+/* ---- inline leaderboard (report §1.1 .lb) ---- */
+.kvlb { border: 1px solid var(--panel-edge); border-radius: 12px; background: var(--panel-fill); overflow: hidden; }
+.kvlb-head { display: flex; align-items: center; gap: 10px; padding: 9px 14px; background: var(--panel-2); border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+.kvlb-tabs { display: inline-flex; gap: 3px; }
+.kvlb-tab { font-family: var(--mono); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); background: none; border: 0; padding: 3px 9px; border-radius: 6px; cursor: pointer; }
+.kvlb-tab:hover { color: var(--text); }
+.kvlb-tab.on { color: var(--accent); background: var(--panel-fill); box-shadow: 0 1px 3px rgba(40,30,15,.12); }
+.kvlb-meta { color: var(--muted); }
+.kvlb-head a { color: var(--accent); margin-left: auto; white-space: nowrap; }
+.kvlb-list { padding: 6px; }
+.kvlb-row { display: grid; grid-template-columns: 22px minmax(110px, 1fr) minmax(60px, 1.6fr) 44px; align-items: center; gap: 12px; padding: 6px 12px; border-radius: 8px; }
+.kvlb-rank { font-family: var(--mono); font-size: 12px; color: var(--dim); text-align: right; }
+.kvlb-name { font-size: 13.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kvlb-name .org { color: var(--dim); }
+.kvlb-bar { height: 8px; border-radius: 999px; background: rgba(60,48,36,.10); }
+.kvlb-bar > i { display: block; height: 100%; border-radius: 999px; background: var(--accent); opacity: .5; transition: width .5s var(--ease); }
+.kvlb-score { font-family: var(--mono); font-size: 13px; color: var(--muted); text-align: right; }
+.kvlb-row.top { background: rgba(189,90,56,.07); }
+.kvlb-row.top .kvlb-bar > i { opacity: 1; }
+.kvlb-row.top .kvlb-score, .kvlb-row.top .kvlb-rank { color: var(--accent); font-weight: 700; }
+.kvlb-row.mine { background: rgba(189,90,56,.05); }
+.kvlb-row.mine .kvlb-name { color: var(--accent); font-weight: 600; }
+.kvlb-row.mine .kvlb-bar > i { opacity: .85; }
+.kvlb-row.mine .kvlb-score { color: var(--accent); font-weight: 600; }
+.kvlb-foot { padding: 9px 16px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 11px; color: var(--dim); line-height: 1.5; }
+
+/* ---- the stack diagram: what the container removes ---- */
+.stack-cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 4px 0 6px; }
+.stack { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 12px; padding: 14px 14px 16px; }
+.stack-h { font-family: var(--mono); font-size: 12px; color: var(--text); display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.stack-h .tag { margin-left: auto; font-size: 10px; letter-spacing: .5px; text-transform: uppercase; }
+.stack-h .kvm { color: #b06a3a; }
+.stack-h .free { color: var(--ok); }
+.layer { font-family: var(--mono); font-size: 12px; color: var(--muted); border: 1px solid var(--line-2); border-radius: 8px; padding: 9px 12px; margin-bottom: 7px; background: var(--bg); text-align: center; line-height: 1.35; }
+.layer small { display: block; font-size: 10px; color: var(--dim); letter-spacing: .3px; margin-top: 2px; }
+.layer.host { background: var(--panel-2); color: var(--text); }
+.layer.desk { border-color: var(--accent-dim); color: var(--text); background: rgba(189,90,56,.05); }
+.layer.kvm-layer { border-style: dashed; border-color: #b06a3a; color: #b06a3a; background: rgba(176,106,58,.06); }
+.layer.gone { position: relative; color: var(--dim); border-style: dashed; opacity: .55; }
+.layer.gone::after { content: "removed"; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--ok); }
+.stack-note { font-family: var(--mono); font-size: 10.5px; color: var(--dim); text-align: center; margin-top: 8px; line-height: 1.4; }
+
+/* ---- action-sequence viewer ---- */
+.seq { border: 1px solid var(--panel-edge); border-radius: 14px; background: var(--panel-fill); overflow: hidden; margin: 6px 0 8px; }
+.seq-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 10px 12px; background: var(--panel-2); border-bottom: 1px solid var(--line); }
+.seq-tab { font-family: var(--mono); font-size: 11.5px; color: var(--muted); background: none; border: 1px solid transparent; padding: 5px 11px; border-radius: 8px; cursor: pointer; letter-spacing: .2px; }
+.seq-tab:hover { color: var(--text); }
+.seq-tab.on { color: var(--accent); background: var(--panel-fill); border-color: var(--accent-dim); font-weight: 600; }
+.seq-tab .dm { color: var(--dim); font-size: 10px; }
+.seq-tab.on .dm { color: var(--accent-dim); }
+.seq-body { padding: 16px; }
+.seq-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+.seq-meta b { color: var(--text); font-weight: 600; }
+.seq-meta .pass { color: var(--ok); border: 1px solid rgba(90,125,78,.4); background: rgba(90,125,78,.07); border-radius: 999px; padding: 2px 9px; font-size: 11px; }
+.seq-meta .mdl { color: var(--accent); }
+.seq-vids { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+.seq-tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; margin-top: 14px; }
+table.seq-tbl { border-collapse: collapse; width: 100%; font-size: 12.5px; min-width: 560px; }
+table.seq-tbl th, table.seq-tbl td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.seq-tbl thead th { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--panel-2); }
+table.seq-tbl thead th.osw { color: #b06a3a; }
+table.seq-tbl thead th.lit { color: var(--accent); }
+table.seq-tbl tbody tr:last-child td { border-bottom: 0; }
+table.seq-tbl .tn { font-family: var(--mono); color: var(--dim); text-align: right; width: 22px; }
+table.seq-tbl .intent { color: var(--muted); font-size: 12px; line-height: 1.4; max-width: 260px; }
+table.seq-tbl code { font-family: var(--mono); font-size: 11px; color: var(--text); white-space: nowrap; }
+table.seq-tbl tr.match td.a-lite code { color: var(--ok); }
+table.seq-tbl td.a-os code { color: var(--muted); }
+.seq-foot { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 12px; font-family: var(--mono); font-size: 11.5px; color: var(--dim); }
+.seq-foot b { color: var(--muted); }
+
+/* ---- 10×10 trajectory matrix (100 gpt-5.5 rollouts, banded by env) ---- */
+.tmx { --c-cuagym: var(--accent); --c-cuaworld: var(--ok); --c-scalecua: #b06a3a;
+  display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; margin: 4px 0 2px;
+  padding: 8px; background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 12px; }
+.tcell { position: relative; aspect-ratio: 16 / 10; border-radius: 3px; overflow: hidden;
+  background: #14120d; box-shadow: inset 0 0 0 1px var(--tint, var(--line-2)); cursor: pointer;
+  transition: transform .16s var(--ease), box-shadow .16s var(--ease), z-index 0s; }
+.tcell video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tcell::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--tint, var(--line-2)); opacity: .8; }
+.tcell:hover, .tcell:focus-visible { transform: scale(2.15); z-index: 5; outline: none;
+  box-shadow: 0 8px 24px -6px rgba(40,30,15,.5), 0 0 0 1.5px var(--tint, var(--accent)); }
+.tcell.e-cuagym { --tint: var(--c-cuagym); }
+.tcell.e-cuaworld { --tint: var(--c-cuaworld); }
+.tcell.e-scalecua { --tint: var(--c-scalecua); }
+.tmx-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 12px 2px 0; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+.tmx-legend b { color: var(--text); font-weight: 600; }
+.tmx-legend .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.tmx-legend .cuagym { background: var(--accent); }
+.tmx-legend .cuaworld { background: var(--ok); }
+.tmx-legend .scalecua { background: #b06a3a; }
+.tmx-cap { font-family: var(--mono); font-size: 10.5px; color: var(--dim); margin-left: auto; }
+
+/* ---- close ---- */
+.report-close { border-top: 1px solid var(--line); margin-top: 44px; padding-top: 22px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 12px; color: var(--dim); }
+.report-close a { color: var(--dim); }
+.report-close a:hover { color: var(--accent); }
+.blog-foot { max-width: 720px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); }
+.blog-foot a { color: var(--dim); }
+.blog-foot a:hover { color: var(--text); }
+
+@media (max-width: 620px) {
+  .cmp, .seq-vids, .stack-cmp { grid-template-columns: 1fr; }
+  .bleed { width: 100%; left: 0; transform: none; }
+  .tcell:hover, .tcell:focus-visible { transform: scale(1.8); }
+}
+@media (max-width: 520px) {
+  table.rt { min-width: 0; font-size: 12.5px; }
+  table.rt th, table.rt td { padding: 8px 10px; }
+  table.rt td .u { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/"><span class="brand-plane"></span><span class="brand-name">CUA-Lite</span></a>
+    <nav class="nav-links">
+      <a href="/#start">Quickstart</a>
+      <a href="/#data">Data</a>
+      <a href="/#benchmarks">Eval</a>
+      <a href="/#train">Train</a>
+      <span class="nav-sep" aria-hidden="true"></span>
+      <a href="/blog/" aria-current="page">Blog</a>
+      <span class="nav-cta"><a class="btn-solid sm" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Datasets</a><a class="btn-ghost sm" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a></span>
+    </nav>
+  </div>
+</header>
+
+<main class="report-wrap">
+  <p class="report-meta">2026-07-20 · Zhanhui Zhou | Haoran Liu</p>
+  <h1>KVM-free <em>OS(World)</em> at scale</h1>
+  <p class="report-lead">A desktop benchmark like OSWorld normally runs each task in its own
+  virtual machine — which needs KVM hardware virtualization and is heavy to run in bulk.
+  <b>Lite.OSWorld runs the same desktop in a plain Docker container</b> — no VM, no KVM, no nested
+  virtualization — with the <b>same 369 tasks, the same graders, and the same scores</b>. This post
+  shows the three things that matter: <b>what changes</b>, <b>what it costs</b>, and <b>that the agent
+  behaves the same</b>.</p>
+
+  <nav class="toc" aria-label="Contents">
+    <p class="toc-t">On this page</p>
+    <ol>
+      <li><a href="#diff"><span class="tnum">1</span><span>What changes: OSWorld vs Lite.OSWorld</span></a></li>
+      <li><a href="#efficiency"><span class="tnum">2</span><span>What it costs: efficiency &amp; footprint at scale</span></a></li>
+      <li><a href="#trajectories"><span class="tnum">3</span><span>Same task, same trajectory</span></a></li>
+      <li><a href="#coming"><span class="tnum">4</span><span>Three more environments, same base</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ 1 · THE DIFF ============ -->
+  <section class="report-sec" id="diff">
+    <h2 class="report-h2"><span class="n">1</span>What changes: OSWorld vs Lite.OSWorld</h2>
+    <p><a href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld</a> ships a
+    full Ubuntu desktop as a <code>~23 GB</code> <code>Ubuntu.qcow2</code> disk image and boots it as a
+    <b>QEMU/KVM virtual machine inside Docker</b>. That VM is what makes it faithful — and what makes it
+    expensive: it needs <code>/dev/kvm</code> (hardware virtualization), it can't run
+    containers-in-containers, and it pins gigabytes of RAM whether or not anything is happening.</p>
+    <p><b>Lite.OSWorld keeps the desktop and drops the VM.</b> The same apps — LibreOffice, GIMP, VLC,
+    Thunderbird, Chrome, VS Code — run on a <b>GNOME-Flashback desktop in a plain Docker container</b>,
+    layered on a shared <code>cua-lite/sandbox.linux</code> base (Xvnc / noVNC, driven over an
+    exec-stdio channel). No KVM, no nested virtualization — so it boots in seconds, runs anywhere Docker
+    does (CI, containers-in-containers), and <b>parallelizes trivially</b>. The task JSONs and the
+    <b>built-in evaluators are unchanged</b>: grading still reads real system state (files, command
+    output, live app state) and returns the same float reward in <code>[0, 1]</code>.</p>
+
+    <figure class="bleed">
+      <div class="stack-cmp">
+        <div class="stack">
+          <div class="stack-h">OSWorld <span class="tag kvm">virtual machine</span></div>
+          <div class="layer host">Docker container</div>
+          <div class="layer kvm-layer">QEMU + KVM<small>needs /dev/kvm · nested virt</small></div>
+          <div class="layer">Guest Ubuntu VM<small>Ubuntu.qcow2 · ~23 GB · 4 GB RAM pinned</small></div>
+          <div class="layer desk">Ubuntu desktop + apps</div>
+          <div class="stack-note">hardware-virtualized · 1 box, a handful of VMs</div>
+        </div>
+        <div class="stack">
+          <div class="stack-h">Lite.OSWorld <span class="tag free">container</span></div>
+          <div class="layer host">Docker container</div>
+          <div class="layer kvm-layer gone">QEMU + KVM</div>
+          <div class="layer">sandbox.linux base<small>Xvnc / noVNC · exec-stdio · 5.4 GB image</small></div>
+          <div class="layer desk">GNOME-Flashback desktop + same apps</div>
+          <div class="stack-note">plain namespaces · 1 box, hundreds of containers</div>
+        </div>
+      </div>
+      <figcaption class="cmp-cap">Same desktop, same apps, same graders — the only thing that leaves is
+        the KVM virtualization layer, and with it the memory floor that caps how many you can pack.</figcaption>
+    </figure>
+
+    <div class="tbl-block">
+      <div class="tbl-wrap">
+        <table class="rt">
+          <thead>
+            <tr><th></th><th>OSWorld</th><th class="lite">Lite.OSWorld</th></tr>
+          </thead>
+          <tbody>
+            <tr class="key"><td>Needs KVM / nested virt</td><td>Yes</td><td class="col-lite">No</td></tr>
+            <tr><td>Backend</td><td>QEMU/KVM VM in Docker</td><td class="col-lite">Plain Docker container</td></tr>
+            <tr><td>Desktop</td><td>Ubuntu <code>.qcow2</code> VM</td><td class="col-lite">GNOME-Flashback container</td></tr>
+            <tr><td>Image on disk</td><td>~30 GB <span class="u">(7 GB image + 23 GB VM disk)</span></td><td class="col-lite">5.4 GB <span class="u">— shared 1.8 GB base</span></td></tr>
+            <tr><td>Runs in CI / container-in-container</td><td>No</td><td class="col-lite">Yes</td></tr>
+            <tr><td>Eval tasks</td><td>369</td><td class="col-lite">369 <span class="u">(same JSONs)</span></td></tr>
+            <tr><td>Evaluators</td><td>OSWorld built-ins</td><td class="col-lite">Identical</td></tr>
+            <tr><td>Training split</td><td>none</td><td class="col-lite">2,490 tasks <span class="u">(verifiable reward)</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="report-note">OSWorld is eval-only (369 tasks, no training data). Because every Lite.OSWorld
+      task carries a <b>deterministic evaluator that returns binary reward</b>, we could also generate a
+      <b>2,490-task training split</b> — 1,781 synthetic + 709 perturbations of the eval tasks — for
+      scalable RL without human annotation.
+      Details: <a href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/lite/osworld/README.md" target="_blank" rel="noopener">lite.osworld README ↗</a>.</p>
+  </section>
+
+  <!-- ============ 2 · EFFICIENCY ============ -->
+  <section class="report-sec" id="efficiency">
+    <h2 class="report-h2"><span class="n">2</span>What it costs: efficiency &amp; footprint at scale</h2>
+    <p>We re-evaluated the <b>environment cost only</b> — no model, no GPU — two ways, both strict:
+    <b>(1) per-step latency</b> read from <b>every turn of the real leaderboard rollouts</b> (~66k turns
+    per env, 13 agents), and <b>(2) resource footprint</b> from a live run that settles to true idle
+    before sampling. Host: 384 cores, 1.5 TiB RAM, <code>/dev/kvm</code> present. Scripts + raw data live
+    in <code>benchmarking/</code> alongside this post.</p>
+
+    <h4 class="report-h4">Per step, the VM is faster — the container is screenshot-bound</h4>
+    <p>Each turn records the environment's cost (<code>act</code> = action + settle + screenshot) and the
+    model's cost (<code>predict</code>). Measured on the real rollouts, and <b>paired on the same agent +
+    same task</b> (4,172 matched rollouts), so the delta is the environment, not the task mix:</p>
+    <div class="tbl-block">
+      <div class="tbl-wrap">
+        <table class="rt">
+          <thead>
+            <tr><th>Per step, median <span class="u">(≈66k turns/env)</span></th><th class="lite">Lite.OSWorld</th><th>OSWorld</th><th>Ratio</th></tr>
+          </thead>
+          <tbody>
+            <tr class="key"><td>Environment <code>act</code></td><td class="col-lite">4.72 s</td><td>2.53 s</td><td>OSWorld 1.9×</td></tr>
+            <tr><td>Model <code>predict</code></td><td class="col-lite">4.88 s</td><td>5.17 s</td><td>≈ equal</td></tr>
+            <tr><td>Env share of a step</td><td class="col-lite">52%</td><td>36%</td><td></td></tr>
+            <tr><td>Paired <code>act</code> ratio <span class="u">(same model+task)</span></td><td class="col-lite" colspan="2" style="text-align:center">Lite 1.86× / +2.4 s slower</td><td>4,172 pairs</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="report-note"><b>Being honest about per-step:</b> the KVM VM is genuinely <b>faster per
+      environment step</b> (median 2.5 s vs 4.7 s). Lite is <b>screenshot-bound</b> — a software-rendered,
+      GPU-less desktop captured and shipped over exec-stdio — not action-bound. But model <code>predict</code>
+      is <b>identical across envs</b> and is ~half of every turn, so the VM's per-step edge is a small slice
+      of a real rollout. Lite's advantage is not latency; it's footprint.</p>
+
+    <h4 class="report-h4">Footprint: ~4.6× less memory, no KVM — the scaling lever</h4>
+    <p>Freshly measured, settling to true idle before sampling (the earlier one-shot snapshot was the
+    source of a bogus idle-CPU number):</p>
+    <div class="tbl-block">
+      <div class="tbl-wrap">
+        <table class="rt">
+          <thead>
+            <tr><th>Footprint (env only)</th><th class="lite">Lite.OSWorld</th><th>OSWorld</th><th>Ratio</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Boot + reset</td><td class="col-lite">23.8 s</td><td>29.9 s</td><td class="col-lift">Lite 1.26×</td></tr>
+            <tr class="key"><td>Idle memory <span class="u">(steady)</span></td><td class="col-lite">0.9 GB</td><td>4.1 GB</td><td class="col-lift">4.6× less</td></tr>
+            <tr><td>Idle CPU <span class="u">(steady)</span></td><td class="col-lite">0.8%</td><td>4.2%</td><td>both low</td></tr>
+            <tr><td>Image on disk</td><td class="col-lite">5.4 GB</td><td>~30 GB <span class="u">(7 GB + 23 GB VM disk)</span></td><td class="col-lift">~5.5× less</td></tr>
+            <tr class="key"><td>Needs KVM / nested virt</td><td class="col-lite">No</td><td>Yes</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="report-note"><b>Two corrections to the earlier numbers:</b> settled, an idle KVM guest costs
+      <b>~4% CPU, not ~1.6 cores</b> — the old three-digit figure was a boot-settling artifact, and idle CPU
+      is <b>not</b> a real differentiator. What is real and stable is <b>memory: ~4.6× smaller</b> (the VM
+      sits near its fixed 4 GB reservation; the container holds ~0.9 GB). Since idle CPU is single-digit for
+      both, <b>RAM is the binding constraint at scale</b>: one host fits <b>~4.6× more Lite containers</b>
+      (RAM-bound projection — <code>host_RAM × 0.85 / idle_mem</code>, not a fleet we booted). The VM's
+      ~1.9× faster step trims that to a <b>~2.4×–4.6× throughput advantage</b> for Lite depending on how
+      much the (env-equal) model term dominates each turn. The lever is footprint, not per-step speed.</p>
+
+    <h4 class="report-h4">Same environment, same scores</h4>
+    <p><b>The point of a cheap copy is that it doesn't change the answer.</b> Across 13 agents, the
+    Lite.OSWorld and OSWorld leaderboards track each other closely — so a model trained or graded on the
+    cheap container carries over to the real benchmark. Toggle to compare:</p>
+    <div class="tbl-block">
+      <div class="kvlb" id="score-lb">
+        <div class="kvlb-head">
+          <span class="kvlb-tabs">
+            <button class="kvlb-tab on" type="button" data-env="lite">Lite.OSWorld</button>
+            <button class="kvlb-tab" type="button" data-env="osworld">OSWorld</button>
+          </span>
+          <span class="kvlb-meta">13 agents · success %</span>
+          <a href="/#benchmarks" target="_blank" rel="noopener">Live ↗</a>
+        </div>
+        <div class="kvlb-list">
+          <div class="kvlb-row top" data-lite="67.9" data-osworld="72.3"><span class="kvlb-rank">1</span><span class="kvlb-name">gpt-5.5</span><span class="kvlb-bar"><i style="width:100.0%"></i></span><span class="kvlb-score">67.9</span></div>
+          <div class="kvlb-row" data-lite="44.9" data-osworld="46.2"><span class="kvlb-rank">2</span><span class="kvlb-name"><span class="org">Qwen/</span>Qwen3.5-27B</span><span class="kvlb-bar"><i style="width:66.1%"></i></span><span class="kvlb-score">44.9</span></div>
+          <div class="kvlb-row" data-lite="37.8" data-osworld="42.8"><span class="kvlb-rank">3</span><span class="kvlb-name"><span class="org">meituan/</span>EvoCUA-8B</span><span class="kvlb-bar"><i style="width:55.7%"></i></span><span class="kvlb-score">37.8</span></div>
+          <div class="kvlb-row" data-lite="37.1" data-osworld="38.1"><span class="kvlb-rank">4</span><span class="kvlb-name"><span class="org">Qwen/</span>Qwen3.5-9B</span><span class="kvlb-bar"><i style="width:54.6%"></i></span><span class="kvlb-score">37.1</span></div>
+          <div class="kvlb-row" data-lite="33.0" data-osworld="35.8"><span class="kvlb-rank">5</span><span class="kvlb-name"><span class="org">Qwen/</span>Qwen3-VL-32B</span><span class="kvlb-bar"><i style="width:48.6%"></i></span><span class="kvlb-score">33.0</span></div>
+          <div class="kvlb-row" data-lite="29.6" data-osworld="34.2"><span class="kvlb-rank">6</span><span class="kvlb-name"><span class="org">Qwen/</span>Qwen3-VL-8B</span><span class="kvlb-bar"><i style="width:43.6%"></i></span><span class="kvlb-score">29.6</span></div>
+          <div class="kvlb-row" data-lite="29.6" data-osworld="30.3"><span class="kvlb-rank">7</span><span class="kvlb-name"><span class="org">Qwen/</span>Qwen3.5-4B</span><span class="kvlb-bar"><i style="width:43.6%"></i></span><span class="kvlb-score">29.6</span></div>
+          <div class="kvlb-row" data-lite="28.0" data-osworld="29.1"><span class="kvlb-rank">8</span><span class="kvlb-name"><span class="org">Qwen/</span>Qwen3-VL-4B</span><span class="kvlb-bar"><i style="width:41.2%"></i></span><span class="kvlb-score">28.0</span></div>
+          <div class="kvlb-row" data-lite="27.7" data-osworld="29.4"><span class="kvlb-rank">9</span><span class="kvlb-name"><span class="org">ByteDance/</span>UI-TARS-1.5-7B</span><span class="kvlb-bar"><i style="width:40.8%"></i></span><span class="kvlb-score">27.7</span></div>
+          <div class="kvlb-row" data-lite="24.9" data-osworld="20.5"><span class="kvlb-rank">10</span><span class="kvlb-name"><span class="org">Qwen/</span>Qwen3-VL-2B</span><span class="kvlb-bar"><i style="width:36.7%"></i></span><span class="kvlb-score">24.9</span></div>
+          <div class="kvlb-row" data-lite="16.8" data-osworld="14.7"><span class="kvlb-rank">11</span><span class="kvlb-name"><span class="org">ByteDance/</span>UI-TARS-7B-DPO</span><span class="kvlb-bar"><i style="width:24.7%"></i></span><span class="kvlb-score">16.8</span></div>
+          <div class="kvlb-row" data-lite="15.3" data-osworld="10.7"><span class="kvlb-rank">12</span><span class="kvlb-name"><span class="org">Qwen/</span>Qwen3.5-2B</span><span class="kvlb-bar"><i style="width:22.5%"></i></span><span class="kvlb-score">15.3</span></div>
+          <div class="kvlb-row" data-lite="13.4" data-osworld="15.0"><span class="kvlb-rank">13</span><span class="kvlb-name"><span class="org">OpenGVLab/</span>ScaleCUA-7B</span><span class="kvlb-bar"><i style="width:19.7%"></i></span><span class="kvlb-score">13.4</span></div>
+        </div>
+        <div class="kvlb-foot">Success % over the scored eval tasks — 321 on Lite.OSWorld, 325 on OSWorld (infeasible / auth-blocked tasks filtered). Source: <code>assets/exps/eval/*/run_0.json</code>.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3 · TRAJECTORIES ============ -->
+  <section class="report-sec" id="trajectories">
+    <h2 class="report-h2"><span class="n">3</span>Same task, same trajectory</h2>
+    <p>Numbers say the scores match; the trajectories say <em>why</em>. Below are five OSWorld tasks run
+    by the <b>same model</b> on <b>both</b> environments — files, a terminal, LibreOffice Writer &amp;
+    Calc, and VS Code. In each case the agent takes the <b>same plan of action</b> and both episodes
+    reach <b>reward&nbsp;1.0</b>. Pick a task; the videos play side by side and the table aligns the two
+    action streams turn by turn.</p>
+
+    <figure class="bleed">
+      <div class="seq" id="seq">
+        <div class="seq-tabs" role="tablist"></div>
+        <div class="seq-body"></div>
+      </div>
+      <figcaption class="cmp-cap">The desktops aren't pixel-identical, so click coordinates drift by a few
+        pixels — but the agent's plan, and the outcome, are the same in the VM and the container.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ 4 · COMING NEXT ============ -->
+  <section class="report-sec" id="coming">
+    <h2 class="report-h2"><span class="n">4</span>Three more environments, same base</h2>
+    <p>The same KVM-free container base already powers more of CUA-Lite — and the rollouts are in. Here
+    are <b>100 gpt-5.5 trajectories</b> as a 10×10 matrix: <b>20 Lite.CUAGym</b> (web + desktop app tasks),
+    <b>30 Lite.CUAWorld</b> (real desktop science apps — GMAT mission analysis + PyMOL molecular
+    structure), and <b>50 ScaleCUA</b> (OSWorld-RL). The rows band by environment.
+    <b>Hover any tile to play it.</b></p>
+
+    <figure class="bleed">
+      <div class="tmx" id="tmx" role="list" aria-label="100 gpt-5.5 trajectories, 10 by 10"></div>
+      <div class="tmx-legend">
+        <span><span class="sw cuagym"></span><b>CUAGym</b> · 20 · web + desktop</span>
+        <span><span class="sw cuaworld"></span><b>CUAWorld</b> · 30 · GMAT + PyMOL</span>
+        <span><span class="sw scalecua"></span><b>ScaleCUA</b> · 50 · OSWorld-RL</span>
+        <span class="tmx-cap">gpt-5.5 · hover to play</span>
+      </div>
+    </figure>
+    <p class="report-note">All three run on the same GNOME-Flashback container as Lite.OSWorld — no VM, no
+      KVM. Want to compare your own agent, or add an environment? Everything here is open —
+      <a href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a> ·
+      <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Hugging&nbsp;Face</a>.</p>
+  </section>
+
+  <div class="report-close">
+    <span>2026-07-20 · Zhanhui Zhou | Haoran Liu</span>
+    <span><a href="#top">↑ Top</a> &nbsp; <a href="/blog/">All posts</a></span>
+  </div>
+</main>
+
+<footer class="blog-foot">
+  <span>© 2026 CUA-Lite — any data, any agent, any computer.</span>
+  <a href="/blog/">← All posts</a>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---- leaderboard env toggle: rescale bars + swap scores in place ---- */
+  var lb = document.getElementById("score-lb");
+  if (lb) {
+    var rows = [].slice.call(lb.querySelectorAll(".kvlb-row"));
+    function paint(env) {
+      var vals = rows.map(function (r) { return parseFloat(r.dataset[env]); });
+      var max = Math.max.apply(null, vals);
+      rows.forEach(function (r, k) {
+        var v = vals[k];
+        r.querySelector(".kvlb-score").textContent = v.toFixed(1);
+        r.querySelector(".kvlb-bar > i").style.width = (100 * v / max) + "%";
+      });
+    }
+    lb.querySelectorAll(".kvlb-tab").forEach(function (t) {
+      t.addEventListener("click", function () {
+        lb.querySelectorAll(".kvlb-tab").forEach(function (x) { x.classList.remove("on"); });
+        t.classList.add("on");
+        paint(t.dataset.env);
+      });
+    });
+    paint("lite");
+  }
+
+  /* ---- action-sequence viewer ---- */
+  var DEMOS = {"demo1":{"domain":"os","label":"Files & folders","app":"Nautilus / desktop","model":"Qwen3-VL-2B","task_id_os":"e0df059f-28a6-4169-924f-b9623e7184cc","task_id_lite":"osworld_os_e0df059f","n_turns":5,"os_reward":1.0,"lite_reward":1.0,"os_act":22.6,"lite_act":22.4,"os_predict":12.1,"lite_predict":19.1,"turns":[{"i":0,"think":"Right-click on the desktop folder labeled \"todo_list_Jan_1\" to open its context menu.","os":"click(coordinate=[961,815], button=right)","lite":"click(coordinate=[961,817], button=right)","same":false},{"i":1,"think":"Click the \"Rename...\" option in the context menu for the folder \"todo_list_Jan_1\" to sta…","os":"click(coordinate=[875,593])","lite":"click(coordinate=[871,589])","same":false},{"i":2,"think":"Type \"todo_list_Jan_2\" into the active rename text field to replace the current name.","os":"type(text=todo_list_Jan_2)","lite":"type(text=todo_list_Jan_2)","same":true},{"i":3,"think":"Click the green \"Rename\" button in the rename dialog to confirm changing the folder name…","os":"click(coordinate=[961,741])","lite":"click(coordinate=[961,744])","same":false},{"i":4,"think":"The task is completed successfully.","os":"terminate(status=success)","lite":"terminate(status=success)","same":true}]},"demo2":{"domain":"os","label":"Shell commands","app":"Terminal","model":"Qwen3.5-27B","task_id_os":"6f56bf42-85b8-4fbb-8e06-6c44960184ba","task_id_lite":"osworld_os_6f56bf42","n_turns":15,"os_reward":1.0,"lite_reward":1.0,"os_act":49.8,"lite_act":73.0,"os_predict":62.0,"lite_predict":61.1,"turns":[{"i":0,"think":"copied file1 to dir1, dir2, and dir3 using cp command","os":"type(text=cp file1 dir1 dir2 dir3)","lite":"type(text=cp file1 dir1/ dir2/ dir3/)","same":false},{"i":1,"think":"pressed enter to execute the copy command","os":"key(keys=[enter])","lite":"key(keys=[enter])","same":true},{"i":2,"think":"typed 'cp file1 dir1/'","os":"type(text=cp file1 dir1/)","lite":"type(text=cp file1 dir1/)","same":true},{"i":3,"think":"pressed enter","os":"key(keys=[enter])","lite":"key(keys=[enter])","same":true},{"i":4,"think":"typed 'cp file1 dir2/'","os":"type(text=cp file1 dir2/)","lite":"type(text=cp file1 dir2/)","same":true},{"i":5,"think":"pressed enter","os":"key(keys=[enter])","lite":"key(keys=[enter])","same":true},{"i":6,"think":"typed 'cp file1 dir3/'","os":"type(text=cp file1 dir3/)","lite":"type(text=cp file1 dir3/)","same":true},{"i":7,"think":"pressed enter","os":"key(keys=[enter])","lite":"key(keys=[enter])","same":true},{"i":8,"think":"typed 'ls dir1/'","os":"type(text=ls dir1/)","lite":"type(text=ls dir1/)","same":true},{"i":9,"think":"pressed enter","os":"key(keys=[enter])","lite":"key(keys=[enter])","same":true},{"i":10,"think":"typed 'ls dir2/'","os":"type(text=ls dir2/)","lite":"type(text=ls dir2/)","same":true},{"i":11,"think":"pressed enter","os":"key(keys=[enter])","lite":"key(keys=[enter])","same":true},{"i":12,"think":"typed 'ls dir3/'","os":"type(text=ls dir3/)","lite":"type(text=ls dir3/)","same":true},{"i":13,"think":"pressed enter","os":"key(keys=[enter])","lite":"key(keys=[enter])","same":true},{"i":14,"think":"copied file1 to dir1, dir2, and dir3 and verified with ls","os":"response(text=file1 has been copied to dir1, dir2, and dir3.)","lite":"response(text=file1 has been successfully copied to dir1, dir2, and dir3. Verification with 'ls' commands confirms the presence of file1 in each directory.)","same":false}]},"demo3":{"domain":"libreoffice_writer","label":"Insert a table","app":"LibreOffice Writer","model":"EvoCUA-8B","task_id_os":"66399b0d-8fda-4618-95c4-bfc6191617e9","task_id_lite":"osworld_libreoffice_writer_66399b0d","n_turns":8,"os_reward":1.0,"lite_reward":1.0,"os_act":20.0,"lite_act":70.1,"os_predict":54.2,"lite_predict":50.1,"turns":[{"i":0,"think":"Click on the \"Table\" menu in the menu bar.","os":"click(coordinate=[211,69])","lite":"click(coordinate=[215,69])","same":false},{"i":1,"think":"Click on the \"Insert Table...\" option in the Table menu.","os":"click(coordinate=[234,92])","lite":"click(coordinate=[244,92])","same":false},{"i":2,"think":"Triple-click on the columns input field to select its current value.","os":"click(coordinate=[451,364], clicks=3)","lite":"click(coordinate=[450,362], clicks=3)","same":false},{"i":3,"think":"Type \"7\" into the columns input field.","os":"type(text=7)","lite":"type(text=7)","same":true},{"i":4,"think":"Triple-click on the rows input field to select its current value.","os":"click(coordinate=[591,364], clicks=3)","lite":"click(coordinate=[598,362], clicks=3)","same":false},{"i":5,"think":"Type \"5\" into the rows input field.","os":"type(text=5)","lite":"type(text=5)","same":true},{"i":6,"think":"Click the \"Insert\" button in the Insert Table dialog to create the table.","os":"click(coordinate=[634,746])","lite":"click(coordinate=[648,753])","same":false},{"i":7,"think":"Task completed successfully; terminate with success.","os":"terminate(status=success)","lite":"terminate(status=success)","same":true}]},"demo4":{"domain":"libreoffice_calc","label":"Spreadsheet edit","app":"LibreOffice Calc","model":"ScaleCUA-7B","task_id_os":"6e99a1ad-07d2-4b66-a1ce-ece6d99c20a5","task_id_lite":"osworld_libreoffice_calc_6e99a1ad","n_turns":6,"os_reward":1.0,"lite_reward":1.0,"os_act":18.2,"lite_act":29.6,"os_predict":13.4,"lite_predict":10.7,"turns":[{"i":0,"think":"To format the 'Spent ($)' column to display two decimal places, I need to first select t…","os":"mouse_move(coordinate=[175,269])","lite":"click(coordinate=[179,195])","same":false},{"i":1,"think":"The goal is to format the \"Spent\" column to retain two decimal places. Since column 'C'…","os":"click(coordinate=[178,427], button=right)","lite":"click(coordinate=[183,201], button=right)","same":false},{"i":2,"think":"Since the goal is to format the 'Spent' column to keep two decimal places, I need to acc…","os":"click(coordinate=[216,722])","lite":"click(coordinate=[229,512])","same":false},{"i":3,"think":"The 'Format Cells' dialog is open, displaying options to adjust the format of cells. The…","os":"click(coordinate=[470,473])","lite":"click(coordinate=[478,462])","same":false},{"i":4,"think":"I am currently in the 'Format Cells' dialog within LibreOffice Calc, with the 'Numbers'…","os":"click(coordinate=[666,778])","lite":"click(coordinate=[683,779])","same":false},{"i":5,"think":"The task was to format the \"Spent\" column to keep two decimal points, and the screenshot…","os":"terminate(status=success)","lite":"terminate(status=success)","same":true}]},"demo5":{"domain":"vs_code","label":"Find & replace","app":"VS Code","model":"Qwen3.5-27B","task_id_os":"0ed39f63-6049-43d4-ba4d-5fa2fe04a951","task_id_lite":"osworld_vs_code_0ed39f63","n_turns":8,"os_reward":1.0,"lite_reward":1.0,"os_act":19.1,"lite_act":35.9,"os_predict":35.1,"lite_predict":33.2,"turns":[{"i":0,"think":"Press the Ctrl and H keys together to open the Find and Replace dialog.","os":"click(coordinate=[962,835], clicks=2)","lite":"key(keys=[ctrl,h])","same":false},{"i":1,"think":"Type the text \"text\" into the Find field to specify the search term that needs to be rep…","os":"key(keys=[ctrl,h])","lite":"type(text=text)","same":false},{"i":2,"think":"Click on the Replace input field in the Find and Replace dialog to activate it for enter…","os":"type(text=text)","lite":"click(coordinate=[751,177])","same":false},{"i":3,"think":"Type the text \"test\" into the Replace field to specify the replacement text that will re…","os":"click(coordinate=[771,175])","lite":"type(text=test)","same":false},{"i":4,"think":"Click on the Replace All button in the Find and Replace dialog, which is located in the…","os":"type(text=test)","lite":"click(coordinate=[851,177])","same":false},{"i":5,"think":"Press the Escape key to close the Find and Replace dialog.","os":"click(coordinate=[851,175])","lite":"key(keys=[esc])","same":false},{"i":6,"think":"Press and hold the Control key, then press the 's' key to save the document and preserve…","os":"key(keys=[ctrl,s])","lite":"key(keys=[ctrl,s])","same":true},{"i":7,"think":"The task is completed successfully.","os":"terminate(status=success)","lite":"terminate(status=success)","same":true}]}};
+  var seq = document.getElementById("seq");
+  if (seq) {
+    var tabsEl = seq.querySelector(".seq-tabs");
+    var bodyEl = seq.querySelector(".seq-body");
+    var keys = Object.keys(DEMOS);
+
+    function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]; }); }
+
+    function render(key) {
+      var d = DEMOS[key];
+      // tabs
+      tabsEl.innerHTML = keys.map(function (k) {
+        var x = DEMOS[k];
+        return '<button class="seq-tab' + (k === key ? " on" : "") + '" data-k="' + k + '" type="button">'
+          + esc(x.label) + ' <span class="dm">· ' + esc(x.app.split(" / ")[0]) + '</span></button>';
+      }).join("");
+
+      var rowsHtml = d.turns.map(function (t) {
+        return '<tr class="' + (t.same ? "match" : "") + '">'
+          + '<td class="tn">' + t.i + '</td>'
+          + '<td class="intent">' + esc(t.think) + '</td>'
+          + '<td class="a-os"><code>' + esc(t.os) + '</code></td>'
+          + '<td class="a-lite"><code>' + esc(t.lite) + '</code></td>'
+          + '</tr>';
+      }).join("");
+
+      bodyEl.innerHTML =
+        '<div class="seq-meta">'
+        + '<span><b>' + esc(d.app) + '</b></span>'
+        + '<span>model <span class="mdl">' + esc(d.model) + '</span></span>'
+        + '<span>' + d.n_turns + ' turns</span>'
+        + '<span class="pass">both reward ' + d.os_reward.toFixed(1) + '</span>'
+        + '</div>'
+        + '<div class="seq-vids">'
+        + '<div class="cmp-card"><div class="cmp-bar">OSWorld <span class="tag kvm">virtual machine</span></div>'
+        + '<video src="assets/action_seq/' + key + '/os_' + key + '.mp4" autoplay loop muted playsinline preload="metadata"></video></div>'
+        + '<div class="cmp-card"><div class="cmp-bar">Lite.OSWorld <span class="tag free">container</span></div>'
+        + '<video src="assets/action_seq/' + key + '/liteos_' + key + '.mp4" autoplay loop muted playsinline preload="metadata"></video></div>'
+        + '</div>'
+        + '<div class="seq-tbl-wrap"><table class="seq-tbl"><thead><tr>'
+        + '<th class="tn">#</th><th>What the agent intends</th><th class="osw">OSWorld action</th><th class="lit">Lite.OSWorld action</th>'
+        + '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>'
+        + '<div class="seq-foot">'
+        + '<span><b>act time</b> — OSWorld ' + d.os_act + 's · Lite ' + d.lite_act + 's</span>'
+        + '<span><b>think time</b> — OSWorld ' + d.os_predict + 's · Lite ' + d.lite_predict + 's</span>'
+        + '<span><b>tasks</b> — <code>' + esc(d.task_id_lite) + '</code></span>'
+        + '</div>';
+
+      tabsEl.querySelectorAll(".seq-tab").forEach(function (b) {
+        b.addEventListener("click", function () { render(b.dataset.k); });
+      });
+    }
+    render(keys[0]);
+  }
+
+  /* ---- §4 · 10×10 trajectory matrix — lazy-loaded, hover to play ---- */
+  var TILES = [{"f":"assets/lite/cuagym/train_01_0018392e-cfed-5e2f-8278-a4580d64a00a.mp4","e":"cuagym","t":"CUAGym · 0018392e"},{"f":"assets/lite/cuagym/train_02_014ff5a6-88a8-53f0-a599-1efefe0c8d61.mp4","e":"cuagym","t":"CUAGym · 014ff5a6"},{"f":"assets/lite/cuagym/train_03_01bf1e31-9466-582e-9b4b-e53ea897dd24.mp4","e":"cuagym","t":"CUAGym · 01bf1e31"},{"f":"assets/lite/cuagym/train_04_0228bc73-d8af-5306-8512-2b28c587db47.mp4","e":"cuagym","t":"CUAGym · 0228bc73"},{"f":"assets/lite/cuagym/train_05_029ac170-7091-5c00-80f2-709eef768eda.mp4","e":"cuagym","t":"CUAGym · 029ac170"},{"f":"assets/lite/cuagym/train_06_02bfd1a7-268d-5512-9fc1-60a287496d7f.mp4","e":"cuagym","t":"CUAGym · 02bfd1a7"},{"f":"assets/lite/cuagym/train_07_02fd9338-90c1-5dd0-a532-7b72a0057c93.mp4","e":"cuagym","t":"CUAGym · 02fd9338"},{"f":"assets/lite/cuagym/train_08_035cfc8c-0279-55f6-805f-e876d6c84fb8.mp4","e":"cuagym","t":"CUAGym · 035cfc8c"},{"f":"assets/lite/cuagym/train_09_04eb0674-bb14-5a2a-b534-3c09d2b8138c.mp4","e":"cuagym","t":"CUAGym · 04eb0674"},{"f":"assets/lite/cuagym/train_10_05d6b960-0e93-5bda-803b-21a9df19bcd9.mp4","e":"cuagym","t":"CUAGym · 05d6b960"},{"f":"assets/lite/cuagym/train_11_05d70c83-1292-5b94-9181-17c631a668af.mp4","e":"cuagym","t":"CUAGym · 05d70c83"},{"f":"assets/lite/cuagym/train_12_07058f41-795d-51a9-8d38-e33c8c0c223b.mp4","e":"cuagym","t":"CUAGym · 07058f41"},{"f":"assets/lite/cuagym/train_13_07342996-7c38-501b-93e8-ab8c0838003e.mp4","e":"cuagym","t":"CUAGym · 07342996"},{"f":"assets/lite/cuagym/train_14_0836071c-953f-54d4-a5ff-10a9e819b0ee.mp4","e":"cuagym","t":"CUAGym · 0836071c"},{"f":"assets/lite/cuagym/train_15_088e42fe-6431-5a3b-9486-344a754c7eae.mp4","e":"cuagym","t":"CUAGym · 088e42fe"},{"f":"assets/lite/cuagym/train_16_0916d074-4ad4-50fd-8333-ca24ef6c2c24.mp4","e":"cuagym","t":"CUAGym · 0916d074"},{"f":"assets/lite/cuagym/train_17_0a043d50-7439-5c74-96cd-0ebc7409e64d.mp4","e":"cuagym","t":"CUAGym · 0a043d50"},{"f":"assets/lite/cuagym/train_18_0a674510-73e4-53ab-ad62-e770fbd9dd1b.mp4","e":"cuagym","t":"CUAGym · 0a674510"},{"f":"assets/lite/cuagym/train_19_0b2bace5-cd2e-56d6-be7d-b0a2e7354c95.mp4","e":"cuagym","t":"CUAGym · 0b2bace5"},{"f":"assets/lite/cuagym/train_20_0bc31e05-f1ac-5a16-8e25-38ce4f98aea7.mp4","e":"cuagym","t":"CUAGym · 0bc31e05"},{"f":"assets/lite/cuaworld/gmat_01_sar_ground_track_targeting.mp4","e":"cuaworld","t":"CUAWorld · GMAT · sar ground track targeting"},{"f":"assets/lite/cuaworld/gmat_02_smallsat_dispenser_phasing_analysis.mp4","e":"cuaworld","t":"CUAWorld · GMAT · smallsat dispenser phasing analysis"},{"f":"assets/lite/cuaworld/gmat_03_solar_flux_decay_comparison.mp4","e":"cuaworld","t":"CUAWorld · GMAT · solar flux decay comparison"},{"f":"assets/lite/cuaworld/gmat_04_solar_oberth_interstellar_escape.mp4","e":"cuaworld","t":"CUAWorld · GMAT · solar oberth interstellar escape"},{"f":"assets/lite/cuaworld/gmat_05_sso_ltan_maintenance_campaign.mp4","e":"cuaworld","t":"CUAWorld · GMAT · sso ltan maintenance campaign"},{"f":"assets/lite/cuaworld/gmat_06_suborbital_splashdown_dispersion.mp4","e":"cuaworld","t":"CUAWorld · GMAT · suborbital splashdown dispersion"},{"f":"assets/lite/cuaworld/gmat_07_tandem_sar_helix_formation.mp4","e":"cuaworld","t":"CUAWorld · GMAT · tandem sar helix formation"},{"f":"assets/lite/cuaworld/gmat_08_targeted_ocean_reentry_design.mp4","e":"cuaworld","t":"CUAWorld · GMAT · targeted ocean reentry design"},{"f":"assets/lite/cuaworld/gmat_09_tdrss_isl_coverage.mp4","e":"cuaworld","t":"CUAWorld · GMAT · tdrss isl coverage"},{"f":"assets/lite/cuaworld/gmat_10_transfer_strategy_tradeoff.mp4","e":"cuaworld","t":"CUAWorld · GMAT · transfer strategy tradeoff"},{"f":"assets/lite/cuaworld/gmat_11_tundra_orbit_longitude_targeting.mp4","e":"cuaworld","t":"CUAWorld · GMAT · tundra orbit longitude targeting"},{"f":"assets/lite/cuaworld/gmat_12_uncontrolled_reentry_prediction.mp4","e":"cuaworld","t":"CUAWorld · GMAT · uncontrolled reentry prediction"},{"f":"assets/lite/cuaworld/gmat_13_upper_stage_gto_finite_burn.mp4","e":"cuaworld","t":"CUAWorld · GMAT · upper stage gto finite burn"},{"f":"assets/lite/cuaworld/gmat_14_vleo_geomagnetic_storm_deorbit.mp4","e":"cuaworld","t":"CUAWorld · GMAT · vleo geomagnetic storm deorbit"},{"f":"assets/lite/cuaworld/gmat_15_walker_constellation_setup.mp4","e":"cuaworld","t":"CUAWorld · GMAT · walker constellation setup"},{"f":"assets/lite/cuaworld/pymol_01_protac_ternary_complex_analysis.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · protac ternary complex analysis"},{"f":"assets/lite/cuaworld/pymol_02_pten_cancer_mutation_mapping.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · pten cancer mutation mapping"},{"f":"assets/lite/cuaworld/pymol_03_rnase_cis_proline_analysis.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · rnase cis proline analysis"},{"f":"assets/lite/cuaworld/pymol_04_sars_cov_2_glycan_shield_mapping.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · sars cov 2 glycan shield mapping"},{"f":"assets/lite/cuaworld/pymol_05_sars_cov_2_n501y_mutagenesis.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · sars cov 2 n501y mutagenesis"},{"f":"assets/lite/cuaworld/pymol_06_sod1_electrostatic_funnel.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · sod1 electrostatic funnel"},{"f":"assets/lite/cuaworld/pymol_07_t4_lysozyme_disulfide_engineering.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · t4 lysozyme disulfide engineering"},{"f":"assets/lite/cuaworld/pymol_08_t4_lysozyme_hydrophobic_cavity.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · t4 lysozyme hydrophobic cavity"},{"f":"assets/lite/cuaworld/pymol_09_telomeric_g_quadruplex_analysis.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · telomeric g quadruplex analysis"},{"f":"assets/lite/cuaworld/pymol_10_trna_domain_architecture_analysis.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · trna domain architecture analysis"},{"f":"assets/lite/cuaworld/pymol_11_ttr_v30m_mutation_analysis.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · ttr v30m mutation analysis"},{"f":"assets/lite/cuaworld/pymol_12_u1a_rna_stacking_analysis.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · u1a rna stacking analysis"},{"f":"assets/lite/cuaworld/pymol_13_ubiquitin_lysine_sasa_mapping.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · ubiquitin lysine sasa mapping"},{"f":"assets/lite/cuaworld/pymol_14_ubiquitin_nmr_ensemble_flexibility.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · ubiquitin nmr ensemble flexibility"},{"f":"assets/lite/cuaworld/pymol_15_zinc_finger_dna_recognition.mp4","e":"cuaworld","t":"CUAWorld · PyMOL · zinc finger dna recognition"},{"f":"assets/lite/scalecua/rl_01_scalecua_osworld_rl_chrome_030eeff7_b492_4218_b312_701ec99ee0cc_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_02_scalecua_osworld_rl_chrome_030eeff7_b492_4218_b312_701ec99ee0cc_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_03_scalecua_osworld_rl_chrome_030eeff7_b492_4218_b312_701ec99ee0cc_traj_verify_3.mp4","e":"scalecua","t":"ScaleCUA · chrome · v3"},{"f":"assets/lite/scalecua/rl_04_scalecua_osworld_rl_chrome_06fe7178_4491_4589_810f_2e2bc9502122_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_05_scalecua_osworld_rl_chrome_06fe7178_4491_4589_810f_2e2bc9502122_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_06_scalecua_osworld_rl_chrome_06fe7178_4491_4589_810f_2e2bc9502122_traj_verify_2.mp4","e":"scalecua","t":"ScaleCUA · chrome · v2"},{"f":"assets/lite/scalecua/rl_07_scalecua_osworld_rl_chrome_0d8b7de3_e8de_4d86_b9fd_dd2dce58a217_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_08_scalecua_osworld_rl_chrome_0d8b7de3_e8de_4d86_b9fd_dd2dce58a217_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_09_scalecua_osworld_rl_chrome_0d8b7de3_e8de_4d86_b9fd_dd2dce58a217_traj_verify_2.mp4","e":"scalecua","t":"ScaleCUA · chrome · v2"},{"f":"assets/lite/scalecua/rl_10_scalecua_osworld_rl_chrome_0e5303d4_8820_42f6_b18d_daf7e633de21_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_11_scalecua_osworld_rl_chrome_0e5303d4_8820_42f6_b18d_daf7e633de21_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_12_scalecua_osworld_rl_chrome_0e5303d4_8820_42f6_b18d_daf7e633de21_traj_verify_2.mp4","e":"scalecua","t":"ScaleCUA · chrome · v2"},{"f":"assets/lite/scalecua/rl_13_scalecua_osworld_rl_chrome_12086550_11c0_466b_b367_1d9e75b3910e_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_14_scalecua_osworld_rl_chrome_12086550_11c0_466b_b367_1d9e75b3910e_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_15_scalecua_osworld_rl_chrome_12086550_11c0_466b_b367_1d9e75b3910e_traj_verify_2.mp4","e":"scalecua","t":"ScaleCUA · chrome · v2"},{"f":"assets/lite/scalecua/rl_16_scalecua_osworld_rl_chrome_12086550_11c0_466b_b367_1d9e75b3910e_traj_verify_3.mp4","e":"scalecua","t":"ScaleCUA · chrome · v3"},{"f":"assets/lite/scalecua/rl_17_scalecua_osworld_rl_chrome_12086550_11c0_466b_b367_1d9e75b3910e_traj_verify_4.mp4","e":"scalecua","t":"ScaleCUA · chrome · v4"},{"f":"assets/lite/scalecua/rl_18_scalecua_osworld_rl_chrome_12086550_11c0_466b_b367_1d9e75b3910e_traj_verify_5.mp4","e":"scalecua","t":"ScaleCUA · chrome · v5"},{"f":"assets/lite/scalecua/rl_19_scalecua_osworld_rl_chrome_121ba48f_9e17_48ce_9bc6_a4fb17a7ebba_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_20_scalecua_osworld_rl_chrome_121ba48f_9e17_48ce_9bc6_a4fb17a7ebba_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_21_scalecua_osworld_rl_chrome_121ba48f_9e17_48ce_9bc6_a4fb17a7ebba_traj_verify_2.mp4","e":"scalecua","t":"ScaleCUA · chrome · v2"},{"f":"assets/lite/scalecua/rl_22_scalecua_osworld_rl_chrome_1704f00f_79e6_43a7_961b_cedd3724d5fd_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_23_scalecua_osworld_rl_chrome_1704f00f_79e6_43a7_961b_cedd3724d5fd_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_24_scalecua_osworld_rl_chrome_1704f00f_79e6_43a7_961b_cedd3724d5fd_traj_verify_2.mp4","e":"scalecua","t":"ScaleCUA · chrome · v2"},{"f":"assets/lite/scalecua/rl_25_scalecua_osworld_rl_chrome_236833a3_5704_47fc_888c_4f298f09f799_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_26_scalecua_osworld_rl_chrome_236833a3_5704_47fc_888c_4f298f09f799_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_27_scalecua_osworld_rl_chrome_236833a3_5704_47fc_888c_4f298f09f799_traj_verify_2.mp4","e":"scalecua","t":"ScaleCUA · chrome · v2"},{"f":"assets/lite/scalecua/rl_28_scalecua_osworld_rl_chrome_2888b4e6_5b47_4b57_8bf5_c73827890774_traj_verify_3.mp4","e":"scalecua","t":"ScaleCUA · chrome · v3"},{"f":"assets/lite/scalecua/rl_29_scalecua_osworld_rl_chrome_2888b4e6_5b47_4b57_8bf5_c73827890774_traj_verify_4.mp4","e":"scalecua","t":"ScaleCUA · chrome · v4"},{"f":"assets/lite/scalecua/rl_30_scalecua_osworld_rl_chrome_2ad9387a_65d8_4e33_ad5b_7580065a27ca_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_31_scalecua_osworld_rl_chrome_2ad9387a_65d8_4e33_ad5b_7580065a27ca_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_32_scalecua_osworld_rl_chrome_2ad9387a_65d8_4e33_ad5b_7580065a27ca_traj_verify_2.mp4","e":"scalecua","t":"ScaleCUA · chrome · v2"},{"f":"assets/lite/scalecua/rl_33_scalecua_osworld_rl_chrome_2ad9387a_65d8_4e33_ad5b_7580065a27ca_traj_verify_3.mp4","e":"scalecua","t":"ScaleCUA · chrome · v3"},{"f":"assets/lite/scalecua/rl_34_scalecua_osworld_rl_chrome_2ad9387a_65d8_4e33_ad5b_7580065a27ca_traj_verify_4.mp4","e":"scalecua","t":"ScaleCUA · chrome · v4"},{"f":"assets/lite/scalecua/rl_35_scalecua_osworld_rl_chrome_2ae9ba84_3a0d_4d4c_8338_3a1478dc5fe3_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_36_scalecua_osworld_rl_chrome_2ae9ba84_3a0d_4d4c_8338_3a1478dc5fe3_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_37_scalecua_osworld_rl_chrome_2ae9ba84_3a0d_4d4c_8338_3a1478dc5fe3_traj_verify_2.mp4","e":"scalecua","t":"ScaleCUA · chrome · v2"},{"f":"assets/lite/scalecua/rl_38_scalecua_osworld_rl_chrome_2ae9ba84_3a0d_4d4c_8338_3a1478dc5fe3_traj_verify_4.mp4","e":"scalecua","t":"ScaleCUA · chrome · v4"},{"f":"assets/lite/scalecua/rl_39_scalecua_osworld_rl_chrome_2ae9ba84_3a0d_4d4c_8338_3a1478dc5fe3_traj_verify_5.mp4","e":"scalecua","t":"ScaleCUA · chrome · v5"},{"f":"assets/lite/scalecua/rl_40_scalecua_osworld_rl_chrome_2ae9ba84_3a0d_4d4c_8338_3a1478dc5fe3_traj_verify_6.mp4","e":"scalecua","t":"ScaleCUA · chrome · v6"},{"f":"assets/lite/scalecua/rl_41_scalecua_osworld_rl_chrome_3299584d_8f11_4457_bf4c_ce98f7600250_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_42_scalecua_osworld_rl_chrome_3299584d_8f11_4457_bf4c_ce98f7600250_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_43_scalecua_osworld_rl_chrome_3299584d_8f11_4457_bf4c_ce98f7600250_traj_verify_2.mp4","e":"scalecua","t":"ScaleCUA · chrome · v2"},{"f":"assets/lite/scalecua/rl_44_scalecua_osworld_rl_chrome_3299584d_8f11_4457_bf4c_ce98f7600250_traj_verify_3.mp4","e":"scalecua","t":"ScaleCUA · chrome · v3"},{"f":"assets/lite/scalecua/rl_45_scalecua_osworld_rl_chrome_3299584d_8f11_4457_bf4c_ce98f7600250_traj_verify_4.mp4","e":"scalecua","t":"ScaleCUA · chrome · v4"},{"f":"assets/lite/scalecua/rl_46_scalecua_osworld_rl_chrome_35253b65_1c19_4304_8aa4_6884b8218fc0_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"},{"f":"assets/lite/scalecua/rl_47_scalecua_osworld_rl_chrome_35253b65_1c19_4304_8aa4_6884b8218fc0_traj_verify_1.mp4","e":"scalecua","t":"ScaleCUA · chrome · v1"},{"f":"assets/lite/scalecua/rl_48_scalecua_osworld_rl_chrome_35253b65_1c19_4304_8aa4_6884b8218fc0_traj_verify_2.mp4","e":"scalecua","t":"ScaleCUA · chrome · v2"},{"f":"assets/lite/scalecua/rl_49_scalecua_osworld_rl_chrome_3720f614_37fd_4d04_8a6b_76f54f8c222d_traj_verify_5.mp4","e":"scalecua","t":"ScaleCUA · chrome · v5"},{"f":"assets/lite/scalecua/rl_50_scalecua_osworld_rl_chrome_386dbd0e_0241_4a0a_b6a2_6704fba26b1c_traj_verify_0.mp4","e":"scalecua","t":"ScaleCUA · chrome · v0"}];
+  var tmx = document.getElementById("tmx");
+  if (tmx) {
+    var io = "IntersectionObserver" in window ? new IntersectionObserver(function (es, obs) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var v = e.target.querySelector("video");
+        if (v && !v.src && v.dataset.src) v.src = v.dataset.src + "#t=0.1";   // load first frame only when near view
+        obs.unobserve(e.target);
+      });
+    }, { rootMargin: "300px" }) : null;
+    var play = function (v) { if (v.dataset.src && !v.src) v.src = v.dataset.src; var p = v.play(); if (p) p.catch(function () {}); };
+    var frag = document.createDocumentFragment();
+    TILES.forEach(function (t) {
+      var cell = document.createElement("div");
+      cell.className = "tcell e-" + t.e;
+      cell.setAttribute("role", "listitem");
+      cell.title = t.t;
+      cell.tabIndex = 0;
+      var v = document.createElement("video");
+      v.muted = true; v.loop = true; v.playsInline = true; v.preload = "auto";
+      v.dataset.src = t.f;
+      cell.appendChild(v);
+      cell.addEventListener("mouseenter", function () { play(v); });
+      cell.addEventListener("focus", function () { play(v); });
+      cell.addEventListener("mouseleave", function () { v.pause(); });
+      cell.addEventListener("blur", function () { v.pause(); });
+      frag.appendChild(cell);
+      if (io) io.observe(cell);
+    });
+    tmx.appendChild(frag);
+  }
+})();
+</script>
+</body>
+</html>

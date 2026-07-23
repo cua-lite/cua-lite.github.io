@@ -1,0 +1,625 @@
+{
+  "meta": {
+    "harness": "measure_footprint.py",
+    "n_tasks": 5,
+    "settle_s": 25.0,
+    "samples": 8,
+    "sample_gap_s": 2.0,
+    "mode": "direct (no env-server, no model, no GPU)",
+    "host": {
+      "date": "2026-07-20",
+      "nproc": "384",
+      "mem_total": "1.5Ti",
+      "kvm_present": true,
+      "images": {
+        "cua-lite/osworld:latest": "7.32GB",
+        "cua-lite/lite.osworld:latest": "5.4GB",
+        "cua-lite/sandbox.linux:latest": "1.9GB"
+      },
+      "osworld_qcow2_bytes": 24460197888,
+      "osworld_qcow2_gib": 22.8
+    },
+    "osworld_note": "OSWorld VM boot initially failed on this host due to VS Code fileWatcher exhausting fs.inotify.max_user_watches (rootless Docker draws from the same pool \u2192 dnsmasq in the qemu container couldn't watch /etc/resolv.conf \u2192 QEMU usermode net \u2192 guest server unreachable). After freeing the watches, all boots succeeded; these are those runs.",
+    "disk": {
+      "lite.osworld_image_gb": 5.4,
+      "osworld_image_gb": 7.32,
+      "osworld_qcow2_gib": 23,
+      "osworld_total_gb_approx": 30,
+      "note": "docker image sizes; osworld also needs the 23 GiB Ubuntu.qcow2 VM disk"
+    }
+  },
+  "envs": {
+    "lite.osworld": {
+      "env_id": "lite.osworld",
+      "per_task": [
+        {
+          "label": "libreoffice_calc",
+          "hash": "7a4e4bc8",
+          "task_id": "osworld_libreoffice_calc_7a4e4bc8",
+          "boot_reset_s": 23.81,
+          "ready": true,
+          "container": "lite-env-local-lite.osworld-osworld_libreoffice_calc_7a4e4bc8-c565f0",
+          "idle_series": [
+            {
+              "mem_mib": 916.1,
+              "cpu_perc": 0.3,
+              "pids": "480"
+            },
+            {
+              "mem_mib": 904.0,
+              "cpu_perc": 0.48,
+              "pids": "480"
+            },
+            {
+              "mem_mib": 904.0,
+              "cpu_perc": 0.19,
+              "pids": "480"
+            },
+            {
+              "mem_mib": 904.1,
+              "cpu_perc": 8.85,
+              "pids": "480"
+            },
+            {
+              "mem_mib": 904.1,
+              "cpu_perc": 0.42,
+              "pids": "480"
+            },
+            {
+              "mem_mib": 902.3,
+              "cpu_perc": 1.2,
+              "pids": "477"
+            },
+            {
+              "mem_mib": 902.2,
+              "cpu_perc": 0.19,
+              "pids": "477"
+            },
+            {
+              "mem_mib": 902.1,
+              "cpu_perc": 8.89,
+              "pids": "477"
+            }
+          ],
+          "idle_mem_mib": {
+            "n": 8,
+            "median": 904.0,
+            "mean": 904.86,
+            "min": 902.1,
+            "max": 916.1,
+            "std": 4.33
+          },
+          "idle_cpu_perc": {
+            "n": 8,
+            "median": 0.45,
+            "mean": 2.56,
+            "min": 0.19,
+            "max": 8.89,
+            "std": 3.65
+          }
+        },
+        {
+          "label": "libreoffice_impress",
+          "hash": "841b50aa",
+          "task_id": "osworld_libreoffice_impress_841b50aa",
+          "boot_reset_s": 23.67,
+          "ready": true,
+          "container": "lite-env-local-lite.osworld-osworld_libreoffice_impress_841b50aa-fb4a05",
+          "idle_series": [
+            {
+              "mem_mib": 906.7,
+              "cpu_perc": 0.58,
+              "pids": "480"
+            },
+            {
+              "mem_mib": 885.6,
+              "cpu_perc": 2.22,
+              "pids": "478"
+            },
+            {
+              "mem_mib": 892.7,
+              "cpu_perc": 0.85,
+              "pids": "480"
+            },
+            {
+              "mem_mib": 892.4,
+              "cpu_perc": 0.45,
+              "pids": "480"
+            },
+            {
+              "mem_mib": 892.3,
+              "cpu_perc": 0.43,
+              "pids": "480"
+            },
+            {
+              "mem_mib": 882.9,
+              "cpu_perc": 2.77,
+              "pids": "475"
+            },
+            {
+              "mem_mib": 890.2,
+              "cpu_perc": 0.71,
+              "pids": "476"
+            },
+            {
+              "mem_mib": 890.6,
+              "cpu_perc": 1.06,
+              "pids": "477"
+            }
+          ],
+          "idle_mem_mib": {
+            "n": 8,
+            "median": 891.45,
+            "mean": 891.67,
+            "min": 882.9,
+            "max": 906.7,
+            "std": 6.57
+          },
+          "idle_cpu_perc": {
+            "n": 8,
+            "median": 0.78,
+            "mean": 1.13,
+            "min": 0.43,
+            "max": 2.77,
+            "std": 0.82
+          }
+        },
+        {
+          "label": "vs_code",
+          "hash": "ea98c5d7",
+          "task_id": "osworld_vs_code_ea98c5d7",
+          "boot_reset_s": 24.77,
+          "ready": true,
+          "container": "lite-env-local-lite.osworld-osworld_vs_code_ea98c5d7-3bcb30",
+          "idle_series": [
+            {
+              "mem_mib": 1074.2,
+              "cpu_perc": 1.07,
+              "pids": "647"
+            },
+            {
+              "mem_mib": 1067.0,
+              "cpu_perc": 1.37,
+              "pids": "644"
+            },
+            {
+              "mem_mib": 1074.2,
+              "cpu_perc": 0.52,
+              "pids": "647"
+            },
+            {
+              "mem_mib": 1074.2,
+              "cpu_perc": 0.38,
+              "pids": "647"
+            },
+            {
+              "mem_mib": 1074.2,
+              "cpu_perc": 2.22,
+              "pids": "647"
+            },
+            {
+              "mem_mib": 1065.0,
+              "cpu_perc": 1.03,
+              "pids": "641"
+            },
+            {
+              "mem_mib": 1072.1,
+              "cpu_perc": 0.6,
+              "pids": "644"
+            },
+            {
+              "mem_mib": 1062.9,
+              "cpu_perc": 2.98,
+              "pids": "644"
+            }
+          ],
+          "idle_mem_mib": {
+            "n": 8,
+            "median": 1073.15,
+            "mean": 1070.47,
+            "min": 1062.9,
+            "max": 1074.2,
+            "std": 4.44
+          },
+          "idle_cpu_perc": {
+            "n": 8,
+            "median": 1.05,
+            "mean": 1.27,
+            "min": 0.38,
+            "max": 2.98,
+            "std": 0.85
+          }
+        },
+        {
+          "label": "multi_apps",
+          "hash": "bc2b57f3",
+          "task_id": "osworld_multi_apps_bc2b57f3",
+          "boot_reset_s": 34.32,
+          "ready": true,
+          "container": "lite-env-local-lite.osworld-osworld_multi_apps_bc2b57f3-9ec096",
+          "idle_series": [
+            {
+              "mem_mib": 959.8,
+              "cpu_perc": 0.45,
+              "pids": "481"
+            },
+            {
+              "mem_mib": 938.4,
+              "cpu_perc": 1.98,
+              "pids": "479"
+            },
+            {
+              "mem_mib": 946.5,
+              "cpu_perc": 1.01,
+              "pids": "481"
+            },
+            {
+              "mem_mib": 945.6,
+              "cpu_perc": 0.22,
+              "pids": "481"
+            },
+            {
+              "mem_mib": 945.6,
+              "cpu_perc": 0.42,
+              "pids": "481"
+            },
+            {
+              "mem_mib": 936.4,
+              "cpu_perc": 2.09,
+              "pids": "476"
+            },
+            {
+              "mem_mib": 943.7,
+              "cpu_perc": 0.63,
+              "pids": "478"
+            },
+            {
+              "mem_mib": 943.9,
+              "cpu_perc": 0.51,
+              "pids": "478"
+            }
+          ],
+          "idle_mem_mib": {
+            "n": 8,
+            "median": 944.75,
+            "mean": 944.99,
+            "min": 936.4,
+            "max": 959.8,
+            "std": 6.54
+          },
+          "idle_cpu_perc": {
+            "n": 8,
+            "median": 0.57,
+            "mean": 0.91,
+            "min": 0.22,
+            "max": 2.09,
+            "std": 0.68
+          }
+        },
+        {
+          "label": "os",
+          "hash": "13584542",
+          "task_id": "osworld_os_13584542",
+          "boot_reset_s": 23.01,
+          "ready": true,
+          "container": "lite-env-local-lite.osworld-osworld_os_13584542-bf2aac",
+          "idle_series": [
+            {
+              "mem_mib": 693.7,
+              "cpu_perc": 1.55,
+              "pids": "474"
+            },
+            {
+              "mem_mib": 679.6,
+              "cpu_perc": 0.43,
+              "pids": "474"
+            },
+            {
+              "mem_mib": 679.8,
+              "cpu_perc": 8.77,
+              "pids": "474"
+            },
+            {
+              "mem_mib": 679.6,
+              "cpu_perc": 0.18,
+              "pids": "474"
+            },
+            {
+              "mem_mib": 679.6,
+              "cpu_perc": 0.5,
+              "pids": "474"
+            },
+            {
+              "mem_mib": 677.8,
+              "cpu_perc": 1.38,
+              "pids": "471"
+            },
+            {
+              "mem_mib": 677.8,
+              "cpu_perc": 8.95,
+              "pids": "471"
+            },
+            {
+              "mem_mib": 677.8,
+              "cpu_perc": 0.21,
+              "pids": "471"
+            }
+          ],
+          "idle_mem_mib": {
+            "n": 8,
+            "median": 679.6,
+            "mean": 680.71,
+            "min": 677.8,
+            "max": 693.7,
+            "std": 4.98
+          },
+          "idle_cpu_perc": {
+            "n": 8,
+            "median": 0.94,
+            "mean": 2.75,
+            "min": 0.18,
+            "max": 8.95,
+            "std": 3.56
+          }
+        }
+      ],
+      "aggregate": {
+        "boot_reset_s": {
+          "n": 5,
+          "median": 23.81,
+          "mean": 25.92,
+          "min": 23.01,
+          "max": 34.32,
+          "std": 4.24
+        },
+        "idle_mem_mib": {
+          "n": 5,
+          "median": 904.0,
+          "mean": 898.59,
+          "min": 679.6,
+          "max": 1073.15,
+          "std": 127.0
+        },
+        "idle_cpu_perc": {
+          "n": 5,
+          "median": 0.78,
+          "mean": 0.76,
+          "min": 0.45,
+          "max": 1.05,
+          "std": 0.22
+        }
+      },
+      "leftover_reaped": 1
+    },
+    "osworld": {
+      "env_id": "osworld",
+      "per_task": [
+        {
+          "label": "libreoffice_calc",
+          "hash": "7a4e4bc8",
+          "task_id": "7a4e4bc8-922c-4c84-865c-25ba34136be1",
+          "boot_reset_s": 30.55,
+          "ready": true,
+          "container": "lite-env-local-osworld-7a4e4bc8-922c-4c84-865c-25ba34136be1-71aada",
+          "idle_series": [
+            {
+              "mem_mib": 4164.6,
+              "cpu_perc": 6.07,
+              "pids": "301"
+            },
+            {
+              "mem_mib": 4164.6,
+              "cpu_perc": 3.56,
+              "pids": "293"
+            },
+            {
+              "mem_mib": 4164.6,
+              "cpu_perc": 4.63,
+              "pids": "293"
+            },
+            {
+              "mem_mib": 4164.6,
+              "cpu_perc": 3.61,
+              "pids": "293"
+            },
+            {
+              "mem_mib": 4164.6,
+              "cpu_perc": 2.93,
+              "pids": "293"
+            },
+            {
+              "mem_mib": 4169.7,
+              "cpu_perc": 379.99,
+              "pids": "293"
+            },
+            {
+              "mem_mib": 4168.7,
+              "cpu_perc": 3.09,
+              "pids": "293"
+            },
+            {
+              "mem_mib": 4168.7,
+              "cpu_perc": 3.3,
+              "pids": "293"
+            }
+          ],
+          "idle_mem_mib": {
+            "n": 8,
+            "median": 4164.6,
+            "mean": 4166.26,
+            "min": 4164.6,
+            "max": 4169.7,
+            "std": 2.17
+          },
+          "idle_cpu_perc": {
+            "n": 8,
+            "median": 3.58,
+            "mean": 50.9,
+            "min": 2.93,
+            "max": 379.99,
+            "std": 124.39
+          }
+        },
+        {
+          "label": "libreoffice_impress",
+          "hash": "841b50aa",
+          "task_id": "841b50aa-df53-47bd-a73a-22d3a9f73160",
+          "boot_reset_s": 29.92,
+          "ready": true,
+          "container": "lite-env-local-osworld-841b50aa-df53-47bd-a73a-22d3a9f73160-93aaff",
+          "idle_series": [
+            {
+              "mem_mib": 4124.7,
+              "cpu_perc": 3.29,
+              "pids": "306"
+            },
+            {
+              "mem_mib": 4123.6,
+              "cpu_perc": 3.55,
+              "pids": "295"
+            },
+            {
+              "mem_mib": 4122.6,
+              "cpu_perc": 4.83,
+              "pids": "295"
+            },
+            {
+              "mem_mib": 4123.6,
+              "cpu_perc": 83.2,
+              "pids": "295"
+            },
+            {
+              "mem_mib": 4123.6,
+              "cpu_perc": 5.14,
+              "pids": "295"
+            },
+            {
+              "mem_mib": 4124.7,
+              "cpu_perc": 301.54,
+              "pids": "295"
+            },
+            {
+              "mem_mib": 4124.7,
+              "cpu_perc": 3.32,
+              "pids": "295"
+            },
+            {
+              "mem_mib": 4124.7,
+              "cpu_perc": 3.3,
+              "pids": "295"
+            }
+          ],
+          "idle_mem_mib": {
+            "n": 8,
+            "median": 4124.15,
+            "mean": 4124.02,
+            "min": 4122.6,
+            "max": 4124.7,
+            "std": 0.74
+          },
+          "idle_cpu_perc": {
+            "n": 8,
+            "median": 4.19,
+            "mean": 51.02,
+            "min": 3.29,
+            "max": 301.54,
+            "std": 98.18
+          }
+        },
+        {
+          "label": "vs_code",
+          "hash": "ea98c5d7",
+          "task_id": "ea98c5d7-3cf9-4f9b-8ad3-366b58e0fcae",
+          "boot_reset_s": 27.61,
+          "ready": true,
+          "container": "lite-env-local-osworld-ea98c5d7-3cf9-4f9b-8ad3-366b58e0fcae-6f1488",
+          "idle_series": [
+            {
+              "mem_mib": 4412.4,
+              "cpu_perc": 50.87,
+              "pids": "298"
+            },
+            {
+              "mem_mib": 4409.3,
+              "cpu_perc": 6.66,
+              "pids": "298"
+            },
+            {
+              "mem_mib": 4414.5,
+              "cpu_perc": 216.5,
+              "pids": "298"
+            },
+            {
+              "mem_mib": 4413.4,
+              "cpu_perc": 8.13,
+              "pids": "298"
+            },
+            {
+              "mem_mib": 4413.4,
+              "cpu_perc": 6.69,
+              "pids": "298"
+            },
+            {
+              "mem_mib": 4413.4,
+              "cpu_perc": 7.16,
+              "pids": "298"
+            },
+            {
+              "mem_mib": 4413.4,
+              "cpu_perc": 6.47,
+              "pids": "298"
+            },
+            {
+              "mem_mib": 4413.4,
+              "cpu_perc": 11.07,
+              "pids": "297"
+            }
+          ],
+          "idle_mem_mib": {
+            "n": 8,
+            "median": 4413.4,
+            "mean": 4412.9,
+            "min": 4409.3,
+            "max": 4414.5,
+            "std": 1.46
+          },
+          "idle_cpu_perc": {
+            "n": 8,
+            "median": 7.65,
+            "mean": 39.19,
+            "min": 6.47,
+            "max": 216.5,
+            "std": 68.5
+          }
+        }
+      ],
+      "aggregate": {
+        "boot_reset_s": {
+          "n": 3,
+          "median": 29.92,
+          "mean": 29.36,
+          "min": 27.61,
+          "max": 30.55,
+          "std": 1.27
+        },
+        "idle_mem_mib": {
+          "n": 3,
+          "median": 4164.6,
+          "mean": 4234.05,
+          "min": 4124.15,
+          "max": 4413.4,
+          "std": 127.89
+        },
+        "idle_cpu_perc": {
+          "n": 3,
+          "median": 4.19,
+          "mean": 5.14,
+          "min": 3.58,
+          "max": 7.65,
+          "std": 1.79
+        }
+      },
+      "leftover_reaped": 0
+    }
+  }
+}

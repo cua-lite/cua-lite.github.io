@@ -1,0 +1,427 @@
+[
+  {
+    "turn": 0,
+    "osworld": {
+      "turn": 0,
+      "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_00/00_screenshot.png",
+      "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_00/04_screenshot_annotated.png",
+      "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_00/01_prompt.txt",
+      "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_00/02_response.txt",
+      "agent_content_text": "Action: Right-click on the \"todo_list_Jan_1\" folder on the desktop to open its context menu.",
+      "agent_tool": {
+        "name": "computer_use",
+        "arguments": {
+          "action": "right_click",
+          "coordinate": [
+            961,
+            815
+          ]
+        }
+      },
+      "lite_content_text": "Right-click on the \"todo_list_Jan_1\" folder on the desktop to open its context menu.",
+      "lite_tool": {
+        "name": "click",
+        "arguments": {
+          "coordinate": [
+            961,
+            815
+          ],
+          "button": "right"
+        }
+      },
+      "executed_actions": [
+        {
+          "call": "pyautogui.click(1845, 880, button='right')"
+        }
+      ],
+      "reward": null,
+      "terminated": false,
+      "truncated": false,
+      "timing_seconds": {
+        "observe": 0.07011463498929515,
+        "predict": 3.1337608519825153,
+        "act": 4.79800949402852
+      }
+    },
+    "lite_osworld": {
+      "turn": 0,
+      "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_00/00_screenshot.png",
+      "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_00/04_screenshot_annotated.png",
+      "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_00/01_prompt.txt",
+      "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_00/02_response.txt",
+      "agent_content_text": "Action: Right-click on the desktop folder labeled \"todo_list_Jan_1\" to open its context menu.",
+      "agent_tool": {
+        "name": "computer_use",
+        "arguments": {
+          "action": "right_click",
+          "coordinate": [
+            961,
+            817
+          ]
+        }
+      },
+      "lite_content_text": "Right-click on the desktop folder labeled \"todo_list_Jan_1\" to open its context menu.",
+      "lite_tool": {
+        "name": "click",
+        "arguments": {
+          "coordinate": [
+            961,
+            817
+          ],
+          "button": "right"
+        }
+      },
+      "executed_actions": [
+        {
+          "call": "computer.interface.right_click",
+          "args": {
+            "x": 1845,
+            "y": 882
+          }
+        }
+      ],
+      "reward": null,
+      "terminated": false,
+      "truncated": false,
+      "timing_seconds": {
+        "observe": 0.05025780600044527,
+        "predict": 1.0379817949997232,
+        "act": 5.013592698000139
+      }
+    },
+    "same_agent_tool_name": true,
+    "same_lite_tool_name": true,
+    "same_lite_tool_arguments": false
+  },
+  {
+    "turn": 1,
+    "osworld": {
+      "turn": 1,
+      "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_01/00_screenshot.png",
+      "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_01/04_screenshot_annotated.png",
+      "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_01/01_prompt.txt",
+      "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_01/02_response.txt",
+      "agent_content_text": "Action: Click the \"Rename...\" option in the context menu for the \"todo_list_Jan_1\" folder.",
+      "agent_tool": {
+        "name": "computer_use",
+        "arguments": {
+          "action": "left_click",
+          "coordinate": [
+            875,
+            593
+          ]
+        }
+      },
+      "lite_content_text": "Click the \"Rename...\" option in the context menu for the \"todo_list_Jan_1\" folder.",
+      "lite_tool": {
+        "name": "click",
+        "arguments": {
+          "coordinate": [
+            875,
+            593
+          ]
+        }
+      },
+      "executed_actions": [
+        {
+          "call": "pyautogui.click(1680, 640, button='left')"
+        }
+      ],
+      "reward": null,
+      "terminated": false,
+      "truncated": false,
+      "timing_seconds": {
+        "observe": 0.052733489021193236,
+        "predict": 2.106538264953997,
+        "act": 6.784670294029638
+      }
+    },
+    "lite_osworld": {
+      "turn": 1,
+      "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_01/00_screenshot.png",
+      "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_01/04_screenshot_annotated.png",
+      "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_01/01_prompt.txt",
+      "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_01/02_response.txt",
+      "agent_content_text": "Action: Click the \"Rename...\" option in the context menu for the folder \"todo_list_Jan_1\" to start renaming it.",
+      "agent_tool": {
+        "name": "computer_use",
+        "arguments": {
+          "action": "left_click",
+          "coordinate": [
+            871,
+            589
+          ]
+        }
+      },
+      "lite_content_text": "Click the \"Rename...\" option in the context menu for the folder \"todo_list_Jan_1\" to start renaming it.",
+      "lite_tool": {
+        "name": "click",
+        "arguments": {
+          "coordinate": [
+            871,
+            589
+          ]
+        }
+      },
+      "executed_actions": [
+        {
+          "call": "computer.interface.left_click",
+          "args": {
+            "x": 1672,
+            "y": 636
+          }
+        }
+      ],
+      "reward": null,
+      "terminated": false,
+      "truncated": false,
+      "timing_seconds": {
+        "observe": 0.08887263199994777,
+        "predict": 3.2071124590002,
+        "act": 4.66677762099971
+      }
+    },
+    "same_agent_tool_name": true,
+    "same_lite_tool_name": true,
+    "same_lite_tool_arguments": false
+  },
+  {
+    "turn": 2,
+    "osworld": {
+      "turn": 2,
+      "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_02/00_screenshot.png",
+      "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_02/04_screenshot_annotated.png",
+      "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_02/01_prompt.txt",
+      "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_02/02_response.txt",
+      "agent_content_text": "Action: Type 'todo_list_Jan_2' into the active rename text field.",
+      "agent_tool": {
+        "name": "computer_use",
+        "arguments": {
+          "action": "type",
+          "text": "todo_list_Jan_2"
+        }
+      },
+      "lite_content_text": "Type 'todo_list_Jan_2' into the active rename text field.",
+      "lite_tool": {
+        "name": "type",
+        "arguments": {
+          "text": "todo_list_Jan_2"
+        }
+      },
+      "executed_actions": [
+        {
+          "call": "pyautogui.typewrite('todo_list_Jan_2')"
+        }
+      ],
+      "reward": null,
+      "terminated": false,
+      "truncated": false,
+      "timing_seconds": {
+        "observe": 0.052806880965363234,
+        "predict": 2.0567449780064635,
+        "act": 3.5163910830160603
+      }
+    },
+    "lite_osworld": {
+      "turn": 2,
+      "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_02/00_screenshot.png",
+      "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_02/04_screenshot_annotated.png",
+      "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_02/01_prompt.txt",
+      "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_02/02_response.txt",
+      "agent_content_text": "Action: Type \"todo_list_Jan_2\" into the active rename text field to replace the current name.",
+      "agent_tool": {
+        "name": "computer_use",
+        "arguments": {
+          "action": "type",
+          "text": "todo_list_Jan_2"
+        }
+      },
+      "lite_content_text": "Type \"todo_list_Jan_2\" into the active rename text field to replace the current name.",
+      "lite_tool": {
+        "name": "type",
+        "arguments": {
+          "text": "todo_list_Jan_2"
+        }
+      },
+      "executed_actions": [
+        {
+          "call": "computer.interface.type_text",
+          "args": {
+            "text": "todo_list_Jan_2"
+          }
+        }
+      ],
+      "reward": null,
+      "terminated": false,
+      "truncated": false,
+      "timing_seconds": {
+        "observe": 0.11788845299997774,
+        "predict": 5.678292456000236,
+        "act": 5.0406706020003185
+      }
+    },
+    "same_agent_tool_name": true,
+    "same_lite_tool_name": true,
+    "same_lite_tool_arguments": true
+  },
+  {
+    "turn": 3,
+    "osworld": {
+      "turn": 3,
+      "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_03/00_screenshot.png",
+      "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_03/04_screenshot_annotated.png",
+      "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_03/01_prompt.txt",
+      "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_03/02_response.txt",
+      "agent_content_text": "Action: Click the green \"Rename\" button in the rename dialog to confirm changing the folder name to \"todo_list_Jan_2\".",
+      "agent_tool": {
+        "name": "computer_use",
+        "arguments": {
+          "action": "left_click",
+          "coordinate": [
+            961,
+            741
+          ]
+        }
+      },
+      "lite_content_text": "Click the green \"Rename\" button in the rename dialog to confirm changing the folder name to \"todo_list_Jan_2\".",
+      "lite_tool": {
+        "name": "click",
+        "arguments": {
+          "coordinate": [
+            961,
+            741
+          ]
+        }
+      },
+      "executed_actions": [
+        {
+          "call": "pyautogui.click(1845, 800, button='left')"
+        }
+      ],
+      "reward": null,
+      "terminated": false,
+      "truncated": false,
+      "timing_seconds": {
+        "observe": 0.05059682502178475,
+        "predict": 2.6808236929937266,
+        "act": 5.985639968013857
+      }
+    },
+    "lite_osworld": {
+      "turn": 3,
+      "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_03/00_screenshot.png",
+      "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_03/04_screenshot_annotated.png",
+      "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_03/01_prompt.txt",
+      "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_03/02_response.txt",
+      "agent_content_text": "Action: Click the green \"Rename\" button in the rename dialog to confirm changing the folder name to \"todo_list_Jan_2\".",
+      "agent_tool": {
+        "name": "computer_use",
+        "arguments": {
+          "action": "left_click",
+          "coordinate": [
+            961,
+            744
+          ]
+        }
+      },
+      "lite_content_text": "Click the green \"Rename\" button in the rename dialog to confirm changing the folder name to \"todo_list_Jan_2\".",
+      "lite_tool": {
+        "name": "click",
+        "arguments": {
+          "coordinate": [
+            961,
+            744
+          ]
+        }
+      },
+      "executed_actions": [
+        {
+          "call": "computer.interface.left_click",
+          "args": {
+            "x": 1845,
+            "y": 803
+          }
+        }
+      ],
+      "reward": null,
+      "terminated": false,
+      "truncated": false,
+      "timing_seconds": {
+        "observe": 0.05136871699960466,
+        "predict": 4.695848250999916,
+        "act": 5.17246314500062
+      }
+    },
+    "same_agent_tool_name": true,
+    "same_lite_tool_name": true,
+    "same_lite_tool_arguments": false
+  },
+  {
+    "turn": 4,
+    "osworld": {
+      "turn": 4,
+      "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_04/00_screenshot.png",
+      "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_04/04_screenshot_annotated.png",
+      "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_04/01_prompt.txt",
+      "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/e0df059f-28a6-4169-924f-b9623e7184cc/sample_00/turn_04/02_response.txt",
+      "agent_content_text": "Action: The task is completed successfully.",
+      "agent_tool": {
+        "name": "computer_use",
+        "arguments": {
+          "action": "terminate",
+          "status": "success"
+        }
+      },
+      "lite_content_text": "The task is completed successfully.",
+      "lite_tool": {
+        "name": "terminate",
+        "arguments": {
+          "status": "success"
+        }
+      },
+      "executed_actions": [],
+      "reward": 1.0,
+      "terminated": true,
+      "truncated": false,
+      "timing_seconds": {
+        "observe": 0.06751464202534407,
+        "predict": 2.0684660139959306,
+        "act": 1.5291950359824114
+      }
+    },
+    "lite_osworld": {
+      "turn": 4,
+      "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_04/00_screenshot.png",
+      "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_04/04_screenshot_annotated.png",
+      "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_04/01_prompt.txt",
+      "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/lite.osworld/2026-07-18T14-23_0cde57702f/run_0/Qwen_Qwen3-VL-2B-Instruct/eval/osworld_os_e0df059f/sample_00/turn_04/02_response.txt",
+      "agent_content_text": "Action: The task is completed successfully.",
+      "agent_tool": {
+        "name": "computer_use",
+        "arguments": {
+          "action": "terminate",
+          "status": "success"
+        }
+      },
+      "lite_content_text": "The task is completed successfully.",
+      "lite_tool": {
+        "name": "terminate",
+        "arguments": {
+          "status": "success"
+        }
+      },
+      "executed_actions": [],
+      "reward": 1.0,
+      "terminated": true,
+      "truncated": false,
+      "timing_seconds": {
+        "observe": 0.050637534000088635,
+        "predict": 4.476783364999392,
+        "act": 2.4654978010003106
+      }
+    },
+    "same_agent_tool_name": true,
+    "same_lite_tool_name": true,
+    "same_lite_tool_arguments": true
+  }
+]
