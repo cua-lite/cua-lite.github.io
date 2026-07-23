@@ -160,18 +160,20 @@
   .tp em { display: none; }   /* inside labels need room; the legend still explains the colors */
   .tape { height: 12px; }
 }
-/* ---- the before-board: same anatomy, but no hub and no color — attempts die mid-air ---- */
-.mess .pair-chip + .pair-k { margin-top: 12px; }   /* the left column stacks two groups */
-.mess .pair-chip.try { color: var(--text); border-color: var(--muted); }   /* ink, never accent — this board has no color */
-.mess .mw { fill: none; stroke: var(--dim); stroke-width: 1.6; stroke-linecap: round; opacity: 0; }
-.mess .mw.dead { opacity: .16; }   /* the junkyard: every failed attempt stays behind, faint */
-.mess-x { position: absolute; font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0; transform: translate(-50%,-56%); pointer-events: none; z-index: 3; }
-.mess-why { position: absolute; font-family: var(--mono); font-size: 11px; color: var(--muted); opacity: 0; transform: translate(-50%,0); white-space: nowrap; pointer-events: none; z-index: 3; }
-.pair-cmd .c-x { color: var(--text); opacity: 0; }
-.mess .mw.draw, .mess-x.hit, .mess-why.hit, .pair-cmd .c-x.hit { animation: messIn .4s ease forwards; }
-.mess-x.hit, .pair-cmd .c-x.hit { animation-delay: .5s; }   /* the wire appears, then dies, then the reason */
-.mess-why.hit { animation-delay: .65s; }
-@keyframes messIn { to { opacity: .85; } }
+/* ---- spec tables: one concrete artifact, read close up — the counterweight to the boards ---- */
+.spec { font-family: var(--mono); }
+.spec figcaption { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 13px; }
+.spec-row { display: grid; grid-template-columns: 94px minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 4px 0; }
+.spec-k { font-size: 10.5px; color: var(--dim); text-align: right; }
+.spec-row code { font-size: 11.5px; color: var(--muted); background: none; border: 0; padding: 0; word-break: break-word; }
+.spec-row.lite code { color: var(--accent); }   /* the one spelling that survives */
+.spec-n { display: block; font-size: 10px; color: var(--dim); margin-top: 3px; }
+.spec-split { border-top: 1px solid var(--line); margin-top: 13px; padding-top: 13px; }
+.spec-fold { text-align: center; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin: 13px 0 11px; }
+@media (max-width: 430px) {
+  .spec-row { grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 6px 0; }
+  .spec-k { text-align: left; }
+}
 .pair-cmd { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; line-height: 1.6; }
 .pair-cmd .c-p { color: var(--dim); }
 .pair-cmd b { color: var(--accent); font-weight: 500; }
@@ -180,7 +182,6 @@
   .pair-wire path.draw { animation: none; stroke-dashoffset: 0; opacity: 1; }
   .tape-row.born .tp.f, .tape-row.born .tp.f em, .tape-row.keep .tape::after, .tape-row.keep .tp.r, .gym-cur.touch::after { animation: none; }
   .pair-chip.on { transition-delay: 0s; }
-  .mess .mw.draw, .mess-x.hit, .mess-why.hit, .pair-cmd .c-x.hit { animation: none; opacity: .85; }
 }
 @media (max-width: 560px) {
   .pair-board { grid-template-columns: 1fr 104px 1fr; }
@@ -196,7 +197,7 @@
   .pair-board { grid-template-columns: minmax(0, 1fr) 84px minmax(0, 1fr); }   /* chips yield inward, never clip at the panel edge */
   .pair-chip { font-size: 10px; padding: 4px 8px; }
   .chip-tag { display: none; }   /* the hint yields before the id does */
-  .mess-why, .flow-lab, .gym-shot, .gym-cur { display: none; }
+  .flow-lab, .gym-shot, .gym-cur { display: none; }
   .pair-node { padding: 5px 8px; }
   .pair-node, .pair-node code { font-size: 10px; }
   .node-sub { display: none; }
@@ -243,28 +244,20 @@
   rebuilds the same plumbing — screenshot loops, VM setup, eval scripts — before
   a single rollout runs.</p>
 
-  <figure class="flow-demo mess" aria-label="Without a shared interface, pairings fail: different schemas, action spaces, harnesses">
-    <div class="pair-board" data-board="mess">
-      <div class="pair-col">
-        <span class="pair-k">Datasets</span>
-        <a class="pair-chip" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web</a>
-        <a class="pair-chip" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey</a>
-        <span class="pair-k">Benchmarks</span>
-        <a class="pair-chip" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld</a>
-        <a class="pair-chip" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena</a>
-      </div>
-      <div></div>
-      <div class="pair-col pair-right">
-        <span class="pair-k">Agents</span>
-        <a class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">gpt-5.5</a>
-        <a class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
-        <a class="pair-chip" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS-1.5</a>
-      </div>
-      <svg class="pair-wire" aria-hidden="true"><path class="mw"/></svg>
-      <span class="mess-x" aria-hidden="true">✗</span>
-      <span class="mess-why" aria-hidden="true"></span>
+  <figure class="flow-demo spec" aria-label="The same two actions written four ways by four agents, mutually incompatible">
+    <figcaption>Double-click the same icon — four agents, four spellings</figcaption>
+    <div class="spec-row"><span class="spec-k">UI-TARS</span><code>left_double(start_box='(612,388)')</code><span class="spec-n">a text DSL, not a JSON tool call</span></div>
+    <div class="spec-row"><span class="spec-k">Qwen3-VL</span><code>computer_use(action="double_click", coordinate=[612,388])</code><span class="spec-n">one wrapper tool; the verb is an enum value</span></div>
+    <div class="spec-row"><span class="spec-k">OpenAI CUA</span><code>double_click(x=1175, y=419)</code><span class="spec-n">absolute pixels — wrong the moment the frame is resized</span></div>
+    <div class="spec-split">
+      <figcaption>Scroll down — now the parameters themselves disagree</figcaption>
+      <div class="spec-row"><span class="spec-k">UI-TARS</span><code>scroll(start_box='(612,388)', direction='down')</code><span class="spec-n">no amount at all</span></div>
+      <div class="spec-row"><span class="spec-k">Qwen3-VL</span><code>computer_use(action="scroll", coordinate=[612,388], pixels=-300)</code><span class="spec-n">the sign carries the direction</span></div>
+      <div class="spec-row"><span class="spec-k">OpenAI CUA</span><code>scroll(x=1175, y=419, scroll_x=0, scroll_y=300)</code><span class="spec-n">two-dimensional pixel deltas</span></div>
+      <div class="spec-row"><span class="spec-k">UI-TARS mobile</span><code>scroll(start_box='(612,388)', end_box='(612,120)')</code><span class="spec-n">a gesture — there is no "direction" to read</span></div>
     </div>
-    <div class="pair-cmd" data-cmd-line></div>
+    <div class="spec-fold">↓ &nbsp;one spelling, converted per agent by its harness&nbsp; ↓</div>
+    <div class="spec-row lite"><span class="spec-k">CUA-Lite</span><code>click(coordinate=[612,388], clicks=2)</code><br><code>scroll(coordinate=[612,388], direction="down", amount=3)</code><span class="spec-n">coordinates normalized to [0,&nbsp;1000] on every platform</span></div>
   </figure>
 
   <p><b>CUA-Lite puts all of it in one place</b> — all a computer-use agent
@@ -277,8 +270,12 @@
   <h2>Datasets</h2>
   <p><b>Convert a dataset once, and every agent can train on it.</b>
   <code class="ls" tabindex="0">LiteSample</code> is the one schema, shared
-  across every env, agent, and task type. No data of your own? It's all free
-  on Hugging&nbsp;Face.</p>
+  across every env, agent, and task type. Preprocessing also sorts each upstream
+  dataset into <code>(platform, task_type)</code> cohorts — GUIAct's three
+  undifferentiated folders become <code>web/grounding.action</code>,
+  <code>web/use</code>, and <code>mobile/use</code> — and that one string is the
+  directory name, the Hugging&nbsp;Face config, and the key that picks the agent's
+  adapter at training time. No data of your own? It's all free on Hugging&nbsp;Face.</p>
   <figure class="flow-demo" aria-label="Any dataset, converted once, trains any agent">
     <div class="pair-board" data-board="data">
       <div class="pair-col">
@@ -342,6 +339,12 @@
     <div class="pair-cmd" data-pack-line></div>
   </figure>
 
+  <p><b>A rollout is a dataset.</b> Trajectories collected in
+  <code class="lg" tabindex="0">lite.gym</code> stage into the very layout
+  preprocessing emits — same schema, same content-addressed image store — so
+  last night's eval run becomes today's training data through a filter, not a
+  conversion: <code>--filter "lambda m: m.others['episode_return'] &gt;= 1.0"</code>.</p>
+
   <p class="post-call"><b class="call">Call for data contributors.</b> Without a shared
   schema, data collected for one agent can't train another — and most datasets
   stop being used. In <code class="ls" tabindex="0">LiteSample</code> they keep working:
@@ -354,10 +357,35 @@
 
   <h2>Environments &amp; agents</h2>
   <p><b>Add an env, and every agent runs it; add an agent, and it runs every
-  env.</b> They meet in <code class="lg" tabindex="0">lite.gym</code> —
-  screenshots flow up, actions flow down, in one action space plus each env's
-  extra tools. The same loop serves eval and RL: every env ships eval
-  tasks, and many add training splits with verifiable rewards.</p>
+  env.</b> They meet in <code class="lg" tabindex="0">lite.gym</code>, in one
+  action space plus each env's extra tools. But every benchmark arrives speaking
+  something else — and the disagreement runs deeper than the spelling of "click":</p>
+
+  <figure class="flow-demo spec" aria-label="What a click natively is in OSWorld, BrowserGym and AndroidWorld, and what it becomes in lite.gym">
+    <figcaption>One click, natively, in three benchmarks</figcaption>
+    <div class="spec-row"><span class="spec-k">OSWorld</span><code>"pyautogui.click(960, 540)"</code><span class="spec-n">a Python source string, exec'd inside a QEMU virtual machine</span></div>
+    <div class="spec-row"><span class="spec-k">BrowserGym</span><code>"click('a47')"</code><span class="spec-n">a47 is a DOM node id, handed out by marking the accessibility tree</span></div>
+    <div class="spec-row"><span class="spec-k">AndroidWorld</span><code>JSONAction(action_type="click", x=540, y=1200)</code><span class="spec-n">its sibling swipe is enum-only — "up", "down"; no start or end point</span></div>
+    <div class="spec-fold">↓ &nbsp;one loop, whatever is underneath&nbsp; ↓</div>
+    <div class="spec-row lite"><span class="spec-k">lite.gym</span><code>await env.step([click(coordinate=[500, 300])])</code><span class="spec-n">over a QEMU snapshot, a Playwright page, an adb shell, or a static PNG — unchanged</span></div>
+  </figure>
+
+  <p>An env implements four methods and declares how its backend behaves — a
+  fresh container per trajectory, one shared service, or nothing at all — and
+  the operations layer comes free: warm pools, orphan reaping,
+  <code>503 + Retry-After</code> backpressure, multi-node routing. The
+  translation goes deeper than renaming: AndroidWorld's swipe is driven through
+  raw <code>adb</code> to recover the precise endpoints its own action type
+  can't express, and BrowserGym's per-step DOM and accessibility-tree extraction
+  is skipped for agents that only look at pixels — its bid actions still there,
+  one config away.</p>
+
+  <p>The same loop serves eval and RL: every env ships eval tasks, and many add
+  training splits with verifiable rewards. OSWorld arrives as 369 eval tasks and
+  no training data, so cua-lite generates 2,490 more behind deterministic
+  evaluators — and runs the whole benchmark KVM-free, on a Docker desktop that
+  boots in seconds instead of a 23&nbsp;GiB virtual machine.</p>
+
   <figure class="flow-demo" aria-label="Any environment paired with any agent through lite.gym: screenshots up, actions down">
     <div class="pair-board" data-board="pair">
       <div class="pair-col">
@@ -552,74 +580,6 @@
   const dataFig = document.querySelector('[data-board="data"]');
   if (dataFig) boards.push(runBoard(dataFig.closest(".flow-demo"), (ds, m) =>
     `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>${ds.split("/").pop()}</b></span> <span class="nb">--model-id</span> <b>${m}</b>`, "data", 1700));
-  // the before-board: an attempted pairing draws 58% of the way, dies with a real reason
-  const messFig = document.querySelector('[data-board="mess"]');
-  if (messFig) (function () {
-    const fig = messFig.closest(".flow-demo");
-    // real frictions, no pretend commands — there is no shared command, and that is the point
-    const TRIES = [
-      { l: 0, r: 2, why: "its own schema",  line: "Mind2Web ships its own schema — UI-TARS-1.5 can't train on it" },
-      { l: 2, r: 1, why: "pixel actions",   line: "OSWorld executes pyautogui pixels — Qwen3-VL's coordinates don't match" },
-      { l: 1, r: 0, why: "its own format",  line: "GUIOdyssey stores mobile traces its own way — no loader fits gpt-5.5" },
-      { l: 3, r: 2, why: "its own runner",  line: "WebArena means five Docker containers and its own runner — rebuild it again" },
-    ];
-    const left = [...messFig.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
-    const right = [...messFig.querySelectorAll(".pair-right .pair-chip")];
-    const svg = messFig.querySelector(".pair-wire");
-    const mw = svg.querySelector(".mw");
-    const mx = messFig.querySelector(".mess-x");
-    const mwhy = messFig.querySelector(".mess-why");
-    const cmd = fig.querySelector("[data-cmd-line]");
-    const pt = (el, side) => { const b = el.getBoundingClientRect(), s = svg.getBoundingClientRect();
-      return [side === "r" ? b.right - s.left + 4 : b.left - s.left - 4, b.top + b.height / 2 - s.top]; };
-    const curve = ([x1, y1], [x2, y2]) => { const mid = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`; };
-    const mkCmd = (t) => `<span class="c-x hit">✗ ${t.line}</span>`;
-    let k = 0, lineT = 0;
-    const wreck = document.createElementNS("http://www.w3.org/2000/svg", "g");   // the junkyard of dead attempts
-    wreck.setAttribute("class", "mess-wreck");
-    svg.insertBefore(wreck, mw);
-    function step(j) {
-      k = j;
-      const t = TRIES[j];
-      left.forEach((c, m) => c.classList.toggle("try", m === t.l));
-      right.forEach((c) => c.classList.remove("try"));   // the far side never receives
-      if (j === 0) wreck.innerHTML = "";                       // new cycle: clear the yard
-      else if (!reduce && mw.getAttribute("d")) {               // the last attempt stays behind, faded
-        const ghost = mw.cloneNode(); ghost.removeAttribute("class"); ghost.removeAttribute("id");
-        ghost.setAttribute("class", "mw dead"); wreck.appendChild(ghost);
-      }
-      mw.classList.remove("draw"); mx.classList.remove("hit"); mwhy.classList.remove("hit");
-      void mw.getBoundingClientRect();
-      mw.setAttribute("d", curve(pt(left[t.l], "r"), pt(right[t.r], "l")));
-      mw.setAttribute("pathLength", 100);                // dash units become percentages
-      const dashes = [];                                 // dashed for ~58 units, then one long gap
-      for (let u = 0; u < 51; u += 6.4) dashes.push("3.2", "3.2");
-      dashes.push("3.2", "200");                         // the last dash, then silence (no 0-length dot)
-      mw.style.strokeDasharray = dashes.join(" ");
-      mw.classList.add("draw");
-      const L2 = mw.getTotalLength();
-      const q = mw.getPointAtLength(0.58 * L2);
-      mx.style.left = q.x + "px"; mx.style.top = q.y + "px";
-      mwhy.style.left = q.x + "px";                        // below the break — the wire never continues there
-      mwhy.style.top = (q.y + 14) + "px";
-      mwhy.textContent = t.why;
-      mx.classList.add("hit"); mwhy.classList.add("hit");
-      clearTimeout(lineT);
-      lineT = setTimeout(() => { cmd.innerHTML = mkCmd(t); }, reduce ? 0 : 500);
-    }
-    function reserve() {
-      const keep = cmd.innerHTML;
-      cmd.style.minHeight = "";
-      let max = 0;
-      TRIES.forEach((t) => { cmd.innerHTML = mkCmd(t); max = Math.max(max, cmd.offsetHeight); });
-      cmd.innerHTML = keep;
-      cmd.style.minHeight = max + "px";
-    }
-    step(0); reserve(); watch(fig);
-    if (!reduce) setInterval(() => { if (live(fig)) step((k + 1) % TRIES.length); }, 5200);
-    boards.push(() => { reserve(); step(k); });
-  })();
-
   const pairFig = document.querySelector('[data-board="pair"]');
   if (pairFig) boards.push(runBoard(pairFig.closest(".flow-demo"), (e, a) =>   // environments sit on the left
     `<span class="c-p">$</span> rollout.py <span class="nb">--model-id</span> <b>${a}</b> <span class="nb">--env-id</span> <b>${e}</b>`, "loop", 3400));
