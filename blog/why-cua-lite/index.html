@@ -174,10 +174,11 @@
 .pack.intro-on .tape-board { opacity: 0; transform: scale(.94); }
 .pack .tape-legend { transition: opacity .5s ease; }
 .pack.intro-on .tape-legend { opacity: 0; }
-.pack-ls { font-size: 13px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 4px; padding: 3px 9px; color: var(--text); }
 .pack-adapter { font-size: 11px; background: #fff; border: 1px solid var(--accent-dim); border-radius: 6px; padding: 4px 11px; color: var(--muted); }
 .pack-arrow { color: var(--accent); font-size: 15px; }
-.pack-model { font-size: 13px; color: var(--text); }
+/* the intro reuses the real figure components (hub card + plane + {} , adapter card, agent chip) so it matches figure 2 */
+.pack-intro .pair-node::before, .pack-intro .pair-node::after { display: none; }   /* no wires in the intro → no ports */
+.pack-intro .pair-chip { align-self: center; }
 .tp-sw { width: 12px; height: 8px; border-radius: 2px; display: inline-block; }
 .tp-sw.p { background: var(--panel-2); border: 1px solid var(--line-2); }
 .tp-sw.r { background: var(--accent); opacity: .8; margin-left: 10px; }
@@ -197,6 +198,8 @@
    hand. Dashed + colourless = makeshift, never resolved — the hub boards below tidy the same wires. */
 .mess .mw { fill: none; stroke: #9c8b74; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 6 6; opacity: .7; }
 .mess .pair-right { justify-content: center; }   /* 3 agents vs 4 left items — centre the shorter column so the wire fan reads symmetric */
+[data-board="data"] .pair-right { justify-content: center; }   /* 3 open agents vs 5 datasets — centre so UI-TARS sits level with the adapter */
+[data-board="pair"] .pair-right { justify-content: center; }   /* 3 agents vs 5 envs — centre so the middle agent sits level with the hub */
 .pair-cmd { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; line-height: 1.6; }
 .pair-cmd .c-p { color: var(--dim); }
 .pair-cmd b { color: var(--accent); font-weight: 500; }
@@ -295,8 +298,8 @@
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
         <a data-cat="model" class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
-        <a data-cat="model" class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3</a>
-        <a data-cat="model" class="pair-chip" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
+        <a data-cat="model" class="pair-chip" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
+        <a data-cat="model" class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="mw"/></svg>
     </div>
@@ -326,10 +329,9 @@
       <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="ls" tabindex="0">LiteSample</code><span class="node-glyph">{ }</span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3</a>
+        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
         <a data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
         <a data-cat="model" class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI</a>
-        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
@@ -341,8 +343,8 @@
   into the exact shape a model trains on, with the building blocks to add your own.
   The next figure plays out Qwen3.5's.</p>
 
-  <figure class="flow-demo pack" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
-    <div class="pack-intro" aria-hidden="true"><span class="pack-ls">LiteSample</span><span class="pack-arrow">→</span><span class="pack-adapter">adapter</span><span class="pack-arrow">→</span><span class="pack-model">Qwen3.5</span></div>
+  <figure class="flow-demo pack intro-on" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
+    <div class="pack-intro" aria-hidden="true"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><span>LiteSample</span><span class="node-glyph">{ }</span></span><span class="pack-arrow">→</span><span class="pack-adapter">adapter</span><span class="pack-arrow">→</span><span class="pair-chip" data-cat="model">Qwen</span></div>
     <div class="tape-board" data-pack>
       <div class="tape-row">
         <span class="tape-lab">step 1</span>
@@ -401,8 +403,7 @@
         <span class="pair-k">Agents</span>
         <a data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
         <a data-cat="model" class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
-        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3</a>
-        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5</a>
+        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
@@ -433,10 +434,14 @@
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   // animations idle while their figure is off-screen (and the three boards start staggered)
   const onScreen = new WeakSet();
+  const starters = new WeakMap(), started = new WeakSet();   // a figure's animation starts the first time it scrolls into view
   const io = "IntersectionObserver" in window ? new IntersectionObserver((es) =>
-    es.forEach((e) => e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target)), { rootMargin: "80px" }) : null;
+    es.forEach((e) => { if (e.isIntersecting) { onScreen.add(e.target);
+        if (starters.has(e.target) && !started.has(e.target)) { started.add(e.target); starters.get(e.target)(); } }
+      else onScreen.delete(e.target); }), { rootMargin: "0px 0px -15% 0px" }) : null;
   const watch = (fig) => { if (io) io.observe(fig); else onScreen.add(fig); };
   const live = (fig) => !io || onScreen.has(fig);
+  const onSeen = (fig, fn) => { if (!io) { fn(); return; } starters.set(fig, fn); };   // run fn once, when fig first enters view
   function runBoard(fig, mkCmd, mode, startDelay) {   // mode: "data" (sample flows in) | "loop" (screenshot up, action down)
     const board = fig.querySelector(".pair-board");
     const left = [...board.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
@@ -564,10 +569,11 @@
       cmd.style.minHeight = max + "px";
     }
     step(0, 0); reserve(); watch(fig);
-    if (!reduce) setTimeout(() => setInterval(() => {
-      if (!live(fig)) return;
-      i = (i + 1) % seq.length; step(seq[i][0], seq[i][1]);
-    }, 5200), startDelay || 0);
+    if (!reduce) onSeen(fig, () => { step(cur[0], cur[1]);   // replay the wire draw when the board scrolls into view, then cycle
+      setTimeout(() => setInterval(() => {
+        if (!live(fig)) return;
+        i = (i + 1) % seq.length; step(seq[i][0], seq[i][1]);
+      }, 5200), startDelay || 0); });
     // re-anchor the wires without replaying the draw
     return () => { reserve(); wires(cur[0], cur[1]); placeExtras(cur[1]); };
   }
@@ -629,17 +635,17 @@
     SCRIPT.forEach(([, , t]) => { line.textContent = t; max = Math.max(max, line.offsetHeight); });
     line.style.minHeight = max + "px";
     const fig = packFig.closest(".flow-demo");
-    const INTRO = 1800;   // hold "LiteSample → adapter → Qwen3.5", then zoom into the tape it produces
+    const INTRO = 3000;   // hold "LiteSample → adapter → Qwen3.5" long enough to read, then fade into the tape it produces
     function play() {
       fig.classList.add("intro-on");
       line.textContent = "the adapter · one LiteSample row → Qwen3.5's training tape";
       setTimeout(() => fig.classList.remove("intro-on"), INTRO);
       SCRIPT.forEach(([ms, fn, t]) => setTimeout(() => { fn(); line.textContent = t; }, ms + INTRO));
     }
-    if (reduce) { const [, fn, t] = SCRIPT[SCRIPT.length - 1];
+    if (reduce) { fig.classList.remove("intro-on"); const [, fn, t] = SCRIPT[SCRIPT.length - 1];
       rows.forEach((r) => r.className = "tape-row"); fn(); line.textContent = t;
     } else { watch(fig);
-      play(); setInterval(() => { if (live(fig)) play(); }, CYCLE + INTRO); }
+      onSeen(fig, () => { play(); setInterval(() => { if (live(fig)) play(); }, CYCLE + INTRO); }); }
   })();
 
   // wires are measured from live geometry — re-anchor after web fonts land and on resize
