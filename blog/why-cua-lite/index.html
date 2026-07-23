@@ -35,13 +35,14 @@
 .post-links a { color: var(--accent); white-space: nowrap; }   /* a link wraps as a unit, never mid-name */
 .post-close { border-top: 1px solid var(--line); margin-top: 40px; padding-top: 24px; }
 /* ---- animated flow figures: a pairing lights up and one wire plugs through the hub ---- */
-.flow-demo { margin: 6px 0 20px; background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 20px 20px 16px; }
+.flow-demo { margin: 6px 0 20px; background: radial-gradient(135% 105% at 50% -12%, #fffdf7, var(--panel-fill) 72%); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 20px 20px 16px;
+  box-shadow: inset 0 1px 0 var(--panel-hi), 0 1px 2px rgba(40,30,15,.04), 0 16px 34px -24px rgba(40,30,15,.30); }   /* lift off the page like the homepage's panels — warm ink shadow, top inner highlight */
 .pair-board { display: grid; grid-template-columns: 1fr 150px 1fr; position: relative; }   /* both boards funnel through a unifying node */
 .pair-col { display: flex; flex-direction: column; gap: 7px; }
 .pair-k { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 3px; }
 .pair-right .pair-k { text-align: right; }   /* the right column mirrors the left */
 .pair-chip { font-family: var(--mono); font-size: 12px; color: var(--muted); background: var(--panel-2); border: 1px solid var(--line-2);
-  border-radius: 999px; padding: 6px 13px; white-space: nowrap; align-self: flex-start; transition: color .25s ease, border-color .25s ease, background .25s ease; }
+  border-radius: 999px; padding: 6px 13px; white-space: nowrap; align-self: flex-start; box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 1px 1.5px rgba(40,30,15,.045); transition: color .25s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease; }
 .pair-chip:hover { text-decoration: none; color: var(--text); border-color: var(--accent-dim); }   /* every chip links out */
 .pair-chip:visited { color: var(--muted); }
 .pair-right .pair-chip { align-self: flex-end; }
@@ -69,7 +70,7 @@
 .pair-chip[data-logo="kimi"]    { --ic: url('/assets/logos/kimi.svg'); }
 .chip-tag { color: var(--dim); font-size: 10px; transition: color .25s ease; }   /* dim platform hint: desktop / web / mobile */
 .pair-chip.ghost { background: transparent; color: var(--dim); }   /* the open slot — solid border like the rest, just no fill */
-.pair-chip.on { color: var(--accent); border-color: var(--accent); background: rgba(189,90,56,.10); }
+.pair-chip.on { color: var(--accent); border-color: var(--accent); background: rgba(189,90,56,.10); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 3px 10px -4px rgba(189,90,56,.4); }   /* the in-play chip warms and lifts */
 .pair-chip.ghost.on { color: var(--accent); background: rgba(189,90,56,.06); }   /* the slot lights up, still dashed — yours to fill */
 .pair-chip.on .chip-tag { color: var(--accent-dim); }
 /* the target chip lights as the wire reaches it, not before */
@@ -79,7 +80,8 @@
 [data-board="pair"] { grid-template-columns: 1.35fr 150px 1fr; }   /* env names are wide; nudge lite.gym right so its left/right margins balance (no adapter fills the right side here) */
 /* the hub reads as a hub: accent-edged card with pixel ports where the wires plug in */
 .pair-node { position: relative; z-index: 2; font-family: var(--mono); font-size: 12.5px; color: var(--text); text-align: center;
-  background: #fff; border: 1px solid var(--accent-dim); border-radius: 10px; padding: 9px 13px 8px; }
+  background: linear-gradient(180deg, #fff, #fffaf1); border: 1px solid var(--accent-dim); border-radius: 10px; padding: 9px 13px 8px;
+  box-shadow: 0 2px 5px -2px rgba(40,30,15,.12), 0 16px 30px -20px rgba(189,90,56,.32), inset 0 1px 0 #fff; }   /* the focal card lifts highest — a faint terracotta ground-shadow */
 .pair-node::before, .pair-node::after { content: ""; position: absolute; top: 50%; width: 7px; height: 7px; margin-top: -3.5px; background: var(--accent); }
 .pair-node::before { left: -4px; }
 .pair-node::after { right: -4px; }
@@ -111,10 +113,11 @@
 .flow-lab { position: absolute; font-family: var(--mono); font-size: 11px; letter-spacing: .5px; color: var(--muted); opacity: 0;
   transform: translate(-50%,-50%); white-space: nowrap; pointer-events: none; z-index: 3; transition: opacity .25s ease; }
 .flow-lab.show { opacity: .9; }
-/* pipeline stages on the wires — mini siblings of the hub card (preproc in, adapter out) */
+/* the adapter stage sits on the wire — a mini sibling of the hub card, same material as the intro's adapter card */
 .wire-stage { position: absolute; transform: translate(-50%, -50%); z-index: 2; cursor: help;
   font-family: var(--mono); font-size: 10px; letter-spacing: .5px; color: var(--muted); white-space: nowrap;
-  background: #fff; border: 1px solid var(--accent-dim); border-radius: 6px; padding: 3px 8px; }
+  background: linear-gradient(180deg, #fff, #fffaf1); border: 1px solid var(--accent-dim); border-radius: 6px; padding: 3px 8px;
+  box-shadow: 0 1px 3px -1px rgba(40,30,15,.12), inset 0 1px 0 #fff; }
 /* the gym loop made tangible: a mini screen above the hub (the screenshot going up),
    the hero demo's own cursor below it (the click coming down) */
 .gym-shot { position: absolute; transform: translate(-50%, -100%); z-index: 3; opacity: 0; transition: opacity .3s ease; pointer-events: none; }
@@ -144,22 +147,23 @@
 @keyframes landHit { 0% { opacity: .9; transform: translate(-50%,-50%) scale(.35); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1); } }
 /* ---- the packing figure: each step's prompt is a tape that contains the previous one;
    responses are the accent bands (the loss), folds are the hatched left region ---- */
-.tape-board { display: grid; gap: 7px; }
-.tape-row { display: grid; grid-template-columns: 44px 1fr; align-items: center; gap: 10px;
-  transition: opacity .5s ease; }
+.tape-board { display: flex; flex-direction: column; justify-content: center; min-height: 146px; }   /* fixed height: the packed rows re-center as the absorbed ones collapse, no page reflow */
+.tape-row { display: grid; grid-template-columns: 54px 1fr; align-items: center; gap: 10px; margin-bottom: 7px; max-height: 44px; overflow: hidden;
+  transition: opacity .5s ease, max-height .55s var(--ease), margin-bottom .55s var(--ease), transform .55s var(--ease); }
+.tape-row:last-child { margin-bottom: 0; }
 .tape-row.future { opacity: .18; }
-.tape-row.absorbed { opacity: .25; }
+.tape-row.absorbed { opacity: 0; max-height: 0; margin-bottom: 0; transform: scaleY(.25); }   /* packed away — the two kept forwards slide together */
 .tape-lab { font-family: var(--mono); font-size: 9.5px; color: var(--dim); text-align: right; }
 .tape-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 118px; align-items: center; gap: 8px; }
 .tape { display: flex; height: 20px; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden;
-  background: var(--panel-fill); flex: none; transition: border-color .4s ease; }
-.tape-row.keep .tape { border-color: var(--accent); }
+  background: var(--panel-fill); flex: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(60,48,36,.05), 0 1px 1.5px rgba(40,30,15,.05); transition: border-color .4s ease, box-shadow .4s ease; }
+.tape-row.keep .tape { border-color: var(--accent); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 2px 10px -3px rgba(189,90,56,.38); }   /* a kept forward glows terracotta */
 .tp { height: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .tp em { font-style: normal; font-family: var(--mono); font-size: 10px; letter-spacing: .3px; color: var(--muted); white-space: nowrap; }
 .tp.r em { color: #fdf6e9; }
 .tp.p { background: var(--panel-2); }
 .tp.d { background: var(--panel-2); border-left: 1px solid var(--panel-fill); }
-.tp.r { background: var(--accent); opacity: .8; }
+.tp.r { background: linear-gradient(180deg, rgba(200,101,64,.95), rgba(178,84,47,.82)); box-shadow: inset 0 1px 0 rgba(255,255,255,.18); }   /* response bands read as raised terracotta strips */
 .tp.f { background: repeating-linear-gradient(45deg, transparent 0 3px, var(--line-2) 3px 5px); }
 .tape-note { font-family: var(--mono); font-size: 9.5px; color: var(--accent); white-space: nowrap; opacity: 0; transition: opacity .4s ease; }
 /* fold moment: the hatched region grows in while the source screenshots (row above) gray out */
@@ -180,26 +184,37 @@
 .tape-legend { margin-top: 12px; font-family: var(--mono); font-size: 9.5px; color: var(--dim); display: flex; align-items: center; gap: 6px; }
 /* the figure opens as LiteSample → adapter → Qwen3.5, then the overlay zooms out while the tape zooms in */
 .flow-demo.pack { position: relative; overflow: hidden; }   /* clips the zoom-scaled intro so it never widens the page */
-.pack-intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 0 8%;
-  background: var(--panel-fill); border-radius: 14px; z-index: 5; opacity: 0; transform: scale(1.3); pointer-events: none;
-  transition: opacity .55s var(--ease), transform .55s var(--ease); font-family: var(--mono); }
-.pack.intro-on .pack-intro { opacity: 1; transform: scale(1); }
-.pack .tape-board { transition: opacity .5s ease, transform .5s ease; }
-.pack.intro-on .tape-board { opacity: 0; transform: scale(.94); }
+.pack-intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-evenly; gap: 12px; flex-wrap: wrap;
+  background: radial-gradient(135% 105% at 50% -12%, #fffdf7, var(--panel-fill) 72%); border-radius: 14px; z-index: 5; opacity: 0; pointer-events: none;
+  transition: opacity .6s var(--ease); font-family: var(--mono); }
+.pack.intro-on .pack-intro { opacity: 1; }
+/* the exit tells the story: LiteSample and Qwen part ways, we zoom INTO the adapter, and the training tape it produces materializes underneath */
+.pack-intro .pair-node, .pack-intro .pack-adapter, .pack-intro .pair-chip { transition: transform .6s var(--ease); }
+.pack-intro .pair-node { transform: translateX(-34px) scale(.92); }
+.pack-intro .pair-chip { transform: translateX(34px) scale(.92); }
+.pack-intro .pack-adapter { transform: scale(2.3); }   /* the adapter is the one we dive into */
+.pack.intro-on .pack-intro .pair-node,
+.pack.intro-on .pack-intro .pair-chip,
+.pack.intro-on .pack-intro .pack-adapter { transform: none; }
+.pack .tape-board { transition: opacity .55s ease .12s, transform .6s var(--ease) .12s; }   /* the tape emerges a beat after the adapter opens */
+.pack.intro-on .tape-board { opacity: 0; transform: scale(.9); }
 .pack .tape-legend { transition: opacity .5s ease; }
 .pack.intro-on .tape-legend { opacity: 0; }
-.pack-adapter { font-size: 11px; background: #fff; border: 1px solid var(--accent-dim); border-radius: 6px; padding: 4px 11px; color: var(--muted); }
-.pack-intro > span { position: relative; z-index: 1; }   /* components ride above the wire */
+.pack-adapter { font-size: 11px; background: linear-gradient(180deg, #fff, #fffaf1); border: 1px solid var(--accent-dim); border-radius: 6px; padding: 4px 11px; color: var(--muted); box-shadow: 0 1px 3px -1px rgba(40,30,15,.12), inset 0 1px 0 #fff; }
+.pack-intro > span:not(.pi-dot) { position: relative; z-index: 1; }   /* components ride above the wire (the packet keeps its own absolute positioning) */
 .pack-intro-wire { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.piw { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 5 8; animation: introFlow .85s linear infinite; }   /* thick terracotta wire, dashes flow LiteSample → adapter → Qwen */
-@keyframes introFlow { to { stroke-dashoffset: -13; } }
-@media (prefers-reduced-motion: reduce) { .piw { animation: none; stroke-dasharray: none; } }
+.piw { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; }   /* thick solid terracotta, like figure 2 */
+.pi-dot { position: absolute; top: var(--piy, 50%); left: var(--pix0, 0); width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; background: var(--accent); box-shadow: 0 0 0 2px var(--panel-fill); opacity: 0; z-index: 2; pointer-events: none; }   /* the pixel-square packet figure 2 sends down its wire (wire is horizontal, so a simple left-slide) */
+.pack.intro-on .pi-dot { animation: piDot 2.4s linear infinite; }
+@keyframes piDot { 0% { left: var(--pix0); opacity: 0; } 8% { opacity: 1; } 90% { opacity: 1; } 100% { left: var(--pix1); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .pack.intro-on .pi-dot { animation: none; opacity: 0; }
+  .pack-intro, .pack-intro .pair-node, .pack-intro .pack-adapter, .pack-intro .pair-chip, .pack .tape-board { transition: none; } }   /* no zoom-into-adapter motion */
 /* the intro reuses the real figure components (hub card + plane + {} , adapter card, agent chip) so it matches figure 2 */
 .pack-intro .pair-node::before, .pack-intro .pair-node::after { display: none; }   /* no wires in the intro → no ports */
 .pack-intro .pair-chip { align-self: center; }
 .tp-sw { width: 12px; height: 8px; border-radius: 2px; display: inline-block; }
 .tp-sw.p { background: var(--panel-2); border: 1px solid var(--line-2); }
-.tp-sw.r { background: var(--accent); opacity: .8; margin-left: 10px; }
+.tp-sw.r { background: linear-gradient(180deg, rgba(200,101,64,.95), rgba(178,84,47,.82)); margin-left: 10px; }
 .tp-sw.f { background: repeating-linear-gradient(45deg, transparent 0 3px, var(--line-2) 3px 5px); border: 1px solid var(--line-2); margin-left: 10px; }
 @media (max-width: 430px) {
   .tape-row { grid-template-columns: 34px 1fr; gap: 6px; }
@@ -363,7 +378,7 @@
   The next figure plays out Qwen3.5's.</p>
 
   <figure class="flow-demo pack intro-on" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
-    <div class="pack-intro" aria-hidden="true"><svg class="pack-intro-wire" aria-hidden="true"><path class="piw"/><path class="piw"/></svg><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><span>LiteSample</span><span class="node-glyph">{ }</span></span><span class="pack-adapter">adapter</span><span class="pair-chip" data-cat="model" data-logo="qwen">Qwen</span></div>
+    <div class="pack-intro" aria-hidden="true"><svg class="pack-intro-wire" aria-hidden="true"><path class="piw"/><path class="piw"/></svg><span class="pi-dot" aria-hidden="true"></span><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><span>LiteSample</span><span class="node-glyph">{ }</span></span><span class="pack-adapter">adapter</span><span class="pair-chip" data-cat="model" data-logo="qwen">Qwen</span></div>
     <div class="tape-board" data-pack>
       <div class="tape-row">
         <span class="tape-lab">step 1</span>
@@ -383,11 +398,11 @@
         <span class="tape-note">1 forward · loss ×4</span></span></div>
       <div class="tape-row">
         <span class="tape-lab">step 5</span>
-        <span class="tape-wrap"><span class="tape" style="width:40.91%"><i class="tp f" style="width:44.44%"><em>collapsed ×4</em></i><i class="tp d" style="width:33.33%"><em>img5</em></i><i class="tp r" style="width:22.22%"><em>act5</em></i></span>
+        <span class="tape-wrap"><span class="tape" style="width:40.91%"><i class="tp f" style="width:44.44%"><em>hist ×4</em></i><i class="tp d" style="width:33.33%"><em>img5</em></i><i class="tp r" style="width:22.22%"><em>act5</em></i></span>
         <span class="tape-note"></span></span></div>
       <div class="tape-row">
         <span class="tape-lab">step 6</span>
-        <span class="tape-wrap"><span class="tape" style="width:63.64%"><i class="tp f" style="width:28.57%"><em>collapsed ×4</em></i><i class="tp d" style="width:21.43%"><em>img5</em></i><i class="tp r" style="width:14.29%"><em>act5</em></i><i class="tp d" style="width:21.43%"><em>img6</em></i><i class="tp r" style="width:14.29%"><em>act6</em></i></span>
+        <span class="tape-wrap"><span class="tape" style="width:63.64%"><i class="tp f" style="width:28.57%"><em>hist ×4</em></i><i class="tp d" style="width:21.43%"><em>img5</em></i><i class="tp r" style="width:14.29%"><em>act5</em></i><i class="tp d" style="width:21.43%"><em>img6</em></i><i class="tp r" style="width:14.29%"><em>act6</em></i></span>
         <span class="tape-note">1 forward · loss ×2</span></span></div>
     </div>
     <div class="tape-legend" aria-hidden="true"><i class="tp-sw p"></i>prompt<i class="tp-sw r"></i>response · loss<i class="tp-sw f"></i>collapsed history</div>
@@ -632,9 +647,10 @@
   const packFig = document.querySelector("[data-pack]");
   if (packFig) (function () {
     const rows = [...packFig.querySelectorAll(".tape-row")];
+    const labs = rows.map((r) => r.querySelector(".tape-lab").textContent);   // "step N" — restored each cycle, renamed to "forward N" once packed
     const line = packFig.closest(".flow-demo").querySelector("[data-pack-line]");
     const SCRIPT = [   // [ms, fn, narration] — each event holds long enough to read its line
-      [0,     () => rows.forEach((r) => r.className = "tape-row future"),
+      [0,     () => rows.forEach((r, i) => { r.className = "tape-row future"; r.querySelector(".tape-lab").textContent = labs[i]; }),
               "one trajectory, 6 steps — as Qwen3.5 sees it"],
       [1800,  () => rows[0].className = "tape-row",
               "step 1 · instr + img1 → act1"],
@@ -646,9 +662,10 @@
       [9400,  () => { rows[4].className = "tape-row born"; rows[3].className = "tape-row foldsrc"; },
               "image_max=4 — the older history collapses to text · the prefix breaks"],
       [11600, () => { rows[5].className = "tape-row"; rows[3].className = "tape-row"; }, "step 6 extends step 5"],
-      [13400, () => { [0, 1, 2].forEach((i) => rows[i].className = "tape-row absorbed");
-                      rows[4].className = "tape-row absorbed";
-                      rows[3].className = "tape-row keep"; rows[5].className = "tape-row keep"; },
+      [13400, () => { [0, 1, 2, 4].forEach((i) => rows[i].className = "tape-row absorbed");
+                      rows[3].className = "tape-row keep"; rows[5].className = "tape-row keep";
+                      rows[3].querySelector(".tape-lab").textContent = "forward 1";
+                      rows[5].querySelector(".tape-lab").textContent = "forward 2"; },
               "prefix-extenders pack into their last tape: 6 steps, 2 forwards"],
     ];
     const CYCLE = 18200;
@@ -666,8 +683,10 @@
       const rx = (el) => el.getBoundingClientRect().right - s.left, lx = (el) => el.getBoundingClientRect().left - s.left;
       const curve = (x1, y1, x2, y2) => { const mx = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
       const paths = introSvg.querySelectorAll(".piw");
-      paths[0].setAttribute("d", curve(rx(node) + 3, cy(node), lx(adp) - 3, cy(adp)));
-      paths[1].setAttribute("d", curve(rx(adp) + 3, cy(adp), lx(qw) - 3, cy(qw)));
+      const w0 = curve(rx(node) + 3, cy(node), lx(adp) - 3, cy(adp)), w1 = curve(rx(adp) + 3, cy(adp), lx(qw) - 3, cy(qw));
+      paths[0].setAttribute("d", w0); paths[1].setAttribute("d", w1);
+      const dot = fig.querySelector(".pi-dot");   // packet flows LiteSample → through adapter → Qwen (horizontal wire → simple left-slide)
+      if (dot) { dot.style.setProperty("--piy", cy(node) + "px"); dot.style.setProperty("--pix0", (rx(node) + 3) + "px"); dot.style.setProperty("--pix1", (lx(qw) - 3) + "px"); }
     };
     drawIntroWire();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawIntroWire);
