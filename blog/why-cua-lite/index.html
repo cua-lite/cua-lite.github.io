@@ -106,6 +106,7 @@
 .pair-right .col-seed { left: auto; right: 0; align-items: flex-end; }
 .seed-fold .col-seed { display: flex; opacity: 1; transition: opacity .32s var(--ease), transform .32s var(--ease); }
 .seed-fold.unfolded .col-seed { opacity: 0; transform: scale(.9); }   /* seeds clear FIRST, then the pills arrive — never both mid-fade in the same spot */
+.seed-fold.unfolded .col-seed.to-gym { opacity: 0; transform: translate(88px, -26px) scale(.6); }   /* the platforms lift toward lite.gym — a hand-off into the gym, where the loop's screenshot device then appears */
 /* screenshot-trajectory frames — real device proportions like the homepage demos: desktop/web landscape, mobile portrait */
 .traj { position: relative; }
 .traj.desktop, .traj.web { width: 127px; height: 52px; }
@@ -240,12 +241,12 @@
 .pack-intro > span:not(.pi-dot) { position: relative; z-index: 1; }   /* components ride above the wire (the packet keeps its own absolute positioning) */
 .pack-intro-wire { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .piw { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; }   /* thick solid terracotta, like figure 2 */
-.pack.intro-on .piw { animation: piwDraw .7s var(--ease) forwards; }   /* the connection DRAWS in like the ladder — not a pre-baked line */
-.pack.intro-on .piw:last-child { animation-delay: .42s; }   /* the adapter→Qwen segment follows the LiteSample→adapter one */
+.pack.playing .piw { animation: piwDraw .7s var(--ease) forwards; }   /* the connection DRAWS in like the ladder — gated on .playing (added on scroll-in), never on page load */
+.pack.playing .piw:last-child { animation-delay: .42s; }   /* the adapter→Qwen segment follows the LiteSample→adapter one */
 .pack.intro-out .piw { stroke-dashoffset: 0 !important; }   /* stay drawn while the intro fades out */
 @keyframes piwDraw { from { stroke-dashoffset: var(--l, 260); } to { stroke-dashoffset: 0; } }
 .pi-dot { position: absolute; top: var(--piy, 50%); left: var(--pix0, 0); width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; background: var(--accent); box-shadow: 0 0 0 2px var(--panel-fill); opacity: 0; z-index: 0; pointer-events: none; }   /* z-index 0: rides the wire but passes BEHIND the adapter/cards, so it goes THROUGH them, not over */
-.pack.intro-on .pi-dot { animation: piDot 2s linear .95s infinite; }   /* flows only after the wire has drawn */
+.pack.playing .pi-dot { animation: piDot 2s linear .95s infinite; }   /* flows only after the wire has drawn (and only once scrolled in) */
 @keyframes piDot { 0% { left: var(--pix0); opacity: 0; } 8% { opacity: 1; } 90% { opacity: 1; } 100% { left: var(--pix1); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .pack.intro-on .pi-dot { animation: none; opacity: 0; }
   .pack.intro-out .pack-intro { animation: none; opacity: 0; } .pack-intro, .pack .tape-board { transition: none; } }   /* no zoom-into-adapter motion */
@@ -677,7 +678,7 @@
     return seed;
   }
   function platformSeed() {   // environments = the three GENERAL platforms, drawn as device forms (not a screenshot)
-    const seed = document.createElement("div"); seed.className = "col-seed"; seed.setAttribute("aria-hidden", "true");
+    const seed = document.createElement("div"); seed.className = "col-seed to-gym"; seed.setAttribute("aria-hidden", "true");
     ["desktop", "web", "mobile"].forEach((plat) => {
       const d = document.createElement("div"); d.className = "plat " + plat;
       d.innerHTML = '<span class="dev"></span>';
@@ -787,11 +788,11 @@
     addEventListener("resize", () => setTimeout(drawIntroWire, 60));
     const INTRO = 3000;   // hold "LiteSample → adapter → Qwen3.5" long enough to read, then fade into the tape it produces
     function play() {
-      fig.classList.remove("intro-on", "intro-out");
-      void fig.offsetWidth;   // restart the wire-draw + packet from the top, so the draw is seen on scroll-in (not pre-played on load)
-      fig.classList.add("intro-on");
+      fig.classList.remove("intro-on", "intro-out", "playing");
+      void fig.offsetWidth;   // restart the wire-draw + packet from the top, so they play on scroll-in (not on page load)
+      fig.classList.add("intro-on", "playing");
       line.textContent = "the adapter · one LiteSample row → Qwen3.5's training tape";
-      setTimeout(() => { fig.classList.remove("intro-on"); fig.classList.add("intro-out"); }, INTRO);
+      setTimeout(() => { fig.classList.remove("intro-on", "playing"); fig.classList.add("intro-out"); }, INTRO);
       SCRIPT.forEach(([ms, fn, t]) => setTimeout(() => { fn(); line.textContent = t; }, ms + INTRO));
     }
     if (reduce) { fig.classList.remove("intro-on"); const [, fn, t] = SCRIPT[SCRIPT.length - 1];
