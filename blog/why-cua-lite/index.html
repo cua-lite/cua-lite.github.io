@@ -107,6 +107,8 @@
 .seed-fold .col-seed { display: flex; opacity: 1; transition: opacity .32s var(--ease), transform .32s var(--ease); }
 .seed-fold.unfolded .col-seed { opacity: 0; transform: scale(.9); }   /* seeds clear FIRST, then the pills arrive — never both mid-fade in the same spot */
 .seed-fold.unfolded .col-seed.to-gym { opacity: 0; transform: translate(155px, -40px) scale(.42); }   /* the platforms travel toward lite.gym and shrink into it — a hand-off into the gym, where the loop's screenshot device then appears */
+.seed-fold.unfolded:has(.col-seed.to-gym) .pair-node { animation: hubReceive .7s var(--ease) .34s; }   /* lite.gym gives a small pulse as the platforms land in it */
+@keyframes hubReceive { 40% { transform: scale(1.05); } }
 /* screenshot-trajectory frames — real device proportions like the homepage demos: desktop/web landscape, mobile portrait */
 .traj { position: relative; }
 .traj.desktop, .traj.web { width: 127px; height: 52px; }
