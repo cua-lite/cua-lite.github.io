@@ -45,6 +45,15 @@
 .pair-chip:hover { text-decoration: none; color: var(--text); border-color: var(--accent-dim); }   /* every chip links out */
 .pair-chip:visited { color: var(--muted); }
 .pair-right .pair-chip { align-self: flex-end; }
+/* category glyphs — each kind of entity wears a silhouette so left/right and
+   data / env / model read without reading the label. Instances stay homogeneous
+   on purpose: the figure's whole point is that they're interchangeable once unified. */
+.pair-chip::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 7px;
+  vertical-align: -1.5px; background: currentColor; opacity: .8;
+  -webkit-mask: var(--ic) center/contain no-repeat; mask: var(--ic) center/contain no-repeat; }
+.pair-chip[data-cat="data"]  { --ic: url('/assets/icons/rows.svg'); }
+.pair-chip[data-cat="env"]   { --ic: url('/assets/icons/window.svg'); }
+.pair-chip[data-cat="model"] { --ic: url('/assets/icons/chip.svg'); }
 .chip-tag { color: var(--dim); font-size: 10px; transition: color .25s ease; }   /* dim platform hint: desktop / web / mobile */
 .pair-chip.ghost { border-style: dashed; background: transparent; color: var(--dim); }   /* the open slot — a contribution not yet made */
 .pair-chip.on { color: var(--accent); border-color: var(--accent); background: rgba(189,90,56,.10); }
@@ -61,6 +70,8 @@
 .pair-node::before { left: -4px; }
 .pair-node::after { right: -4px; }
 .pair-node code { background: none; border: 0; padding: 0; font-size: 12.5px; }
+/* the hub wears the CUA-Lite mark: everything converges into the paper plane = into CUA-Lite */
+.node-mark { display: block; width: 15px; height: 15px; margin: 0 auto 5px; background: url('/assets/logo.svg') center/contain no-repeat; }
 .pair-node:hover, .pair-node:focus-within { z-index: 30; }   /* the hover card must clear the sibling stage cards */
 .wire-stage:hover, .wire-stage:focus-within { z-index: 30; }
 .wire-stage:hover .ls-pop, .wire-stage:focus-within .ls-pop { opacity: 1; visibility: visible; transform: translateY(-50%); pointer-events: auto; }
@@ -162,16 +173,10 @@
 }
 /* ---- the before-board: same anatomy, but no hub and no color — attempts die mid-air ---- */
 .mess .pair-chip + .pair-k { margin-top: 12px; }   /* the left column stacks two groups */
-.mess .pair-chip.try { color: var(--text); border-color: var(--muted); }   /* ink, never accent — this board has no color */
-.mess .mw { fill: none; stroke: var(--dim); stroke-width: 1.6; stroke-linecap: round; opacity: 0; }
-.mess .mw.dead { opacity: .16; }   /* the junkyard: every failed attempt stays behind, faint */
-.mess-x { position: absolute; font-family: var(--mono); font-size: 12px; color: var(--text); opacity: 0; transform: translate(-50%,-56%); pointer-events: none; z-index: 3; }
-.mess-why { position: absolute; font-family: var(--mono); font-size: 11px; color: var(--muted); opacity: 0; transform: translate(-50%,0); white-space: nowrap; pointer-events: none; z-index: 3; }
-.pair-cmd .c-x { color: var(--text); opacity: 0; }
-.mess .mw.draw, .mess-x.hit, .mess-why.hit, .pair-cmd .c-x.hit { animation: messIn .4s ease forwards; }
-.mess-x.hit, .pair-cmd .c-x.hit { animation-delay: .5s; }   /* the wire appears, then dies, then the reason */
-.mess-why.hit { animation-delay: .65s; }
-@keyframes messIn { to { opacity: .85; } }
+/* the before-board draws the full N×M tangle: every dataset/benchmark wired to every agent by
+   hand. Dashed + colourless = makeshift, never resolved — the hub boards below tidy the same wires. */
+.mess .mw { fill: none; stroke: #9c8b74; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 6 6; opacity: .7; }
+.mess .pair-right { justify-content: center; }   /* 3 agents vs 4 left items — centre the shorter column so the wire fan reads symmetric */
 .pair-cmd { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; line-height: 1.6; }
 .pair-cmd .c-p { color: var(--dim); }
 .pair-cmd b { color: var(--accent); font-weight: 500; }
@@ -180,7 +185,6 @@
   .pair-wire path.draw { animation: none; stroke-dashoffset: 0; opacity: 1; }
   .tape-row.born .tp.f, .tape-row.born .tp.f em, .tape-row.keep .tape::after, .tape-row.keep .tp.r, .gym-cur.touch::after { animation: none; }
   .pair-chip.on { transition-delay: 0s; }
-  .mess .mw.draw, .mess-x.hit, .mess-why.hit, .pair-cmd .c-x.hit { animation: none; opacity: .85; }
 }
 @media (max-width: 560px) {
   .pair-board { grid-template-columns: 1fr 104px 1fr; }
@@ -191,15 +195,19 @@
   .pair-node { padding: 7px 9px 6px; }
   .pair-node, .pair-node code { font-size: 10.5px; }
   .node-sub { font-size: 7.5px; letter-spacing: 1px; margin-top: 3px; }
+  .pair-chip::before { width: 11px; height: 11px; margin-right: 5px; }
+  .node-mark { width: 12px; height: 12px; margin-bottom: 3px; }
 }
 @media (max-width: 430px) {  /* keep the node clear of the chips on small phones */
   .pair-board { grid-template-columns: minmax(0, 1fr) 84px minmax(0, 1fr); }   /* chips yield inward, never clip at the panel edge */
   .pair-chip { font-size: 10px; padding: 4px 8px; }
   .chip-tag { display: none; }   /* the hint yields before the id does */
-  .mess-why, .flow-lab, .gym-shot, .gym-cur { display: none; }
+  .flow-lab, .gym-shot, .gym-cur { display: none; }
   .pair-node { padding: 5px 8px; }
   .pair-node, .pair-node code { font-size: 10px; }
   .node-sub { display: none; }
+  .pair-chip::before { width: 9px; height: 9px; margin-right: 4px; }
+  .node-mark { width: 10px; height: 10px; margin-bottom: 2px; }
   .flow-demo { padding: 14px 14px 12px; }
 }
 @media (max-width: 360px) {
@@ -233,6 +241,13 @@
 </header>
 
 <main class="post-wrap">
+  <!-- NORTH STAR · every "Call for … contributors" block — a one-glance reader must get all three,
+       payoff-first; cut anything a scanner can't use (mechanism, scope lists, hedging):
+         (1) OUR CONTRIBUTION — what CUA-Lite already provides that makes joining pay off
+             (the reach: every agent / every env, present AND future);
+         (2) VALUE TO SELF — your data / env keeps working and never goes stale;
+         (3) VALUE TO THE COMMUNITY — you grow the shared pool everyone else draws on.
+       The two calls are siblings: keep them parallel in shape and length. -->
   <p class="post-meta">2026-07-10 · The CUA-Lite team</p>
   <h1>Why CUA-Lite — and a call for <em>contributors.</em></h1>
 
@@ -247,24 +262,21 @@
     <div class="pair-board" data-board="mess">
       <div class="pair-col">
         <span class="pair-k">Datasets</span>
-        <a class="pair-chip" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web</a>
-        <a class="pair-chip" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey</a>
+        <a data-cat="data" class="pair-chip" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web</a>
+        <a data-cat="data" class="pair-chip" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey</a>
         <span class="pair-k">Benchmarks</span>
-        <a class="pair-chip" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld</a>
-        <a class="pair-chip" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena</a>
+        <a data-cat="env" class="pair-chip" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld</a>
+        <a data-cat="env" class="pair-chip" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena</a>
       </div>
       <div></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">gpt-5.5</a>
-        <a class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
-        <a class="pair-chip" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS-1.5</a>
+        <a data-cat="model" class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">gpt-5.5</a>
+        <a data-cat="model" class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
+        <a data-cat="model" class="pair-chip" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS-1.5</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="mw"/></svg>
-      <span class="mess-x" aria-hidden="true">✗</span>
-      <span class="mess-why" aria-hidden="true"></span>
     </div>
-    <div class="pair-cmd" data-cmd-line></div>
   </figure>
 
   <p><b>CUA-Lite puts all of it in one place</b> — all a computer-use agent
@@ -277,39 +289,34 @@
   <h2>Datasets</h2>
   <p><b>Convert a dataset once, and every agent can train on it.</b>
   <code class="ls" tabindex="0">LiteSample</code> is the one schema, shared
-  across every env, agent, and task type. No data of your own? It's all free
-  on Hugging&nbsp;Face.</p>
+  across every env, agent, and task type — all of it free on Hugging&nbsp;Face.</p>
   <figure class="flow-demo" aria-label="Any dataset, converted once, trains any agent">
     <div class="pair-board" data-board="data">
       <div class="pair-col">
         <span class="pair-k">Datasets</span>
-        <a class="pair-chip" data-id="Multimodal-Mind2Web" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web</a>
-        <a class="pair-chip" data-id="GUIOdyssey" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey</a>
-        <a class="pair-chip" data-id="ScaleCUA" href="https://huggingface.co/datasets/cua-lite/ScaleCUA" target="_blank" rel="noopener">ScaleCUA</a>
-        <a class="pair-chip" data-id="OpenCUA" href="https://huggingface.co/datasets/cua-lite/OpenCUA" target="_blank" rel="noopener">OpenCUA</a>
-        <a class="pair-chip ghost" data-id="YourDataset" href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">yours next</a>
+        <a data-cat="data" class="pair-chip" data-id="Multimodal-Mind2Web" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web</a>
+        <a data-cat="data" class="pair-chip" data-id="GUIOdyssey" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey</a>
+        <a data-cat="data" class="pair-chip" data-id="ScaleCUA" href="https://huggingface.co/datasets/cua-lite/ScaleCUA" target="_blank" rel="noopener">ScaleCUA</a>
+        <a data-cat="data" class="pair-chip" data-id="OpenCUA" href="https://huggingface.co/datasets/cua-lite/OpenCUA" target="_blank" rel="noopener">OpenCUA</a>
+        <a data-cat="data" class="pair-chip ghost" data-id="YourDataset" href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">yours next</a>
       </div>
-      <div class="pair-mid"><span class="pair-node"><code class="ls" tabindex="0">LiteSample</code><span class="node-sub">one schema</span></span></div>
+      <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="ls" tabindex="0">LiteSample</code><span class="node-sub">one schema</span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
-        <a class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS-1.5</a>
-        <a class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI-8B</a>
-        <a class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5-9B</a>
+        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
+        <a data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS-1.5</a>
+        <a data-cat="model" class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI-8B</a>
+        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5-9B</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
-  <p><b>The <code class="ad" tabindex="0">adapter</code> stage above is the agent harness doing double
-  duty: it runs the model live in the envs, and it converts standardized
-  <code class="ls" tabindex="0">LiteSample</code> rows into the data format
-  the model needs for training.</b> This is where the training complexity hides —
-  Qwen3.5's harness, for example, keeps the last four screenshots, collapses
-  the older history to a fixed line of text, and radix-packs prefix-extending
-  steps into a single forward pass; the next figure plays it out. CUA-Lite
-  ships every built-in model's harness ready to use, plus the building blocks
-  to compose a new one with ease.</p>
+  <p><b>Every model wants your training data packed its own way — CUA-Lite ships a
+  ready harness for each.</b> That's the <code class="ad" tabindex="0">adapter</code>
+  in the figure above: it packs a <code class="ls" tabindex="0">LiteSample</code> row
+  into the exact shape a model trains on, with the building blocks to add your own.
+  The next figure plays out Qwen3.5's.</p>
 
   <figure class="flow-demo pack" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
     <div class="tape-board" data-pack>
@@ -342,13 +349,11 @@
     <div class="pair-cmd" data-pack-line></div>
   </figure>
 
-  <p class="post-call"><b class="call">Call for data contributors.</b> Without a shared
-  schema, data collected for one agent can't train another — and most datasets
-  stop being used. In <code class="ls" tabindex="0">LiteSample</code> they keep working:
-  every agent can train on them, even models that don't exist yet. The
-  datasets join <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">a growing pool of computer-use data</a> — grounding steps, full trajectories,
-  every platform. If you've collected trajectories, one conversion puts them
-  to work for everyone.</p>
+  <p class="post-call"><b class="call">Call for data contributors.</b> Most datasets
+  stop being used — collected for one agent, they can't train another. In
+  <code class="ls" tabindex="0">LiteSample</code> yours keeps working: every agent
+  trains on it, even models that don't exist yet. One conversion, and the whole
+  community can train on it — for good.</p>
 
   <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">Preprocessing guide ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">Agent harnesses ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/docs/sft.md" target="_blank" rel="noopener">SFT guide ↗</a></p>
 
@@ -362,29 +367,28 @@
     <div class="pair-board" data-board="pair">
       <div class="pair-col">
         <span class="pair-k">Environments</span>
-        <a class="pair-chip" data-id="osworld" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld<span class="chip-tag"> · desktop</span></a>
-        <a class="pair-chip" data-id="browsergym.webarena" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena<span class="chip-tag"> · web</span></a>
-        <a class="pair-chip" data-id="androidworld" href="https://github.com/google-research/android_world" target="_blank" rel="noopener">AndroidWorld<span class="chip-tag"> · mobile</span></a>
-        <a class="pair-chip" data-id="webgym" href="https://github.com/microsoft/webgym" target="_blank" rel="noopener">WebGym<span class="chip-tag"> · web</span></a>
-        <a class="pair-chip ghost" data-id="your-env" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
+        <a data-cat="env" class="pair-chip" data-id="osworld" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld<span class="chip-tag"> · desktop</span></a>
+        <a data-cat="env" class="pair-chip" data-id="browsergym.webarena" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena<span class="chip-tag"> · web</span></a>
+        <a data-cat="env" class="pair-chip" data-id="androidworld" href="https://github.com/google-research/android_world" target="_blank" rel="noopener">AndroidWorld<span class="chip-tag"> · mobile</span></a>
+        <a data-cat="env" class="pair-chip" data-id="webgym" href="https://github.com/microsoft/webgym" target="_blank" rel="noopener">WebGym<span class="chip-tag"> · web</span></a>
+        <a data-cat="env" class="pair-chip ghost" data-id="your-env" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
       </div>
-      <div class="pair-mid"><span class="pair-node"><code class="lg" tabindex="0">lite.gym</code><span class="node-sub">one action space</span></span></div>
+      <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="lg" tabindex="0">lite.gym</code><span class="node-sub">one action space</span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">gpt-5.5</a>
-        <a class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">claude-opus-4-7</a>
-        <a class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
-        <a class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5-9B</a>
+        <a data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">gpt-5.5</a>
+        <a data-cat="model" class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">claude-opus-4-7</a>
+        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
+        <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5-9B</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
-  <p class="post-call"><b class="call">Call for env contributors.</b> A benchmark or a training
-  environment only matters while people run it. Behind <code class="lg" tabindex="0">lite.gym</code>, yours runs against every
-  agent we ship and every agent added later, on <a href="/#leaderboard">one leaderboard</a>; give it a
-  training split, and it becomes a place agents learn, not just get graded.
-  One integration keeps it alive.</p>
+  <p class="post-call"><b class="call">Call for env contributors.</b> An env only matters
+  while people run it. Behind <code class="lg" tabindex="0">lite.gym</code>, yours runs
+  against every agent, now and later, on <a href="/#leaderboard">one shared leaderboard</a>.
+  One integration, and the whole field trains and competes on it.</p>
 
   <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">Env guide ↗</a> &nbsp;·&nbsp; <a href="/#leaderboard">Leaderboard ↗</a></p>
 
@@ -552,72 +556,24 @@
   const dataFig = document.querySelector('[data-board="data"]');
   if (dataFig) boards.push(runBoard(dataFig.closest(".flow-demo"), (ds, m) =>
     `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>${ds.split("/").pop()}</b></span> <span class="nb">--model-id</span> <b>${m}</b>`, "data", 1700));
-  // the before-board: an attempted pairing draws 58% of the way, dies with a real reason
+  // the before-board: no shared interface, so every dataset/benchmark must be wired to every
+  // agent by hand — the full N×M tangle. The hub boards below route the same wires cleanly (N+M).
   const messFig = document.querySelector('[data-board="mess"]');
   if (messFig) (function () {
-    const fig = messFig.closest(".flow-demo");
-    // real frictions, no pretend commands — there is no shared command, and that is the point
-    const TRIES = [
-      { l: 0, r: 2, why: "its own schema",  line: "Mind2Web ships its own schema — UI-TARS-1.5 can't train on it" },
-      { l: 2, r: 1, why: "pixel actions",   line: "OSWorld executes pyautogui pixels — Qwen3-VL's coordinates don't match" },
-      { l: 1, r: 0, why: "its own format",  line: "GUIOdyssey stores mobile traces its own way — no loader fits gpt-5.5" },
-      { l: 3, r: 2, why: "its own runner",  line: "WebArena means five Docker containers and its own runner — rebuild it again" },
-    ];
     const left = [...messFig.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
     const right = [...messFig.querySelectorAll(".pair-right .pair-chip")];
     const svg = messFig.querySelector(".pair-wire");
     const mw = svg.querySelector(".mw");
-    const mx = messFig.querySelector(".mess-x");
-    const mwhy = messFig.querySelector(".mess-why");
-    const cmd = fig.querySelector("[data-cmd-line]");
     const pt = (el, side) => { const b = el.getBoundingClientRect(), s = svg.getBoundingClientRect();
       return [side === "r" ? b.right - s.left + 4 : b.left - s.left - 4, b.top + b.height / 2 - s.top]; };
-    const curve = ([x1, y1], [x2, y2]) => { const mid = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`; };
-    const mkCmd = (t) => `<span class="c-x hit">✗ ${t.line}</span>`;
-    let k = 0, lineT = 0;
-    const wreck = document.createElementNS("http://www.w3.org/2000/svg", "g");   // the junkyard of dead attempts
-    wreck.setAttribute("class", "mess-wreck");
-    svg.insertBefore(wreck, mw);
-    function step(j) {
-      k = j;
-      const t = TRIES[j];
-      left.forEach((c, m) => c.classList.toggle("try", m === t.l));
-      right.forEach((c) => c.classList.remove("try"));   // the far side never receives
-      if (j === 0) wreck.innerHTML = "";                       // new cycle: clear the yard
-      else if (!reduce && mw.getAttribute("d")) {               // the last attempt stays behind, faded
-        const ghost = mw.cloneNode(); ghost.removeAttribute("class"); ghost.removeAttribute("id");
-        ghost.setAttribute("class", "mw dead"); wreck.appendChild(ghost);
-      }
-      mw.classList.remove("draw"); mx.classList.remove("hit"); mwhy.classList.remove("hit");
-      void mw.getBoundingClientRect();
-      mw.setAttribute("d", curve(pt(left[t.l], "r"), pt(right[t.r], "l")));
-      mw.setAttribute("pathLength", 100);                // dash units become percentages
-      const dashes = [];                                 // dashed for ~58 units, then one long gap
-      for (let u = 0; u < 51; u += 6.4) dashes.push("3.2", "3.2");
-      dashes.push("3.2", "200");                         // the last dash, then silence (no 0-length dot)
-      mw.style.strokeDasharray = dashes.join(" ");
-      mw.classList.add("draw");
-      const L2 = mw.getTotalLength();
-      const q = mw.getPointAtLength(0.58 * L2);
-      mx.style.left = q.x + "px"; mx.style.top = q.y + "px";
-      mwhy.style.left = q.x + "px";                        // below the break — the wire never continues there
-      mwhy.style.top = (q.y + 14) + "px";
-      mwhy.textContent = t.why;
-      mx.classList.add("hit"); mwhy.classList.add("hit");
-      clearTimeout(lineT);
-      lineT = setTimeout(() => { cmd.innerHTML = mkCmd(t); }, reduce ? 0 : 500);
-    }
-    function reserve() {
-      const keep = cmd.innerHTML;
-      cmd.style.minHeight = "";
-      let max = 0;
-      TRIES.forEach((t) => { cmd.innerHTML = mkCmd(t); max = Math.max(max, cmd.offsetHeight); });
-      cmd.innerHTML = keep;
-      cmd.style.minHeight = max + "px";
-    }
-    step(0); reserve(); watch(fig);
-    if (!reduce) setInterval(() => { if (live(fig)) step((k + 1) % TRIES.length); }, 5200);
-    boards.push(() => { reserve(); step(k); });
+    const curve = ([x1, y1], [x2, y2]) => { const mid = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2} `; };
+    const draw = () => {   // every left node to every right node — one tangled bundle
+      let d = "";
+      left.forEach((l) => right.forEach((r) => { d += curve(pt(l, "r"), pt(r, "l")); }));
+      mw.setAttribute("d", d);
+    };
+    draw();
+    boards.push(draw);   // re-anchor with the other boards on resize / font load
   })();
 
   const pairFig = document.querySelector('[data-board="pair"]');
