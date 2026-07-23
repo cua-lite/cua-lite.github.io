@@ -186,18 +186,13 @@
 .flow-demo.pack { position: relative; overflow: hidden; }   /* clips the zoom-scaled intro so it never widens the page */
 .pack-intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-evenly; gap: 12px; flex-wrap: wrap;
   background: radial-gradient(135% 105% at 50% -12%, #fffdf7, var(--panel-fill) 72%); border-radius: 14px; z-index: 5; opacity: 0; pointer-events: none;
-  transition: opacity .6s var(--ease); font-family: var(--mono); }
+  transform-origin: 50% 50%; transition: opacity .45s var(--ease); font-family: var(--mono); }
 .pack.intro-on .pack-intro { opacity: 1; }
-/* the exit tells the story: LiteSample and Qwen part ways, we zoom INTO the adapter, and the training tape it produces materializes underneath */
-.pack-intro .pair-node, .pack-intro .pack-adapter, .pack-intro .pair-chip { transition: transform .6s var(--ease); }
-.pack-intro .pair-node { transform: translateX(-34px) scale(.92); }
-.pack-intro .pair-chip { transform: translateX(34px) scale(.92); }
-.pack-intro .pack-adapter { transform: scale(2.3); }   /* the adapter is the one we dive into */
-.pack.intro-on .pack-intro .pair-node,
-.pack.intro-on .pack-intro .pair-chip,
-.pack.intro-on .pack-intro .pack-adapter { transform: none; }
-.pack .tape-board { transition: opacity .55s ease .12s, transform .6s var(--ease) .12s; }   /* the tape emerges a beat after the adapter opens */
-.pack.intro-on .tape-board { opacity: 0; transform: scale(.9); }
+/* exit: the whole intro stays OPAQUE and pushes into the adapter (centred) — LiteSample and Qwen scale off-frame, the adapter grows — then it dissolves only at the very end to reveal the tape already settled behind it. Opaque until the last moment, so the two layers never bleed through each other. */
+.pack.intro-out .pack-intro { animation: introZoomOut .82s var(--ease) forwards; transition: none; }
+@keyframes introZoomOut { 0% { opacity: 1; transform: scale(1); } 70% { opacity: 1; transform: scale(1.6); } 100% { opacity: 0; transform: scale(1.95); } }
+.pack .tape-board { transition: opacity .4s ease; }   /* fades in hidden behind the opaque intro, so it is fully in place before the dissolve */
+.pack.intro-on .tape-board { opacity: 0; }
 .pack .tape-legend { transition: opacity .5s ease; }
 .pack.intro-on .tape-legend { opacity: 0; }
 .pack-adapter { font-size: 11px; background: linear-gradient(180deg, #fff, #fffaf1); border: 1px solid var(--accent-dim); border-radius: 6px; padding: 4px 11px; color: var(--muted); box-shadow: 0 1px 3px -1px rgba(40,30,15,.12), inset 0 1px 0 #fff; }
@@ -208,7 +203,7 @@
 .pack.intro-on .pi-dot { animation: piDot 2.4s linear infinite; }
 @keyframes piDot { 0% { left: var(--pix0); opacity: 0; } 8% { opacity: 1; } 90% { opacity: 1; } 100% { left: var(--pix1); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .pack.intro-on .pi-dot { animation: none; opacity: 0; }
-  .pack-intro, .pack-intro .pair-node, .pack-intro .pack-adapter, .pack-intro .pair-chip, .pack .tape-board { transition: none; } }   /* no zoom-into-adapter motion */
+  .pack.intro-out .pack-intro { animation: none; opacity: 0; } .pack-intro, .pack .tape-board { transition: none; } }   /* no zoom-into-adapter motion */
 /* the intro reuses the real figure components (hub card + plane + {} , adapter card, agent chip) so it matches figure 2 */
 .pack-intro .pair-node::before, .pack-intro .pair-node::after { display: none; }   /* no wires in the intro → no ports */
 .pack-intro .pair-chip { align-self: center; }
@@ -693,9 +688,10 @@
     addEventListener("resize", () => setTimeout(drawIntroWire, 60));
     const INTRO = 3000;   // hold "LiteSample → adapter → Qwen3.5" long enough to read, then fade into the tape it produces
     function play() {
+      fig.classList.remove("intro-out");
       fig.classList.add("intro-on");
       line.textContent = "the adapter · one LiteSample row → Qwen3.5's training tape";
-      setTimeout(() => fig.classList.remove("intro-on"), INTRO);
+      setTimeout(() => { fig.classList.remove("intro-on"); fig.classList.add("intro-out"); }, INTRO);
       SCRIPT.forEach(([ms, fn, t]) => setTimeout(() => { fn(); line.textContent = t; }, ms + INTRO));
     }
     if (reduce) { fig.classList.remove("intro-on"); const [, fn, t] = SCRIPT[SCRIPT.length - 1];
