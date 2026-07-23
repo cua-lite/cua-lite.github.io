@@ -112,16 +112,18 @@
 .traj.desktop .fr, .traj.web .fr { width: 82px; height: 52px; border-radius: 6px; }
 .traj.mobile { width: 89px; height: 66px; }
 .traj.mobile .fr { width: 44px; height: 66px; border-radius: 10px; }
-.traj.single.desktop, .traj.single.web { width: 82px; }   /* one live screen, no stack */
-.traj.single.mobile { width: 44px; }
-.traj .fr { position: absolute; top: 0; overflow: hidden; background: #fff; border: 1px solid rgba(40,30,15,.22); box-shadow: 2px 3px 6px -3px rgba(40,30,15,.30); }
-.traj .fr .bar { display: block; height: 9px; }
-.traj .fr .ln { display: block; height: 4.5px; border-radius: 1px; margin: 6px 8px 0; background: #ddd3c0; }
-.traj .fr .ln.a { background: var(--accent); opacity: .88; }
-.traj.mobile .fr .ln { margin: 6px 6px 0; }
-.traj.desktop .fr { background: #33475a; } .traj.desktop .fr .bar { background: #26313d; } .traj.desktop .fr .ln { background: #56687a; }
-.traj.web .fr .bar { background: #ece2d1; }
-.traj.mobile .fr { background: #fbf7ef; } .traj.mobile .fr .bar { background: #efe6d5; }
+.traj .fr { position: absolute; top: 0; overflow: hidden; background: #fff center / cover no-repeat; border: 1px solid rgba(40,30,15,.22); box-shadow: 2px 3px 6px -3px rgba(40,30,15,.30); }
+.traj.desktop .fr { background-image: url(/assets/traj/desktop.png); }   /* real screenshots of the hero demos — a dataset is recorded screens */
+.traj.web .fr { background-image: url(/assets/traj/web.png); }
+.traj.mobile .fr { background-image: url(/assets/traj/mobile.png); background-position: center top; }
+/* fig 4: environments open as the three GENERAL platforms — device forms (not a screenshot) */
+.plat .dev { display: block; position: relative; background: linear-gradient(180deg, #fff, #fdf7ec); border: 1.5px solid var(--accent-dim); box-shadow: 0 2px 5px -2px rgba(40,30,15,.13); }
+.plat.desktop .dev, .plat.web .dev { width: 90px; height: 54px; border-radius: 6px; }
+.plat.mobile .dev { width: 44px; height: 70px; border-radius: 12px; }
+.plat.desktop::after { content: ""; display: block; width: 30px; height: 7px; margin: 0 auto; background: var(--accent-dim); opacity: .4; clip-path: polygon(28% 0, 72% 0, 100% 100%, 0 100%); }   /* monitor stand */
+.plat.web .dev::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 13px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); border-radius: 6px 6px 0 0; }   /* browser chrome */
+.plat.web .dev::after { content: ""; position: absolute; top: 5px; left: 7px; width: 3.5px; height: 3.5px; border-radius: 50%; background: var(--accent-dim); box-shadow: 6px 0 var(--accent-dim), 12px 0 var(--accent-dim); }   /* traffic lights */
+.plat.mobile .dev::before { content: ""; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 14px; height: 3px; border-radius: 2px; background: var(--line-2); }   /* notch */
 .ag-seed { position: relative; display: inline-flex; align-items: center; background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 999px; padding: 9px 20px; box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 1px 1.5px rgba(40,30,15,.045); font-family: var(--mono); font-size: 13px; color: var(--muted); }
 .ag-seed::before, .ag-seed::after { content: ""; position: absolute; inset: 0; border-radius: 999px; background: var(--panel-2); border: 1px solid var(--line-2); z-index: -1; }
 .ag-seed::before { transform: translate(4px, 6px); opacity: .7; } .ag-seed::after { transform: translate(8px, 12px); opacity: .45; }   /* stacked = many agents, fanning into GPT/Claude/… */
@@ -659,9 +661,7 @@
       for (let i = 0; i < 4; i++) {
         const fr = document.createElement("span"); fr.className = "fr";
         fr.style.left = (i * 15) + "px"; fr.style.opacity = [".6", ".74", ".87", "1"][i]; fr.style.zIndex = i + 1;
-        const front = plat === "mobile" ? '<span class="bar"></span><span class="ln"></span><span class="ln"></span><span class="ln a"></span>' : '<span class="bar"></span><span class="ln"></span><span class="ln a"></span>';
-        fr.innerHTML = i === 3 ? front : '<span class="bar"></span>';
-        t.appendChild(fr);
+        t.appendChild(fr);   // the frame's real hero screenshot comes from its CSS background-image
       }
       seed.appendChild(t);
     });
@@ -672,13 +672,12 @@
     seed.innerHTML = '<span class="ag-seed">Agents</span>';
     return seed;
   }
-  function screenSeed() {   // environments open as single LIVE screens (not stacked) — the running device, vs datasets' recorded stacks
+  function platformSeed() {   // environments = the three GENERAL platforms, drawn as device forms (not a screenshot)
     const seed = document.createElement("div"); seed.className = "col-seed"; seed.setAttribute("aria-hidden", "true");
     ["desktop", "web", "mobile"].forEach((plat) => {
-      const t = document.createElement("div"); t.className = "traj single " + plat;
-      const fr = document.createElement("span"); fr.className = "fr";
-      fr.innerHTML = plat === "mobile" ? '<span class="bar"></span><span class="ln"></span><span class="ln"></span><span class="ln a"></span>' : '<span class="bar"></span><span class="ln"></span><span class="ln a"></span>';
-      t.appendChild(fr); seed.appendChild(t);
+      const d = document.createElement("div"); d.className = "plat " + plat;
+      d.innerHTML = '<span class="dev"></span>';
+      seed.appendChild(d);
     });
     return seed;
   }
@@ -686,7 +685,7 @@
     const df = document.querySelector('[data-board="data"]');
     if (df) { df.querySelector(".pair-col:not(.pair-right)").appendChild(trajSeed()); df.querySelector(".pair-right").appendChild(agentsSeed()); df.closest(".flow-demo").classList.add("seed-fold"); }
     const pf = document.querySelector('[data-board="pair"]');
-    if (pf) { pf.querySelector(".pair-col:not(.pair-right)").appendChild(screenSeed()); pf.querySelector(".pair-right").appendChild(agentsSeed()); pf.closest(".flow-demo").classList.add("seed-fold"); }
+    if (pf) { pf.querySelector(".pair-col:not(.pair-right)").appendChild(platformSeed()); pf.querySelector(".pair-right").appendChild(agentsSeed()); pf.closest(".flow-demo").classList.add("seed-fold"); }
   })();
   const dataFig = document.querySelector('[data-board="data"]');
   if (dataFig) boards.push(runBoard(dataFig.closest(".flow-demo"), (ds, m) =>
