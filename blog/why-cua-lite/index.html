@@ -179,6 +179,38 @@
   .spec-row { grid-template-columns: minmax(0, 1fr); gap: 3px; padding: 7px 0; }
   .spec-k { text-align: left; color: var(--muted); }
 }
+/* ---- the cohort grid: every platform × task type, lit by whichever dataset is active.
+   It rides the board's existing beat, so the figure gains a fact per cycle, not a new motion ---- */
+.cg { margin-top: 15px; padding-top: 14px; border-top: 1px solid var(--line); font-family: var(--mono); }
+.cg-head, .cg-row { display: grid; grid-template-columns: 52px repeat(5, minmax(0, 1fr)); align-items: center; gap: 4px; }
+.cg-row { height: 21px; }
+.cg-head span { font-size: 8.5px; letter-spacing: .3px; color: var(--dim); text-align: center; line-height: 1.25; }
+.cg-head b { font-weight: 400; }
+.cg-head u { display: none; text-decoration: none; }   /* the narrow-width spelling, swapped in below 560 */
+.cg-row > span { font-size: 9.5px; color: var(--dim); text-align: right; padding-right: 4px; }
+.cg-row i { width: 7px; height: 7px; margin: 0 auto; background: var(--line-2);
+  transition: background .35s ease, transform .35s ease, box-shadow .35s ease; }
+.cg-row i.on { background: var(--accent); transform: scale(1.3); }
+.cg-row i.maybe { background: transparent; box-shadow: inset 0 0 0 1px var(--accent-dim); }   /* the open slot: yours could fill any of them */
+.cg-row i:nth-child(2) { transition-delay: 0s; }      /* a left-to-right wave, so the grid flows like the wire */
+.cg-row i:nth-child(3) { transition-delay: .05s; }
+.cg-row i:nth-child(4) { transition-delay: .10s; }
+.cg-row i:nth-child(5) { transition-delay: .15s; }
+.cg-row i:nth-child(6) { transition-delay: .20s; }
+.cg-note { margin-top: 9px; font-size: 10px; color: var(--dim); text-align: center; min-height: 13px; }
+.cg-note b { color: var(--accent); font-weight: 400; }
+/* ---- the env board's per-beat fact: what this one actually was, and what it took ---- */
+.pair-fact { margin-top: 15px; padding-top: 13px; border-top: 1px solid var(--line);
+  font-family: var(--mono); font-size: 11px; line-height: 1.55; color: var(--dim); }
+.pair-fact b { color: var(--text); font-weight: 400; }   /* the before is dim; what the integration bought is not */
+.pair-fact + .pair-cmd { margin-top: 9px; padding-top: 0; border-top: 0; }
+@media (max-width: 560px) {
+  .cg-head, .cg-row { grid-template-columns: 40px repeat(5, minmax(0, 1fr)); gap: 2px; }
+  .cg-head span { font-size: 8px; }
+  .cg-head b { display: none; }
+  .cg-head u { display: inline; }
+  .cg-row > span { font-size: 8.5px; }
+}
 .pair-cmd { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; line-height: 1.6; }
 .pair-cmd .c-p { color: var(--dim); }
 .pair-cmd b { color: var(--accent); font-weight: 500; }
@@ -273,23 +305,36 @@
   web, and mobile. Here is how each contribution compounds:</p>
 
   <h2>Datasets</h2>
-  <p><b>Convert a dataset once, and every agent can train on it.</b>
-  <code class="ls" tabindex="0">LiteSample</code> is the one schema, shared
-  across every env, agent, and task type. Preprocessing also sorts each upstream
-  dataset into <code>(platform, task_type)</code> cohorts — GUIAct's three
-  undifferentiated folders become <code>web/grounding.action</code>,
-  <code>web/use</code>, and <code>mobile/use</code> — and that one string is the
-  directory name, the Hugging&nbsp;Face config, and the key that picks the agent's
-  adapter at training time. No data of your own? It's all free on Hugging&nbsp;Face.</p>
+  <p><b>Say you want to train on three public GUI datasets.</b> In the first, the
+  click coordinate is a pair of decimals inside a line of Python source code. In
+  the second there is no coordinate at all — you get the corner points of a
+  web-page element, three layers of nested text down, and you work out the middle
+  yourself. In the third the numbers are there already, on a third scale. The
+  screenshots sit inside the data file in one, in a 20&nbsp;GB archive in another,
+  spread across eleven folders in the third. None of them agree on what a scroll
+  is. You write three loaders, then a fourth thing to reconcile them, and only
+  then start training.</p>
+
+  <p><b>CUA-Lite does that work once, in the open, for every dataset.</b>
+  Everything lands as <code class="ls" tabindex="0">LiteSample</code>: one list of
+  screenshots, one conversation, one set of actions, coordinates always on the
+  same 0–1000 scale whatever the screen was. Images are stored by their content,
+  so a screenshot two datasets share is kept once.</p>
+
+  <p><b>And every sample is filed by platform and task type.</b> Upstream folder
+  names mean nothing to a machine; the fifteen boxes below do. The same label names
+  the directory, the Hugging&nbsp;Face config, and the adapter that renders the
+  sample for a given model — so a training run can ask for every mobile grounding
+  sample there is and get it from every dataset at once.</p>
   <figure class="flow-demo" aria-label="Any dataset, converted once, trains any agent">
     <div class="pair-board" data-board="data">
       <div class="pair-col">
         <span class="pair-k">Datasets</span>
-        <a class="pair-chip" data-id="Multimodal-Mind2Web" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web</a>
-        <a class="pair-chip" data-id="GUIOdyssey" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey</a>
-        <a class="pair-chip" data-id="ScaleCUA" href="https://huggingface.co/datasets/cua-lite/ScaleCUA" target="_blank" rel="noopener">ScaleCUA</a>
-        <a class="pair-chip" data-id="OpenCUA" href="https://huggingface.co/datasets/cua-lite/OpenCUA" target="_blank" rel="noopener">OpenCUA</a>
-        <a class="pair-chip ghost" data-id="YourDataset" href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">yours next</a>
+        <a class="pair-chip" data-id="Multimodal-Mind2Web" data-cells="web.use" data-note="a web-page element box, three layers of text down — <b>one</b> box filled" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web</a>
+        <a class="pair-chip" data-id="GUIOdyssey" data-cells="mobile.understanding mobile.use" data-note="phone traces, coordinates as two-point lists — <b>two</b> boxes filled" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey</a>
+        <a class="pair-chip" data-id="OpenCUA" data-cells="desktop.use" data-note="desktop recordings with written reasoning — <b>one</b> box filled" href="https://huggingface.co/datasets/cua-lite/OpenCUA" target="_blank" rel="noopener">OpenCUA</a>
+        <a class="pair-chip" data-id="ScaleCUA" data-cells="*" data-note="decimals buried in a line of text, every platform — <b>all fifteen</b> filled" href="https://huggingface.co/datasets/cua-lite/ScaleCUA" target="_blank" rel="noopener">ScaleCUA</a>
+        <a class="pair-chip ghost" data-id="YourDataset" data-cells="?" data-note="whatever shape it arrives in — it lands in the boxes it belongs to" href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">yours next</a>
       </div>
       <div class="pair-mid"><span class="pair-node"><code class="ls" tabindex="0">LiteSample</code><span class="node-sub">one schema</span></span></div>
       <div class="pair-col pair-right">
@@ -300,6 +345,18 @@
         <a class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5-9B</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
+    </div>
+    <div class="cg" data-cells-grid>
+      <div class="cg-head"><span></span>
+        <span><b>understanding</b><u>under.</u></span>
+        <span><b>grounding<br>point</b><u>g.point</u></span>
+        <span><b>grounding<br>bbox</b><u>g.bbox</u></span>
+        <span><b>grounding<br>action</b><u>g.action</u></span>
+        <span><b>use</b><u>use</u></span></div>
+      <div class="cg-row" data-plat="desktop"><span>desktop</span><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="cg-row" data-plat="mobile"><span>mobile</span><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="cg-row" data-plat="web"><span>web</span><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="cg-note" data-cells-note></div>
     </div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
@@ -375,31 +432,28 @@
     <div class="spec-row lite"><span class="spec-k">lite.gym</span><span class="spec-v"><code>await env.step([click(coordinate=[500, 300])])</code><span class="spec-n">over a QEMU snapshot, a Playwright page, an adb shell, or a static PNG — unchanged</span></span></div>
   </figure>
 
-  <p>An env implements four methods and declares how its backend behaves — a
-  fresh container per trajectory, one shared service, or nothing at all — and
-  the operations layer comes free: warm pools, orphan reaping,
-  <code>503 + Retry-After</code> backpressure, multi-node routing. The
-  translation goes deeper than renaming: AndroidWorld's swipe is driven through
-  raw <code>adb</code> to recover the precise endpoints its own action type
-  can't express, and BrowserGym's per-step DOM and accessibility-tree extraction
-  is skipped for agents that only look at pixels — its bid actions still there,
-  one config away.</p>
+  <p><b>Integrating one is rarely just a translation.</b> Most benchmarks were
+  built to be run once, by hand, by the people who wrote them — not thousands of
+  times, in parallel, by everyone else. So most of the work is making them cheap
+  and repeatable, and it is different work every time. The board below cycles
+  through what that meant for five of them.</p>
 
-  <p>The same loop serves eval and RL: every env ships eval tasks, and many add
-  training splits with verifiable rewards. OSWorld arrives as 369 eval tasks and
-  no training data, so cua-lite generates 2,490 more behind deterministic
-  evaluators — and runs the whole benchmark KVM-free, on a Docker desktop that
-  boots in seconds instead of a 23&nbsp;GiB virtual machine.</p>
+  <p><b>An environment is also not only a scoreboard.</b> Many carry training
+  tasks beside their eval set, each with an automatic checker that hands back a
+  reward — OSWorld arrives with 369 tasks to be graded on, and 2,490 more,
+  generated, to learn from. So the same environment can grade an agent, produce
+  training data for it, or be the world it learns in.</p>
 
   <figure class="flow-demo" aria-label="Any environment paired with any agent through lite.gym: screenshots up, actions down">
     <div class="pair-board" data-board="pair">
       <div class="pair-col">
         <span class="pair-k">Environments</span>
-        <a class="pair-chip" data-id="osworld" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld<span class="chip-tag"> · desktop</span></a>
-        <a class="pair-chip" data-id="browsergym.webarena" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena<span class="chip-tag"> · web</span></a>
-        <a class="pair-chip" data-id="androidworld" href="https://github.com/google-research/android_world" target="_blank" rel="noopener">AndroidWorld<span class="chip-tag"> · mobile</span></a>
-        <a class="pair-chip" data-id="webgym" href="https://github.com/microsoft/webgym" target="_blank" rel="noopener">WebGym<span class="chip-tag"> · web</span></a>
-        <a class="pair-chip ghost" data-id="your-env" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
+        <a class="pair-chip" data-id="lite.osworld" data-fact="Shipped as a virtual machine, minutes to boot. <b>Also runs KVM-free, in a container that starts in seconds — same tasks, same scoring.</b>" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld<span class="chip-tag"> · desktop</span></a>
+        <a class="pair-chip" data-id="lite.cuaworld.pymol" data-fact="Forty real applications — CAD, molecular viewers, IDEs — each expecting its own virtual machine. <b>Tested and re-hosted onto plain containers.</b>" href="https://github.com/cmu-l3/gym-anything" target="_blank" rel="noopener">CUAWorld<span class="chip-tag"> · desktop</span></a>
+        <a class="pair-chip" data-id="browsergym.webarena" data-fact="One shared world behind every task, minutes to rewind — too heavy to restart per task. <b>Tasks that only look now run in parallel; only the ones that change something wait.</b>" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena<span class="chip-tag"> · web</span></a>
+        <a class="pair-chip" data-id="webharbor.webvoyager" data-fact="Scored against the live internet, where today's Amazon is not last month's. <b>Now against frozen local copies of all fifteen sites.</b>" href="https://github.com/MinorJerry/WebVoyager" target="_blank" rel="noopener">WebVoyager<span class="chip-tag"> · web</span></a>
+        <a class="pair-chip" data-id="androidworld" data-fact="A phone emulator booted per run, and a swipe you could only aim in four directions. <b>Emulators kept warm and reused; swipes get exact start and end points.</b>" href="https://github.com/google-research/android_world" target="_blank" rel="noopener">AndroidWorld<span class="chip-tag"> · mobile</span></a>
+        <a class="pair-chip ghost" data-id="your-env" data-fact="Whatever it takes to make yours cheap and repeatable. <b>Four methods on your side; every agent here runs it, and every agent added later.</b>" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
       </div>
       <div class="pair-mid"><span class="pair-node"><code class="lg" tabindex="0">lite.gym</code><span class="node-sub">one action space</span></span></div>
       <div class="pair-col pair-right">
@@ -411,6 +465,7 @@
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
+    <div class="pair-fact" data-fact-line></div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
   <p class="post-call"><b class="call">Call for env contributors.</b> A benchmark or a training
@@ -443,7 +498,10 @@
     es.forEach((e) => e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target)), { rootMargin: "80px" }) : null;
   const watch = (fig) => { if (io) io.observe(fig); else onScreen.add(fig); };
   const live = (fig) => !io || onScreen.has(fig);
-  function runBoard(fig, mkCmd, mode, startDelay) {   // mode: "data" (sample flows in) | "loop" (screenshot up, action down)
+  // onBeat(leftChip) — the figure's own per-beat payload (the cohort grid, the env fact).
+  // It rides the beat the board already has, so each figure carries a fact per cycle
+  // without a second thing moving on screen.
+  function runBoard(fig, mkCmd, mode, startDelay, onBeat) {   // mode: "data" (sample flows in) | "loop" (screenshot up, action down)
     const board = fig.querySelector(".pair-board");
     const left = [...board.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
     const right = [...board.querySelectorAll(".pair-right .pair-chip")];
@@ -536,6 +594,7 @@
       wires(a, e);
       paths.forEach(redraw);
       cmd.innerHTML = mkCmd(left[a].dataset.id, right[e].dataset.id);
+      if (onBeat) onBeat(left[a]);
       placeExtras(e);
       if (!reduce) {
         timers.forEach(clearTimeout); timers.length = 0;
@@ -582,12 +641,59 @@
     return () => { reserve(); wires(cur[0], cur[1]); placeExtras(cur[1]); };
   }
   const boards = [];
+  // hold a per-beat line at its tallest variant so the figure never reflows mid-cycle
+  function reserveTallest(el, variants) {
+    const keep = el.innerHTML;
+    el.style.minHeight = "";
+    let max = 0;
+    variants.forEach((v) => { el.innerHTML = v; max = Math.max(max, el.offsetHeight); });
+    el.innerHTML = keep;
+    el.style.minHeight = max + "px";
+  }
   const dataFig = document.querySelector('[data-board="data"]');
-  if (dataFig) boards.push(runBoard(dataFig.closest(".flow-demo"), (ds, m) =>
-    `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>${ds.split("/").pop()}</b></span> <span class="nb">--model-id</span> <b>${m}</b>`, "data", 1700));
+  if (dataFig) {
+    // the grid is the taxonomy itself: 3 platforms × 5 task types, lit by the active dataset
+    const fig = dataFig.closest(".flow-demo");
+    const grid = fig.querySelector("[data-cells-grid]");
+    const note = fig.querySelector("[data-cells-note]");
+    const cells = new Map();   // "web.use" -> <i>
+    const COLS = ["understanding", "grounding.point", "grounding.bbox", "grounding.action", "use"];
+    grid.querySelectorAll(".cg-row").forEach((row) => {
+      const plat = row.dataset.plat;
+      [...row.querySelectorAll("i")].forEach((el, c) => cells.set(`${plat}.${COLS[c]}`, el));
+    });
+    const paintCells = (chip) => {
+      const want = (chip.dataset.cells || "").trim();
+      const all = want === "*", open = want === "?";
+      const set = new Set(all || open ? [] : want.split(/\s+/));
+      cells.forEach((el, key) => {
+        el.classList.toggle("on", all || set.has(key));
+        el.classList.toggle("maybe", open);
+      });
+      note.innerHTML = chip.dataset.note || "";
+    };
+    const dsChips = [...dataFig.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
+    const reserveNote = () => reserveTallest(note, dsChips.map((c) => c.dataset.note || ""));
+    const step = runBoard(fig, (ds, m) =>
+      `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>${ds.split("/").pop()}</b></span> <span class="nb">--model-id</span> <b>${m}</b>`,
+      "data", 1700, paintCells);
+    reserveNote();
+    boards.push(() => { reserveNote(); step(); });
+  }
   const pairFig = document.querySelector('[data-board="pair"]');
-  if (pairFig) boards.push(runBoard(pairFig.closest(".flow-demo"), (e, a) =>   // environments sit on the left
-    `<span class="c-p">$</span> rollout.py <span class="nb">--model-id</span> <b>${a}</b> <span class="nb">--env-id</span> <b>${e}</b>`, "loop", 3400));
+  if (pairFig) {
+    // one line per env: what it was before the integration, and what the integration bought
+    const fig = pairFig.closest(".flow-demo");
+    const factLine = fig.querySelector("[data-fact-line]");
+    const chips = [...pairFig.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
+    const showFact = (chip) => { factLine.innerHTML = chip.dataset.fact || ""; };
+    const reserveFact = () => reserveTallest(factLine, chips.map((c) => c.dataset.fact || ""));
+    const step = runBoard(fig, (e, a) =>   // environments sit on the left
+      `<span class="c-p">$</span> rollout.py <span class="nb">--model-id</span> <b>${a}</b> <span class="nb">--env-id</span> <b>${e}</b>`,
+      "loop", 3400, showFact);
+    reserveFact();
+    boards.push(() => { reserveFact(); step(); });
+  }
   // the packing figure: each step's prompt tape contains the previous one (token-level
   // prefix); at step 5 image_max=4 folds the oldest screenshots and the prefix breaks —
   // so steps 1-4 collapse into one forward, steps 5-6 into another
