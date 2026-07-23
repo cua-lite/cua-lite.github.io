@@ -132,10 +132,10 @@
 .seed-fold.unfolded .pair-col .pair-chip:nth-child(4) { transition-delay: .5s; }
 .seed-fold.unfolded .pair-col .pair-chip:nth-child(5) { transition-delay: .58s; }
 .seed-fold.unfolded .pair-col .pair-chip:nth-child(6) { transition-delay: .66s; }
-.seed-fold:not(.unfolded) .pair-wire { opacity: 0; }
-.seed-fold:not(.unfolded) .pair-node::before, .seed-fold:not(.unfolded) .pair-node::after { opacity: 0; }   /* no ports until wired */
-.seed-fold:not(.unfolded) .flow-dot, .seed-fold:not(.unfolded) .land-ring, .seed-fold:not(.unfolded) .gym-shot,
-.seed-fold:not(.unfolded) .gym-cur, .seed-fold:not(.unfolded) .flow-lab { display: none; }   /* these run on their own timers — display:none beats the animation, so nothing flickers during the fold */
+.seed-fold:not(.wired) .pair-wire { opacity: 0; }   /* the wire waits for the ladder to begin — not just the unfold — so it never links pills that are still fading in */
+.seed-fold:not(.wired) .pair-node::before, .seed-fold:not(.wired) .pair-node::after { opacity: 0; }   /* no ports until wired */
+.seed-fold:not(.wired) .flow-dot, .seed-fold:not(.wired) .land-ring, .seed-fold:not(.wired) .gym-shot,
+.seed-fold:not(.wired) .gym-cur, .seed-fold:not(.wired) .flow-lab { display: none; }   /* these run on their own timers — display:none beats the animation, so nothing flickers before the ladder */
 .seed-fold .pair-wire { transition: opacity .4s ease; }
 .pair-wire { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .pair-wire .w1, .pair-wire .w2 { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 400; opacity: 0; }
@@ -641,8 +641,8 @@
     }
     step(0, 0); reserve(); watch(fig);
     const cycle = () => { if (!live(fig)) return; i = (i + 1) % seq.length; step(seq[i][0], seq[i][1]); };
-    const begin = () => { step(cur[0], cur[1]); setTimeout(() => setInterval(cycle, 5200), startDelay || 0); };
-    if (reduce) { if (unfold) fig.classList.add("unfolded"); }
+    const begin = () => { fig.classList.add("wired"); step(cur[0], cur[1]); setTimeout(() => setInterval(cycle, 5200), startDelay || 0); };
+    if (reduce) { if (unfold) fig.classList.add("unfolded", "wired"); }
     else onSeen(fig, () => {   // seeds hold, unfold into the pills, then the wire ladder runs
       if (unfold) { setTimeout(() => fig.classList.add("unfolded"), 1300); setTimeout(begin, 2650); }
       else begin();
