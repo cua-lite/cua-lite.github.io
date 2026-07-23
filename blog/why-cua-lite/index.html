@@ -612,7 +612,7 @@
       paths.forEach(redraw);
       cmd.innerHTML = mkCmd(left[a].dataset.id, right[e].dataset.id);
       placeExtras(e);
-      if (!reduce) {
+      if (!reduce && (!unfold || fig.classList.contains("wired"))) {   // don't schedule the loop extras (screenshot device, cursor, dot) until the board has actually begun — the initial step(0,0) on load must not queue a stray gym-shot flash
         timers.forEach(clearTimeout); timers.length = 0;
         ring.classList.remove("hit");
         dot.classList.remove("go", "back");
