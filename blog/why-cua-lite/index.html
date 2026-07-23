@@ -225,6 +225,7 @@
 /* the before-board draws the full N×M tangle: every dataset/benchmark wired to every agent by
    hand. Dashed + colourless = makeshift, never resolved — the hub boards below tidy the same wires. */
 .mess .mw { fill: none; stroke: #9c8b74; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 6 6; opacity: .7; }
+.mess .mw-bundle { fill: none; stroke-linecap: round; }   /* one bundle per left node: draws accent, then settles into the grey tangle (states set inline) */
 /* both columns carry 4 real boxes + a "yours next" ghost, top-aligned, so rows line up */
 .pair-cmd { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; line-height: 1.6; }
 .pair-cmd .c-p { color: var(--dim); }
@@ -619,17 +620,37 @@
     const left = [...messFig.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
     const right = [...messFig.querySelectorAll(".pair-right .pair-chip")];
     const svg = messFig.querySelector(".pair-wire");
-    const mw = svg.querySelector(".mw");
     const pt = (el, side) => { const b = el.getBoundingClientRect(), s = svg.getBoundingClientRect();
       return [side === "r" ? b.right - s.left + 4 : b.left - s.left - 4, b.top + b.height / 2 - s.top]; };
     const curve = ([x1, y1], [x2, y2]) => { const mid = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2} `; };
-    const draw = () => {   // every left node to every right node — one tangled bundle
-      let d = "";
-      left.forEach((l) => right.forEach((r) => { d += curve(pt(l, "r"), pt(r, "l")); }));
-      mw.setAttribute("d", d);
-    };
-    draw();
-    boards.push(draw);   // re-anchor with the other boards on resize / font load
+    svg.innerHTML = "";   // one bundle path per left node — its wires reach out to every right node
+    const bundles = left.map(() => { const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("class", "mw-bundle"); svg.appendChild(p); return p; });
+    const GREY = "#9c8b74";
+    const anchor = () => bundles.forEach((p, i) => { let d = ""; right.forEach((r) => { d += curve(pt(left[i], "r"), pt(r, "l")); }); p.setAttribute("d", d); });
+    const settle = (p) => { p.style.transition = "stroke .45s ease, stroke-width .45s ease, opacity .45s ease"; p.style.stroke = GREY; p.style.strokeWidth = "1.6"; p.style.strokeDasharray = "6 6"; p.style.strokeDashoffset = "0"; p.style.opacity = ".7"; };
+    // shared beat — the mess accumulates one left node at a time, each reaching every agent
+    const BEAT = 1050, DRAW = 900, LEAD = 380;
+    const CYCLE = LEAD + (left.length - 1) * BEAT + DRAW + 2000;
+    let timers = [];
+    const clear = () => { timers.forEach(clearTimeout); timers = []; };
+    function play() {
+      clear(); anchor();
+      bundles.forEach((p) => { p.style.transition = "opacity .35s ease"; p.style.opacity = "0"; });   // fade the old tangle out before rebuilding
+      timers.push(setTimeout(() => {
+        left.forEach((c) => c.classList.remove("on"));
+        bundles.forEach((p) => { p.style.transition = "none"; p.style.stroke = "var(--accent)"; p.style.strokeWidth = "2"; const len = p.getTotalLength(); p.style.strokeDasharray = len; p.style.strokeDashoffset = len; p.style.opacity = "1"; });
+        void svg.getBoundingClientRect();
+        bundles.forEach((p, i) => timers.push(setTimeout(() => {
+          left[i].classList.add("on");
+          p.style.transition = "stroke-dashoffset " + DRAW + "ms var(--ease)";
+          p.style.strokeDashoffset = 0;   // reach out to every agent
+          timers.push(setTimeout(() => { settle(p); left[i].classList.remove("on"); }, DRAW));
+        }, i * BEAT)));
+      }, LEAD));
+    }
+    if (reduce) { anchor(); bundles.forEach((p) => { p.style.stroke = GREY; p.style.strokeWidth = "1.6"; p.style.strokeDasharray = "6 6"; p.style.opacity = ".7"; }); }
+    else { watch(messFig); onSeen(messFig, () => { play(); setInterval(() => { if (live(messFig)) play(); }, CYCLE); }); }
+    boards.push(anchor);   // re-anchor with the other boards on resize / font load
   })();
 
   const pairFig = document.querySelector('[data-board="pair"]');
