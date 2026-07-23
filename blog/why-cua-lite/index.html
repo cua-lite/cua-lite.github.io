@@ -162,17 +162,22 @@
 }
 /* ---- spec tables: one concrete artifact, read close up — the counterweight to the boards ---- */
 .spec { font-family: var(--mono); }
-.spec figcaption { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 13px; }
-.spec-row { display: grid; grid-template-columns: 94px minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 4px 0; }
+.spec figcaption, .spec-cap { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
+/* two columns, ALWAYS two children: the label, and one block holding code + its note.
+   (a third direct child would auto-place into the label column on the next row) */
+.spec-row { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 5px 0; }
 .spec-k { font-size: 10.5px; color: var(--dim); text-align: right; }
-.spec-row code { font-size: 11.5px; color: var(--muted); background: none; border: 0; padding: 0; word-break: break-word; }
+.spec-v { min-width: 0; }
+.spec-v code { display: block; font-size: 11.5px; line-height: 1.5; color: var(--muted); background: none; border: 0; padding: 0; overflow-wrap: anywhere; }
+.spec-v code + code { margin-top: 5px; }   /* two calls in one row stay two calls when they wrap */
 .spec-row.lite code { color: var(--accent); }   /* the one spelling that survives */
-.spec-n { display: block; font-size: 10px; color: var(--dim); margin-top: 3px; }
-.spec-split { border-top: 1px solid var(--line); margin-top: 13px; padding-top: 13px; }
-.spec-fold { text-align: center; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin: 13px 0 11px; }
-@media (max-width: 430px) {
-  .spec-row { grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 6px 0; }
-  .spec-k { text-align: left; }
+.spec-n { display: block; font-size: 10px; line-height: 1.45; color: var(--dim); margin-top: 2px; }
+.spec-split { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 14px; }
+.spec-fold { text-align: center; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim);
+  border-top: 1px solid var(--line); margin-top: 14px; padding-top: 14px; margin-bottom: 12px; }
+@media (max-width: 480px) {
+  .spec-row { grid-template-columns: minmax(0, 1fr); gap: 3px; padding: 7px 0; }
+  .spec-k { text-align: left; color: var(--muted); }
 }
 .pair-cmd { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; line-height: 1.6; }
 .pair-cmd .c-p { color: var(--dim); }
@@ -246,18 +251,18 @@
 
   <figure class="flow-demo spec" aria-label="The same two actions written four ways by four agents, mutually incompatible">
     <figcaption>Double-click the same icon — four agents, four spellings</figcaption>
-    <div class="spec-row"><span class="spec-k">UI-TARS</span><code>left_double(start_box='(612,388)')</code><span class="spec-n">a text DSL, not a JSON tool call</span></div>
-    <div class="spec-row"><span class="spec-k">Qwen3-VL</span><code>computer_use(action="double_click", coordinate=[612,388])</code><span class="spec-n">one wrapper tool; the verb is an enum value</span></div>
-    <div class="spec-row"><span class="spec-k">OpenAI CUA</span><code>double_click(x=1175, y=419)</code><span class="spec-n">absolute pixels — wrong the moment the frame is resized</span></div>
+    <div class="spec-row"><span class="spec-k">UI-TARS</span><span class="spec-v"><code>left_double(start_box='(612,388)')</code><span class="spec-n">a text DSL, not a JSON tool call</span></span></div>
+    <div class="spec-row"><span class="spec-k">Qwen3-VL</span><span class="spec-v"><code>computer_use(action="double_click", coordinate=[612,388])</code><span class="spec-n">one wrapper tool; the verb is an enum value</span></span></div>
+    <div class="spec-row"><span class="spec-k">OpenAI CUA</span><span class="spec-v"><code>double_click(x=1175, y=419)</code><span class="spec-n">absolute pixels — wrong the moment the frame is resized</span></span></div>
     <div class="spec-split">
-      <figcaption>Scroll down — now the parameters themselves disagree</figcaption>
-      <div class="spec-row"><span class="spec-k">UI-TARS</span><code>scroll(start_box='(612,388)', direction='down')</code><span class="spec-n">no amount at all</span></div>
-      <div class="spec-row"><span class="spec-k">Qwen3-VL</span><code>computer_use(action="scroll", coordinate=[612,388], pixels=-300)</code><span class="spec-n">the sign carries the direction</span></div>
-      <div class="spec-row"><span class="spec-k">OpenAI CUA</span><code>scroll(x=1175, y=419, scroll_x=0, scroll_y=300)</code><span class="spec-n">two-dimensional pixel deltas</span></div>
-      <div class="spec-row"><span class="spec-k">UI-TARS mobile</span><code>scroll(start_box='(612,388)', end_box='(612,120)')</code><span class="spec-n">a gesture — there is no "direction" to read</span></div>
+      <div class="spec-cap">Scroll down — now the parameters themselves disagree</div>
+      <div class="spec-row"><span class="spec-k">UI-TARS</span><span class="spec-v"><code>scroll(start_box='(612,388)', direction='down')</code><span class="spec-n">no amount at all</span></span></div>
+      <div class="spec-row"><span class="spec-k">Qwen3-VL</span><span class="spec-v"><code>computer_use(action="scroll", coordinate=[612,388], pixels=-300)</code><span class="spec-n">the sign carries the direction</span></span></div>
+      <div class="spec-row"><span class="spec-k">OpenAI CUA</span><span class="spec-v"><code>scroll(x=1175, y=419, scroll_x=0, scroll_y=300)</code><span class="spec-n">two-dimensional pixel deltas</span></span></div>
+      <div class="spec-row"><span class="spec-k">UI-TARS mobile</span><span class="spec-v"><code>scroll(start_box='(612,388)', end_box='(612,120)')</code><span class="spec-n">a gesture — there is no "direction" to read</span></span></div>
     </div>
     <div class="spec-fold">↓ &nbsp;one spelling, converted per agent by its harness&nbsp; ↓</div>
-    <div class="spec-row lite"><span class="spec-k">CUA-Lite</span><code>click(coordinate=[612,388], clicks=2)</code><br><code>scroll(coordinate=[612,388], direction="down", amount=3)</code><span class="spec-n">coordinates normalized to [0,&nbsp;1000] on every platform</span></div>
+    <div class="spec-row lite"><span class="spec-k">CUA-Lite</span><span class="spec-v"><code>click(coordinate=[612,388], clicks=2)</code><code>scroll(coordinate=[612,388], direction="down", amount=3)</code><span class="spec-n">coordinates normalized to [0,&nbsp;1000] on every platform</span></span></div>
   </figure>
 
   <p><b>CUA-Lite puts all of it in one place</b> — all a computer-use agent
@@ -363,11 +368,11 @@
 
   <figure class="flow-demo spec" aria-label="What a click natively is in OSWorld, BrowserGym and AndroidWorld, and what it becomes in lite.gym">
     <figcaption>One click, natively, in three benchmarks</figcaption>
-    <div class="spec-row"><span class="spec-k">OSWorld</span><code>"pyautogui.click(960, 540)"</code><span class="spec-n">a Python source string, exec'd inside a QEMU virtual machine</span></div>
-    <div class="spec-row"><span class="spec-k">BrowserGym</span><code>"click('a47')"</code><span class="spec-n">a47 is a DOM node id, handed out by marking the accessibility tree</span></div>
-    <div class="spec-row"><span class="spec-k">AndroidWorld</span><code>JSONAction(action_type="click", x=540, y=1200)</code><span class="spec-n">its sibling swipe is enum-only — "up", "down"; no start or end point</span></div>
+    <div class="spec-row"><span class="spec-k">OSWorld</span><span class="spec-v"><code>"pyautogui.click(960, 540)"</code><span class="spec-n">a Python source string, exec'd inside a QEMU virtual machine</span></span></div>
+    <div class="spec-row"><span class="spec-k">BrowserGym</span><span class="spec-v"><code>"click('a47')"</code><span class="spec-n">a47 is a DOM node id, handed out by marking the accessibility tree</span></span></div>
+    <div class="spec-row"><span class="spec-k">AndroidWorld</span><span class="spec-v"><code>JSONAction(action_type="click", x=540, y=1200)</code><span class="spec-n">its sibling swipe is enum-only — "up", "down"; no start or end point</span></span></div>
     <div class="spec-fold">↓ &nbsp;one loop, whatever is underneath&nbsp; ↓</div>
-    <div class="spec-row lite"><span class="spec-k">lite.gym</span><code>await env.step([click(coordinate=[500, 300])])</code><span class="spec-n">over a QEMU snapshot, a Playwright page, an adb shell, or a static PNG — unchanged</span></div>
+    <div class="spec-row lite"><span class="spec-k">lite.gym</span><span class="spec-v"><code>await env.step([click(coordinate=[500, 300])])</code><span class="spec-n">over a QEMU snapshot, a Playwright page, an adb shell, or a static PNG — unchanged</span></span></div>
   </figure>
 
   <p>An env implements four methods and declares how its backend behaves — a
