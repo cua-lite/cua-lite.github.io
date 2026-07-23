@@ -197,9 +197,7 @@
 /* the before-board draws the full N×M tangle: every dataset/benchmark wired to every agent by
    hand. Dashed + colourless = makeshift, never resolved — the hub boards below tidy the same wires. */
 .mess .mw { fill: none; stroke: #9c8b74; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 6 6; opacity: .7; }
-.mess .pair-right { justify-content: center; }   /* 3 agents vs 4 left items — centre the shorter column so the wire fan reads symmetric */
-[data-board="data"] .pair-right { justify-content: center; }   /* 3 open agents vs 5 datasets — centre so UI-TARS sits level with the adapter */
-[data-board="pair"] .pair-right { justify-content: center; }   /* 3 agents vs 5 envs — centre so the middle agent sits level with the hub */
+/* both columns carry 4 real boxes + a "yours next" ghost, top-aligned, so rows line up */
 .pair-cmd { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; line-height: 1.6; }
 .pair-cmd .c-p { color: var(--dim); }
 .pair-cmd b { color: var(--accent); font-weight: 500; }
@@ -300,6 +298,7 @@
         <a data-cat="model" class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
         <a data-cat="model" class="pair-chip" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
         <a data-cat="model" class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
+        <a data-cat="model" class="pair-chip" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="mw"/></svg>
     </div>
@@ -332,6 +331,8 @@
         <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
         <a data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
         <a data-cat="model" class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI</a>
+        <a data-cat="model" class="pair-chip" data-id="moonshotai/Kimi-VL-A3B-Instruct" href="https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct" target="_blank" rel="noopener">Kimi</a>
+        <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours next</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
@@ -404,6 +405,8 @@
         <a data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
         <a data-cat="model" class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
         <a data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
+        <a data-cat="model" class="pair-chip" data-id="gemini-2.5" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
+        <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours next</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
@@ -444,8 +447,8 @@
   const onSeen = (fig, fn) => { if (!io) { fn(); return; } starters.set(fig, fn); };   // run fn once, when fig first enters view
   function runBoard(fig, mkCmd, mode, startDelay) {   // mode: "data" (sample flows in) | "loop" (screenshot up, action down)
     const board = fig.querySelector(".pair-board");
-    const left = [...board.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
-    const right = [...board.querySelectorAll(".pair-right .pair-chip")];
+    const left = [...board.querySelectorAll(".pair-col:not(.pair-right) .pair-chip:not(.ghost)")];
+    const right = [...board.querySelectorAll(".pair-right .pair-chip:not(.ghost)")];
     const node = board.querySelector(".pair-node");
     const svg = board.querySelector(".pair-wire");
     const paths = svg.querySelectorAll(".w1, .w2");
