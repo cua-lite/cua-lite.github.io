@@ -68,6 +68,7 @@
 .pair-chip[data-logo="gemini"]  { --ic: url('/assets/logos/gemini.svg'); }
 .pair-chip[data-logo="ui-tars"] { --ic: url('/assets/logos/ui-tars.png'); }
 .pair-chip[data-logo="kimi"]    { --ic: url('/assets/logos/kimi.svg'); }
+.pair-chip[data-logo="microsoft"] { --ic: url('/assets/logos/microsoft.svg'); }   /* Fara-1.0 is a Microsoft model */
 .chip-tag { color: var(--dim); font-size: 10px; transition: color .25s ease; }   /* dim platform hint: desktop / web / mobile */
 .pair-chip.ghost { background: transparent; color: var(--dim); }   /* the open slot — solid border like the rest, just no fill */
 .pair-chip.on { color: var(--accent); border-color: var(--accent); background: rgba(189,90,56,.10); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 3px 10px -4px rgba(189,90,56,.4); }   /* the in-play chip warms and lifts */
@@ -190,6 +191,59 @@
   transform: translate(-50%,-50%) scale(.35); opacity: 0; pointer-events: none; z-index: 3; }
 .land-ring.hit { animation: landHit .6s var(--ease) forwards; }
 @keyframes landHit { 0% { opacity: .9; transform: translate(-50%,-50%) scale(.35); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1); } }
+/* ---- the task-type taxonomy: five little screens, each showing what one task
+   family asks of the model (a screenshot in → a shape out). Hover lifts a card;
+   the strip is the interactive glossary for the "every task type" claim above. ---- */
+.tax { padding-top: 20px; padding-bottom: 18px; }
+.tax-cap { font-family: var(--mono); font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--dim); text-align: center; margin-bottom: 18px; }
+/* three families across: understanding · grounding (a group of three) · use — so the two
+   grounding.* pairs read as sub-types of one family, not as peers of understanding/use */
+.tax-row { display: grid; grid-template-columns: 1fr 3.15fr 1fr; gap: 11px; align-items: center; }
+.tax-card { display: flex; flex-direction: column; align-items: center; gap: 11px; padding: 14px 6px 13px; text-align: center;
+  border: 1px solid var(--line-2); border-radius: 12px; background: var(--panel-fill);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.5); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+.tax-card:hover { text-decoration: none; border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 9px 20px -10px rgba(189,90,56,.5); }
+.tax-card.sub { padding: 12px 5px 11px; gap: 9px; }
+/* the grounding family: a dashed enclosure + a header, holding its three variants */
+.tax-fam { border: 1px dashed var(--line-2); border-radius: 14px; padding: 10px 11px 12px; background: rgba(189,90,56,.022); }
+.tax-fam-h { font-family: var(--mono); font-size: 9.5px; letter-spacing: .4px; color: var(--dim); text-align: center; margin: 1px 0 10px; }
+.tax-fam-h b { color: var(--muted); font-weight: 400; }
+.tax-fam-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+.tax-txt { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.tax-name { font-family: var(--mono); font-size: 11px; color: var(--text); letter-spacing: -.2px; }
+.tax-card:hover .tax-name { color: var(--accent); }
+.tax-gloss { font-size: 10.5px; color: var(--muted); line-height: 1.35; }
+.tax-foot { margin-top: 15px; text-align: center; font-family: var(--mono); font-size: 10px; letter-spacing: .3px; color: var(--dim); }
+.tax-foot b { color: var(--muted); font-weight: 400; }
+/* the mini screen every card shares */
+.tg { position: relative; width: 64px; height: 44px; border: 1.5px solid var(--muted); border-radius: 5px; background: #fdfbf6; overflow: hidden; flex: none; }
+.tg::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 8px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); }
+.tg > i { position: absolute; }
+/* understanding — lines of read-out text, the last one accented (the answer) */
+.tg-understand > i.a { left: 9px; right: 9px; top: 16px; height: 3px; border-radius: 2px; background: var(--line-2); box-shadow: 0 7px 0 var(--line-2); }
+.tg-understand > i.b { left: 9px; right: 28px; top: 32px; height: 3px; border-radius: 2px; background: var(--accent); }
+/* point — a single target dot */
+.tg-point > i { left: 50%; top: 58%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(189,90,56,.18); }
+/* bbox — an outlined region */
+.tg-bbox > i { left: 15px; top: 20px; right: 16px; bottom: 8px; border: 1.5px solid var(--accent); border-radius: 2px; background: rgba(189,90,56,.08); }
+/* action — a cursor landing on a highlighted control */
+.tg-action > i.t { left: 42%; top: 50%; width: 18px; height: 9px; border-radius: 2px; background: rgba(189,90,56,.16); border: 1px solid var(--accent-dim); }
+.tg-action > i.c { left: 54%; top: 60%; width: 11px; height: 15px; background: url('/assets/pixel/cursor.png') center/contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
+/* use — three little screens in sequence (a trajectory), not one */
+.tg-use { border: 0; background: none; overflow: visible; display: flex; align-items: center; justify-content: center; gap: 3px; }
+.tg-use::before { content: none; }
+.tg-use s { width: 15px; height: 21px; border: 1.5px solid var(--muted); border-radius: 3px; background: #fdfbf6; position: relative; }
+.tg-use s::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); border-radius: 2px 2px 0 0; }
+.tg-use s:last-of-type { border-color: var(--accent); }
+.tg-use b { width: 5px; height: 5px; border-top: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); transform: rotate(45deg); }
+@media (max-width: 560px) {   /* stack into a readable list; grounding's three sit together under its header */
+  .tax-row { grid-template-columns: 1fr; gap: 8px; }
+  .tax-card { flex-direction: row; align-items: center; gap: 15px; padding: 10px 15px; text-align: left; }
+  .tax-txt { align-items: flex-start; gap: 3px; }
+  .tax-fam-row { grid-template-columns: 1fr; gap: 8px; }
+  .tax-card.sub { padding: 10px 15px; }
+  .tax-fam-h { text-align: left; margin-left: 3px; }
+}
 /* ---- the packing figure: each step's prompt is a tape that contains the previous one;
    responses are the accent bands (the loss), folds are the hatched left region ---- */
 .tape-board { display: flex; flex-direction: column; justify-content: center; min-height: 146px; }   /* fixed height: the packed rows re-center as the absorbed ones collapse, no page reflow */
@@ -275,6 +329,27 @@
    hand. Dashed + colourless = makeshift, never resolved — the hub boards below tidy the same wires. */
 .mess .mw { fill: none; stroke: #9c8b74; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 6 6; opacity: .7; }
 .mess .mw-bundle { fill: none; stroke-linecap: round; }   /* one bundle per left node: draws accent, then settles into the grey tangle (states set inline) */
+/* the concrete proof fused under the tangle: one action, each agent's own syntax — nothing
+   lines up (even the coordinates: [0,1000] here, screen pixels there). Interactive: double-click
+   vs scroll. Stays grey like the rest of the before-figure; the resolution is the boards below. */
+.dial { margin-top: 17px; padding-top: 15px; border-top: 1px solid var(--line); }
+.dial-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; margin-bottom: 13px; }
+.dial-q { font-family: var(--mono); font-size: 11px; letter-spacing: .3px; color: var(--dim); }
+.dial-toggle { display: inline-flex; gap: 3px; border: 1px solid var(--line-2); border-radius: 999px; padding: 2px; }
+.dial-opt { font-family: var(--mono); font-size: 10.5px; color: var(--dim); background: none; border: 0; cursor: pointer;
+  padding: 3px 12px; border-radius: 999px; transition: color .2s ease, background .2s ease; }
+.dial-opt.on { color: var(--text); background: var(--panel-2); box-shadow: inset 0 1px 0 rgba(255,255,255,.55); }
+.dial-opt:hover { color: var(--text); }
+.dial-rows { display: flex; flex-direction: column; gap: 9px; }
+.dial-row { display: grid; grid-template-columns: 84px minmax(0, 1fr); align-items: baseline; gap: 13px; }
+.dial-who { font-family: var(--mono); font-size: 10.5px; color: var(--muted); text-align: right; }
+.dial-row code { font-family: var(--mono); font-size: 11.5px; color: var(--muted); background: none; border: 0; padding: 0; overflow-wrap: anywhere; line-height: 1.5; }
+.dial-foot { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line-2); font-family: var(--mono); font-size: 10.5px; color: var(--dim); text-align: center; }
+.dial-foot b { color: var(--accent); font-weight: 400; }
+@media (max-width: 480px) {
+  .dial-row { grid-template-columns: 1fr; gap: 1px; }
+  .dial-who { text-align: left; color: var(--dim); }
+}
 /* both columns carry 4 real boxes + a "yours next" ghost, top-aligned, so rows line up */
 .pair-cmd { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; line-height: 1.6; }
 .pair-cmd .c-p { color: var(--dim); }
@@ -376,9 +451,25 @@
         <a data-logo="openai" data-cat="model" class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
         <a data-logo="claude" data-cat="model" class="pair-chip" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
         <a data-logo="qwen" data-cat="model" class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
-        <a data-logo="gemini" data-cat="model" class="pair-chip" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
+        <a data-logo="ui-tars" data-cat="model" class="pair-chip" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="mw"/></svg>
+    </div>
+    <div class="dial" data-dial>
+      <div class="dial-head">
+        <span class="dial-q">the same action — four agents, four action spaces</span>
+        <span class="dial-toggle" role="tablist" aria-label="which action">
+          <button class="dial-opt on" type="button" data-act="click">double-click</button>
+          <button class="dial-opt" type="button" data-act="scroll">scroll down</button>
+        </span>
+      </div>
+      <div class="dial-rows">
+        <div class="dial-row"><span class="dial-who">GPT</span><code data-click="double_click(x=1175, y=419)" data-scroll="scroll(x=1175, y=419, scroll_x=0, scroll_y=300)">double_click(x=1175, y=419)</code></div>
+        <div class="dial-row"><span class="dial-who">Claude</span><code data-click='{"action": "double_click", "coordinate": [1175, 419]}' data-scroll='{"action": "scroll", "coordinate": [1175, 419], "scroll_direction": "down", "scroll_amount": 3}'>{"action": "double_click", "coordinate": [1175, 419]}</code></div>
+        <div class="dial-row"><span class="dial-who">Qwen3-VL</span><code data-click="computer_use(action=&quot;double_click&quot;, coordinate=[612,388])" data-scroll="computer_use(action=&quot;scroll&quot;, coordinate=[612,388], pixels=-300)">computer_use(action="double_click", coordinate=[612,388])</code></div>
+        <div class="dial-row"><span class="dial-who">UI-TARS</span><code data-click="left_double(start_box='(612,388)')" data-scroll="scroll(start_box='(612,388)', direction='down')">left_double(start_box='(612,388)')</code></div>
+      </div>
+      <div class="dial-foot"><b>CUA-Lite</b> speaks all of them — one action space, one adapter per agent</div>
     </div>
   </figure>
 
@@ -393,6 +484,39 @@
   <p><b>Convert a dataset once, and every agent can train on it.</b>
   <code class="ls" tabindex="0">LiteSample</code> is the one schema, shared
   across every env, agent, and task type, free on Hugging&nbsp;Face.</p>
+
+  <figure class="flow-demo tax" aria-label="The task types in LiteSample — understanding, grounding (as a point, box, or action), and multi-step use — each on desktop, web, or mobile">
+    <div class="tax-cap">what a screenshot turns into — three task families</div>
+    <div class="tax-row">
+      <a class="tax-card" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">
+        <span class="tg tg-understand"><i class="a"></i><i class="b"></i></span>
+        <span class="tax-txt"><span class="tax-name">understanding</span><span class="tax-gloss">describe what's<br>on the screen</span></span>
+      </a>
+      <div class="tax-fam">
+        <div class="tax-fam-h"><b>grounding</b> — find one element, returned as…</div>
+        <div class="tax-fam-row">
+          <a class="tax-card sub" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">
+            <span class="tg tg-point"><i></i></span>
+            <span class="tax-txt"><span class="tax-name">.point</span><span class="tax-gloss">a point</span></span>
+          </a>
+          <a class="tax-card sub" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">
+            <span class="tg tg-bbox"><i></i></span>
+            <span class="tax-txt"><span class="tax-name">.bbox</span><span class="tax-gloss">a box</span></span>
+          </a>
+          <a class="tax-card sub" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">
+            <span class="tg tg-action"><i class="t"></i><i class="c"></i></span>
+            <span class="tax-txt"><span class="tax-name">.action</span><span class="tax-gloss">an action</span></span>
+          </a>
+        </div>
+      </div>
+      <a class="tax-card" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">
+        <span class="tg tg-use"><s></s><b></b><s></s><b></b><s></s></span>
+        <span class="tax-txt"><span class="tax-name">use</span><span class="tax-gloss">reach a goal in<br>many steps</span></span>
+      </a>
+    </div>
+    <div class="tax-foot">each on <b>desktop · web · mobile</b> — so a run pulls exactly the slice it wants</div>
+  </figure>
+
   <figure class="flow-demo" aria-label="Any dataset, converted once, trains any agent">
     <div class="pair-board" data-board="data">
       <div class="pair-col">
@@ -400,16 +524,20 @@
         <a data-cat="data" class="pair-chip" data-id="Multimodal-Mind2Web" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web<span class="chip-tag"> · web</span></a>
         <a data-cat="data" class="pair-chip" data-id="GUIOdyssey" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey<span class="chip-tag"> · mobile</span></a>
         <a data-cat="data" class="pair-chip" data-id="ScaleCUA" href="https://huggingface.co/datasets/cua-lite/ScaleCUA" target="_blank" rel="noopener">ScaleCUA<span class="chip-tag"> · all</span></a>
+        <a data-cat="data" class="pair-chip" data-id="Aguvis" href="https://huggingface.co/datasets/cua-lite/Aguvis" target="_blank" rel="noopener">Aguvis<span class="chip-tag"> · all</span></a>
         <a data-cat="data" class="pair-chip" data-id="OpenCUA" href="https://huggingface.co/datasets/cua-lite/OpenCUA" target="_blank" rel="noopener">OpenCUA<span class="chip-tag"> · desktop</span></a>
+        <a data-cat="data" class="pair-chip" data-id="GUI-360" href="https://huggingface.co/datasets/cua-lite/GUI-360" target="_blank" rel="noopener">GUI-360<span class="chip-tag"> · desktop</span></a>
         <a data-cat="data" class="pair-chip ghost" data-id="YourDataset" href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">yours</a>
       </div>
       <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="ls" tabindex="0">LiteSample</code><span class="node-glyph">{ }</span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL</a>
         <a data-logo="ui-tars" data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
         <a data-cat="model" class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI</a>
-        <a data-logo="kimi" data-cat="model" class="pair-chip" data-id="moonshotai/Kimi-VL-A3B-Instruct" href="https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct" target="_blank" rel="noopener">Kimi</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen" target="_blank" rel="noopener">Qwen3.5</a>
+        <a data-logo="microsoft" data-cat="model" class="pair-chip" data-id="microsoft/Fara-7B" href="https://huggingface.co/microsoft/Fara-7B" target="_blank" rel="noopener">Fara</a>
+        <a data-logo="kimi" data-cat="model" class="pair-chip" data-id="moonshotai/Kimi-VL-A3B-Instruct" href="https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct" target="_blank" rel="noopener">Kimi-VL</a>
         <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
@@ -467,6 +595,12 @@
   screenshots flow up, actions flow down, in one action space plus each env's
   extra tools. The same loop serves eval and RL: every env ships eval
   tasks, and many add training splits with verifiable rewards.</p>
+  <p><b>Fitting one in is real work, and it's different for each.</b> Some ship a
+  full virtual machine per task — where we can, we re-host them as containers that
+  boot in seconds. Some are one heavy backend — rather than each run starting its
+  own, a single copy runs on a server that many rollouts share at once. Some can
+  only be graded — we add training tasks with automatic rewards, so agents can
+  learn on them, not just be scored. Different work each time; done once, here.</p>
   <figure class="flow-demo" aria-label="Any environment paired with any agent through lite.gym: screenshots up, actions down">
     <div class="pair-board" data-board="pair">
       <div class="pair-col">
@@ -474,16 +608,20 @@
         <a data-cat="env" class="pair-chip" data-id="osworld" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld<span class="chip-tag"> · desktop</span></a>
         <a data-cat="env" class="pair-chip" data-id="browsergym.webarena" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena<span class="chip-tag"> · web</span></a>
         <a data-cat="env" class="pair-chip" data-id="androidworld" href="https://github.com/google-research/android_world" target="_blank" rel="noopener">AndroidWorld<span class="chip-tag"> · mobile</span></a>
+        <a data-cat="env" class="pair-chip" data-id="lite.cuaworld" href="https://github.com/cmu-l3/gym-anything" target="_blank" rel="noopener">CUAWorld<span class="chip-tag"> · desktop</span></a>
         <a data-cat="env" class="pair-chip" data-id="webgym" href="https://github.com/microsoft/webgym" target="_blank" rel="noopener">WebGym<span class="chip-tag"> · web</span></a>
+        <a data-cat="env" class="pair-chip" data-id="mobilegym" href="https://github.com/MobileGym/MobileGym" target="_blank" rel="noopener">MobileGym<span class="chip-tag"> · mobile</span></a>
         <a data-cat="env" class="pair-chip ghost" data-id="your-env" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
       </div>
       <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="lg" tabindex="0">lite.gym</code><span class="node-glyph node-loop" aria-hidden="true"></span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a data-logo="openai" data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
+        <a data-logo="openai" data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT-5.5</a>
         <a data-logo="claude" data-cat="model" class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
-        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
         <a data-logo="gemini" data-cat="model" class="pair-chip" data-id="gemini-2.5" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL</a>
+        <a data-logo="ui-tars" data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
+        <a data-logo="kimi" data-cat="model" class="pair-chip" data-id="moonshotai/Kimi-VL-A3B-Instruct" href="https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct" target="_blank" rel="noopener">Kimi-VL</a>
         <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours next</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
@@ -622,7 +760,7 @@
         const pulse = (x, y) => { ring.style.left = x + "px"; ring.style.top = y + "px";
           void ring.getBoundingClientRect(); ring.classList.add("hit"); };
         if (mode === "loop") {   // wire lands, then the loop runs once: screenshot up, click comes down and lands
-          const PLAT = { "osworld": "desktop", "browsergym.webarena": "web", "androidworld": "mobile", "webgym": "web" };
+          const PLAT = { "osworld": "desktop", "browsergym.webarena": "web", "androidworld": "mobile", "webgym": "web", "lite.cuaworld": "desktop", "mobilegym": "mobile" };
           const plat = PLAT[left[a].dataset.id] || "desktop";
           shot.dataset.plat = plat;
           labDown.textContent = (plat === "mobile" ? "tap([632, 375])" : "click([632, 375])");
@@ -694,67 +832,12 @@
     const pf = document.querySelector('[data-board="pair"]');
     if (pf) { pf.querySelector(".pair-col:not(.pair-right)").appendChild(platformSeed()); pf.querySelector(".pair-right").appendChild(agentsSeed()); pf.closest(".flow-demo").classList.add("seed-fold"); }
   })();
-  // 图二 · the efficient route: all datasets converge through LiteSample → one adapter → fork to every agent (N+M, not the N×M tangle above)
+  // 图二 · one dataset at a time converts into LiteSample and trains one agent — the export command below tracks the lit pair (the old cycling design; not an all-at-once converge)
   const dataFig = document.querySelector('[data-board="data"]');
-  if (dataFig) (function () {
-    const fig = dataFig.closest(".flow-demo"), board = dataFig;
-    const left = [...board.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];   // incl the "yours next" ghost — it converges too
-    const right = [...board.querySelectorAll(".pair-right .pair-chip")];
-    const node = board.querySelector(".pair-node"), svg = board.querySelector(".pair-wire");
-    const cmd = fig.querySelector("[data-cmd-line]");
-    const adp = document.createElement("span"); adp.className = "wire-stage stage-adapter"; adp.tabIndex = 0; adp.textContent = "adapter"; board.appendChild(adp);
-    svg.innerHTML = "";
-    const mk = () => { const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("class", "cw"); svg.appendChild(p); return p; };
-    const wIn = left.map(mk), wMid = mk(), wOut = right.map(mk), all = [...wIn, wMid, ...wOut];
-    const S = () => svg.getBoundingClientRect(), R = (el) => el.getBoundingClientRect(), so = () => (innerWidth <= 430 ? 2 : 4);
-    const curve = ([x1, y1], [x2, y2]) => { const mx = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
-    const rx = (el) => R(el).right - S().left + so(), lx = (el) => R(el).left - S().left - so(), cyy = (el) => R(el).top + R(el).height / 2 - S().top;
-    // Both sides are smooth fans that share ONE bend-x: with a common bend-x the curves keep their
-    // vertical order and can never cross, whichever end fans out — so no gather stub is needed.
-    const fan = ([x1, y1], [x2, y2], bx) => `M ${x1} ${y1} C ${bx} ${y1}, ${bx} ${y2}, ${x2} ${y2}`;
-    const anchor = () => {
-      const s = S(), nb = R(node);
-      const nL = [nb.left - s.left - 3, nb.top + nb.height / 2 - s.top], nR = [nb.right - s.left + 3, nb.top + nb.height / 2 - s.top];
-      // Sit the adapter snug against the hub (not out by the agents) so the fork fan gets the same
-      // horizontal room the converge fan has — otherwise its wires have ~9px to open in and tangle.
-      adp.style.left = (nb.right - s.left + R(adp).width / 2 + 12) + "px"; adp.style.top = (nb.top + nb.height / 2 - s.top) + "px";
-      // Converge: datasets → hub port. Bend-x sits midway between the widest chip edge and the hub,
-      // never left of a chip, so the smooth fan closes in without a hook — mirror of the fork below.
-      const maxRx = Math.max(...left.map(rx));
-      const convCx = maxRx + (nL[0] - maxRx) * 0.5;
-      left.forEach((el, k) => wIn[k].setAttribute("d", fan([rx(el), cyy(el)], nL, convCx)));
-      // the adapter label is hidden on narrow screens (mid column too tight) — then the hub itself
-      // doubles as the fork point: no mid line, agents fork straight from the hub's right port.
-      const adpVisible = adp.offsetParent !== null && R(adp).width > 0;
-      const forkFrom = adpVisible
-        ? (() => { const ab = R(adp), aL = [ab.left - s.left, ab.top + ab.height / 2 - s.top], aR = [ab.right - s.left, ab.top + ab.height / 2 - s.top]; wMid.setAttribute("d", curve(nR, aL)); return aR; })()
-        : (wMid.setAttribute("d", ""), nR);
-      // Fork: adapter → agents. Bend-x halfway to the NEAREST agent edge (never past it) so the curves
-      // don't overshoot and hook. Agents are right-aligned, so a per-wire midpoint would let a higher
-      // (narrower) agent's wire bend late and cross the lower one — the shared bend-x prevents that.
-      const forkCx = forkFrom[0] + (Math.min(...right.map(lx)) - forkFrom[0]) * 0.5;
-      right.forEach((el, k) => wOut[k].setAttribute("d", fan(forkFrom, [lx(el), cyy(el)], forkCx)));
-    };
-    anchor(); boards.push(anchor);
-    cmd.innerHTML = `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>Multimodal-Mind2Web</b></span> <span class="nb">--model-id</span> <b>Qwen3-VL-8B-Instruct</b>`;
-    let timers = [];
-    const clr = () => { timers.forEach(clearTimeout); timers = []; };
-    const draw = (p, dur) => { const len = p.getTotalLength(); p.style.transition = `stroke-dashoffset ${dur}ms var(--ease)`; p.style.strokeDashoffset = 0; };
-    const hide = (p) => { const len = p.getTotalLength(); p.style.transition = "none"; p.style.strokeDasharray = len; p.style.strokeDashoffset = len; p.style.opacity = "1"; };
-    function run() {
-      clr(); all.forEach(hide); left.concat(right).forEach((c) => c.classList.remove("on")); adp.classList.remove("on"); void svg.getBoundingClientRect();
-      wIn.forEach((p) => draw(p, 850)); left.forEach((c) => timers.push(setTimeout(() => c.classList.add("on"), 160)));   // 5 datasets converge to the hub
-      timers.push(setTimeout(() => { draw(wMid, 430); adp.classList.add("on"); }, 900));                                   // one line through the adapter
-      timers.push(setTimeout(() => { wOut.forEach((p) => draw(p, 850)); right.forEach((c) => c.classList.add("on")); }, 1350));  // fork out to every agent
-    }
-    const CYCLE = 5200;
-    function loop() { clr(); svg.style.transition = "opacity .35s ease"; svg.style.opacity = "0"; left.concat(right).forEach((c) => c.classList.remove("on")); adp.classList.remove("on"); timers.push(setTimeout(() => { svg.style.opacity = "1"; run(); }, 360)); }
-    if (reduce) { fig.classList.add("unfolded", "wired"); anchor(); all.forEach((p) => { p.style.strokeDashoffset = 0; }); left.concat(right).forEach((c) => c.classList.add("on")); }
-    else { watch(fig); onSeen(fig, () => {
-      setTimeout(() => fig.classList.add("unfolded"), 1300);
-      setTimeout(() => { fig.classList.add("wired"); anchor(); run(); setInterval(() => { if (live(fig)) loop(); }, CYCLE); }, 2450);
-    }); }
-  })();
+  if (dataFig) boards.push(runBoard(dataFig.closest(".flow-demo"),
+    (ds, m) => `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>${ds}</b></span> <span class="nb">--model-id</span> <b>${m.split("/").pop()}</b>`,
+    "data", 1700, true));
+
   // the before-board: no shared interface, so every dataset/benchmark must be wired to every
   // agent by hand — the full N×M tangle. The hub boards below route the same wires cleanly (N+M).
   const messFig = document.querySelector('[data-board="mess"]');
@@ -790,6 +873,19 @@
     else { watch(messFig); onSeen(messFig, () => { play(); setInterval(() => { if (live(messFig)) play(); }, CYCLE); }); }
     boards.push(anchor);   // re-anchor with the other boards on resize / font load
   })();
+
+  // the dialect readout under the tangle — click-to-toggle which action is shown (no autoplay:
+  // the tangle carries the motion, this stays put until the reader picks click vs scroll)
+  const dial = document.querySelector("[data-dial]");
+  if (dial) {
+    const codes = [...dial.querySelectorAll(".dial-row code")];
+    const opts = [...dial.querySelectorAll(".dial-opt")];
+    const setAct = (act) => {
+      opts.forEach((o) => o.classList.toggle("on", o.dataset.act === act));
+      codes.forEach((c) => { const v = c.dataset[act]; if (v != null) c.textContent = v; });
+    };
+    opts.forEach((o) => o.addEventListener("click", () => setAct(o.dataset.act)));
+  }
 
   const pairFig = document.querySelector('[data-board="pair"]');
   if (pairFig) boards.push(runBoard(pairFig.closest(".flow-demo"), (e, a) =>   // environments sit on the left
