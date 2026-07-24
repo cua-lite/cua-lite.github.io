@@ -41,50 +41,55 @@
 .fig-todo b { color: var(--accent); font-weight: 600; }
 /* ---- the one figure · three beats: OSWorld (a desktop on a heavy VM stack) → shed the machine →
    Lite.OSWorld (container, driven agent⇄desktop, same evaluator) → packs at scale ---- */
-.v2c-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 268px; padding: 8px 0; transition: opacity .3s ease; }
-.v2c.notrans .v2c-lyr, .v2c.notrans .v2c-kvm, .v2c.notrans .v2c-ctr, .v2c.notrans .v2c-clones span, .v2c.notrans .v2c-label, .v2c.notrans .v2c-unit { transition: none !important; }
-.v2c-unit { position: relative; display: flex; flex-direction: column; align-items: center; z-index: 2; transition: transform .5s var(--ease); }
-.v2c-label { font-family: var(--mono); font-size: 12px; letter-spacing: .5px; color: var(--muted); margin-bottom: 15px; transition: color .4s ease; }
+.v2c-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 312px; padding: 8px 0; transition: opacity .3s ease; }
+.v2c.notrans .v2c-lyr, .v2c.notrans .v2c-kvm, .v2c.notrans .v2c-ctr, .v2c.notrans .v2c-clones span, .v2c.notrans .v2c-clones span i b, .v2c.notrans .v2c-label, .v2c.notrans .v2c-cap, .v2c.notrans .v2c-unit { transition: none !important; }
+.v2c-unit { position: relative; display: flex; flex-direction: column; align-items: center; z-index: 2; transition: transform .55s var(--ease), opacity .42s ease .12s; }
+.v2c-label { font-family: var(--mono); font-size: 14px; letter-spacing: .5px; color: var(--muted); margin-bottom: 18px; transition: color .4s ease; }
 .v2c.s2 .v2c-label, .v2c.s3 .v2c-label { color: var(--accent); }
-/* the desktop — the constant through all three beats */
+/* the desktop — the constant through the first beats */
 .v2c-screen-wrap { position: relative; z-index: 3; }
-.v2c-screen { width: 138px; height: 86px; border-radius: 7px 7px 2px 2px; overflow: hidden; position: relative;
-  background: linear-gradient(180deg, #fff, #fdf7ec); border: 1.5px solid var(--accent-dim); box-shadow: 0 2px 6px -2px rgba(40,30,15,.16); }
-.v2c-screen .scr-bar { height: 15px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); display: flex; align-items: center; gap: 4px; padding: 0 6px; }
-.v2c-screen .scr-bar i { width: 5px; height: 5px; border-radius: 50%; background: var(--accent-dim); opacity: .55; }
-.v2c-screen .scr-body { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; }
-.v2c-screen .scr-body b { height: 6px; border-radius: 2px; background: #e4dac6; }
+.v2c-screen { width: 188px; height: 118px; border-radius: 9px 9px 3px 3px; overflow: hidden; position: relative;
+  background: linear-gradient(180deg, #fff, #fdf7ec); border: 2px solid var(--accent-dim); box-shadow: 0 3px 8px -2px rgba(40,30,15,.16); }
+.v2c-screen .scr-bar { height: 20px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); display: flex; align-items: center; gap: 5px; padding: 0 9px; }
+.v2c-screen .scr-bar i { width: 6.5px; height: 6.5px; border-radius: 50%; background: var(--accent-dim); opacity: .55; }
+.v2c-screen .scr-body { display: flex; flex-direction: column; gap: 8px; padding: 15px 18px; }
+.v2c-screen .scr-body b { height: 8px; border-radius: 2px; background: #e4dac6; }
 .v2c-screen .scr-body b.a { background: var(--accent); opacity: .85; width: 56%; }
 /* beat 1 · the heavy VM stack the desktop rides on */
 .v2c-stack { display: flex; flex-direction: column; align-items: center; }
-.v2c-lyr { display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 9.5px; letter-spacing: .4px; transition: transform .55s var(--ease), opacity .45s ease; }
-.v2c-lyr.qcow { width: 152px; height: 22px; margin-top: -1px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--muted); }
-.v2c-lyr.vm { width: 162px; height: 28px; margin-top: -1px; border-radius: 0 0 8px 8px; color: #d9c9b3;
-  background: repeating-linear-gradient(135deg, #3b352c 0 5px, #322d25 5px 10px); box-shadow: 0 9px 18px -7px rgba(40,30,15,.5); }
-.v2c-kvm { margin-top: 9px; position: relative; font-family: var(--mono); font-size: 9.5px; color: var(--muted); background: var(--panel-2); border: 1px solid var(--line-2);
-  border-radius: 5px; padding: 3px 9px; transition: transform .55s var(--ease), opacity .45s ease; }
-.v2c-kvm::before { content: ""; position: absolute; left: 50%; top: -9px; width: 2px; height: 9px; background: var(--line-2); transform: translateX(-50%); }
+.v2c-lyr { display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 13px; letter-spacing: .4px; transition: transform .55s var(--ease), opacity .45s ease; }
+.v2c-lyr.qcow { width: 208px; height: 30px; margin-top: -1px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--muted); }
+.v2c-lyr.vm { width: 222px; height: 38px; margin-top: -1px; border-radius: 0 0 10px 10px; color: #d9c9b3;
+  background: repeating-linear-gradient(135deg, #3b352c 0 6px, #322d25 6px 12px); box-shadow: 0 11px 22px -8px rgba(40,30,15,.5); }
+.v2c-kvm { margin-top: 13px; position: relative; font-family: var(--mono); font-size: 13px; color: var(--muted); background: var(--panel-2); border: 1px solid var(--line-2);
+  border-radius: 6px; padding: 5px 13px; transition: transform .55s var(--ease), opacity .45s ease; }
+.v2c-kvm::before { content: ""; position: absolute; left: 50%; top: -13px; width: 2px; height: 13px; background: var(--line-2); transform: translateX(-50%); }
 /* beat 2 · the light container frame that wraps the desktop after the shed */
-.v2c-ctr { position: absolute; inset: -10px; border: 1.5px dashed var(--accent-dim); border-radius: 12px; opacity: 0; transform: scale(.92);
+.v2c-ctr { position: absolute; inset: -13px; border: 2px dashed var(--accent-dim); border-radius: 15px; opacity: 0; transform: scale(.92);
   transition: opacity .45s ease, transform .5s var(--ease); pointer-events: none; }
-.v2c-ctr::before { content: "container"; position: absolute; left: 9px; top: -8px; background: var(--panel-fill); padding: 0 5px;
-  font-family: var(--mono); font-size: 8.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }
-/* beat 3 · pack into many */
-.v2c-clones { position: absolute; top: 50%; left: calc(50% + 80px); transform: translateY(-50%); display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px; transition: transform .5s var(--ease); }
-.v2c-clones span { position: relative; overflow: hidden; width: 37px; height: 46px; border-radius: 5px; background: linear-gradient(180deg, #fff, #fdf7ec); border: 1.5px solid var(--accent-dim); box-shadow: 0 2px 4px -2px rgba(40,30,15,.14);
-  opacity: 0; transform: scale(.55); transition: opacity .35s ease, transform .4s var(--ease); }
-.v2c-clones span::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); }
-.v2c-clones span::after { content: ""; position: absolute; top: 15px; left: 6px; width: 17px; height: 2.5px; border-radius: 2px; background: var(--accent); opacity: .7; }
+.v2c-ctr::before { content: "container"; position: absolute; left: 12px; top: -9px; background: var(--panel-fill); padding: 0 6px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }
+/* beat 3 · replicate the container into an aligned grid of parallel rollouts */
+.v2c-cap { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) translateY(calc(-150px * var(--gk, 1))); font-family: var(--mono); font-size: 13px; letter-spacing: .4px; color: var(--accent); white-space: nowrap; opacity: 0; transition: opacity .4s ease; pointer-events: none; }
+.v2c.s3 .v2c-cap { opacity: 1; transition-delay: .42s; }   /* wait for the hero's own label to clear — no double title */
+.v2c-clones { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(var(--gk, 1)); display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }   /* --gk (set in JS) shrinks the whole grid to fit narrow figures */
+.v2c-clones span { position: relative; overflow: hidden; width: 120px; height: 76px; border-radius: 7px; background: linear-gradient(180deg, #fff, #fdf7ec); border: 2px solid var(--accent-dim); box-shadow: 0 3px 6px -2px rgba(40,30,15,.15);
+  opacity: 0; transform: scale(.5); transition: opacity .3s ease, transform .4s var(--ease); }
+.v2c-clones span::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 17px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); }
+.v2c-clones span::after { content: ""; position: absolute; top: 31px; left: 15px; width: 58px; height: 4px; border-radius: 2px; background: var(--accent-dim); }   /* one window/content line — the desktop inside */
+.v2c-clones span i { position: absolute; left: 15px; right: 15px; bottom: 13px; height: 4px; border-radius: 2px; background: var(--line-2); overflow: hidden; }   /* rollout track */
+.v2c-clones span i b { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 2px; background: var(--accent); transition: width .6s var(--ease); }   /* rollout progress */
+.v2c-note { text-align: center; font-family: var(--mono); font-size: 12.5px; letter-spacing: .3px; color: var(--muted); margin: 4px auto 0; min-height: 18px; transition: opacity .25s ease; }
 /* states */
-.v2c.s1 .v2c-lyr.qcow { transform: translateY(30px); opacity: 0; }
-.v2c.s1 .v2c-lyr.vm { transform: translateY(40px) scale(.96); opacity: 0; }
-.v2c.s1 .v2c-kvm { transform: translateY(36px); opacity: 0; }
+.v2c.s1 .v2c-lyr.qcow { transform: translateY(40px); opacity: 0; }
+.v2c.s1 .v2c-lyr.vm { transform: translateY(54px) scale(.96); opacity: 0; }
+.v2c.s1 .v2c-kvm { transform: translateY(48px); opacity: 0; }
 .v2c.s2 .v2c-ctr, .v2c.s3 .v2c-ctr { opacity: 1; transform: scale(1); }
-.v2c.s3 .v2c-unit { transform: translateX(-128px); }   /* container slides left so container + the grid of copies centre as a group */
-.v2c.s3 .v2c-clones { transform: translateY(-50%) translateX(-128px); }
-.v2c.s3 .v2c-clones span { opacity: 1; transform: scale(1); }   /* 1 → many (staggered fill set per-cell in JS) */
+.v2c.s3 .v2c-unit { opacity: 0; }   /* the container shrinks toward tile #1 (transform set in JS) and hands off */
+.v2c.s3 .v2c-clones span { opacity: 1; transform: scale(1); }   /* 1 → many · diagonal stamp, per-cell delay in JS */
+.v2c.s3 .v2c-clones span i b { width: var(--p, 60%); }          /* each rollout fills to its own level (parallel) */
 @media (prefers-reduced-motion: reduce) {
-  .v2c-lyr, .v2c-kvm, .v2c-ctr, .v2c-clones span { transition: none; }
+  .v2c-lyr, .v2c-kvm, .v2c-ctr, .v2c-clones span, .v2c-clones span i b { transition: none; }
 }
 .blog-foot { max-width: 680px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); }
 .blog-foot a { color: var(--dim); }
@@ -151,7 +156,9 @@
         <div class="v2c-kvm">/dev/kvm</div>
       </div>
       <div class="v2c-clones" aria-hidden="true"></div>
+      <span class="v2c-cap" aria-hidden="true">Lite.OSWorld · parallel rollouts</span>
     </div>
+    <figcaption class="v2c-note">A desktop sealed in a VM — every task boots QEMU/KVM.</figcaption>
   </figure>
 
   <h2>Drop the machine</h2>
@@ -201,29 +208,65 @@
   if (!fig) return;
   const label = fig.querySelector(".v2c-label");
   const stage = fig.querySelector(".v2c-stage");
-  const clones = fig.querySelector(".v2c-clones");   // beat 3 · one container packs into many (grid, diagonal fill)
-  for (let i = 0; i < 12; i++) { const s = document.createElement("span"); s.style.transitionDelay = ((Math.floor(i / 6) + (i % 6)) * 32) + "ms"; clones.appendChild(s); }
+  const unit = fig.querySelector(".v2c-unit");
+  const clones = fig.querySelector(".v2c-clones");   // beat 3 · one container replicates into a grid of parallel rollouts
+  const note = fig.querySelector(".v2c-note");
+  const NOTES = [
+    "A desktop sealed in a VM — every task boots QEMU/KVM.",
+    "Drop the machine — the same desktop, now a container.",
+    "Replicate the container — rollouts run in parallel.",
+  ];
+  const COLS = 4;
+  const LEVELS = [62, 88, 45, 74, 55, 92, 68, 40, 80, 58, 84, 50];   // each rollout at its own progress — parallel, not lockstep
+  for (let i = 0; i < 12; i++) {
+    const s = document.createElement("span");
+    const diag = Math.floor(i / COLS) + (i % COLS);   // stamp out diagonally from the top-left (tile #1 first)
+    s.style.transitionDelay = (330 + diag * 46) + "ms";     // tile #1 fades in as the hero lands (overlap, no blank gap), rest stamp after
+    s.style.setProperty("--p", LEVELS[i] + "%");
+    const track = document.createElement("i"), bar = document.createElement("b");
+    bar.style.transitionDelay = (800 + diag * 52) + "ms";   // each rollout bar advances once its tile has landed
+    track.appendChild(bar); s.appendChild(track);
+    clones.appendChild(s);
+  }
+  const ctr = fig.querySelector(".v2c-ctr");
+  // shrink the grid to fit the figure width on narrow screens (one factor scales tiles + text + gaps together)
+  function fitGrid() {
+    const avail = fig.querySelector(".v2c-stage").clientWidth - 12;
+    clones.style.setProperty("--gk", Math.min(1, avail / clones.scrollWidth || 1).toFixed(3));
+  }
+  // the hero container shrinks toward the grid's first cell as the grid blooms — the big box BECOMES tile #1
+  function heroToTile1() {
+    const t = clones.firstChild.getBoundingClientRect(), u = unit.getBoundingClientRect(), c = ctr.getBoundingClientRect();
+    const scale = c.width ? Math.min(1, t.width / c.width) : 0.5;   // match the (possibly grid-scaled) tile size, any viewport
+    const dx = (t.left + t.width / 2) - (u.left + u.width / 2);
+    const dy = (t.top + t.height / 2) - (u.top + u.height / 2);
+    unit.style.transform = `translate(${dx}px, ${dy}px) scale(${scale.toFixed(3)})`;
+  }
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let timers = [];
   const clear = () => { timers.forEach(clearTimeout); timers = []; };
-  function timeline() {   // beat 1 (OSWorld VM) held → shed → beat 2 (container + agent loop + evaluator) → beat 3 (pack)
+  const setNote = (t) => { note.style.opacity = "0"; timers.push(setTimeout(() => { note.textContent = t; note.style.opacity = "1"; }, 220)); };
+  function timeline() {   // beat 1 (OSWorld VM) held → shed → beat 2 (Lite.OSWorld container) → beat 3 (replicate into parallel rollouts)
     fig.classList.remove("s1", "s2", "s3");
-    label.textContent = "OSWorld";
+    label.textContent = "OSWorld"; unit.style.transform = ""; note.textContent = NOTES[0]; note.style.opacity = "1";
     timers.push(setTimeout(() => fig.classList.add("s1"), 1600));
-    timers.push(setTimeout(() => { fig.classList.add("s2"); label.textContent = "Lite.OSWorld"; }, 2550));
-    timers.push(setTimeout(() => fig.classList.add("s3"), 4450));
+    timers.push(setTimeout(() => { fig.classList.add("s2"); label.textContent = "Lite.OSWorld"; setNote(NOTES[1]); }, 2550));
+    timers.push(setTimeout(() => { fig.classList.add("s3"); heroToTile1(); setNote(NOTES[2]); }, 4450));
   }
   function loopReset() {   // fade out, reset instantly (no reverse-animation), fade back in, replay
     clear();
     stage.style.opacity = "0";
     timers.push(setTimeout(() => {
-      fig.classList.add("notrans"); fig.classList.remove("s1", "s2", "s3"); label.textContent = "OSWorld";
+      fig.classList.add("notrans"); fig.classList.remove("s1", "s2", "s3"); label.textContent = "OSWorld"; unit.style.transform = "";
+      note.textContent = NOTES[0]; note.style.opacity = "1";
       void fig.offsetWidth; fig.classList.remove("notrans");
       stage.style.opacity = "1"; timeline();
     }, 340));
   }
   const CYCLE = 7000;
-  if (reduce) { fig.classList.add("s2"); label.textContent = "Lite.OSWorld"; return; }
+  fitGrid();
+  addEventListener("resize", () => { fitGrid(); if (fig.classList.contains("s3")) heroToTile1(); });
+  if (reduce) { fig.classList.add("s2"); label.textContent = "Lite.OSWorld"; note.textContent = NOTES[1]; return; }
   if ("IntersectionObserver" in window) {
     let started = false;
     const io = new IntersectionObserver((es) => es.forEach((e) => {
