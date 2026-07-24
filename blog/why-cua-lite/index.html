@@ -35,38 +35,116 @@
 .post-links a { color: var(--accent); white-space: nowrap; }   /* a link wraps as a unit, never mid-name */
 .post-close { border-top: 1px solid var(--line); margin-top: 40px; padding-top: 24px; }
 /* ---- animated flow figures: a pairing lights up and one wire plugs through the hub ---- */
-.flow-demo { margin: 6px 0 20px; background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 20px 20px 16px; }
+.flow-demo { margin: 6px 0 20px; background: radial-gradient(135% 105% at 50% -12%, #fffdf7, var(--panel-fill) 72%); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 20px 20px 16px;
+  box-shadow: inset 0 1px 0 var(--panel-hi), 0 1px 2px rgba(40,30,15,.04), 0 16px 34px -24px rgba(40,30,15,.30); }   /* lift off the page like the homepage's panels — warm ink shadow, top inner highlight */
 .pair-board { display: grid; grid-template-columns: 1fr 150px 1fr; position: relative; }   /* both boards funnel through a unifying node */
 .pair-col { display: flex; flex-direction: column; gap: 7px; }
 .pair-k { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 3px; }
 .pair-right .pair-k { text-align: right; }   /* the right column mirrors the left */
 .pair-chip { font-family: var(--mono); font-size: 12px; color: var(--muted); background: var(--panel-2); border: 1px solid var(--line-2);
-  border-radius: 999px; padding: 6px 13px; white-space: nowrap; align-self: flex-start; transition: color .25s ease, border-color .25s ease, background .25s ease; }
+  border-radius: 999px; padding: 6px 13px; white-space: nowrap; align-self: flex-start; box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 1px 1.5px rgba(40,30,15,.045); transition: color .25s ease, border-color .25s ease, background .25s ease, box-shadow .25s ease; }
 .pair-chip:hover { text-decoration: none; color: var(--text); border-color: var(--accent-dim); }   /* every chip links out */
 .pair-chip:visited { color: var(--muted); }
 .pair-right .pair-chip { align-self: flex-end; }
+/* category glyphs — each kind of entity wears a silhouette so left/right and
+   data / env / model read without reading the label. Instances stay homogeneous
+   on purpose: the figure's whole point is that they're interchangeable once unified. */
+.pair-chip::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: 7px;
+  vertical-align: -1.5px; background: currentColor; opacity: .8;
+  -webkit-mask: var(--ic) center/contain no-repeat; mask: var(--ic) center/contain no-repeat; }
+.pair-chip[data-cat="data"]  { --ic: url('/assets/icons/rows.svg'); }
+.pair-chip[data-cat="env"]   { --ic: url('/assets/icons/window.svg'); }
+.pair-chip[data-cat="model"] { --ic: url('/assets/icons/chip.svg'); }
+/* agents wear their maker's mark (grey via currentColor, brightening on hover/active), echoing the
+   homepage's affiliation logos; MAI-UI has no brand mark so it keeps the generic chip glyph. */
+.pair-chip[data-logo]::before { width: 14px; height: 14px; vertical-align: -3.5px; opacity: .74; }   /* balanced below so dense marks don't read heavier than thin ones */
+.pair-chip[data-logo="qwen"]::before    { opacity: .6; }
+.pair-chip[data-logo="ui-tars"]::before { opacity: .5; }
+.pair-chip[data-logo="claude"]::before  { opacity: .66; }
+.pair-chip[data-logo].on::before        { opacity: 1; }   /* the active agent's mark goes full terracotta */
+.pair-chip[data-logo="openai"]  { --ic: url('/assets/logos/openai.svg'); }
+.pair-chip[data-logo="claude"]  { --ic: url('/assets/logos/claude.svg'); }
+.pair-chip[data-logo="qwen"]    { --ic: url('/assets/logos/qwen.svg'); }
+.pair-chip[data-logo="gemini"]  { --ic: url('/assets/logos/gemini.svg'); }
+.pair-chip[data-logo="ui-tars"] { --ic: url('/assets/logos/ui-tars.png'); }
+.pair-chip[data-logo="kimi"]    { --ic: url('/assets/logos/kimi.svg'); }
 .chip-tag { color: var(--dim); font-size: 10px; transition: color .25s ease; }   /* dim platform hint: desktop / web / mobile */
-.pair-chip.ghost { border-style: dashed; background: transparent; color: var(--dim); }   /* the open slot — a contribution not yet made */
-.pair-chip.on { color: var(--accent); border-color: var(--accent); background: rgba(189,90,56,.10); }
+.pair-chip.ghost { background: transparent; color: var(--dim); }   /* the open slot — solid border like the rest, just no fill */
+.pair-chip.on { color: var(--accent); border-color: var(--accent); background: rgba(189,90,56,.10); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 3px 10px -4px rgba(189,90,56,.4); }   /* the in-play chip warms and lifts */
 .pair-chip.ghost.on { color: var(--accent); background: rgba(189,90,56,.06); }   /* the slot lights up, still dashed — yours to fill */
 .pair-chip.on .chip-tag { color: var(--accent-dim); }
 /* the target chip lights as the wire reaches it, not before */
 .pair-right .pair-chip.on { transition-delay: 1.2s; }   /* the target lights as the second wire segment lands (~1.4s) */
 .pair-right .pair-chip.on .chip-tag { transition-delay: 1.2s; }   /* the tag waits with its chip */
-.pair-mid { display: flex; align-items: center; justify-content: center; }
+.pair-mid { display: flex; align-items: center; justify-content: center; padding-top: 26px; }   /* the chip columns carry a label on top; match its offset so the hub lands on the 3rd (middle) capsule, not above it */
+[data-board="pair"] { grid-template-columns: 1.35fr 150px 1fr; }   /* env names are wide; nudge lite.gym right so its left/right margins balance (no adapter fills the right side here) */
 /* the hub reads as a hub: accent-edged card with pixel ports where the wires plug in */
 .pair-node { position: relative; z-index: 2; font-family: var(--mono); font-size: 12.5px; color: var(--text); text-align: center;
-  background: #fff; border: 1px solid var(--accent-dim); border-radius: 10px; padding: 9px 13px 8px; }
+  background: linear-gradient(180deg, #fff, #fffaf1); border: 1px solid var(--accent-dim); border-radius: 10px; padding: 9px 13px 8px;
+  box-shadow: 0 2px 5px -2px rgba(40,30,15,.12), 0 16px 30px -20px rgba(189,90,56,.32), inset 0 1px 0 #fff; }   /* the focal card lifts highest — a faint terracotta ground-shadow */
 .pair-node::before, .pair-node::after { content: ""; position: absolute; top: 50%; width: 7px; height: 7px; margin-top: -3.5px; background: var(--accent); }
 .pair-node::before { left: -4px; }
 .pair-node::after { right: -4px; }
 .pair-node code { background: none; border: 0; padding: 0; font-size: 12.5px; }
+/* the hub wears the CUA-Lite mark: everything converges into the paper plane = into CUA-Lite */
+.node-mark { display: block; width: 15px; height: 15px; margin: 0 auto 5px; background: url('/assets/logo.svg') center/contain no-repeat; }
+/* under the shared plane, a small glyph tells the two hubs apart: {} = the schema · ↻ = the gym loop */
+.node-glyph { display: block; font-family: var(--mono); font-size: 14px; line-height: 1; color: var(--accent); margin-top: 6px; }
+.node-loop { width: 14px; height: 14px; margin: 6px auto 0; background: var(--accent);
+  -webkit-mask: url('/assets/icons/loop.svg') center/contain no-repeat; mask: url('/assets/icons/loop.svg') center/contain no-repeat; }
+.pair-node { box-sizing: border-box; }
+@media (min-width: 561px) { .pair-node { min-width: 128px; } }   /* both hubs share one width on desktop; mobile shrinks naturally so it never covers the chips */
 .pair-node:hover, .pair-node:focus-within { z-index: 30; }   /* the hover card must clear the sibling stage cards */
 .wire-stage:hover, .wire-stage:focus-within { z-index: 30; }
 .wire-stage:hover .ls-pop, .wire-stage:focus-within .ls-pop { opacity: 1; visibility: visible; transform: translateY(-50%); pointer-events: auto; }
 .node-sub { display: block; font-size: 8.5px; letter-spacing: 1.3px; text-transform: uppercase; color: var(--dim); margin-top: 4px; white-space: nowrap; }
+/* ---- column seeds: a column opens as a category emblem, then unfolds into its pills ----
+   datasets = three platform screenshot-trajectory stacks (recorded data); agents = a cursor (the actor).
+   this is what tells figure "datasets→agents" apart from figure "environments→agents" at a glance. */
+.pair-col { position: relative; }
+.col-seed { position: absolute; left: 0; top: 0; bottom: 0; display: none; flex-direction: column; gap: 10px; justify-content: center; padding-top: 26px; z-index: 4; pointer-events: none; }   /* centred + the hub's 26px offset so the seed sits exactly at the hub's midline */
+.pair-right .col-seed { left: auto; right: 0; align-items: flex-end; }
+.seed-fold .col-seed { display: flex; opacity: 1; transition: opacity .32s var(--ease), transform .32s var(--ease); }
+.seed-fold.unfolded .col-seed { opacity: 0; transform: scale(.9); }   /* seeds clear FIRST, then the pills arrive — never both mid-fade in the same spot */
+.seed-fold.unfolded .col-seed.to-gym { opacity: 0; transform: translate(155px, -40px) scale(.42); }   /* the platforms travel toward lite.gym and shrink into it — a hand-off into the gym, where the loop's screenshot device then appears */
+.seed-fold.unfolded:has(.col-seed.to-gym) .pair-node { animation: hubReceive .7s var(--ease) .34s; }   /* lite.gym gives a small pulse as the platforms land in it */
+@keyframes hubReceive { 40% { transform: scale(1.05); } }
+/* screenshot-trajectory frames — real device proportions like the homepage demos: desktop/web landscape, mobile portrait */
+.traj { position: relative; }
+.traj.desktop, .traj.web { width: 127px; height: 52px; }
+.traj.desktop .fr, .traj.web .fr { width: 82px; height: 52px; border-radius: 6px; }
+.traj.mobile { width: 89px; height: 66px; }
+.traj.mobile .fr { width: 44px; height: 66px; border-radius: 10px; }
+.traj .fr { position: absolute; top: 0; overflow: hidden; background: #fff center / cover no-repeat; border: 1px solid rgba(40,30,15,.22); box-shadow: 2px 3px 6px -3px rgba(40,30,15,.30); }
+.traj.desktop .fr { background-image: url(/assets/traj/desktop.png); }   /* real screenshots of the hero demos — a dataset is recorded screens */
+.traj.web .fr { background-image: url(/assets/traj/web.png); }
+.traj.mobile .fr { background-image: url(/assets/traj/mobile.png); background-position: center top; }
+/* fig 4: environments open as the three GENERAL platforms — device forms (not a screenshot) */
+.plat .dev { display: block; position: relative; background: linear-gradient(180deg, #fff, #fdf7ec); border: 1.5px solid var(--accent-dim); box-shadow: 0 2px 5px -2px rgba(40,30,15,.13); }
+.plat.desktop .dev, .plat.web .dev { width: 90px; height: 54px; border-radius: 6px; }
+.plat.mobile .dev { width: 44px; height: 70px; border-radius: 12px; }
+.plat.desktop::after { content: ""; display: block; width: 30px; height: 7px; margin: 0 auto; background: var(--accent-dim); opacity: .4; clip-path: polygon(28% 0, 72% 0, 100% 100%, 0 100%); }   /* monitor stand */
+.plat.web .dev::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 13px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); border-radius: 6px 6px 0 0; }   /* browser chrome */
+.plat.web .dev::after { content: ""; position: absolute; top: 5px; left: 7px; width: 3.5px; height: 3.5px; border-radius: 50%; background: var(--accent-dim); box-shadow: 6px 0 var(--accent-dim), 12px 0 var(--accent-dim); }   /* traffic lights */
+.plat.mobile .dev::before { content: ""; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 14px; height: 3px; border-radius: 2px; background: var(--line-2); }   /* notch */
+.ag-seed { position: relative; display: inline-flex; align-items: center; background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 999px; padding: 9px 20px; box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 1px 1.5px rgba(40,30,15,.045); font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.ag-seed::before, .ag-seed::after { content: ""; position: absolute; inset: 0; border-radius: 999px; background: var(--panel-2); border: 1px solid var(--line-2); z-index: -1; }
+.ag-seed::before { transform: translate(4px, 6px); opacity: .7; } .ag-seed::after { transform: translate(8px, 12px); opacity: .45; }   /* stacked = many agents, fanning into GPT/Claude/… */
+/* fold: pills wait, hidden, until the seed unfolds */
+.seed-fold .pair-chip { opacity: 0; transform: translateY(-8px); transition: opacity .4s var(--ease), transform .4s var(--ease); }
+.seed-fold.unfolded .pair-chip { opacity: 1; transform: none; transition-delay: .34s; }   /* wait for the seeds to clear */
+.seed-fold.unfolded .pair-col .pair-chip:nth-child(3) { transition-delay: .42s; }
+.seed-fold.unfolded .pair-col .pair-chip:nth-child(4) { transition-delay: .5s; }
+.seed-fold.unfolded .pair-col .pair-chip:nth-child(5) { transition-delay: .58s; }
+.seed-fold.unfolded .pair-col .pair-chip:nth-child(6) { transition-delay: .66s; }
+.seed-fold:not(.wired) .pair-wire { opacity: 0; }   /* the wire waits for the ladder to begin — not just the unfold — so it never links pills that are still fading in */
+.seed-fold:not(.wired) .pair-node::before, .seed-fold:not(.wired) .pair-node::after { opacity: 0; }   /* no ports until wired */
+.seed-fold:not(.wired) .flow-dot, .seed-fold:not(.wired) .land-ring, .seed-fold:not(.wired) .gym-shot,
+.seed-fold:not(.wired) .gym-cur, .seed-fold:not(.wired) .flow-lab { display: none; }   /* these run on their own timers — display:none beats the animation, so nothing flickers before the ladder */
+.seed-fold .pair-wire { transition: opacity .4s ease; }
 .pair-wire { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .pair-wire .w1, .pair-wire .w2 { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 400; opacity: 0; }
+.pair-wire .cw { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; }   /* fig-2 converge/fork wires — dasharray + offset set per-path in JS */
 .pair-wire path.draw { animation: wireDraw 1s var(--ease) forwards; }
 .pair-wire .w2.draw { animation-delay: .4s; }
 @keyframes wireDraw { 0% { stroke-dashoffset: 400; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
@@ -80,10 +158,11 @@
 .flow-lab { position: absolute; font-family: var(--mono); font-size: 11px; letter-spacing: .5px; color: var(--muted); opacity: 0;
   transform: translate(-50%,-50%); white-space: nowrap; pointer-events: none; z-index: 3; transition: opacity .25s ease; }
 .flow-lab.show { opacity: .9; }
-/* pipeline stages on the wires — mini siblings of the hub card (preproc in, adapter out) */
+/* the adapter stage sits on the wire — a mini sibling of the hub card, same material as the intro's adapter card */
 .wire-stage { position: absolute; transform: translate(-50%, -50%); z-index: 2; cursor: help;
   font-family: var(--mono); font-size: 10px; letter-spacing: .5px; color: var(--muted); white-space: nowrap;
-  background: #fff; border: 1px solid var(--accent-dim); border-radius: 6px; padding: 3px 8px; }
+  background: linear-gradient(180deg, #fff, #fffaf1); border: 1px solid var(--accent-dim); border-radius: 6px; padding: 3px 8px;
+  box-shadow: 0 1px 3px -1px rgba(40,30,15,.12), inset 0 1px 0 #fff; }
 /* the gym loop made tangible: a mini screen above the hub (the screenshot going up),
    the hero demo's own cursor below it (the click coming down) */
 .gym-shot { position: absolute; transform: translate(-50%, -100%); z-index: 3; opacity: 0; transition: opacity .3s ease; pointer-events: none; }
@@ -113,22 +192,23 @@
 @keyframes landHit { 0% { opacity: .9; transform: translate(-50%,-50%) scale(.35); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1); } }
 /* ---- the packing figure: each step's prompt is a tape that contains the previous one;
    responses are the accent bands (the loss), folds are the hatched left region ---- */
-.tape-board { display: grid; gap: 7px; }
-.tape-row { display: grid; grid-template-columns: 44px 1fr; align-items: center; gap: 10px;
-  transition: opacity .5s ease; }
+.tape-board { display: flex; flex-direction: column; justify-content: center; min-height: 146px; }   /* fixed height: the packed rows re-center as the absorbed ones collapse, no page reflow */
+.tape-row { display: grid; grid-template-columns: 54px 1fr; align-items: center; gap: 10px; margin-bottom: 7px; max-height: 44px; overflow: hidden;
+  transition: opacity .5s ease, max-height .55s var(--ease), margin-bottom .55s var(--ease), transform .55s var(--ease); }
+.tape-row:last-child { margin-bottom: 0; }
 .tape-row.future { opacity: .18; }
-.tape-row.absorbed { opacity: .25; }
+.tape-row.absorbed { opacity: 0; max-height: 0; margin-bottom: 0; transform: scaleY(.25); }   /* packed away — the two kept forwards slide together */
 .tape-lab { font-family: var(--mono); font-size: 9.5px; color: var(--dim); text-align: right; }
 .tape-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 118px; align-items: center; gap: 8px; }
 .tape { display: flex; height: 20px; border: 1px solid var(--line-2); border-radius: 4px; overflow: hidden;
-  background: var(--panel-fill); flex: none; transition: border-color .4s ease; }
-.tape-row.keep .tape { border-color: var(--accent); }
+  background: var(--panel-fill); flex: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(60,48,36,.05), 0 1px 1.5px rgba(40,30,15,.05); transition: border-color .4s ease, box-shadow .4s ease; }
+.tape-row.keep .tape { border-color: var(--accent); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 2px 10px -3px rgba(189,90,56,.38); }   /* a kept forward glows terracotta */
 .tp { height: 100%; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .tp em { font-style: normal; font-family: var(--mono); font-size: 10px; letter-spacing: .3px; color: var(--muted); white-space: nowrap; }
 .tp.r em { color: #fdf6e9; }
 .tp.p { background: var(--panel-2); }
 .tp.d { background: var(--panel-2); border-left: 1px solid var(--panel-fill); }
-.tp.r { background: var(--accent); opacity: .8; }
+.tp.r { background: linear-gradient(180deg, rgba(200,101,64,.95), rgba(178,84,47,.82)); box-shadow: inset 0 1px 0 rgba(255,255,255,.18); }   /* response bands read as raised terracotta strips */
 .tp.f { background: repeating-linear-gradient(45deg, transparent 0 3px, var(--line-2) 3px 5px); }
 .tape-note { font-family: var(--mono); font-size: 9.5px; color: var(--accent); white-space: nowrap; opacity: 0; transition: opacity .4s ease; }
 /* fold moment: the hatched region grows in while the source screenshots (row above) gray out */
@@ -147,9 +227,38 @@
 @keyframes lossPulse { 50% { filter: brightness(1.35); transform: scaleY(1.2); } }
 .tape-row.keep .tape-note { opacity: 1; }
 .tape-legend { margin-top: 12px; font-family: var(--mono); font-size: 9.5px; color: var(--dim); display: flex; align-items: center; gap: 6px; }
+/* the figure opens as LiteSample → adapter → Qwen3.5, then the overlay zooms out while the tape zooms in */
+.flow-demo.pack { position: relative; overflow: hidden; }   /* clips the zoom-scaled intro so it never widens the page */
+.pack-intro { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-evenly; gap: 12px; flex-wrap: wrap;
+  background: radial-gradient(135% 105% at 50% -12%, #fffdf7, var(--panel-fill) 72%); border-radius: 14px; z-index: 5; opacity: 0; pointer-events: none;
+  transform-origin: 50% 50%; transition: opacity .45s var(--ease); font-family: var(--mono); }
+.pack.intro-on .pack-intro { opacity: 1; }
+/* exit: the whole intro stays OPAQUE and pushes into the adapter (centred) — LiteSample and Qwen scale off-frame, the adapter grows — then it dissolves only at the very end to reveal the tape already settled behind it. Opaque until the last moment, so the two layers never bleed through each other. */
+.pack.intro-out .pack-intro { animation: introZoomOut .82s var(--ease) forwards; transition: none; }
+@keyframes introZoomOut { 0% { opacity: 1; transform: scale(1); } 70% { opacity: 1; transform: scale(1.6); } 100% { opacity: 0; transform: scale(1.95); } }
+.pack .tape-board { transition: opacity .4s ease; }   /* fades in hidden behind the opaque intro, so it is fully in place before the dissolve */
+.pack.intro-on .tape-board { opacity: 0; }
+.pack .tape-legend { transition: opacity .5s ease; }
+.pack.intro-on .tape-legend { opacity: 0; }
+.pack-adapter { font-size: 11px; background: linear-gradient(180deg, #fff, #fffaf1); border: 1px solid var(--accent-dim); border-radius: 6px; padding: 4px 11px; color: var(--muted); box-shadow: 0 1px 3px -1px rgba(40,30,15,.12), inset 0 1px 0 #fff; }
+.pack-intro > span:not(.pi-dot) { position: relative; z-index: 1; }   /* components ride above the wire (the packet keeps its own absolute positioning) */
+.pack-intro-wire { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.piw { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 400; }   /* fixed dasharray, exactly like figures 2/4's wires */
+.pack.playing .piw { animation: piwDraw 1s var(--ease) forwards; }   /* same fixed dasharray + 1s as the ladder → the line-head extends at the SAME rate, not a per-segment speed */
+.pack.playing .piw:last-child { animation-delay: .4s; }   /* the adapter→Qwen segment follows the LiteSample→adapter one, same stagger as .w2 */
+.pack.intro-out .piw { stroke-dashoffset: 0 !important; }   /* stay drawn while the intro fades out */
+@keyframes piwDraw { to { stroke-dashoffset: 0; } }
+.pi-dot { position: absolute; top: var(--piy, 50%); left: var(--pix0, 0); width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; background: var(--accent); box-shadow: 0 0 0 2px var(--panel-fill); opacity: 0; z-index: 0; pointer-events: none; }   /* z-index 0: rides the wire but passes BEHIND the adapter/cards, so it goes THROUGH them, not over */
+.pack.playing .pi-dot { animation: piDot 1.4s linear 1.5s infinite; }   /* flows only after both wire segments have drawn (~1.4s) */
+@keyframes piDot { 0% { left: var(--pix0); opacity: 0; } 8% { opacity: 1; } 90% { opacity: 1; } 100% { left: var(--pix1); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .pack.intro-on .pi-dot { animation: none; opacity: 0; }
+  .pack.intro-out .pack-intro { animation: none; opacity: 0; } .pack-intro, .pack .tape-board { transition: none; } }   /* no zoom-into-adapter motion */
+/* the intro reuses the real figure components (hub card + plane + {} , adapter card, agent chip) so it matches figure 2 */
+.pack-intro .pair-node::before, .pack-intro .pair-node::after { display: none; }   /* no wires in the intro → no ports */
+.pack-intro .pair-chip { align-self: center; }
 .tp-sw { width: 12px; height: 8px; border-radius: 2px; display: inline-block; }
 .tp-sw.p { background: var(--panel-2); border: 1px solid var(--line-2); }
-.tp-sw.r { background: var(--accent); opacity: .8; margin-left: 10px; }
+.tp-sw.r { background: linear-gradient(180deg, rgba(200,101,64,.95), rgba(178,84,47,.82)); margin-left: 10px; }
 .tp-sw.f { background: repeating-linear-gradient(45deg, transparent 0 3px, var(--line-2) 3px 5px); border: 1px solid var(--line-2); margin-left: 10px; }
 @media (max-width: 430px) {
   .tape-row { grid-template-columns: 34px 1fr; gap: 6px; }
@@ -160,57 +269,13 @@
   .tp em { display: none; }   /* inside labels need room; the legend still explains the colors */
   .tape { height: 12px; }
 }
-/* ---- spec tables: one concrete artifact, read close up — the counterweight to the boards ---- */
-.spec { font-family: var(--mono); }
-.spec figcaption, .spec-cap { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
-/* two columns, ALWAYS two children: the label, and one block holding code + its note.
-   (a third direct child would auto-place into the label column on the next row) */
-.spec-row { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 5px 0; }
-.spec-k { font-size: 10.5px; color: var(--dim); text-align: right; }
-.spec-v { min-width: 0; }
-.spec-v code { display: block; font-size: 11.5px; line-height: 1.5; color: var(--muted); background: none; border: 0; padding: 0; overflow-wrap: anywhere; }
-.spec-v code + code { margin-top: 5px; }   /* two calls in one row stay two calls when they wrap */
-.spec-row.lite code { color: var(--accent); }   /* the one spelling that survives */
-.spec-n { display: block; font-size: 10px; line-height: 1.45; color: var(--dim); margin-top: 2px; }
-.spec-split { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 14px; }
-.spec-fold { text-align: center; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim);
-  border-top: 1px solid var(--line); margin-top: 14px; padding-top: 14px; margin-bottom: 12px; }
-@media (max-width: 480px) {
-  .spec-row { grid-template-columns: minmax(0, 1fr); gap: 3px; padding: 7px 0; }
-  .spec-k { text-align: left; color: var(--muted); }
-}
-/* ---- the cohort grid: every platform × task type, lit by whichever dataset is active.
-   It rides the board's existing beat, so the figure gains a fact per cycle, not a new motion ---- */
-.cg { margin-top: 15px; padding-top: 14px; border-top: 1px solid var(--line); font-family: var(--mono); }
-.cg-head, .cg-row { display: grid; grid-template-columns: 52px repeat(5, minmax(0, 1fr)); align-items: center; gap: 4px; }
-.cg-row { height: 21px; }
-.cg-head span { font-size: 8.5px; letter-spacing: .3px; color: var(--dim); text-align: center; line-height: 1.25; }
-.cg-head b { font-weight: 400; }
-.cg-head u { display: none; text-decoration: none; }   /* the narrow-width spelling, swapped in below 560 */
-.cg-row > span { font-size: 9.5px; color: var(--dim); text-align: right; padding-right: 4px; }
-.cg-row i { width: 7px; height: 7px; margin: 0 auto; background: var(--line-2);
-  transition: background .35s ease, transform .35s ease, box-shadow .35s ease; }
-.cg-row i.on { background: var(--accent); transform: scale(1.3); }
-.cg-row i.maybe { background: transparent; box-shadow: inset 0 0 0 1px var(--accent-dim); }   /* the open slot: yours could fill any of them */
-.cg-row i:nth-child(2) { transition-delay: 0s; }      /* a left-to-right wave, so the grid flows like the wire */
-.cg-row i:nth-child(3) { transition-delay: .05s; }
-.cg-row i:nth-child(4) { transition-delay: .10s; }
-.cg-row i:nth-child(5) { transition-delay: .15s; }
-.cg-row i:nth-child(6) { transition-delay: .20s; }
-.cg-note { margin-top: 9px; font-size: 10px; color: var(--dim); text-align: center; min-height: 13px; }
-.cg-note b { color: var(--accent); font-weight: 400; }
-/* ---- the env board's per-beat fact: what this one actually was, and what it took ---- */
-.pair-fact { margin-top: 15px; padding-top: 13px; border-top: 1px solid var(--line);
-  font-family: var(--mono); font-size: 11px; line-height: 1.55; color: var(--dim); }
-.pair-fact b { color: var(--text); font-weight: 400; }   /* the before is dim; what the integration bought is not */
-.pair-fact + .pair-cmd { margin-top: 9px; padding-top: 0; border-top: 0; }
-@media (max-width: 560px) {
-  .cg-head, .cg-row { grid-template-columns: 40px repeat(5, minmax(0, 1fr)); gap: 2px; }
-  .cg-head span { font-size: 8px; }
-  .cg-head b { display: none; }
-  .cg-head u { display: inline; }
-  .cg-row > span { font-size: 8.5px; }
-}
+/* ---- the before-board: same anatomy, but no hub and no color — attempts die mid-air ---- */
+.mess .pair-chip + .pair-k { margin-top: 12px; }   /* the left column stacks two groups */
+/* the before-board draws the full N×M tangle: every dataset/benchmark wired to every agent by
+   hand. Dashed + colourless = makeshift, never resolved — the hub boards below tidy the same wires. */
+.mess .mw { fill: none; stroke: #9c8b74; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 6 6; opacity: .7; }
+.mess .mw-bundle { fill: none; stroke-linecap: round; }   /* one bundle per left node: draws accent, then settles into the grey tangle (states set inline) */
+/* both columns carry 4 real boxes + a "yours next" ghost, top-aligned, so rows line up */
 .pair-cmd { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; line-height: 1.6; }
 .pair-cmd .c-p { color: var(--dim); }
 .pair-cmd b { color: var(--accent); font-weight: 500; }
@@ -229,6 +294,8 @@
   .pair-node { padding: 7px 9px 6px; }
   .pair-node, .pair-node code { font-size: 10.5px; }
   .node-sub { font-size: 7.5px; letter-spacing: 1px; margin-top: 3px; }
+  .pair-chip::before { width: 11px; height: 11px; margin-right: 5px; }
+  .node-mark { width: 12px; height: 12px; margin-bottom: 3px; }
 }
 @media (max-width: 430px) {  /* keep the node clear of the chips on small phones */
   .pair-board { grid-template-columns: minmax(0, 1fr) 84px minmax(0, 1fr); }   /* chips yield inward, never clip at the panel edge */
@@ -238,6 +305,8 @@
   .pair-node { padding: 5px 8px; }
   .pair-node, .pair-node code { font-size: 10px; }
   .node-sub { display: none; }
+  .pair-chip::before { width: 9px; height: 9px; margin-right: 4px; }
+  .node-mark { width: 10px; height: 10px; margin-bottom: 2px; }
   .flow-demo { padding: 14px 14px 12px; }
 }
 @media (max-width: 360px) {
@@ -271,30 +340,46 @@
 </header>
 
 <main class="post-wrap">
+  <!-- NORTH STAR · every "Call for … contributors" block — a one-glance reader must get all three,
+       payoff-first; cut anything a scanner can't use (mechanism, scope lists, hedging):
+         (1) OUR CONTRIBUTION — what CUA-Lite already provides that makes joining pay off
+             (the reach: every agent / every env, present AND future);
+         (2) VALUE TO SELF — your data / env keeps working and never goes stale;
+         (3) VALUE TO THE COMMUNITY — you grow the shared pool everyone else draws on.
+       The two calls are siblings: keep them parallel in shape and length.
+       PROSE HYGIENE (all paragraphs): no orphans — if a paragraph ends with a lone word or
+       short unit dangling on its last line, TRIM the copy until it wraps clean. Fix it by
+       cutting words, never with &nbsp; or text-wrap tricks (they only jag the right edge). -->
   <p class="post-meta">2026-07-10 · The CUA-Lite team</p>
   <h1>Why CUA-Lite — and a call for <em>contributors.</em></h1>
 
   <h2>Why CUA-Lite</h2>
   <p><b>Computer-use agent resources are fragmented.</b> Every benchmark ships its
-  own runner, its own action space, its own data format. Every dataset picks its
+  own runner, action space, and data format. Every dataset picks its
   own schema, so data collected for one agent can't train another. Every project
   rebuilds the same plumbing — screenshot loops, VM setup, eval scripts — before
   a single rollout runs.</p>
 
-  <figure class="flow-demo spec" aria-label="The same two actions written four ways by four agents, mutually incompatible">
-    <figcaption>Double-click the same icon — four agents, four spellings</figcaption>
-    <div class="spec-row"><span class="spec-k">UI-TARS</span><span class="spec-v"><code>left_double(start_box='(612,388)')</code><span class="spec-n">a text DSL, not a JSON tool call</span></span></div>
-    <div class="spec-row"><span class="spec-k">Qwen3-VL</span><span class="spec-v"><code>computer_use(action="double_click", coordinate=[612,388])</code><span class="spec-n">one wrapper tool; the verb is an enum value</span></span></div>
-    <div class="spec-row"><span class="spec-k">OpenAI CUA</span><span class="spec-v"><code>double_click(x=1175, y=419)</code><span class="spec-n">absolute pixels — wrong the moment the frame is resized</span></span></div>
-    <div class="spec-split">
-      <div class="spec-cap">Scroll down — now the parameters themselves disagree</div>
-      <div class="spec-row"><span class="spec-k">UI-TARS</span><span class="spec-v"><code>scroll(start_box='(612,388)', direction='down')</code><span class="spec-n">no amount at all</span></span></div>
-      <div class="spec-row"><span class="spec-k">Qwen3-VL</span><span class="spec-v"><code>computer_use(action="scroll", coordinate=[612,388], pixels=-300)</code><span class="spec-n">the sign carries the direction</span></span></div>
-      <div class="spec-row"><span class="spec-k">OpenAI CUA</span><span class="spec-v"><code>scroll(x=1175, y=419, scroll_x=0, scroll_y=300)</code><span class="spec-n">two-dimensional pixel deltas</span></span></div>
-      <div class="spec-row"><span class="spec-k">UI-TARS mobile</span><span class="spec-v"><code>scroll(start_box='(612,388)', end_box='(612,120)')</code><span class="spec-n">a gesture — there is no "direction" to read</span></span></div>
+  <figure class="flow-demo mess" aria-label="Without a shared interface, pairings fail: different schemas, action spaces, harnesses">
+    <div class="pair-board" data-board="mess">
+      <div class="pair-col">
+        <span class="pair-k">Datasets</span>
+        <a data-cat="data" class="pair-chip" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web</a>
+        <a data-cat="data" class="pair-chip" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey</a>
+        <span class="pair-k">Benchmarks</span>
+        <a data-cat="env" class="pair-chip" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld</a>
+        <a data-cat="env" class="pair-chip" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena</a>
+      </div>
+      <div></div>
+      <div class="pair-col pair-right">
+        <span class="pair-k">Agents</span>
+        <a data-logo="openai" data-cat="model" class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
+        <a data-logo="claude" data-cat="model" class="pair-chip" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
+        <a data-logo="gemini" data-cat="model" class="pair-chip" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
+      </div>
+      <svg class="pair-wire" aria-hidden="true"><path class="mw"/></svg>
     </div>
-    <div class="spec-fold">↓ &nbsp;one spelling, converted per agent by its harness&nbsp; ↓</div>
-    <div class="spec-row lite"><span class="spec-k">CUA-Lite</span><span class="spec-v"><code>click(coordinate=[612,388], clicks=2)</code><code>scroll(coordinate=[612,388], direction="down", amount=3)</code><span class="spec-n">coordinates normalized to [0,&nbsp;1000] on every platform</span></span></div>
   </figure>
 
   <p><b>CUA-Lite puts all of it in one place</b> — all a computer-use agent
@@ -305,72 +390,40 @@
   web, and mobile. Here is how each contribution compounds:</p>
 
   <h2>Datasets</h2>
-  <p><b>Say you want to train on three public GUI datasets.</b> In the first, the
-  click coordinate is a pair of decimals inside a line of Python source code. In
-  the second there is no coordinate at all — you get the corner points of a
-  web-page element, three layers of nested text down, and you work out the middle
-  yourself. In the third the numbers are there already, on a third scale. The
-  screenshots sit inside the data file in one, in a 20&nbsp;GB archive in another,
-  spread across eleven folders in the third. None of them agree on what a scroll
-  is. You write three loaders, then a fourth thing to reconcile them, and only
-  then start training.</p>
-
-  <p><b>CUA-Lite does that work once, in the open, for every dataset.</b>
-  Everything lands as <code class="ls" tabindex="0">LiteSample</code>: one list of
-  screenshots, one conversation, one set of actions, coordinates always on the
-  same 0–1000 scale whatever the screen was. Images are stored by their content,
-  so a screenshot two datasets share is kept once.</p>
-
-  <p><b>And every sample is filed by platform and task type.</b> Upstream folder
-  names mean nothing to a machine; the fifteen boxes below do. The same label names
-  the directory, the Hugging&nbsp;Face config, and the adapter that renders the
-  sample for a given model — so a training run can ask for every mobile grounding
-  sample there is and get it from every dataset at once.</p>
+  <p><b>Convert a dataset once, and every agent can train on it.</b>
+  <code class="ls" tabindex="0">LiteSample</code> is the one schema, shared
+  across every env, agent, and task type, free on Hugging&nbsp;Face.</p>
   <figure class="flow-demo" aria-label="Any dataset, converted once, trains any agent">
     <div class="pair-board" data-board="data">
       <div class="pair-col">
         <span class="pair-k">Datasets</span>
-        <a class="pair-chip" data-id="Multimodal-Mind2Web" data-cells="web.use" data-note="a web-page element box, three layers of text down — <b>one</b> box filled" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web</a>
-        <a class="pair-chip" data-id="GUIOdyssey" data-cells="mobile.understanding mobile.use" data-note="phone traces, coordinates as two-point lists — <b>two</b> boxes filled" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey</a>
-        <a class="pair-chip" data-id="OpenCUA" data-cells="desktop.use" data-note="desktop recordings with written reasoning — <b>one</b> box filled" href="https://huggingface.co/datasets/cua-lite/OpenCUA" target="_blank" rel="noopener">OpenCUA</a>
-        <a class="pair-chip" data-id="ScaleCUA" data-cells="*" data-note="decimals buried in a line of text, every platform — <b>all fifteen</b> filled" href="https://huggingface.co/datasets/cua-lite/ScaleCUA" target="_blank" rel="noopener">ScaleCUA</a>
-        <a class="pair-chip ghost" data-id="YourDataset" data-cells="?" data-note="whatever shape it arrives in — it lands in the boxes it belongs to" href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">yours next</a>
+        <a data-cat="data" class="pair-chip" data-id="Multimodal-Mind2Web" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web<span class="chip-tag"> · web</span></a>
+        <a data-cat="data" class="pair-chip" data-id="GUIOdyssey" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey<span class="chip-tag"> · mobile</span></a>
+        <a data-cat="data" class="pair-chip" data-id="ScaleCUA" href="https://huggingface.co/datasets/cua-lite/ScaleCUA" target="_blank" rel="noopener">ScaleCUA<span class="chip-tag"> · all</span></a>
+        <a data-cat="data" class="pair-chip" data-id="OpenCUA" href="https://huggingface.co/datasets/cua-lite/OpenCUA" target="_blank" rel="noopener">OpenCUA<span class="chip-tag"> · desktop</span></a>
+        <a data-cat="data" class="pair-chip ghost" data-id="YourDataset" href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">yours</a>
       </div>
-      <div class="pair-mid"><span class="pair-node"><code class="ls" tabindex="0">LiteSample</code><span class="node-sub">one schema</span></span></div>
+      <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="ls" tabindex="0">LiteSample</code><span class="node-glyph">{ }</span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
-        <a class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS-1.5</a>
-        <a class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI-8B</a>
-        <a class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5-9B</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
+        <a data-logo="ui-tars" data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
+        <a data-cat="model" class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI</a>
+        <a data-logo="kimi" data-cat="model" class="pair-chip" data-id="moonshotai/Kimi-VL-A3B-Instruct" href="https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct" target="_blank" rel="noopener">Kimi</a>
+        <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
-    <div class="cg" data-cells-grid>
-      <div class="cg-head"><span></span>
-        <span><b>understanding</b><u>under.</u></span>
-        <span><b>grounding<br>point</b><u>g.point</u></span>
-        <span><b>grounding<br>bbox</b><u>g.bbox</u></span>
-        <span><b>grounding<br>action</b><u>g.action</u></span>
-        <span><b>use</b><u>use</u></span></div>
-      <div class="cg-row" data-plat="desktop"><span>desktop</span><i></i><i></i><i></i><i></i><i></i></div>
-      <div class="cg-row" data-plat="mobile"><span>mobile</span><i></i><i></i><i></i><i></i><i></i></div>
-      <div class="cg-row" data-plat="web"><span>web</span><i></i><i></i><i></i><i></i><i></i></div>
-      <div class="cg-note" data-cells-note></div>
-    </div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
-  <p><b>The <code class="ad" tabindex="0">adapter</code> stage above is the agent harness doing double
-  duty: it runs the model live in the envs, and it converts standardized
-  <code class="ls" tabindex="0">LiteSample</code> rows into the data format
-  the model needs for training.</b> This is where the training complexity hides —
-  Qwen3.5's harness, for example, keeps the last four screenshots, collapses
-  the older history to a fixed line of text, and radix-packs prefix-extending
-  steps into a single forward pass; the next figure plays it out. CUA-Lite
-  ships every built-in model's harness ready to use, plus the building blocks
-  to compose a new one with ease.</p>
+  <p><b>Every model wants your training data packed its own way — CUA-Lite ships a
+  ready harness for each.</b> That's the <code class="ad" tabindex="0">adapter</code>
+  in the figure above: it packs a <code class="ls" tabindex="0">LiteSample</code> row
+  into the exact shape a model trains on, with the building blocks to add your own.
+  The next figure plays out Qwen3.5's.</p>
 
-  <figure class="flow-demo pack" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
+  <figure class="flow-demo pack intro-on" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
+    <div class="pack-intro" aria-hidden="true"><svg class="pack-intro-wire" aria-hidden="true"><path class="piw"/><path class="piw"/></svg><span class="pi-dot" aria-hidden="true"></span><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><span>LiteSample</span><span class="node-glyph">{ }</span></span><span class="pack-adapter">adapter</span><span class="pair-chip" data-cat="model" data-logo="qwen">Qwen</span></div>
     <div class="tape-board" data-pack>
       <div class="tape-row">
         <span class="tape-lab">step 1</span>
@@ -390,89 +443,57 @@
         <span class="tape-note">1 forward · loss ×4</span></span></div>
       <div class="tape-row">
         <span class="tape-lab">step 5</span>
-        <span class="tape-wrap"><span class="tape" style="width:40.91%"><i class="tp f" style="width:44.44%"><em>collapsed ×4</em></i><i class="tp d" style="width:33.33%"><em>img5</em></i><i class="tp r" style="width:22.22%"><em>act5</em></i></span>
+        <span class="tape-wrap"><span class="tape" style="width:40.91%"><i class="tp f" style="width:44.44%"><em>hist ×4</em></i><i class="tp d" style="width:33.33%"><em>img5</em></i><i class="tp r" style="width:22.22%"><em>act5</em></i></span>
         <span class="tape-note"></span></span></div>
       <div class="tape-row">
         <span class="tape-lab">step 6</span>
-        <span class="tape-wrap"><span class="tape" style="width:63.64%"><i class="tp f" style="width:28.57%"><em>collapsed ×4</em></i><i class="tp d" style="width:21.43%"><em>img5</em></i><i class="tp r" style="width:14.29%"><em>act5</em></i><i class="tp d" style="width:21.43%"><em>img6</em></i><i class="tp r" style="width:14.29%"><em>act6</em></i></span>
+        <span class="tape-wrap"><span class="tape" style="width:63.64%"><i class="tp f" style="width:28.57%"><em>hist ×4</em></i><i class="tp d" style="width:21.43%"><em>img5</em></i><i class="tp r" style="width:14.29%"><em>act5</em></i><i class="tp d" style="width:21.43%"><em>img6</em></i><i class="tp r" style="width:14.29%"><em>act6</em></i></span>
         <span class="tape-note">1 forward · loss ×2</span></span></div>
     </div>
     <div class="tape-legend" aria-hidden="true"><i class="tp-sw p"></i>prompt<i class="tp-sw r"></i>response · loss<i class="tp-sw f"></i>collapsed history</div>
     <div class="pair-cmd" data-pack-line></div>
   </figure>
 
-  <p><b>A rollout is a dataset.</b> Trajectories collected in
-  <code class="lg" tabindex="0">lite.gym</code> stage into the very layout
-  preprocessing emits — same schema, same content-addressed image store — so
-  last night's eval run becomes today's training data through a filter, not a
-  conversion: <code>--filter "lambda m: m.others['episode_return'] &gt;= 1.0"</code>.</p>
-
-  <p class="post-call"><b class="call">Call for data contributors.</b> Without a shared
-  schema, data collected for one agent can't train another — and most datasets
-  stop being used. In <code class="ls" tabindex="0">LiteSample</code> they keep working:
-  every agent can train on them, even models that don't exist yet. The
-  datasets join <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">a growing pool of computer-use data</a> — grounding steps, full trajectories,
-  every platform. If you've collected trajectories, one conversion puts them
-  to work for everyone.</p>
+  <p class="post-call"><b class="call">Call for data contributors.</b> Data collected for
+  one agent won't train another out of the box. In <code class="ls" tabindex="0">LiteSample</code>
+  it trains every agent — even models that don't exist yet. One conversion, and the
+  whole community can train on it.</p>
 
   <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">Preprocessing guide ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">Agent harnesses ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/docs/sft.md" target="_blank" rel="noopener">SFT guide ↗</a></p>
 
   <h2>Environments &amp; agents</h2>
   <p><b>Add an env, and every agent runs it; add an agent, and it runs every
-  env.</b> They meet in <code class="lg" tabindex="0">lite.gym</code>, in one
-  action space plus each env's extra tools. But every benchmark arrives speaking
-  something else — and the disagreement runs deeper than the spelling of "click":</p>
-
-  <figure class="flow-demo spec" aria-label="What a click natively is in OSWorld, BrowserGym and AndroidWorld, and what it becomes in lite.gym">
-    <figcaption>One click, natively, in three benchmarks</figcaption>
-    <div class="spec-row"><span class="spec-k">OSWorld</span><span class="spec-v"><code>"pyautogui.click(960, 540)"</code><span class="spec-n">a Python source string, exec'd inside a QEMU virtual machine</span></span></div>
-    <div class="spec-row"><span class="spec-k">BrowserGym</span><span class="spec-v"><code>"click('a47')"</code><span class="spec-n">a47 is a DOM node id, handed out by marking the accessibility tree</span></span></div>
-    <div class="spec-row"><span class="spec-k">AndroidWorld</span><span class="spec-v"><code>JSONAction(action_type="click", x=540, y=1200)</code><span class="spec-n">its sibling swipe is enum-only — "up", "down"; no start or end point</span></span></div>
-    <div class="spec-fold">↓ &nbsp;one loop, whatever is underneath&nbsp; ↓</div>
-    <div class="spec-row lite"><span class="spec-k">lite.gym</span><span class="spec-v"><code>await env.step([click(coordinate=[500, 300])])</code><span class="spec-n">over a QEMU snapshot, a Playwright page, an adb shell, or a static PNG — unchanged</span></span></div>
-  </figure>
-
-  <p><b>Integrating one is rarely just a translation.</b> Most benchmarks were
-  built to be run once, by hand, by the people who wrote them — not thousands of
-  times, in parallel, by everyone else. So most of the work is making them cheap
-  and repeatable, and it is different work every time. The board below cycles
-  through what that meant for five of them.</p>
-
-  <p><b>An environment is also not only a scoreboard.</b> Many carry training
-  tasks beside their eval set, each with an automatic checker that hands back a
-  reward — OSWorld arrives with 369 tasks to be graded on, and 2,490 more,
-  generated, to learn from. So the same environment can grade an agent, produce
-  training data for it, or be the world it learns in.</p>
-
+  env.</b> They meet in <code class="lg" tabindex="0">lite.gym</code> —
+  screenshots flow up, actions flow down, in one action space plus each env's
+  extra tools. The same loop serves eval and RL: every env ships eval
+  tasks, and many add training splits with verifiable rewards.</p>
   <figure class="flow-demo" aria-label="Any environment paired with any agent through lite.gym: screenshots up, actions down">
     <div class="pair-board" data-board="pair">
       <div class="pair-col">
         <span class="pair-k">Environments</span>
-        <a class="pair-chip" data-id="lite.osworld" data-fact="Shipped as a virtual machine, minutes to boot. <b>Also runs KVM-free, in a container that starts in seconds — same tasks, same scoring.</b>" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld<span class="chip-tag"> · desktop</span></a>
-        <a class="pair-chip" data-id="lite.cuaworld.pymol" data-fact="Forty real applications — CAD, molecular viewers, IDEs — each expecting its own virtual machine. <b>Tested and re-hosted onto plain containers.</b>" href="https://github.com/cmu-l3/gym-anything" target="_blank" rel="noopener">CUAWorld<span class="chip-tag"> · desktop</span></a>
-        <a class="pair-chip" data-id="browsergym.webarena" data-fact="One shared world behind every task, minutes to rewind — too heavy to restart per task. <b>Tasks that only look now run in parallel; only the ones that change something wait.</b>" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena<span class="chip-tag"> · web</span></a>
-        <a class="pair-chip" data-id="webharbor.webvoyager" data-fact="Scored against the live internet, where today's Amazon is not last month's. <b>Now against frozen local copies of all fifteen sites.</b>" href="https://github.com/MinorJerry/WebVoyager" target="_blank" rel="noopener">WebVoyager<span class="chip-tag"> · web</span></a>
-        <a class="pair-chip" data-id="androidworld" data-fact="A phone emulator booted per run, and a swipe you could only aim in four directions. <b>Emulators kept warm and reused; swipes get exact start and end points.</b>" href="https://github.com/google-research/android_world" target="_blank" rel="noopener">AndroidWorld<span class="chip-tag"> · mobile</span></a>
-        <a class="pair-chip ghost" data-id="your-env" data-fact="Whatever it takes to make yours cheap and repeatable. <b>Four methods on your side; every agent here runs it, and every agent added later.</b>" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
+        <a data-cat="env" class="pair-chip" data-id="osworld" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld<span class="chip-tag"> · desktop</span></a>
+        <a data-cat="env" class="pair-chip" data-id="browsergym.webarena" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena<span class="chip-tag"> · web</span></a>
+        <a data-cat="env" class="pair-chip" data-id="androidworld" href="https://github.com/google-research/android_world" target="_blank" rel="noopener">AndroidWorld<span class="chip-tag"> · mobile</span></a>
+        <a data-cat="env" class="pair-chip" data-id="webgym" href="https://github.com/microsoft/webgym" target="_blank" rel="noopener">WebGym<span class="chip-tag"> · web</span></a>
+        <a data-cat="env" class="pair-chip ghost" data-id="your-env" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
       </div>
-      <div class="pair-mid"><span class="pair-node"><code class="lg" tabindex="0">lite.gym</code><span class="node-sub">one action space</span></span></div>
+      <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="lg" tabindex="0">lite.gym</code><span class="node-glyph node-loop" aria-hidden="true"></span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">gpt-5.5</a>
-        <a class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">claude-opus-4-7</a>
-        <a class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL-8B</a>
-        <a class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen/Qwen3.5-9B" target="_blank" rel="noopener">Qwen3.5-9B</a>
+        <a data-logo="openai" data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
+        <a data-logo="claude" data-cat="model" class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
+        <a data-logo="gemini" data-cat="model" class="pair-chip" data-id="gemini-2.5" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
+        <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours next</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
-    <div class="pair-fact" data-fact-line></div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
-  <p class="post-call"><b class="call">Call for env contributors.</b> A benchmark or a training
-  environment only matters while people run it. Behind <code class="lg" tabindex="0">lite.gym</code>, yours runs against every
-  agent we ship and every agent added later, on <a href="/#leaderboard">one leaderboard</a>; give it a
-  training split, and it becomes a place agents learn, not just get graded.
-  One integration keeps it alive.</p>
+  <p class="post-call"><b class="call">Call for env contributors.</b> An env only matters
+  while people run it. Behind <code class="lg" tabindex="0">lite.gym</code>, yours runs
+  against every agent, now and later, on <a href="/#leaderboard">one shared leaderboard</a>.
+  One integration, and the whole field trains and competes on it.</p>
 
   <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">Env guide ↗</a> &nbsp;·&nbsp; <a href="/#leaderboard">Leaderboard ↗</a></p>
 
@@ -494,17 +515,18 @@
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   // animations idle while their figure is off-screen (and the three boards start staggered)
   const onScreen = new WeakSet();
+  const starters = new WeakMap(), started = new WeakSet();   // a figure's animation starts the first time it scrolls into view
   const io = "IntersectionObserver" in window ? new IntersectionObserver((es) =>
-    es.forEach((e) => e.isIntersecting ? onScreen.add(e.target) : onScreen.delete(e.target)), { rootMargin: "80px" }) : null;
+    es.forEach((e) => { if (e.isIntersecting) { onScreen.add(e.target);
+        if (starters.has(e.target) && !started.has(e.target)) { started.add(e.target); starters.get(e.target)(); } }
+      else onScreen.delete(e.target); }), { rootMargin: "0px 0px -15% 0px" }) : null;
   const watch = (fig) => { if (io) io.observe(fig); else onScreen.add(fig); };
   const live = (fig) => !io || onScreen.has(fig);
-  // onBeat(leftChip) — the figure's own per-beat payload (the cohort grid, the env fact).
-  // It rides the beat the board already has, so each figure carries a fact per cycle
-  // without a second thing moving on screen.
-  function runBoard(fig, mkCmd, mode, startDelay, onBeat) {   // mode: "data" (sample flows in) | "loop" (screenshot up, action down)
+  const onSeen = (fig, fn) => { if (!io) { fn(); return; } starters.set(fig, fn); };   // run fn once, when fig first enters view
+  function runBoard(fig, mkCmd, mode, startDelay, unfold) {   // mode: "data" (sample flows in) | "loop" (screenshot up, action down); unfold: open as column seeds first
     const board = fig.querySelector(".pair-board");
-    const left = [...board.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
-    const right = [...board.querySelectorAll(".pair-right .pair-chip")];
+    const left = [...board.querySelectorAll(".pair-col:not(.pair-right) .pair-chip:not(.ghost)")];
+    const right = [...board.querySelectorAll(".pair-right .pair-chip:not(.ghost)")];
     const node = board.querySelector(".pair-node");
     const svg = board.querySelector(".pair-wire");
     const paths = svg.querySelectorAll(".w1, .w2");
@@ -536,10 +558,7 @@
       board.appendChild(shot);
       gcur = document.createElement("span"); gcur.className = "gym-cur";
       board.appendChild(gcur);
-    } else {                 // the pipeline: preproc into the schema, adapter out to each model
-      pmark = document.createElement("span"); pmark.className = "wire-stage stage-preproc"; pmark.tabIndex = 0;
-      pmark.textContent = "preproc";
-      board.appendChild(pmark);
+    } else {                 // the pipeline: the left plugs straight into the schema; the adapter converts a row to each model's format
       amark = document.createElement("span"); amark.className = "wire-stage stage-adapter"; amark.tabIndex = 0;
       amark.textContent = "adapter";
       board.appendChild(amark);
@@ -554,9 +573,9 @@
     const seg = ([x1, y1], [x2, y2]) => { const mx = (x1 + x2) / 2; return `C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
     // one continuous path chip → spine → (under the cards + hub) → chip, for the traveling payload
     const fullPath = (a, e) => { const p1 = pt(left[a], "r"), p2 = pt(right[e], "l");
-      if (hasSpine()) { const { pL, pR } = spine();
-        return `${curve(p1, pL)} L ${pR[0]} ${pR[1]} ${seg(pR, p2)}`; }
       const h1 = ptN("l"), h2 = ptN("r");
+      if (hasSpine()) { const { pR } = spine();   // left plugs straight in; right routes through the adapter (pR)
+        return `M ${p1[0]} ${p1[1]} ${seg(p1, h1)} L ${h2[0]} ${h2[1]} L ${pR[0]} ${pR[1]} ${seg(pR, p2)}`; }
       return `M ${p1[0]} ${p1[1]} ${seg(p1, h1)} L ${h2[0]} ${h2[1]} ${seg(h2, p2)}`; };
     function placeExtras(e) {
       if (labUp) { const b = node.getBoundingClientRect(), sv = svg.getBoundingClientRect();
@@ -565,9 +584,8 @@
         labDown.style.left = cx + "px"; labDown.style.top = (b.bottom - sv.top + 12) + "px";
         shot.style.left = cx + "px"; shot.style.top = (b.top - sv.top - 24) + "px";
         gcur.style.left = (cx + 68) + "px"; gcur.style.top = (b.bottom - sv.top + 9) + "px"; }
-      if (amark) {   // fixed stage cards on the spine — they never move between beats
-        const { y, pL, pR } = spine();
-        pmark.style.left = pL[0] + "px"; pmark.style.top = y + "px";
+      if (amark) {   // the adapter card sits on the right spine — it never moves between beats
+        const { y, pR } = spine();
         amark.style.left = pR[0] + "px"; amark.style.top = y + "px"; }
     }
     const redraw = (p) => { p.classList.remove("draw"); void p.getBoundingClientRect(); p.classList.add("draw"); };
@@ -578,9 +596,9 @@
     const hasSpine = () => mode === "data" && innerWidth > 560;   // the stage cards hide below 560 — so does their spine
     function wires(a, e) {
       if (hasSpine()) {
-        const { pL, pR } = spine();
-        const h1 = ptN("l"), h2 = ptN("r");
-        paths[0].setAttribute("d", `${curve(pt(left[a], "r"), pL)} L ${h1[0]} ${h1[1]}`);
+        const { pR } = spine();
+        const h2 = ptN("r");
+        paths[0].setAttribute("d", curve(pt(left[a], "r"), ptN("l")));   // left plugs straight into the hub (no preproc stage)
         paths[1].setAttribute("d", `M ${h2[0]} ${h2[1]} L ${pR[0]} ${pR[1]} ${seg(pR, pt(right[e], "l"))}`);
       } else {
         paths[0].setAttribute("d", curve(pt(left[a], "r"), ptN("l")));
@@ -594,9 +612,8 @@
       wires(a, e);
       paths.forEach(redraw);
       cmd.innerHTML = mkCmd(left[a].dataset.id, right[e].dataset.id);
-      if (onBeat) onBeat(left[a]);
       placeExtras(e);
-      if (!reduce) {
+      if (!reduce && (!unfold || fig.classList.contains("wired"))) {   // don't schedule the loop extras (screenshot device, cursor, dot) until the board has actually begun — the initial step(0,0) on load must not queue a stray gym-shot flash
         timers.forEach(clearTimeout); timers.length = 0;
         ring.classList.remove("hit");
         dot.classList.remove("go", "back");
@@ -617,9 +634,8 @@
             dot.classList.add("back"); labDown.classList.add("show"); gcur.classList.add("show"); }, 3100));
           timers.push(setTimeout(() => { const [x, y] = pt(left[a], "r"); pulse(x, y); }, 4150));
           timers.push(setTimeout(() => { labDown.classList.remove("show"); gcur.classList.remove("show"); }, 4500));
-        } else {                 // wire lands, then one sample flows in and reaches the model
-          timers.push(setTimeout(() => dot.classList.add("go"), 1700));
-          timers.push(setTimeout(() => { const [x, y] = pt(right[e], "l"); pulse(x, y); }, 2750));
+        } else {                 // one-directional: the wire DRAWING IN is the flow — no traveling packet after (unlike the gym loop's round-trip). Just a "delivered" pulse as the wire lands.
+          timers.push(setTimeout(() => { const [x, y] = pt(right[e], "l"); pulse(x, y); }, 1500));
         }
       }
     }
@@ -633,67 +649,151 @@
       cmd.style.minHeight = max + "px";
     }
     step(0, 0); reserve(); watch(fig);
-    if (!reduce) setTimeout(() => setInterval(() => {
-      if (!live(fig)) return;
-      i = (i + 1) % seq.length; step(seq[i][0], seq[i][1]);
-    }, 5200), startDelay || 0);
+    const cycle = () => { if (!live(fig)) return; i = (i + 1) % seq.length; step(seq[i][0], seq[i][1]); };
+    const begin = () => { fig.classList.add("wired"); step(cur[0], cur[1]); setTimeout(() => setInterval(cycle, 5200), startDelay || 0); };
+    if (reduce) { if (unfold) fig.classList.add("unfolded", "wired"); }
+    else onSeen(fig, () => {   // seeds hold, unfold into the pills, then the wire ladder runs
+      if (unfold) { setTimeout(() => fig.classList.add("unfolded"), 1300); setTimeout(begin, 2650); }
+      else begin();
+    });
     // re-anchor the wires without replaying the draw
     return () => { reserve(); wires(cur[0], cur[1]); placeExtras(cur[1]); };
   }
   const boards = [];
-  // hold a per-beat line at its tallest variant so the figure never reflows mid-cycle
-  function reserveTallest(el, variants) {
-    const keep = el.innerHTML;
-    el.style.minHeight = "";
-    let max = 0;
-    variants.forEach((v) => { el.innerHTML = v; max = Math.max(max, el.offsetHeight); });
-    el.innerHTML = keep;
-    el.style.minHeight = max + "px";
-  }
-  const dataFig = document.querySelector('[data-board="data"]');
-  if (dataFig) {
-    // the grid is the taxonomy itself: 3 platforms × 5 task types, lit by the active dataset
-    const fig = dataFig.closest(".flow-demo");
-    const grid = fig.querySelector("[data-cells-grid]");
-    const note = fig.querySelector("[data-cells-note]");
-    const cells = new Map();   // "web.use" -> <i>
-    const COLS = ["understanding", "grounding.point", "grounding.bbox", "grounding.action", "use"];
-    grid.querySelectorAll(".cg-row").forEach((row) => {
-      const plat = row.dataset.plat;
-      [...row.querySelectorAll("i")].forEach((el, c) => cells.set(`${plat}.${COLS[c]}`, el));
+  // column seeds — datasets open as three platform screenshot-trajectory stacks, agents as a cursor; hidden until a figure opts in with .seed-fold
+  function trajSeed() {
+    const seed = document.createElement("div"); seed.className = "col-seed"; seed.setAttribute("aria-hidden", "true");
+    ["desktop", "web", "mobile"].forEach((plat) => {
+      const t = document.createElement("div"); t.className = "traj " + plat;
+      for (let i = 0; i < 4; i++) {
+        const fr = document.createElement("span"); fr.className = "fr";
+        fr.style.left = (i * 15) + "px"; fr.style.opacity = [".6", ".74", ".87", "1"][i]; fr.style.zIndex = i + 1;
+        t.appendChild(fr);   // the frame's real hero screenshot comes from its CSS background-image
+      }
+      seed.appendChild(t);
     });
-    const paintCells = (chip) => {
-      const want = (chip.dataset.cells || "").trim();
-      const all = want === "*", open = want === "?";
-      const set = new Set(all || open ? [] : want.split(/\s+/));
-      cells.forEach((el, key) => {
-        el.classList.toggle("on", all || set.has(key));
-        el.classList.toggle("maybe", open);
-      });
-      note.innerHTML = chip.dataset.note || "";
+    return seed;
+  }
+  function agentsSeed() {   // agents open as one neutral grey "Agents" chip (stacked = many) that fans into GPT/Claude/…
+    const seed = document.createElement("div"); seed.className = "col-seed"; seed.setAttribute("aria-hidden", "true");
+    seed.innerHTML = '<span class="ag-seed">Agents</span>';
+    return seed;
+  }
+  function platformSeed() {   // environments = the three GENERAL platforms, drawn as device forms (not a screenshot)
+    const seed = document.createElement("div"); seed.className = "col-seed to-gym"; seed.setAttribute("aria-hidden", "true");
+    ["desktop", "web", "mobile"].forEach((plat) => {
+      const d = document.createElement("div"); d.className = "plat " + plat;
+      d.innerHTML = '<span class="dev"></span>';
+      seed.appendChild(d);
+    });
+    return seed;
+  }
+  (function () {   // JS-gated (.seed-fold) so no-JS keeps the pills visible
+    const df = document.querySelector('[data-board="data"]');
+    if (df) { df.querySelector(".pair-col:not(.pair-right)").appendChild(trajSeed()); df.querySelector(".pair-right").appendChild(agentsSeed()); df.closest(".flow-demo").classList.add("seed-fold"); }
+    const pf = document.querySelector('[data-board="pair"]');
+    if (pf) { pf.querySelector(".pair-col:not(.pair-right)").appendChild(platformSeed()); pf.querySelector(".pair-right").appendChild(agentsSeed()); pf.closest(".flow-demo").classList.add("seed-fold"); }
+  })();
+  // 图二 · the efficient route: all datasets converge through LiteSample → one adapter → fork to every agent (N+M, not the N×M tangle above)
+  const dataFig = document.querySelector('[data-board="data"]');
+  if (dataFig) (function () {
+    const fig = dataFig.closest(".flow-demo"), board = dataFig;
+    const left = [...board.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];   // incl the "yours next" ghost — it converges too
+    const right = [...board.querySelectorAll(".pair-right .pair-chip")];
+    const node = board.querySelector(".pair-node"), svg = board.querySelector(".pair-wire");
+    const cmd = fig.querySelector("[data-cmd-line]");
+    const adp = document.createElement("span"); adp.className = "wire-stage stage-adapter"; adp.tabIndex = 0; adp.textContent = "adapter"; board.appendChild(adp);
+    svg.innerHTML = "";
+    const mk = () => { const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("class", "cw"); svg.appendChild(p); return p; };
+    const wIn = left.map(mk), wMid = mk(), wOut = right.map(mk), all = [...wIn, wMid, ...wOut];
+    const S = () => svg.getBoundingClientRect(), R = (el) => el.getBoundingClientRect(), so = () => (innerWidth <= 430 ? 2 : 4);
+    const curve = ([x1, y1], [x2, y2]) => { const mx = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
+    const rx = (el) => R(el).right - S().left + so(), lx = (el) => R(el).left - S().left - so(), cyy = (el) => R(el).top + R(el).height / 2 - S().top;
+    // Both sides are smooth fans that share ONE bend-x: with a common bend-x the curves keep their
+    // vertical order and can never cross, whichever end fans out — so no gather stub is needed.
+    const fan = ([x1, y1], [x2, y2], bx) => `M ${x1} ${y1} C ${bx} ${y1}, ${bx} ${y2}, ${x2} ${y2}`;
+    const anchor = () => {
+      const s = S(), nb = R(node);
+      const nL = [nb.left - s.left - 3, nb.top + nb.height / 2 - s.top], nR = [nb.right - s.left + 3, nb.top + nb.height / 2 - s.top];
+      // Sit the adapter snug against the hub (not out by the agents) so the fork fan gets the same
+      // horizontal room the converge fan has — otherwise its wires have ~9px to open in and tangle.
+      adp.style.left = (nb.right - s.left + R(adp).width / 2 + 12) + "px"; adp.style.top = (nb.top + nb.height / 2 - s.top) + "px";
+      // Converge: datasets → hub port. Bend-x sits midway between the widest chip edge and the hub,
+      // never left of a chip, so the smooth fan closes in without a hook — mirror of the fork below.
+      const maxRx = Math.max(...left.map(rx));
+      const convCx = maxRx + (nL[0] - maxRx) * 0.5;
+      left.forEach((el, k) => wIn[k].setAttribute("d", fan([rx(el), cyy(el)], nL, convCx)));
+      // the adapter label is hidden on narrow screens (mid column too tight) — then the hub itself
+      // doubles as the fork point: no mid line, agents fork straight from the hub's right port.
+      const adpVisible = adp.offsetParent !== null && R(adp).width > 0;
+      const forkFrom = adpVisible
+        ? (() => { const ab = R(adp), aL = [ab.left - s.left, ab.top + ab.height / 2 - s.top], aR = [ab.right - s.left, ab.top + ab.height / 2 - s.top]; wMid.setAttribute("d", curve(nR, aL)); return aR; })()
+        : (wMid.setAttribute("d", ""), nR);
+      // Fork: adapter → agents. Bend-x halfway to the NEAREST agent edge (never past it) so the curves
+      // don't overshoot and hook. Agents are right-aligned, so a per-wire midpoint would let a higher
+      // (narrower) agent's wire bend late and cross the lower one — the shared bend-x prevents that.
+      const forkCx = forkFrom[0] + (Math.min(...right.map(lx)) - forkFrom[0]) * 0.5;
+      right.forEach((el, k) => wOut[k].setAttribute("d", fan(forkFrom, [lx(el), cyy(el)], forkCx)));
     };
-    const dsChips = [...dataFig.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
-    const reserveNote = () => reserveTallest(note, dsChips.map((c) => c.dataset.note || ""));
-    const step = runBoard(fig, (ds, m) =>
-      `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>${ds.split("/").pop()}</b></span> <span class="nb">--model-id</span> <b>${m}</b>`,
-      "data", 1700, paintCells);
-    reserveNote();
-    boards.push(() => { reserveNote(); step(); });
-  }
+    anchor(); boards.push(anchor);
+    cmd.innerHTML = `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>Multimodal-Mind2Web</b></span> <span class="nb">--model-id</span> <b>Qwen3-VL-8B-Instruct</b>`;
+    let timers = [];
+    const clr = () => { timers.forEach(clearTimeout); timers = []; };
+    const draw = (p, dur) => { const len = p.getTotalLength(); p.style.transition = `stroke-dashoffset ${dur}ms var(--ease)`; p.style.strokeDashoffset = 0; };
+    const hide = (p) => { const len = p.getTotalLength(); p.style.transition = "none"; p.style.strokeDasharray = len; p.style.strokeDashoffset = len; p.style.opacity = "1"; };
+    function run() {
+      clr(); all.forEach(hide); left.concat(right).forEach((c) => c.classList.remove("on")); adp.classList.remove("on"); void svg.getBoundingClientRect();
+      wIn.forEach((p) => draw(p, 850)); left.forEach((c) => timers.push(setTimeout(() => c.classList.add("on"), 160)));   // 5 datasets converge to the hub
+      timers.push(setTimeout(() => { draw(wMid, 430); adp.classList.add("on"); }, 900));                                   // one line through the adapter
+      timers.push(setTimeout(() => { wOut.forEach((p) => draw(p, 850)); right.forEach((c) => c.classList.add("on")); }, 1350));  // fork out to every agent
+    }
+    const CYCLE = 5200;
+    function loop() { clr(); svg.style.transition = "opacity .35s ease"; svg.style.opacity = "0"; left.concat(right).forEach((c) => c.classList.remove("on")); adp.classList.remove("on"); timers.push(setTimeout(() => { svg.style.opacity = "1"; run(); }, 360)); }
+    if (reduce) { fig.classList.add("unfolded", "wired"); anchor(); all.forEach((p) => { p.style.strokeDashoffset = 0; }); left.concat(right).forEach((c) => c.classList.add("on")); }
+    else { watch(fig); onSeen(fig, () => {
+      setTimeout(() => fig.classList.add("unfolded"), 1300);
+      setTimeout(() => { fig.classList.add("wired"); anchor(); run(); setInterval(() => { if (live(fig)) loop(); }, CYCLE); }, 2450);
+    }); }
+  })();
+  // the before-board: no shared interface, so every dataset/benchmark must be wired to every
+  // agent by hand — the full N×M tangle. The hub boards below route the same wires cleanly (N+M).
+  const messFig = document.querySelector('[data-board="mess"]');
+  if (messFig) (function () {
+    const left = [...messFig.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
+    const right = [...messFig.querySelectorAll(".pair-right .pair-chip")];
+    const svg = messFig.querySelector(".pair-wire");
+    const pt = (el, side) => { const b = el.getBoundingClientRect(), s = svg.getBoundingClientRect();
+      return [side === "r" ? b.right - s.left + 4 : b.left - s.left - 4, b.top + b.height / 2 - s.top]; };
+    const curve = ([x1, y1], [x2, y2]) => { const mid = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2} `; };
+    svg.innerHTML = "";   // one bundle path per left node — its wires reach out to every right node
+    const bundles = left.map(() => { const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("class", "mw-bundle"); svg.appendChild(p); return p; });
+    const GREY = "#9c8b74";
+    const anchor = () => bundles.forEach((p, i) => { let d = ""; right.forEach((r) => { d += curve(pt(left[i], "r"), pt(r, "l")); }); p.setAttribute("d", d); });
+    const grey = (p, op) => { p.style.stroke = GREY; p.style.strokeWidth = "1.6"; p.style.strokeDasharray = "6 6"; p.style.strokeDashoffset = "0"; p.style.opacity = op; };
+    // shared beat — the grey tangle accumulates one left node's bundle at a time
+    const BEAT = 1050, LEAD = 380;
+    const CYCLE = LEAD + (left.length - 1) * BEAT + 500 + 1900;
+    let timers = [];
+    const clear = () => { timers.forEach(clearTimeout); timers = []; };
+    function play() {
+      clear(); anchor();
+      bundles.forEach((p) => { p.style.transition = "opacity .35s ease"; p.style.opacity = "0"; });   // fade the old tangle out before rebuilding
+      timers.push(setTimeout(() => {
+        bundles.forEach((p) => { p.style.transition = "none"; grey(p, "0"); });
+        void svg.getBoundingClientRect();
+        bundles.forEach((p, i) => timers.push(setTimeout(() => {
+          p.style.transition = "opacity .5s ease"; p.style.opacity = ".7";   // this left node's wires to every agent fade in
+        }, i * BEAT)));
+      }, LEAD));
+    }
+    if (reduce) { anchor(); bundles.forEach((p) => grey(p, ".7")); }
+    else { watch(messFig); onSeen(messFig, () => { play(); setInterval(() => { if (live(messFig)) play(); }, CYCLE); }); }
+    boards.push(anchor);   // re-anchor with the other boards on resize / font load
+  })();
+
   const pairFig = document.querySelector('[data-board="pair"]');
-  if (pairFig) {
-    // one line per env: what it was before the integration, and what the integration bought
-    const fig = pairFig.closest(".flow-demo");
-    const factLine = fig.querySelector("[data-fact-line]");
-    const chips = [...pairFig.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];
-    const showFact = (chip) => { factLine.innerHTML = chip.dataset.fact || ""; };
-    const reserveFact = () => reserveTallest(factLine, chips.map((c) => c.dataset.fact || ""));
-    const step = runBoard(fig, (e, a) =>   // environments sit on the left
-      `<span class="c-p">$</span> rollout.py <span class="nb">--model-id</span> <b>${a}</b> <span class="nb">--env-id</span> <b>${e}</b>`,
-      "loop", 3400, showFact);
-    reserveFact();
-    boards.push(() => { reserveFact(); step(); });
-  }
+  if (pairFig) boards.push(runBoard(pairFig.closest(".flow-demo"), (e, a) =>   // environments sit on the left
+    `<span class="c-p">$</span> rollout.py <span class="nb">--model-id</span> <b>${a}</b> <span class="nb">--env-id</span> <b>${e}</b>`, "loop", 3400, true));
   // the packing figure: each step's prompt tape contains the previous one (token-level
   // prefix); at step 5 image_max=4 folds the oldest screenshots and the prefix breaks —
   // so steps 1-4 collapse into one forward, steps 5-6 into another
@@ -701,34 +801,63 @@
   const packFig = document.querySelector("[data-pack]");
   if (packFig) (function () {
     const rows = [...packFig.querySelectorAll(".tape-row")];
+    const labs = rows.map((r) => r.querySelector(".tape-lab").textContent);   // "step N" — restored each cycle, renamed to "forward N" once packed
     const line = packFig.closest(".flow-demo").querySelector("[data-pack-line]");
     const SCRIPT = [   // [ms, fn, narration] — each event holds long enough to read its line
-      [0,     () => rows.forEach((r) => r.className = "tape-row future"),
+      [0,     () => rows.forEach((r, i) => { r.className = "tape-row future"; r.querySelector(".tape-lab").textContent = labs[i]; }),
               "one trajectory, 6 steps — as Qwen3.5 sees it"],
-      [1800,  () => rows[0].className = "tape-row",
+      [1300,  () => rows[0].className = "tape-row",
               "step 1 · instr + img1 → act1"],
-      [3600,  () => rows[1].className = "tape-row",
+      [2600,  () => rows[1].className = "tape-row",
               "step 2 starts with all of step 1 — a strict prefix"],
-      [5400,  () => rows[2].className = "tape-row", "step 3 · still extending"],
-      [7200,  () => rows[3].className = "tape-row",
+      [3900,  () => rows[2].className = "tape-row", "step 3 · still extending"],
+      [5200,  () => rows[3].className = "tape-row",
               "step 4 · acts 1–4 all live in this one tape"],
-      [9400,  () => { rows[4].className = "tape-row born"; rows[3].className = "tape-row foldsrc"; },
+      [7000,  () => { rows[4].className = "tape-row born"; rows[3].className = "tape-row foldsrc"; },
               "image_max=4 — the older history collapses to text · the prefix breaks"],
-      [11600, () => { rows[5].className = "tape-row"; rows[3].className = "tape-row"; }, "step 6 extends step 5"],
-      [13400, () => { [0, 1, 2].forEach((i) => rows[i].className = "tape-row absorbed");
-                      rows[4].className = "tape-row absorbed";
-                      rows[3].className = "tape-row keep"; rows[5].className = "tape-row keep"; },
+      [8800,  () => { rows[5].className = "tape-row"; rows[3].className = "tape-row"; }, "step 6 extends step 5"],
+      [10500, () => { [0, 1, 2, 4].forEach((i) => rows[i].className = "tape-row absorbed");
+                      rows[3].className = "tape-row keep"; rows[5].className = "tape-row keep";
+                      rows[3].querySelector(".tape-lab").textContent = "forward 1";
+                      rows[5].querySelector(".tape-lab").textContent = "forward 2"; },
               "prefix-extenders pack into their last tape: 6 steps, 2 forwards"],
     ];
-    const CYCLE = 18200;
+    const CYCLE = 15200;
     let max = 0;
     SCRIPT.forEach(([, , t]) => { line.textContent = t; max = Math.max(max, line.offsetHeight); });
     line.style.minHeight = max + "px";
-    function play() { SCRIPT.forEach(([ms, fn, t]) => setTimeout(() => { fn(); line.textContent = t; }, ms)); }
-    if (reduce) { const [, fn, t] = SCRIPT[SCRIPT.length - 1];
+    const fig = packFig.closest(".flow-demo");
+    const introSvg = fig.querySelector(".pack-intro-wire");
+    const drawIntroWire = () => {   // curve LiteSample → adapter → Qwen, measured from live geometry
+      if (!introSvg) return;
+      const s = introSvg.getBoundingClientRect(); if (!s.width) return;
+      const node = fig.querySelector(".pack-intro .pair-node"), adp = fig.querySelector(".pack-intro .pack-adapter"), qw = fig.querySelector(".pack-intro .pair-chip");
+      if (!node || !adp || !qw) return;
+      const cy = (el) => { const b = el.getBoundingClientRect(); return b.top + b.height / 2 - s.top; };
+      const rx = (el) => el.getBoundingClientRect().right - s.left, lx = (el) => el.getBoundingClientRect().left - s.left;
+      const curve = (x1, y1, x2, y2) => { const mx = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
+      const paths = introSvg.querySelectorAll(".piw");
+      const w0 = curve(rx(node) + 3, cy(node), lx(adp) - 3, cy(adp)), w1 = curve(rx(adp) + 3, cy(adp), lx(qw) - 3, cy(qw));
+      paths[0].setAttribute("d", w0); paths[1].setAttribute("d", w1);
+      const dot = fig.querySelector(".pi-dot");   // packet flows LiteSample → through adapter → Qwen (horizontal wire → simple left-slide)
+      if (dot) { dot.style.setProperty("--piy", cy(node) + "px"); dot.style.setProperty("--pix0", (rx(node) + 3) + "px"); dot.style.setProperty("--pix1", (lx(qw) - 3) + "px"); }
+    };
+    drawIntroWire();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawIntroWire);
+    addEventListener("resize", () => setTimeout(drawIntroWire, 60));
+    const INTRO = 3000;   // hold "LiteSample → adapter → Qwen3.5" long enough to read, then fade into the tape it produces
+    function play() {
+      fig.classList.remove("intro-on", "intro-out", "playing");
+      void fig.offsetWidth;   // restart the wire-draw + packet from the top, so they play on scroll-in (not on page load)
+      fig.classList.add("intro-on", "playing");
+      line.textContent = "the adapter · one LiteSample row → Qwen3.5's training tape";
+      setTimeout(() => { fig.classList.remove("intro-on", "playing"); fig.classList.add("intro-out"); }, INTRO);
+      SCRIPT.forEach(([ms, fn, t]) => setTimeout(() => { fn(); line.textContent = t; }, ms + INTRO));
+    }
+    if (reduce) { fig.classList.remove("intro-on"); const [, fn, t] = SCRIPT[SCRIPT.length - 1];
       rows.forEach((r) => r.className = "tape-row"); fn(); line.textContent = t;
-    } else { const fig = packFig.closest(".flow-demo"); watch(fig);
-      play(); setInterval(() => { if (live(fig)) play(); }, CYCLE); }
+    } else { watch(fig);
+      onSeen(fig, () => { play(); setInterval(() => { if (live(fig)) play(); }, CYCLE + INTRO); }); }
   })();
 
   // wires are measured from live geometry — re-anchor after web fonts land and on resize
