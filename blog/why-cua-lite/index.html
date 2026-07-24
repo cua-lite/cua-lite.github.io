@@ -712,26 +712,22 @@
     // converge/fork wires gather at a shared vertical line first, so varying chip widths can never make them cross:
     // a short horizontal stub from each chip to the gather line, then a fan of curves that all share one control-x.
     const gIn = ([x1, y1], [x2, y2], gx) => { const cx = (gx + x2) / 2; return `M ${x1} ${y1} L ${gx} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`; };
-    const gOut = ([x1, y1], [x2, y2], gx) => { const cx = (x1 + gx) / 2; return `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${gx} ${y2} L ${x2} ${y2}`; };
     const anchor = () => {
       const s = S(), nb = R(node);
       const nL = [nb.left - s.left - 3, nb.top + nb.height / 2 - s.top], nR = [nb.right - s.left + 3, nb.top + nb.height / 2 - s.top];
       const gap = (R(right[0]).left - s.left) - (nb.right - s.left);
       adp.style.left = (nb.right - s.left + Math.round(gap * 0.46)) + "px"; adp.style.top = (nb.top + nb.height / 2 - s.top) + "px";
+      // Converge (many datasets → one hub port) gathers at a shared line first: chips sit at varying x,
+      // so without it the fan crosses. Fork is one point → many agents and never crosses, so it fans direct.
       const gatherL = Math.max(...left.map(rx)) + 12;   // just right of the widest dataset chip
-      const gatherR = Math.min(...right.map(lx)) - 12;  // just left of the widest agent chip
       left.forEach((el, k) => wIn[k].setAttribute("d", gIn([rx(el), cyy(el)], nL, gatherL)));
       // the adapter label is hidden on narrow screens (mid column too tight) — then the hub itself
       // doubles as the fork point: no mid line, agents fork straight from the hub's right port.
       const adpVisible = adp.offsetParent !== null && R(adp).width > 0;
-      if (adpVisible) {
-        const ab = R(adp), aL = [ab.left - s.left, ab.top + ab.height / 2 - s.top], aR = [ab.right - s.left, ab.top + ab.height / 2 - s.top];
-        wMid.setAttribute("d", curve(nR, aL));
-        right.forEach((el, k) => wOut[k].setAttribute("d", gOut(aR, [lx(el), cyy(el)], gatherR)));
-      } else {
-        wMid.setAttribute("d", "");
-        right.forEach((el, k) => wOut[k].setAttribute("d", gOut(nR, [lx(el), cyy(el)], gatherR)));
-      }
+      const forkFrom = adpVisible
+        ? (() => { const ab = R(adp), aL = [ab.left - s.left, ab.top + ab.height / 2 - s.top], aR = [ab.right - s.left, ab.top + ab.height / 2 - s.top]; wMid.setAttribute("d", curve(nR, aL)); return aR; })()
+        : (wMid.setAttribute("d", ""), nR);
+      right.forEach((el, k) => wOut[k].setAttribute("d", curve(forkFrom, [lx(el), cyy(el)])));
     };
     anchor(); boards.push(anchor);
     cmd.innerHTML = `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>Multimodal-Mind2Web</b></span> <span class="nb">--model-id</span> <b>Qwen3-VL-8B-Instruct</b>`;
