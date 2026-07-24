@@ -190,6 +190,48 @@
   transform: translate(-50%,-50%) scale(.35); opacity: 0; pointer-events: none; z-index: 3; }
 .land-ring.hit { animation: landHit .6s var(--ease) forwards; }
 @keyframes landHit { 0% { opacity: .9; transform: translate(-50%,-50%) scale(.35); } 100% { opacity: 0; transform: translate(-50%,-50%) scale(1); } }
+/* ---- the task-type taxonomy: five little screens, each showing what one task
+   family asks of the model (a screenshot in → a shape out). Hover lifts a card;
+   the strip is the interactive glossary for the "every task type" claim above. ---- */
+.tax { padding-top: 20px; padding-bottom: 18px; }
+.tax-cap { font-family: var(--mono); font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--dim); text-align: center; margin-bottom: 18px; }
+.tax-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 9px; }
+.tax-card { display: flex; flex-direction: column; align-items: center; gap: 11px; padding: 14px 6px 13px; text-align: center;
+  border: 1px solid var(--line-2); border-radius: 12px; background: var(--panel-fill);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.5); transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+.tax-card:hover { text-decoration: none; border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 9px 20px -10px rgba(189,90,56,.5); }
+.tax-txt { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.tax-name { font-family: var(--mono); font-size: 11px; color: var(--text); letter-spacing: -.2px; }
+.tax-card:hover .tax-name { color: var(--accent); }
+.tax-gloss { font-size: 10.5px; color: var(--muted); line-height: 1.35; }
+.tax-foot { margin-top: 15px; text-align: center; font-family: var(--mono); font-size: 10px; letter-spacing: .3px; color: var(--dim); }
+.tax-foot b { color: var(--muted); font-weight: 400; }
+/* the mini screen every card shares */
+.tg { position: relative; width: 64px; height: 44px; border: 1.5px solid var(--muted); border-radius: 5px; background: #fdfbf6; overflow: hidden; flex: none; }
+.tg::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 8px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); }
+.tg > i { position: absolute; }
+/* understanding — lines of read-out text, the last one accented (the answer) */
+.tg-understand > i.a { left: 9px; right: 9px; top: 16px; height: 3px; border-radius: 2px; background: var(--line-2); box-shadow: 0 7px 0 var(--line-2); }
+.tg-understand > i.b { left: 9px; right: 28px; top: 32px; height: 3px; border-radius: 2px; background: var(--accent); }
+/* point — a single target dot */
+.tg-point > i { left: 50%; top: 58%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(189,90,56,.18); }
+/* bbox — an outlined region */
+.tg-bbox > i { left: 15px; top: 20px; right: 16px; bottom: 8px; border: 1.5px solid var(--accent); border-radius: 2px; background: rgba(189,90,56,.08); }
+/* action — a cursor landing on a highlighted control */
+.tg-action > i.t { left: 42%; top: 50%; width: 18px; height: 9px; border-radius: 2px; background: rgba(189,90,56,.16); border: 1px solid var(--accent-dim); }
+.tg-action > i.c { left: 54%; top: 60%; width: 11px; height: 15px; background: url('/assets/pixel/cursor.png') center/contain no-repeat; image-rendering: pixelated; filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
+/* use — three little screens in sequence (a trajectory), not one */
+.tg-use { border: 0; background: none; overflow: visible; display: flex; align-items: center; justify-content: center; gap: 3px; }
+.tg-use::before { content: none; }
+.tg-use s { width: 15px; height: 21px; border: 1.5px solid var(--muted); border-radius: 3px; background: #fdfbf6; position: relative; }
+.tg-use s::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); border-radius: 2px 2px 0 0; }
+.tg-use s:last-of-type { border-color: var(--accent); }
+.tg-use b { width: 5px; height: 5px; border-top: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); transform: rotate(45deg); }
+@media (max-width: 560px) {   /* five across won't fit the labels — stack into a readable list */
+  .tax-row { grid-template-columns: 1fr; gap: 7px; }
+  .tax-card { flex-direction: row; align-items: center; gap: 15px; padding: 10px 15px; text-align: left; }
+  .tax-txt { align-items: flex-start; gap: 3px; }
+}
 /* ---- the packing figure: each step's prompt is a tape that contains the previous one;
    responses are the accent bands (the loss), folds are the hatched left region ---- */
 .tape-board { display: flex; flex-direction: column; justify-content: center; min-height: 146px; }   /* fixed height: the packed rows re-center as the absorbed ones collapse, no page reflow */
@@ -393,6 +435,34 @@
   <p><b>Convert a dataset once, and every agent can train on it.</b>
   <code class="ls" tabindex="0">LiteSample</code> is the one schema, shared
   across every env, agent, and task type, free on Hugging&nbsp;Face.</p>
+
+  <figure class="flow-demo tax" aria-label="The five task types in LiteSample — understanding, grounding by point, box, or action, and multi-step use — each on desktop, web, or mobile">
+    <div class="tax-cap">what a screenshot turns into — five task types</div>
+    <div class="tax-row">
+      <a class="tax-card" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">
+        <span class="tg tg-understand"><i class="a"></i><i class="b"></i></span>
+        <span class="tax-txt"><span class="tax-name">understanding</span><span class="tax-gloss">describe what's<br>on the screen</span></span>
+      </a>
+      <a class="tax-card" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">
+        <span class="tg tg-point"><i></i></span>
+        <span class="tax-txt"><span class="tax-name">grounding.point</span><span class="tax-gloss">point to an<br>element</span></span>
+      </a>
+      <a class="tax-card" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">
+        <span class="tg tg-bbox"><i></i></span>
+        <span class="tax-txt"><span class="tax-name">grounding.bbox</span><span class="tax-gloss">box an element</span></span>
+      </a>
+      <a class="tax-card" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">
+        <span class="tg tg-action"><i class="t"></i><i class="c"></i></span>
+        <span class="tax-txt"><span class="tax-name">grounding.action</span><span class="tax-gloss">the action to<br>take on it</span></span>
+      </a>
+      <a class="tax-card" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">
+        <span class="tg tg-use"><s></s><b></b><s></s><b></b><s></s></span>
+        <span class="tax-txt"><span class="tax-name">use</span><span class="tax-gloss">reach a goal in<br>many steps</span></span>
+      </a>
+    </div>
+    <div class="tax-foot">each on <b>desktop · web · mobile</b> — so a run pulls exactly the slice it wants</div>
+  </figure>
+
   <figure class="flow-demo" aria-label="Any dataset, converted once, trains any agent">
     <div class="pair-board" data-board="data">
       <div class="pair-col">
@@ -406,10 +476,12 @@
       <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="ls" tabindex="0">LiteSample</code><span class="node-glyph">{ }</span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL</a>
         <a data-logo="ui-tars" data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
         <a data-cat="model" class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI</a>
-        <a data-logo="kimi" data-cat="model" class="pair-chip" data-id="moonshotai/Kimi-VL-A3B-Instruct" href="https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct" target="_blank" rel="noopener">Kimi</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3.5-9B" href="https://huggingface.co/Qwen" target="_blank" rel="noopener">Qwen3.5</a>
+        <a data-cat="model" class="pair-chip" data-id="microsoft/Fara-7B" href="https://huggingface.co/microsoft" target="_blank" rel="noopener">Fara</a>
+        <a data-logo="kimi" data-cat="model" class="pair-chip" data-id="moonshotai/Kimi-VL-A3B-Instruct" href="https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct" target="_blank" rel="noopener">Kimi-VL</a>
         <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
@@ -467,6 +539,10 @@
   screenshots flow up, actions flow down, in one action space plus each env's
   extra tools. The same loop serves eval and RL: every env ships eval
   tasks, and many add training splits with verifiable rewards.</p>
+  <p><b>Fitting one in is real work, not a rename.</b> The heavy setups they
+  ship with — a whole virtual machine per task, a shared world that must be
+  rebuilt after every change — become containers that boot in seconds and run
+  many at once. That work happens once, here, so no one repeats it.</p>
   <figure class="flow-demo" aria-label="Any environment paired with any agent through lite.gym: screenshots up, actions down">
     <div class="pair-board" data-board="pair">
       <div class="pair-col">
@@ -480,10 +556,12 @@
       <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="lg" tabindex="0">lite.gym</code><span class="node-glyph node-loop" aria-hidden="true"></span></span></div>
       <div class="pair-col pair-right">
         <span class="pair-k">Agents</span>
-        <a data-logo="openai" data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
+        <a data-logo="openai" data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT-5.5</a>
         <a data-logo="claude" data-cat="model" class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
-        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
         <a data-logo="gemini" data-cat="model" class="pair-chip" data-id="gemini-2.5" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
+        <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen3-VL</a>
+        <a data-logo="ui-tars" data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
+        <a data-logo="kimi" data-cat="model" class="pair-chip" data-id="moonshotai/Kimi-VL-A3B-Instruct" href="https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct" target="_blank" rel="noopener">Kimi-VL</a>
         <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours next</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
