@@ -177,6 +177,10 @@
              (your world runs at scale the day you add it — anywhere Docker runs, against every agent, present AND future);
          (2) VALUE TO SELF — your world never rots: eval + training splits + verifiable rewards, and no VM to babysit;
          (3) VALUE TO THE COMMUNITY — you add a world to the shared pool everyone else evals and trains on.
+       BOLD SKIM (hard rule): reading ONLY the bold — h1 + each paragraph's bold lead, in order — must
+       stand alone as the whole post's argument. Every bold lead names its own subject (OSWorld is the
+       EXISTING benchmark, not ours) and states a complete claim; no cadence-first fragments a reader
+       can't parse without the body (e.g. "A faithful desktop, one heavy machine at a time" — banned).
        PROSE HYGIENE (all paragraphs): no orphans — if a paragraph ends with a lone word or short unit
        dangling on its last line, TRIM the copy until it wraps clean. Fix it by cutting words, never with
        &nbsp; or text-wrap tricks (they only jag the right edge).
@@ -192,10 +196,9 @@
   But it ships as a virtual machine — and that's what keeps it from scaling.</p>
 
   <h2>The VM tax</h2>
-  <p><b>A faithful desktop, one heavy machine at a time.</b> OSWorld runs a full VM per task —
-  it needs <code>/dev/kvm</code> and nested virtualization. Fine on a laptop; a wall at scale,
-  where cloud instances, CI runners, and nested containers rarely hand you KVM, and one VM per
-  trajectory doesn't pack.</p>
+  <p><b>OSWorld's faithful desktop is a full VM per task.</b> It needs <code>/dev/kvm</code> and
+  nested virtualization — fine on a laptop, a wall at scale, where cloud instances, CI runners,
+  and nested containers rarely hand you KVM, and one VM per trajectory doesn't pack.</p>
 
   <p><b>Lite.OSWorld keeps the desktop and drops the machine.</b> The same tasks and evaluators
   run on a real GNOME desktop in a plain Docker container — no hypervisor, no <code>/dev/kvm</code>
