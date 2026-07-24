@@ -122,13 +122,19 @@
 .hh-tab.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
 .hh-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .hh-panel { position: relative; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; border: 1.5px solid var(--panel-edge); background: linear-gradient(158deg, #efe1cd, #e6d5bd); display: flex; align-items: center; justify-content: center; }
-.hh-panel::before { content: ""; position: absolute; inset: 26px 30px 24px; border: 1.5px solid rgba(255,255,255,.55); border-radius: 5px; }   /* a faint app window on the desktop — a paused rollout */
+.hh-panel::before { content: ""; position: absolute; inset: 26px 30px 24px; border: 1.5px solid rgba(255,255,255,.55); border-radius: 5px; }   /* a faint app window on the desktop */
 .hh-panel.hh-lite { border-color: var(--accent-dim); box-shadow: inset 0 0 0 1px rgba(189,90,56,.14); }
 .hh-tag { position: absolute; top: 10px; left: 10px; z-index: 2; font-family: var(--mono); font-size: 11px; letter-spacing: .2px; padding: 3px 10px; border-radius: 999px; background: rgba(255,252,246,.82); color: var(--muted); }
 .hh-panel.hh-lite .hh-tag { color: var(--accent); }
-.hh-play { position: relative; z-index: 2; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,252,246,.72); box-shadow: 0 3px 12px -3px rgba(40,30,15,.32); transition: transform .15s ease, background .15s ease; }
-.hh-play::after { content: ""; position: absolute; top: 50%; left: 54%; transform: translate(-50%,-50%); border-style: solid; border-width: 8px 0 8px 13px; border-color: transparent transparent transparent var(--accent); }
-.hh-panel:hover .hh-play { transform: scale(1.06); background: rgba(255,252,246,.92); cursor: pointer; }
+/* the panels auto-play (no click): a live indicator + a scrubber that sweeps in lockstep across both */
+.hh-live { position: absolute; top: 12px; right: 12px; z-index: 2; display: flex; align-items: flex-end; gap: 2.5px; height: 13px; }
+.hh-live i { width: 3px; height: 4px; border-radius: 1px; background: var(--accent); animation: belteq .9s ease-in-out infinite; }
+.hh-live i:nth-child(2) { animation-delay: .18s; }
+.hh-live i:nth-child(3) { animation-delay: .36s; }
+.hh-scrub { position: absolute; left: 14px; right: 14px; bottom: 12px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.5); overflow: hidden; z-index: 2; }
+.hh-scrub::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 0; background: var(--accent); border-radius: 2px; animation: hhscrub 5s linear infinite; }
+@keyframes hhscrub { 0% { width: 0; } 90% { width: 100%; } 100% { width: 100%; } }
+@media (prefers-reduced-motion: reduce) { .hh-live i { animation: none; height: 8px; } .hh-scrub::after { animation: none; width: 62%; } }
 .hh-cap { text-align: center; font-family: var(--mono); font-size: 12px; letter-spacing: .2px; color: var(--muted); margin-top: 13px; }
 @media (max-width: 560px) { .hh-pair { grid-template-columns: 1fr; gap: 12px; } }
 /* ---- parity plot · OSWorld vs Lite.OSWorld scores, one dot per model on a y=x diagonal ---- */
@@ -275,8 +281,8 @@
       <button class="hh-tab" type="button" role="tab" aria-selected="false">VS&nbsp;Code</button>
     </div>
     <div class="hh-pair">
-      <div class="hh-panel"><span class="hh-tag">OSWorld</span><span class="hh-play" aria-hidden="true"></span></div>
-      <div class="hh-panel hh-lite"><span class="hh-tag">Lite.OSWorld</span><span class="hh-play" aria-hidden="true"></span></div>
+      <div class="hh-panel"><span class="hh-tag">OSWorld</span><span class="hh-live" aria-hidden="true"><i></i><i></i><i></i></span><span class="hh-scrub" aria-hidden="true"></span></div>
+      <div class="hh-panel hh-lite"><span class="hh-tag">Lite.OSWorld</span><span class="hh-live" aria-hidden="true"><i></i><i></i><i></i></span><span class="hh-scrub" aria-hidden="true"></span></div>
     </div>
     <figcaption class="hh-cap">Same model, same task — <span class="cmp-pending">clips land with the benchmark writeup.</span></figcaption>
   </figure>
