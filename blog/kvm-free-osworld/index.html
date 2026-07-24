@@ -142,16 +142,16 @@
 .par-plot { position: relative; }
 .par-svg { width: 100%; height: auto; display: block; font-family: var(--mono); overflow: visible; }
 .par-svg .ax { stroke: var(--line-2); stroke-width: 1; }
-.par-svg .grid { stroke: var(--line); stroke-width: 1; }
+.par-svg .grid { stroke: var(--line-2); stroke-width: 1; }
 .par-svg .diag { stroke: var(--accent-dim); stroke-width: 1.5; stroke-dasharray: 4 4; fill: none; }
 .par-svg .diag-lbl { fill: var(--accent); font-size: 8.5px; letter-spacing: .3px; }
-.par-svg .tick { fill: var(--dim); font-size: 8.5px; }
+.par-svg .tick { fill: var(--muted); font-size: 8.5px; }
 .par-svg .axname { fill: var(--muted); font-size: 10px; letter-spacing: .4px; }
 .par-svg .dot { fill: var(--accent); fill-opacity: .82; stroke: var(--panel-fill); stroke-width: 1.5; cursor: pointer; transition: fill-opacity .12s ease; }
 .par-svg .dot:hover { fill-opacity: 1; }
-.par-tip { position: absolute; z-index: 5; transform: translate(-50%, -100%); background: var(--text, #2b2118); color: #fdf7ec; font-family: var(--mono); font-size: 11px; line-height: 1.45; padding: 6px 9px; border-radius: 7px; white-space: nowrap; pointer-events: none; box-shadow: 0 4px 14px -4px rgba(40,30,15,.45); }
-.par-tip b { color: #fff; font-weight: 600; }
-.par-tip i { color: var(--accent-dim); font-style: normal; }
+.par-tip { position: absolute; z-index: 5; transform: translate(-50%, -100%); background: #fffdf8; color: var(--muted); border: 1px solid var(--panel-edge); font-family: var(--mono); font-size: 11px; line-height: 1.45; padding: 6px 10px; border-radius: 7px; white-space: nowrap; pointer-events: none; box-shadow: 0 5px 16px -5px rgba(40,30,15,.3); }
+.par-tip b { color: var(--text); font-weight: 600; }
+.par-tip i { color: var(--accent); font-weight: 600; font-style: normal; }
 .par-cap { text-align: center; font-family: var(--mono); font-size: 11.5px; letter-spacing: .2px; color: var(--muted); margin-top: 12px; }
 /* ---- training-env belt · a conveyor of looping rollout clips, one env family at a time ---- */
 .belt-fig { margin: 22px 0 8px; }
@@ -276,8 +276,12 @@
 
   <figure class="hh" aria-label="The same agent rollout in OSWorld and Lite.OSWorld, side by side">
     <div class="hh-tabs" role="tablist">
-      <button class="hh-tab is-on" type="button" role="tab" aria-selected="true">LibreOffice</button>
-      <button class="hh-tab" type="button" role="tab" aria-selected="false">Chrome</button>
+      <button class="hh-tab is-on" type="button" role="tab" aria-selected="true">Chrome</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false">Calc</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false">Writer</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false">Impress</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false">GIMP</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false">VLC</button>
       <button class="hh-tab" type="button" role="tab" aria-selected="false">VS&nbsp;Code</button>
     </div>
     <div class="hh-pair">
@@ -312,8 +316,6 @@
     <div class="belt"><div class="belt-track" aria-hidden="true"></div></div>
     <figcaption class="belt-cap">Looping rollout trajectories — <span class="cmp-pending">clips land with the benchmark writeup.</span></figcaption>
   </figure>
-
-  <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/lite/osworld/README.md" target="_blank" rel="noopener">Lite.OSWorld ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">Env guide ↗</a> &nbsp;·&nbsp; <a href="/#leaderboard">Leaderboard ↗</a></p>
 
   <p class="post-close"><b>Any agent, any computer — without the machine.</b> Try it, or bring
   your own world —
