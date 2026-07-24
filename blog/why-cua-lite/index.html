@@ -709,30 +709,31 @@
     const S = () => svg.getBoundingClientRect(), R = (el) => el.getBoundingClientRect(), so = () => (innerWidth <= 430 ? 2 : 4);
     const curve = ([x1, y1], [x2, y2]) => { const mx = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
     const rx = (el) => R(el).right - S().left + so(), lx = (el) => R(el).left - S().left - so(), cyy = (el) => R(el).top + R(el).height / 2 - S().top;
-    // converge/fork wires gather at a shared vertical line first, so varying chip widths can never make them cross:
-    // a short horizontal stub from each chip to the gather line, then a fan of curves that all share one control-x.
-    const gIn = ([x1, y1], [x2, y2], gx) => { const cx = (gx + x2) / 2; return `M ${x1} ${y1} L ${gx} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`; };
+    // Both sides are smooth fans that share ONE bend-x: with a common bend-x the curves keep their
+    // vertical order and can never cross, whichever end fans out — so no gather stub is needed.
+    const fan = ([x1, y1], [x2, y2], bx) => `M ${x1} ${y1} C ${bx} ${y1}, ${bx} ${y2}, ${x2} ${y2}`;
     const anchor = () => {
       const s = S(), nb = R(node);
       const nL = [nb.left - s.left - 3, nb.top + nb.height / 2 - s.top], nR = [nb.right - s.left + 3, nb.top + nb.height / 2 - s.top];
       // Sit the adapter snug against the hub (not out by the agents) so the fork fan gets the same
       // horizontal room the converge fan has — otherwise its wires have ~9px to open in and tangle.
       adp.style.left = (nb.right - s.left + R(adp).width / 2 + 12) + "px"; adp.style.top = (nb.top + nb.height / 2 - s.top) + "px";
-      // Converge (many datasets → one hub port) gathers at a shared line first: chips sit at varying x,
-      // so without it the fan crosses. Fork is one point → many agents and never crosses, so it fans direct.
-      const gatherL = Math.max(...left.map(rx)) + 12;   // just right of the widest dataset chip
-      left.forEach((el, k) => wIn[k].setAttribute("d", gIn([rx(el), cyy(el)], nL, gatherL)));
+      // Converge: datasets → hub port. Bend-x sits midway between the widest chip edge and the hub,
+      // never left of a chip, so the smooth fan closes in without a hook — mirror of the fork below.
+      const maxRx = Math.max(...left.map(rx));
+      const convCx = maxRx + (nL[0] - maxRx) * 0.5;
+      left.forEach((el, k) => wIn[k].setAttribute("d", fan([rx(el), cyy(el)], nL, convCx)));
       // the adapter label is hidden on narrow screens (mid column too tight) — then the hub itself
       // doubles as the fork point: no mid line, agents fork straight from the hub's right port.
       const adpVisible = adp.offsetParent !== null && R(adp).width > 0;
       const forkFrom = adpVisible
         ? (() => { const ab = R(adp), aL = [ab.left - s.left, ab.top + ab.height / 2 - s.top], aR = [ab.right - s.left, ab.top + ab.height / 2 - s.top]; wMid.setAttribute("d", curve(nR, aL)); return aR; })()
         : (wMid.setAttribute("d", ""), nR);
-      // Fork all wires share one bend-x so they open as an ordered fan; agents are right-aligned, so
-      // a per-wire midpoint would let the higher (narrower) agent's wire bend late and cross the lower one.
-      // Bend-x stays halfway to the NEAREST agent edge (never past it) so the curves don't overshoot and hook.
+      // Fork: adapter → agents. Bend-x halfway to the NEAREST agent edge (never past it) so the curves
+      // don't overshoot and hook. Agents are right-aligned, so a per-wire midpoint would let a higher
+      // (narrower) agent's wire bend late and cross the lower one — the shared bend-x prevents that.
       const forkCx = forkFrom[0] + (Math.min(...right.map(lx)) - forkFrom[0]) * 0.5;
-      right.forEach((el, k) => { const x2 = lx(el), y2 = cyy(el); wOut[k].setAttribute("d", `M ${forkFrom[0]} ${forkFrom[1]} C ${forkCx} ${forkFrom[1]}, ${forkCx} ${y2}, ${x2} ${y2}`); });
+      right.forEach((el, k) => wOut[k].setAttribute("d", fan(forkFrom, [lx(el), cyy(el)], forkCx)));
     };
     anchor(); boards.push(anchor);
     cmd.innerHTML = `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>Multimodal-Mind2Web</b></span> <span class="nb">--model-id</span> <b>Qwen3-VL-8B-Instruct</b>`;
