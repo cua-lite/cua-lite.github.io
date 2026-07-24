@@ -144,6 +144,7 @@
 .seed-fold .pair-wire { transition: opacity .4s ease; }
 .pair-wire { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .pair-wire .w1, .pair-wire .w2 { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 400; opacity: 0; }
+.pair-wire .cw { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; }   /* fig-2 converge/fork wires — dasharray + offset set per-path in JS */
 .pair-wire path.draw { animation: wireDraw 1s var(--ease) forwards; }
 .pair-wire .w2.draw { animation-delay: .4s; }
 @keyframes wireDraw { 0% { stroke-dashoffset: 400; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
@@ -633,9 +634,8 @@
             dot.classList.add("back"); labDown.classList.add("show"); gcur.classList.add("show"); }, 3100));
           timers.push(setTimeout(() => { const [x, y] = pt(left[a], "r"); pulse(x, y); }, 4150));
           timers.push(setTimeout(() => { labDown.classList.remove("show"); gcur.classList.remove("show"); }, 4500));
-        } else {                 // wire lands, then one sample flows in and reaches the model
-          timers.push(setTimeout(() => dot.classList.add("go"), 1700));
-          timers.push(setTimeout(() => { const [x, y] = pt(right[e], "l"); pulse(x, y); }, 2750));
+        } else {                 // one-directional: the wire DRAWING IN is the flow — no traveling packet after (unlike the gym loop's round-trip). Just a "delivered" pulse as the wire lands.
+          timers.push(setTimeout(() => { const [x, y] = pt(right[e], "l"); pulse(x, y); }, 1500));
         }
       }
     }
@@ -694,9 +694,65 @@
     const pf = document.querySelector('[data-board="pair"]');
     if (pf) { pf.querySelector(".pair-col:not(.pair-right)").appendChild(platformSeed()); pf.querySelector(".pair-right").appendChild(agentsSeed()); pf.closest(".flow-demo").classList.add("seed-fold"); }
   })();
+  // 图二 · the efficient route: all datasets converge through LiteSample → one adapter → fork to every agent (N+M, not the N×M tangle above)
   const dataFig = document.querySelector('[data-board="data"]');
-  if (dataFig) boards.push(runBoard(dataFig.closest(".flow-demo"), (ds, m) =>
-    `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>${ds.split("/").pop()}</b></span> <span class="nb">--model-id</span> <b>${m.split("/").pop()}</b>`, "data", 1700, true));
+  if (dataFig) (function () {
+    const fig = dataFig.closest(".flow-demo"), board = dataFig;
+    const left = [...board.querySelectorAll(".pair-col:not(.pair-right) .pair-chip")];   // incl the "yours next" ghost — it converges too
+    const right = [...board.querySelectorAll(".pair-right .pair-chip")];
+    const node = board.querySelector(".pair-node"), svg = board.querySelector(".pair-wire");
+    const cmd = fig.querySelector("[data-cmd-line]");
+    const adp = document.createElement("span"); adp.className = "wire-stage stage-adapter"; adp.tabIndex = 0; adp.textContent = "adapter"; board.appendChild(adp);
+    svg.innerHTML = "";
+    const mk = () => { const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("class", "cw"); svg.appendChild(p); return p; };
+    const wIn = left.map(mk), wMid = mk(), wOut = right.map(mk), all = [...wIn, wMid, ...wOut];
+    const S = () => svg.getBoundingClientRect(), R = (el) => el.getBoundingClientRect(), so = () => (innerWidth <= 430 ? 2 : 4);
+    const curve = ([x1, y1], [x2, y2]) => { const mx = (x1 + x2) / 2; return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`; };
+    const rx = (el) => R(el).right - S().left + so(), lx = (el) => R(el).left - S().left - so(), cyy = (el) => R(el).top + R(el).height / 2 - S().top;
+    // converge/fork wires gather at a shared vertical line first, so varying chip widths can never make them cross:
+    // a short horizontal stub from each chip to the gather line, then a fan of curves that all share one control-x.
+    const gIn = ([x1, y1], [x2, y2], gx) => { const cx = (gx + x2) / 2; return `M ${x1} ${y1} L ${gx} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`; };
+    const gOut = ([x1, y1], [x2, y2], gx) => { const cx = (x1 + gx) / 2; return `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${gx} ${y2} L ${x2} ${y2}`; };
+    const anchor = () => {
+      const s = S(), nb = R(node);
+      const nL = [nb.left - s.left - 3, nb.top + nb.height / 2 - s.top], nR = [nb.right - s.left + 3, nb.top + nb.height / 2 - s.top];
+      const gap = (R(right[0]).left - s.left) - (nb.right - s.left);
+      adp.style.left = (nb.right - s.left + Math.round(gap * 0.46)) + "px"; adp.style.top = (nb.top + nb.height / 2 - s.top) + "px";
+      const gatherL = Math.max(...left.map(rx)) + 12;   // just right of the widest dataset chip
+      const gatherR = Math.min(...right.map(lx)) - 12;  // just left of the widest agent chip
+      left.forEach((el, k) => wIn[k].setAttribute("d", gIn([rx(el), cyy(el)], nL, gatherL)));
+      // the adapter label is hidden on narrow screens (mid column too tight) — then the hub itself
+      // doubles as the fork point: no mid line, agents fork straight from the hub's right port.
+      const adpVisible = adp.offsetParent !== null && R(adp).width > 0;
+      if (adpVisible) {
+        const ab = R(adp), aL = [ab.left - s.left, ab.top + ab.height / 2 - s.top], aR = [ab.right - s.left, ab.top + ab.height / 2 - s.top];
+        wMid.setAttribute("d", curve(nR, aL));
+        right.forEach((el, k) => wOut[k].setAttribute("d", gOut(aR, [lx(el), cyy(el)], gatherR)));
+      } else {
+        wMid.setAttribute("d", "");
+        right.forEach((el, k) => wOut[k].setAttribute("d", gOut(nR, [lx(el), cyy(el)], gatherR)));
+      }
+    };
+    anchor(); boards.push(anchor);
+    cmd.innerHTML = `<span class="c-p">$</span> export_sft <span class="nb">--data-paths</span> <span class="nb">hf/<b>Multimodal-Mind2Web</b></span> <span class="nb">--model-id</span> <b>Qwen3-VL-8B-Instruct</b>`;
+    let timers = [];
+    const clr = () => { timers.forEach(clearTimeout); timers = []; };
+    const draw = (p, dur) => { const len = p.getTotalLength(); p.style.transition = `stroke-dashoffset ${dur}ms var(--ease)`; p.style.strokeDashoffset = 0; };
+    const hide = (p) => { const len = p.getTotalLength(); p.style.transition = "none"; p.style.strokeDasharray = len; p.style.strokeDashoffset = len; p.style.opacity = "1"; };
+    function run() {
+      clr(); all.forEach(hide); left.concat(right).forEach((c) => c.classList.remove("on")); adp.classList.remove("on"); void svg.getBoundingClientRect();
+      wIn.forEach((p) => draw(p, 850)); left.forEach((c) => timers.push(setTimeout(() => c.classList.add("on"), 160)));   // 5 datasets converge to the hub
+      timers.push(setTimeout(() => { draw(wMid, 430); adp.classList.add("on"); }, 900));                                   // one line through the adapter
+      timers.push(setTimeout(() => { wOut.forEach((p) => draw(p, 850)); right.forEach((c) => c.classList.add("on")); }, 1350));  // fork out to every agent
+    }
+    const CYCLE = 5200;
+    function loop() { clr(); svg.style.transition = "opacity .35s ease"; svg.style.opacity = "0"; left.concat(right).forEach((c) => c.classList.remove("on")); adp.classList.remove("on"); timers.push(setTimeout(() => { svg.style.opacity = "1"; run(); }, 360)); }
+    if (reduce) { fig.classList.add("unfolded", "wired"); anchor(); all.forEach((p) => { p.style.strokeDashoffset = 0; }); left.concat(right).forEach((c) => c.classList.add("on")); }
+    else { watch(fig); onSeen(fig, () => {
+      setTimeout(() => fig.classList.add("unfolded"), 1300);
+      setTimeout(() => { fig.classList.add("wired"); anchor(); run(); setInterval(() => { if (live(fig)) loop(); }, CYCLE); }, 2450);
+    }); }
+  })();
   // the before-board: no shared interface, so every dataset/benchmark must be wired to every
   // agent by hand — the full N×M tangle. The hub boards below route the same wires cleanly (N+M).
   const messFig = document.querySelector('[data-board="mess"]');
