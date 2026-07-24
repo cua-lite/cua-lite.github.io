@@ -147,6 +147,27 @@
 .par-tip b { color: #fff; font-weight: 600; }
 .par-tip i { color: var(--accent-dim); font-style: normal; }
 .par-cap { text-align: center; font-family: var(--mono); font-size: 11.5px; letter-spacing: .2px; color: var(--muted); margin-top: 12px; }
+/* ---- training-env belt · a conveyor of looping rollout clips, one env family at a time ---- */
+.belt-fig { margin: 22px 0 8px; }
+.belt-tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 16px; }
+.belt-tab { font-family: var(--mono); font-size: 12px; letter-spacing: .2px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; color: var(--muted); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
+.belt-tab:hover { border-color: var(--accent-dim); color: var(--text); }
+.belt-tab.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.belt { position: relative; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+.belt-track { display: flex; width: max-content; animation: beltscroll 44s linear infinite; }
+.belt:hover .belt-track { animation-play-state: paused; }
+@keyframes beltscroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.belt-tile { position: relative; flex: 0 0 auto; width: 172px; aspect-ratio: 16 / 10; margin-right: 14px; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--panel-edge); background: linear-gradient(158deg, #efe1cd, #e6d5bd); }
+.belt-tile::before { content: ""; position: absolute; inset: 20px 26px 18px; border: 1.5px solid rgba(255,255,255,.5); border-radius: 4px; }   /* a faint app window — a paused-looking frame */
+.belt-tile::after { content: ""; position: absolute; left: 26px; top: 27px; width: var(--w, 44%); height: 4px; border-radius: 2px; background: var(--accent); opacity: .5; }
+.belt-tag { position: absolute; bottom: 8px; left: 9px; z-index: 2; font-family: var(--mono); font-size: 10px; letter-spacing: .2px; padding: 2px 8px; border-radius: 999px; background: rgba(255,252,246,.85); color: var(--accent); }
+.belt-live { position: absolute; top: 9px; right: 10px; z-index: 2; display: flex; align-items: flex-end; gap: 2px; height: 11px; }   /* auto-playing indicator */
+.belt-live i { width: 2.5px; height: 4px; border-radius: 1px; background: var(--accent); animation: belteq .9s ease-in-out infinite; }
+.belt-live i:nth-child(2) { animation-delay: .18s; }
+.belt-live i:nth-child(3) { animation-delay: .36s; }
+@keyframes belteq { 0%, 100% { height: 3px; } 50% { height: 11px; } }
+.belt-cap { text-align: center; font-family: var(--mono); font-size: 11.5px; letter-spacing: .2px; color: var(--muted); margin-top: 14px; }
+@media (prefers-reduced-motion: reduce) { .belt-track { animation: none; } .belt-live i { animation: none; height: 7px; } }
 .blog-foot { max-width: 680px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); }
 .blog-foot a { color: var(--dim); }
 .blog-foot a:hover { color: var(--text); }
@@ -274,6 +295,17 @@
   spacecraft, PyMOL turning proteins), and RL rollouts that train straight against the
   environment. Scale doesn't buy a cheaper OSWorld; it buys more worlds, each open to every
   agent and graded by a verifiable reward.</p>
+
+  <figure class="belt-fig" aria-label="Looping rollout trajectories across CUA-Lite training environments">
+    <div class="belt-tabs" role="tablist">
+      <button class="belt-tab is-on" type="button" role="tab" aria-selected="true">Lite.OSWorld</button>
+      <button class="belt-tab" type="button" role="tab" aria-selected="false">Lite.ScaleCUA</button>
+      <button class="belt-tab" type="button" role="tab" aria-selected="false">Lite.CUAGym</button>
+      <button class="belt-tab" type="button" role="tab" aria-selected="false">Lite.CUAWorld</button>
+    </div>
+    <div class="belt"><div class="belt-track" aria-hidden="true"></div></div>
+    <figcaption class="belt-cap">Rollout trajectories, looping across every world. <span class="cmp-pending">Clips land with the benchmark writeup.</span></figcaption>
+  </figure>
 
   <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/lite/osworld/README.md" target="_blank" rel="noopener">Lite.OSWorld ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">Env guide ↗</a> &nbsp;·&nbsp; <a href="/#leaderboard">Leaderboard ↗</a></p>
 
@@ -426,6 +458,29 @@
     });
     dot.addEventListener("mouseleave", () => { tip.hidden = true; });
   });
+})();
+</script>
+<script>
+/* training-env belt · a conveyor of looping rollout clips; pills switch the env family.
+   Placeholder frames for now — swap each tile for a muted autoplay <video> when clips land. */
+(function () {
+  "use strict";
+  const fig = document.querySelector(".belt-fig");
+  if (!fig) return;
+  const track = fig.querySelector(".belt-track"), tabs = [...fig.querySelectorAll(".belt-tab")];
+  const WS = [42, 55, 34, 60, 48, 38];   // vary the "content line" so the frames aren't identical
+  const tile = (env, i) => {
+    const d = document.createElement("div"); d.className = "belt-tile"; d.style.setProperty("--w", WS[i % WS.length] + "%");
+    d.innerHTML = '<span class="belt-live"><i></i><i></i><i></i></span><span class="belt-tag"></span>';
+    d.querySelector(".belt-tag").textContent = env;
+    return d;
+  };
+  const fill = (env) => { track.innerHTML = ""; for (let k = 0; k < 2; k++) for (let i = 0; i < WS.length; i++) track.appendChild(tile(env, i)); };   // ×2 = seamless loop
+  fill("Lite.OSWorld");
+  tabs.forEach((t) => t.addEventListener("click", () => {
+    tabs.forEach((o) => { const on = o === t; o.classList.toggle("is-on", on); o.setAttribute("aria-selected", on); });
+    fig.querySelectorAll(".belt-tag").forEach((g) => { g.textContent = t.textContent; });   // relabel in place — no scroll jump
+  }));
 })();
 </script>
 <script src="/js/lspop.js"></script>
