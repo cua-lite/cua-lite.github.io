@@ -317,6 +317,27 @@
    hand. Dashed + colourless = makeshift, never resolved — the hub boards below tidy the same wires. */
 .mess .mw { fill: none; stroke: #9c8b74; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 6 6; opacity: .7; }
 .mess .mw-bundle { fill: none; stroke-linecap: round; }   /* one bundle per left node: draws accent, then settles into the grey tangle (states set inline) */
+/* the concrete proof fused under the tangle: one action, each agent's own syntax — nothing
+   lines up (even the coordinates: [0,1000] here, screen pixels there). Interactive: double-click
+   vs scroll. Stays grey like the rest of the before-figure; the resolution is the boards below. */
+.dial { margin-top: 17px; padding-top: 15px; border-top: 1px solid var(--line); }
+.dial-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; margin-bottom: 13px; }
+.dial-q { font-family: var(--mono); font-size: 11px; letter-spacing: .3px; color: var(--dim); }
+.dial-toggle { display: inline-flex; gap: 3px; border: 1px solid var(--line-2); border-radius: 999px; padding: 2px; }
+.dial-opt { font-family: var(--mono); font-size: 10.5px; color: var(--dim); background: none; border: 0; cursor: pointer;
+  padding: 3px 12px; border-radius: 999px; transition: color .2s ease, background .2s ease; }
+.dial-opt.on { color: var(--text); background: var(--panel-2); box-shadow: inset 0 1px 0 rgba(255,255,255,.55); }
+.dial-opt:hover { color: var(--text); }
+.dial-rows { display: flex; flex-direction: column; gap: 9px; }
+.dial-row { display: grid; grid-template-columns: 84px minmax(0, 1fr); align-items: baseline; gap: 13px; }
+.dial-who { font-family: var(--mono); font-size: 10.5px; color: var(--muted); text-align: right; }
+.dial-row code { font-family: var(--mono); font-size: 11.5px; color: var(--muted); background: none; border: 0; padding: 0; overflow-wrap: anywhere; line-height: 1.5; }
+.dial-foot { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line-2); font-family: var(--mono); font-size: 10.5px; color: var(--dim); text-align: center; }
+.dial-foot b { color: var(--accent); font-weight: 400; }
+@media (max-width: 480px) {
+  .dial-row { grid-template-columns: 1fr; gap: 1px; }
+  .dial-who { text-align: left; color: var(--dim); }
+}
 /* both columns carry 4 real boxes + a "yours next" ghost, top-aligned, so rows line up */
 .pair-cmd { margin-top: 16px; padding-top: 13px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 12px; color: var(--muted); word-break: break-word; line-height: 1.6; }
 .pair-cmd .c-p { color: var(--dim); }
@@ -418,9 +439,25 @@
         <a data-logo="openai" data-cat="model" class="pair-chip" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
         <a data-logo="claude" data-cat="model" class="pair-chip" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
         <a data-logo="qwen" data-cat="model" class="pair-chip" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
-        <a data-logo="gemini" data-cat="model" class="pair-chip" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
+        <a data-logo="ui-tars" data-cat="model" class="pair-chip" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="mw"/></svg>
+    </div>
+    <div class="dial" data-dial>
+      <div class="dial-head">
+        <span class="dial-q">the same action — four agents, four action spaces</span>
+        <span class="dial-toggle" role="tablist" aria-label="which action">
+          <button class="dial-opt on" type="button" data-act="click">double-click</button>
+          <button class="dial-opt" type="button" data-act="scroll">scroll down</button>
+        </span>
+      </div>
+      <div class="dial-rows">
+        <div class="dial-row"><span class="dial-who">GPT</span><code data-click="double_click(x=1175, y=419)" data-scroll="scroll(x=1175, y=419, scroll_x=0, scroll_y=300)">double_click(x=1175, y=419)</code></div>
+        <div class="dial-row"><span class="dial-who">Claude</span><code data-click='{"action": "double_click", "coordinate": [1175, 419]}' data-scroll='{"action": "scroll", "coordinate": [1175, 419], "scroll_direction": "down", "scroll_amount": 3}'>{"action": "double_click", "coordinate": [1175, 419]}</code></div>
+        <div class="dial-row"><span class="dial-who">Qwen3-VL</span><code data-click="computer_use(action=&quot;double_click&quot;, coordinate=[612,388])" data-scroll="computer_use(action=&quot;scroll&quot;, coordinate=[612,388], pixels=-300)">computer_use(action="double_click", coordinate=[612,388])</code></div>
+        <div class="dial-row"><span class="dial-who">UI-TARS</span><code data-click="left_double(start_box='(612,388)')" data-scroll="scroll(start_box='(612,388)', direction='down')">left_double(start_box='(612,388)')</code></div>
+      </div>
+      <div class="dial-foot"><b>CUA-Lite</b> speaks all of them — one action space, one adapter per agent</div>
     </div>
   </figure>
 
@@ -868,6 +905,19 @@
     else { watch(messFig); onSeen(messFig, () => { play(); setInterval(() => { if (live(messFig)) play(); }, CYCLE); }); }
     boards.push(anchor);   // re-anchor with the other boards on resize / font load
   })();
+
+  // the dialect readout under the tangle — click-to-toggle which action is shown (no autoplay:
+  // the tangle carries the motion, this stays put until the reader picks click vs scroll)
+  const dial = document.querySelector("[data-dial]");
+  if (dial) {
+    const codes = [...dial.querySelectorAll(".dial-row code")];
+    const opts = [...dial.querySelectorAll(".dial-opt")];
+    const setAct = (act) => {
+      opts.forEach((o) => o.classList.toggle("on", o.dataset.act === act));
+      codes.forEach((c) => { const v = c.dataset[act]; if (v != null) c.textContent = v; });
+    };
+    opts.forEach((o) => o.addEventListener("click", () => setAct(o.dataset.act)));
+  }
 
   const pairFig = document.querySelector('[data-board="pair"]');
   if (pairFig) boards.push(runBoard(pairFig.closest(".flow-demo"), (e, a) =>   // environments sit on the left
