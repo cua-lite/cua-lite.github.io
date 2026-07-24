@@ -114,6 +114,23 @@
   .cmp-tbl thead th, .cmp-tbl tbody td { font-size: 12px; }
   .cmp-tbl tbody th[scope="row"] { white-space: normal; }
 }
+/* ---- Still OSWorld? · the same rollout, two environments, side by side ---- */
+.hh { margin: 24px 0 30px; }
+.hh-tabs { display: flex; gap: 6px; justify-content: center; margin-bottom: 14px; }
+.hh-tab { font-family: var(--mono); font-size: 12px; letter-spacing: .2px; padding: 6px 15px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; color: var(--muted); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
+.hh-tab:hover { border-color: var(--accent-dim); color: var(--text); }
+.hh-tab.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.hh-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.hh-panel { position: relative; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; border: 1.5px solid var(--panel-edge); background: linear-gradient(158deg, #efe1cd, #e6d5bd); display: flex; align-items: center; justify-content: center; }
+.hh-panel::before { content: ""; position: absolute; inset: 26px 30px 24px; border: 1.5px solid rgba(255,255,255,.55); border-radius: 5px; }   /* a faint app window on the desktop — a paused rollout */
+.hh-panel.hh-lite { border-color: var(--accent-dim); box-shadow: inset 0 0 0 1px rgba(189,90,56,.14); }
+.hh-tag { position: absolute; top: 10px; left: 10px; z-index: 2; font-family: var(--mono); font-size: 11px; letter-spacing: .2px; padding: 3px 10px; border-radius: 999px; background: rgba(255,252,246,.82); color: var(--muted); }
+.hh-panel.hh-lite .hh-tag { color: var(--accent); }
+.hh-play { position: relative; z-index: 2; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,252,246,.72); box-shadow: 0 3px 12px -3px rgba(40,30,15,.32); transition: transform .15s ease, background .15s ease; }
+.hh-play::after { content: ""; position: absolute; top: 50%; left: 54%; transform: translate(-50%,-50%); border-style: solid; border-width: 8px 0 8px 13px; border-color: transparent transparent transparent var(--accent); }
+.hh-panel:hover .hh-play { transform: scale(1.06); background: rgba(255,252,246,.92); cursor: pointer; }
+.hh-cap { text-align: center; font-family: var(--mono); font-size: 12px; letter-spacing: .2px; color: var(--muted); margin-top: 13px; }
+@media (max-width: 560px) { .hh-pair { grid-template-columns: 1fr; gap: 12px; } }
 .blog-foot { max-width: 680px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); }
 .blog-foot a { color: var(--dim); }
 .blog-foot a:hover { color: var(--text); }
@@ -137,7 +154,8 @@
 </header>
 
 <main class="post-wrap">
-  <!-- NORTH STAR · the closing "Bring a world" call must land all three at a glance, payoff-first;
+  <!-- NORTH STAR · the dedicated "Bring a world" banner was cut as low-value; the post should still
+       land all three below (now via "More worlds" + the close), payoff-first;
        cut anything a scanner can't use (mechanism, scope lists, hedging):
          (1) OUR CONTRIBUTION — what the KVM-free base already gives that makes joining pay off
              (your world runs at scale the day you add it — anywhere Docker runs, against every agent, present AND future);
@@ -152,20 +170,18 @@
   <h1>KVM-free OS(World), <em>at scale.</em></h1>
 
   <p><b>To eval or train a computer-use agent, you need real desktops — a lot of them.</b>
-  OSWorld gives you a faithful one: LibreOffice, Chrome, VS Code, a real desktop with real
-  files and real windows. But it ships as a virtual machine — a QEMU/KVM guest booting an
-  Ubuntu disk — so every task boots its own VM and asks the host for hardware virtualization.
-  That fidelity is exactly what keeps it from scaling.</p>
+  OSWorld gives you a faithful one: LibreOffice, Chrome, VS Code, real files and windows.
+  But it ships as a virtual machine — and that's what keeps it from scaling.</p>
 
   <h2>The VM tax</h2>
   <p><b>A faithful desktop, one heavy machine at a time.</b> OSWorld runs a full VM per task —
-  it needs <code>/dev/kvm</code> and nested virtualization the host has to grant. Fine on a
-  laptop; a wall at scale, where cloud instances, CI runners, and nested containers rarely hand
-  you KVM, and one VM per trajectory doesn't pack.</p>
+  it needs <code>/dev/kvm</code> and nested virtualization. Fine on a laptop; a wall at scale,
+  where cloud instances, CI runners, and nested containers rarely hand you KVM, and one VM per
+  trajectory doesn't pack.</p>
 
-  <p><b>Lite.OSWorld keeps the desktop and drops the machine.</b> The same tasks and the same
-  evaluators run on a real GNOME desktop in a plain Docker container — no hypervisor, no
-  <code>/dev/kvm</code> — so it boots anywhere Docker runs, pools warm across tasks, and parallelizes.</p>
+  <p><b>Lite.OSWorld keeps the desktop and drops the machine.</b> The same tasks and evaluators
+  run on a real GNOME desktop in a plain Docker container — no hypervisor, no <code>/dev/kvm</code>
+  — so it boots anywhere Docker runs, packing many to a host.</p>
 
   <figure class="flow-demo v2c" aria-label="OSWorld's KVM virtual machine sheds its heavy VM and /dev/kvm dependency to become the Lite.OSWorld container, which then packs into many">
     <div class="v2c-stage">
@@ -204,23 +220,31 @@
     <figcaption class="cmp-cap">Same tasks and evaluators, a smaller footprint per desktop. <span class="cmp-pending">Figures land with the benchmark writeup.</span></figcaption>
   </figure>
 
-  <h2>Still OSWorld?</h2>
-  <p><b>A cheap copy is only worth it if it doesn't change the answer.</b> It doesn't. Give the
-  same model the same task on both, and it takes the same plan of actions — click for click —
-  and lands on the same result. Same evaluators, same reward: a score or a training signal
-  earned on the container carries straight back to the real benchmark.</p>
+  <h2>Still OSWorld? Yes!</h2>
+  <p><b>A cheap copy is only worth it if it doesn't change the answer.</b> It doesn't: the same
+  model runs the same task the same way on both, and lands on the same result. Same evaluators,
+  same reward — a score or training signal earned on the container carries straight back to the
+  real benchmark.</p>
 
-  <h2>More worlds, not a cheaper one</h2>
+  <figure class="hh" aria-label="The same agent rollout in OSWorld and Lite.OSWorld, side by side">
+    <div class="hh-tabs" role="tablist">
+      <button class="hh-tab is-on" type="button" role="tab" aria-selected="true">LibreOffice</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false">Chrome</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false">VS&nbsp;Code</button>
+    </div>
+    <div class="hh-pair">
+      <div class="hh-panel"><span class="hh-tag">OSWorld</span><span class="hh-play" aria-hidden="true"></span></div>
+      <div class="hh-panel hh-lite"><span class="hh-tag">Lite.OSWorld</span><span class="hh-play" aria-hidden="true"></span></div>
+    </div>
+    <figcaption class="hh-cap">Same model, same task — click for click. <span class="cmp-pending">Rollout clips land with the benchmark writeup.</span></figcaption>
+  </figure>
+
+  <h2>Beyond OSWorld: Scalable Training Sandboxes</h2>
   <p><b>The KVM-free container isn't an OSWorld trick — it's a base.</b> The same base already
-  runs more worlds on the same terms: web-and-desktop app tasks, real science desktops — GMAT
-  flying spacecraft, PyMOL turning proteins — and RL rollouts that train straight against the
-  environment. What running at scale buys isn't a cheaper OSWorld; it's more worlds, each open
-  to every agent and each graded by a verifiable reward.</p>
-
-  <p class="post-call"><b class="call">Bring a world.</b> Because it's KVM-free, your desktop
-  environment runs at scale the day you add it — anywhere Docker runs, against every agent,
-  now and later. It won't rot: it ships eval and training splits with verifiable rewards, and
-  there's no VM to babysit. Add one world, and the whole community can eval and train on it.</p>
+  runs more worlds on the same terms — web-and-desktop tasks, real science desktops (GMAT flying
+  spacecraft, PyMOL turning proteins), and RL rollouts that train straight against the
+  environment. Scale doesn't buy a cheaper OSWorld; it buys more worlds, each open to every
+  agent and graded by a verifiable reward.</p>
 
   <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/lite/osworld/README.md" target="_blank" rel="noopener">Lite.OSWorld ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">Env guide ↗</a> &nbsp;·&nbsp; <a href="/#leaderboard">Leaderboard ↗</a></p>
 
@@ -309,6 +333,20 @@
     }), { rootMargin: "0px 0px -15% 0px" });
     io.observe(fig);
   } else { timeline(); setInterval(loopReset, CYCLE); }
+})();
+</script>
+<script>
+/* Still OSWorld? · task switcher — one row of tabs drives both panels in lockstep.
+   Placeholder for now (no clips yet); when real clips land, swap panel sources here. */
+(function () {
+  "use strict";
+  const hh = document.querySelector(".hh");
+  if (!hh) return;
+  const tabs = [...hh.querySelectorAll(".hh-tab")];
+  tabs.forEach((t) => t.addEventListener("click", () => {
+    tabs.forEach((o) => { const on = o === t; o.classList.toggle("is-on", on); o.setAttribute("aria-selected", on); });
+    // future: point both .hh-panel clips at the selected task's OSWorld / Lite.OSWorld sources
+  }));
 })();
 </script>
 <script src="/js/lspop.js"></script>
