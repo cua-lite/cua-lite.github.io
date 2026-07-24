@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "env": "browsergym.webarena",
+  "commit_dir": "2026-07-19T01-32_07f599ab7a",
+  "run_id": "run_0",
+  "commit": {
+    "short_sha": "07f599ab7a",
+    "subject": "add vwa eval scripts"
+  },
+  "artifact_root": ".exps/eval/browsergym.webarena/2026-07-19T01-32_07f599ab7a/run_0",
+  "result_count": 4,
+  "status_counts": {
+    "complete": 4,
+    "partial": 0,
+    "empty": 0
+  },
+  "results": [
+    {
+      "model": "gpt-5.5",
+      "slug": "gpt-5.5",
+      "base_slug": "gpt-5.5",
+      "config_id": "default",
+      "status": "complete",
+      "num_valid": 812,
+      "num_tasks": 812,
+      "num_samples": 812,
+      "mean_episode_return": 0.5073891625615764,
+      "summary_path": ".exps/eval/browsergym.webarena/2026-07-19T01-32_07f599ab7a/run_0/gpt-5.5/summary.json",
+      "artifact_path": ".exps/eval/browsergym.webarena/2026-07-19T01-32_07f599ab7a/run_0/gpt-5.5"
+    },
+    {
+      "model": "Qwen/Qwen3.5-27B",
+      "slug": "Qwen_Qwen3.5-27B",
+      "base_slug": "Qwen_Qwen3.5-27B",
+      "config_id": "default",
+      "status": "complete",
+      "num_valid": 812,
+      "num_tasks": 812,
+      "num_samples": 812,
+      "mean_episode_return": 0.19950738916256158,
+      "summary_path": ".exps/eval/browsergym.webarena/2026-07-19T01-32_07f599ab7a/run_0/Qwen_Qwen3.5-27B/summary.json",
+      "artifact_path": ".exps/eval/browsergym.webarena/2026-07-19T01-32_07f599ab7a/run_0/Qwen_Qwen3.5-27B"
+    },
+    {
+      "model": "Qwen/Qwen3.5-9B",
+      "slug": "Qwen_Qwen3.5-9B",
+      "base_slug": "Qwen_Qwen3.5-9B",
+      "config_id": "default",
+      "status": "complete",
+      "num_valid": 812,
+      "num_tasks": 812,
+      "num_samples": 812,
+      "mean_episode_return": 0.18472906403940886,
+      "summary_path": ".exps/eval/browsergym.webarena/2026-07-19T01-32_07f599ab7a/run_0/Qwen_Qwen3.5-9B/summary.json",
+      "artifact_path": ".exps/eval/browsergym.webarena/2026-07-19T01-32_07f599ab7a/run_0/Qwen_Qwen3.5-9B"
+    },
+    {
+      "model": "Qwen/Qwen3-VL-32B-Instruct",
+      "slug": "Qwen_Qwen3-VL-32B-Instruct",
+      "base_slug": "Qwen_Qwen3-VL-32B-Instruct",
+      "config_id": "default",
+      "status": "complete",
+      "num_valid": 812,
+      "num_tasks": 812,
+      "num_samples": 812,
+      "mean_episode_return": 0.15024630541871922,
+      "summary_path": ".exps/eval/browsergym.webarena/2026-07-19T01-32_07f599ab7a/run_0/Qwen_Qwen3-VL-32B-Instruct/summary.json",
+      "artifact_path": ".exps/eval/browsergym.webarena/2026-07-19T01-32_07f599ab7a/run_0/Qwen_Qwen3-VL-32B-Instruct"
+    }
+  ]
+}
