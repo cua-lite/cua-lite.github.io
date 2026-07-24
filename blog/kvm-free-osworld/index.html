@@ -174,6 +174,17 @@
 @keyframes belteq { 0%, 100% { height: 3px; } 50% { height: 11px; } }
 .belt-cap { text-align: center; font-family: var(--mono); font-size: 11.5px; letter-spacing: .2px; color: var(--muted); margin-top: 14px; }
 @media (prefers-reduced-motion: reduce) { .belt-track { animation: none; } .belt-live i { animation: none; height: 7px; } }
+/* ---- table of contents — the blog index's postlist idiom, numbered (the sections are a sequence) ---- */
+.toc { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 12px; padding: 6px; margin: 2px 0 34px; }
+.toc a { display: flex; align-items: baseline; gap: 14px; padding: 10px 15px; border-radius: 8px; font-family: var(--mono); font-size: 13.5px; color: var(--text); transition: background .14s ease, color .14s ease; }
+.toc a:hover { background: var(--panel-2); color: var(--accent); }
+.toc a + a { border-top: 1px solid var(--line); border-top-left-radius: 0; border-top-right-radius: 0; }
+.toc-n { flex: 0 0 auto; min-width: 18px; color: var(--accent-dim); font-size: 11px; letter-spacing: 1px; }
+.toc a:hover .toc-n { color: var(--accent); }
+/* ---- the payoff section wears the blog index's "featured" highlight: accent wash + inset bar ---- */
+.hl-sec { margin: 40px 0 0; padding: 2px 26px 18px; background: rgba(189,90,56,.06); border-radius: 14px; box-shadow: inset 3px 0 0 var(--accent); }
+.hl-sec > h2 { margin-top: 22px; }
+@media (max-width: 480px) { .hl-sec { padding: 2px 16px 14px; } }
 .blog-foot { max-width: 680px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); }
 .blog-foot a { color: var(--dim); }
 .blog-foot a:hover { color: var(--text); }
@@ -222,7 +233,13 @@
   OSWorld gives you a faithful one: LibreOffice, Chrome, VS Code, real files and windows.
   But it ships as a virtual machine — and that's what keeps it from scaling.</p>
 
-  <h2>The VM tax</h2>
+  <nav class="toc" aria-label="Contents">
+    <a href="#vm-tax"><span class="toc-n">01</span>OSWorld's VM tax</a>
+    <a href="#still-osworld"><span class="toc-n">02</span>Is Lite.OSWorld still OSWorld?</a>
+    <a href="#beyond"><span class="toc-n">03</span>Beyond OSWorld: Scalable Training Sandboxes</a>
+  </nav>
+
+  <h2 id="vm-tax">OSWorld's VM tax</h2>
   <p><b>OSWorld's faithful desktop is a full VM per task.</b> It needs <code>/dev/kvm</code> and
   nested virtualization — fine on a laptop, a wall at scale, where cloud instances, CI runners,
   and nested containers rarely hand you KVM, and one VM per trajectory doesn't pack.</p>
@@ -268,7 +285,7 @@
     <figcaption class="cmp-cap">Same tasks and evaluators, a smaller footprint per desktop. <span class="cmp-pending">Figures land with the benchmark writeup.</span></figcaption>
   </figure>
 
-  <h2>Still OSWorld? Yes!</h2>
+  <h2 id="still-osworld">Is Lite.OSWorld still OSWorld? Yes</h2>
   <p><b>A cheap copy is only worth it if it doesn't change the answer.</b> It doesn't: the same
   model runs the same task the same way on both, and lands on the same result. Same evaluators,
   same reward — a score or training signal earned on the container carries straight back to the
@@ -299,6 +316,7 @@
     <figcaption class="par-cap">Success rate (%) · OSWorld vs Lite.OSWorld · hover a point for the model</figcaption>
   </figure>
 
+  <section class="hl-sec" id="beyond">
   <h2>Beyond OSWorld: Scalable Training Sandboxes</h2>
   <p><b>The KVM-free container isn't an OSWorld trick — it's a base.</b> The same base already
   runs more worlds on the same terms — web-and-desktop tasks, real science desktops (GMAT flying
@@ -316,6 +334,7 @@
     <div class="belt"><div class="belt-track" aria-hidden="true"></div></div>
     <figcaption class="belt-cap">Looping rollout trajectories — <span class="cmp-pending">clips land with the benchmark writeup.</span></figcaption>
   </figure>
+  </section>
 
   <p class="post-close"><b>Any agent, any computer — without the machine.</b> Try it, or bring
   your own world —
