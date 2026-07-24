@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KVM-free OS(World) at Scale</title>
+<meta name="description" content="OSWorld is a faithful desktop — but a full KVM virtual machine per task, so it doesn't scale. Lite.OSWorld keeps the desktop, drops the VM: the same tasks and evaluators in a plain Docker container, so a desktop benchmark runs anywhere Docker does." />
+<link rel="preload" href="/assets/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/fonts/Fraunces-Italic.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/fonts/Urbanist.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/fonts/GeistMono.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=3" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=3" />
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=4" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="KVM-free OS(World) at Scale" />
+<meta property="og:description" content="Keep OSWorld's desktop, drop the VM: the same tasks and evaluators in a plain Docker container — a desktop benchmark that runs anywhere Docker does, at scale." />
+<meta property="og:url" content="https://cua-lite.github.io/blog/kvm-free-osworld/" />
+<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=4" />
+<link rel="stylesheet" href="/css/style.css" />
+<style>
+/* article layout — the quiet template, shared with /blog/why-cua-lite/ */
+.post-wrap { max-width: 680px; margin: 0 auto; padding: 76px 28px 72px; }
+.post-wrap p.post-meta { font-family: var(--mono); font-size: var(--fs-xs); letter-spacing: 2.5px; text-transform: uppercase; color: var(--dim); margin: 0 0 18px; }
+.post-wrap p { color: var(--muted); font-size: var(--fs-xl); line-height: 1.7; margin: 0 0 22px; }
+.post-wrap p b { color: var(--text); font-weight: 650; }
+.post-wrap p a { color: var(--accent); }
+.post-wrap p a:hover { text-decoration: underline; }
+.post-wrap code { font-family: var(--mono); font-size: var(--fs-md); background: var(--panel-2); border: 1px solid var(--line); padding: 1px 6px; color: var(--text); }
+.post-wrap b.call { color: var(--accent); }
+.post-call { border-left: 3px solid var(--accent); background: rgba(189,90,56,.05); padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 0 0 22px; }
+.post-wrap p.post-links { font-family: var(--mono); font-size: var(--fs-sm); margin: 0 0 22px; }
+.post-links a { color: var(--accent); white-space: nowrap; }
+.post-close { border-top: 1px solid var(--line); margin-top: 40px; padding-top: 24px; }
+/* ---- figures share the flow-demo shell; real animated figures land after the narrative is signed off ---- */
+.flow-demo { margin: 6px 0 20px; background: radial-gradient(135% 105% at 50% -12%, #fffdf7, var(--panel-fill) 72%); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 20px 20px 16px;
+  box-shadow: inset 0 1px 0 var(--panel-hi), 0 1px 2px rgba(40,30,15,.04), 0 16px 34px -24px rgba(40,30,15,.30); }
+.fig-todo { min-height: 150px; display: flex; align-items: center; justify-content: center; text-align: center;
+  font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); line-height: 1.7; letter-spacing: .3px;
+  border: 1px dashed var(--line-2); border-radius: 10px; padding: 24px; }
+.fig-todo b { color: var(--accent); font-weight: 600; }
+/* ---- the one figure · three beats: OSWorld (a desktop on a heavy VM stack) → shed the machine →
+   Lite.OSWorld (container, driven agent⇄desktop, same evaluator) → packs at scale ---- */
+.v2c-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 268px; padding: 8px 0; transition: opacity .3s ease; }
+.v2c.notrans .v2c-lyr, .v2c.notrans .v2c-kvm, .v2c.notrans .v2c-ctr, .v2c.notrans .v2c-clones span, .v2c.notrans .v2c-label, .v2c.notrans .v2c-unit { transition: none !important; }
+.v2c-unit { position: relative; display: flex; flex-direction: column; align-items: center; z-index: 2; transition: transform .5s var(--ease); }
+.v2c-label { font-family: var(--mono); font-size: 12px; letter-spacing: .5px; color: var(--muted); margin-bottom: 15px; transition: color .4s ease; }
+.v2c.s2 .v2c-label, .v2c.s3 .v2c-label { color: var(--accent); }
+/* the desktop — the constant through all three beats */
+.v2c-screen-wrap { position: relative; z-index: 3; }
+.v2c-screen { width: 138px; height: 86px; border-radius: 7px 7px 2px 2px; overflow: hidden; position: relative;
+  background: linear-gradient(180deg, #fff, #fdf7ec); border: 1.5px solid var(--accent-dim); box-shadow: 0 2px 6px -2px rgba(40,30,15,.16); }
+.v2c-screen .scr-bar { height: 15px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); display: flex; align-items: center; gap: 4px; padding: 0 6px; }
+.v2c-screen .scr-bar i { width: 5px; height: 5px; border-radius: 50%; background: var(--accent-dim); opacity: .55; }
+.v2c-screen .scr-body { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; }
+.v2c-screen .scr-body b { height: 6px; border-radius: 2px; background: #e4dac6; }
+.v2c-screen .scr-body b.a { background: var(--accent); opacity: .85; width: 56%; }
+/* beat 1 · the heavy VM stack the desktop rides on */
+.v2c-stack { display: flex; flex-direction: column; align-items: center; }
+.v2c-lyr { display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 9.5px; letter-spacing: .4px; transition: transform .55s var(--ease), opacity .45s ease; }
+.v2c-lyr.qcow { width: 152px; height: 22px; margin-top: -1px; background: var(--panel-2); border: 1px solid var(--line-2); color: var(--muted); }
+.v2c-lyr.vm { width: 162px; height: 28px; margin-top: -1px; border-radius: 0 0 8px 8px; color: #d9c9b3;
+  background: repeating-linear-gradient(135deg, #3b352c 0 5px, #322d25 5px 10px); box-shadow: 0 9px 18px -7px rgba(40,30,15,.5); }
+.v2c-kvm { margin-top: 9px; position: relative; font-family: var(--mono); font-size: 9.5px; color: var(--muted); background: var(--panel-2); border: 1px solid var(--line-2);
+  border-radius: 5px; padding: 3px 9px; transition: transform .55s var(--ease), opacity .45s ease; }
+.v2c-kvm::before { content: ""; position: absolute; left: 50%; top: -9px; width: 2px; height: 9px; background: var(--line-2); transform: translateX(-50%); }
+/* beat 2 · the light container frame that wraps the desktop after the shed */
+.v2c-ctr { position: absolute; inset: -10px; border: 1.5px dashed var(--accent-dim); border-radius: 12px; opacity: 0; transform: scale(.92);
+  transition: opacity .45s ease, transform .5s var(--ease); pointer-events: none; }
+.v2c-ctr::before { content: "container"; position: absolute; left: 9px; top: -8px; background: var(--panel-fill); padding: 0 5px;
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); }
+/* beat 3 · pack into many */
+.v2c-clones { position: absolute; top: 50%; left: calc(50% + 80px); transform: translateY(-50%); display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px; transition: transform .5s var(--ease); }
+.v2c-clones span { position: relative; overflow: hidden; width: 37px; height: 46px; border-radius: 5px; background: linear-gradient(180deg, #fff, #fdf7ec); border: 1.5px solid var(--accent-dim); box-shadow: 0 2px 4px -2px rgba(40,30,15,.14);
+  opacity: 0; transform: scale(.55); transition: opacity .35s ease, transform .4s var(--ease); }
+.v2c-clones span::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); }
+.v2c-clones span::after { content: ""; position: absolute; top: 15px; left: 6px; width: 17px; height: 2.5px; border-radius: 2px; background: var(--accent); opacity: .7; }
+/* states */
+.v2c.s1 .v2c-lyr.qcow { transform: translateY(30px); opacity: 0; }
+.v2c.s1 .v2c-lyr.vm { transform: translateY(40px) scale(.96); opacity: 0; }
+.v2c.s1 .v2c-kvm { transform: translateY(36px); opacity: 0; }
+.v2c.s2 .v2c-ctr, .v2c.s3 .v2c-ctr { opacity: 1; transform: scale(1); }
+.v2c.s3 .v2c-unit { transform: translateX(-128px); }   /* container slides left so container + the grid of copies centre as a group */
+.v2c.s3 .v2c-clones { transform: translateY(-50%) translateX(-128px); }
+.v2c.s3 .v2c-clones span { opacity: 1; transform: scale(1); }   /* 1 → many (staggered fill set per-cell in JS) */
+@media (prefers-reduced-motion: reduce) {
+  .v2c-lyr, .v2c-kvm, .v2c-ctr, .v2c-clones span { transition: none; }
+}
+.blog-foot { max-width: 680px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); }
+.blog-foot a { color: var(--dim); }
+.blog-foot a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/"><span class="brand-plane"></span><span class="brand-name">CUA-Lite</span></a>
+    <nav class="nav-links">
+      <a href="/#start">Quickstart</a>
+      <a href="/#data">Data</a>
+      <a href="/#benchmarks">Eval</a>
+      <a href="/#train">Train</a>
+      <span class="nav-sep" aria-hidden="true"></span>
+      <a href="/blog/" aria-current="page">Blog</a>
+      <span class="nav-cta"><a class="btn-solid sm" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Datasets</a><a class="btn-ghost sm" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a></span>
+    </nav>
+  </div>
+</header>
+
+<main class="post-wrap">
+  <!-- NORTH STAR · the closing "Bring a world" call must land all three at a glance, payoff-first;
+       cut anything a scanner can't use (mechanism, scope lists, hedging):
+         (1) OUR CONTRIBUTION — what the KVM-free base already gives that makes joining pay off
+             (your world runs at scale the day you add it — anywhere Docker runs, against every agent, present AND future);
+         (2) VALUE TO SELF — your world never rots: eval + training splits + verifiable rewards, and no VM to babysit;
+         (3) VALUE TO THE COMMUNITY — you add a world to the shared pool everyone else evals and trains on.
+       PROSE HYGIENE (all paragraphs): no orphans — if a paragraph ends with a lone word or short unit
+       dangling on its last line, TRIM the copy until it wraps clean. Fix it by cutting words, never with
+       &nbsp; or text-wrap tricks (they only jag the right edge).
+       FACTS: no measured numbers (image sizes, latencies, memory, boot times, parallel counts) — none are
+       grounded, keep it qualitative. The desktop is GNOME-Shell (NOT "Flashback"). -->
+  <p class="post-meta">2026-07-23 · Zhanhui Zhou · Haoran Liu</p>
+  <h1>KVM-free OS(World), <em>at scale.</em></h1>
+
+  <p><b>To eval or train a computer-use agent, you need real desktops — a lot of them.</b>
+  OSWorld gives you a faithful one: LibreOffice, Chrome, VS Code, a real desktop with real
+  files and real windows. But it ships as a virtual machine — a QEMU/KVM guest booting an
+  Ubuntu disk — so every task boots its own VM and asks the host for hardware virtualization.
+  That fidelity is exactly what keeps it from scaling.</p>
+
+  <h2>The VM tax</h2>
+  <p><b>A faithful desktop, one heavy machine at a time.</b> The classic OSWorld environment
+  runs a full VM per task: it needs <code>/dev/kvm</code>, nested virtualization the host has
+  to grant, and a dedicated machine for every trajectory. On a laptop that's fine. To collect
+  or grade thousands of rollouts it's a wall — most cloud instances, CI runners, and
+  containers-in-containers never hand you KVM, and one VM per trajectory doesn't pack.</p>
+
+  <figure class="flow-demo v2c" aria-label="OSWorld's KVM virtual machine sheds its heavy VM and /dev/kvm dependency to become the Lite.OSWorld container, which then packs into many">
+    <div class="v2c-stage">
+      <div class="v2c-unit">
+        <span class="v2c-label">OSWorld</span>
+        <div class="v2c-screen-wrap">
+          <div class="v2c-screen"><span class="scr-bar"><i></i><i></i><i></i></span><span class="scr-body"><b></b><b></b><b class="a"></b></span></div>
+          <span class="v2c-ctr" aria-hidden="true"></span>
+        </div>
+        <div class="v2c-stack">
+          <div class="v2c-lyr qcow">Ubuntu.qcow2</div>
+          <div class="v2c-lyr vm">QEMU · KVM</div>
+        </div>
+        <div class="v2c-kvm">/dev/kvm</div>
+      </div>
+      <div class="v2c-clones" aria-hidden="true"></div>
+    </div>
+  </figure>
+
+  <h2>Drop the machine</h2>
+  <p><b>Lite.OSWorld keeps the desktop and drops the machine.</b> The same apps run on a real
+  GNOME desktop in a plain Docker container — a software display, no GPU, no hypervisor, no
+  <code>/dev/kvm</code> — all on one shared sandbox base. It is the same OSWorld tasks and the
+  same OSWorld evaluators, just on a container instead of a VM. So it boots without nested
+  virtualization, runs anywhere Docker runs, pools warm across tasks, and parallelizes —
+  everything a VM-per-task can't.</p>
+
+  <h2>Still OSWorld?</h2>
+  <p><b>A cheap copy is only worth it if it doesn't change the answer.</b> It doesn't. Give the
+  same model the same task on both, and it takes the same plan of actions — click for click —
+  and lands on the same result. Same evaluators, same reward: a score or a training signal
+  earned on the container carries straight back to the real benchmark.</p>
+
+  <h2>More worlds, not a cheaper one</h2>
+  <p><b>The KVM-free container isn't an OSWorld trick — it's a base.</b> The same base already
+  runs more worlds on the same terms: web-and-desktop app tasks, real science desktops — GMAT
+  flying spacecraft, PyMOL turning proteins — and RL rollouts that train straight against the
+  environment. What running at scale buys isn't a cheaper OSWorld; it's more worlds, each open
+  to every agent and each graded by a verifiable reward.</p>
+
+  <p class="post-call"><b class="call">Bring a world.</b> Because it's KVM-free, your desktop
+  environment runs at scale the day you add it — anywhere Docker runs, against every agent,
+  now and later. It won't rot: it ships eval and training splits with verifiable rewards, and
+  there's no VM to babysit. Add one world, and the whole community can eval and train on it.</p>
+
+  <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/lite/osworld/README.md" target="_blank" rel="noopener">Lite.OSWorld ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">Env guide ↗</a> &nbsp;·&nbsp; <a href="/#leaderboard">Leaderboard ↗</a></p>
+
+  <p class="post-close"><b>Any agent, any computer — without the machine.</b> Try it, or bring
+  your own world —
+  <a href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a> ·
+  <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Hugging Face</a> ·
+  <a href="mailto:zhanhui@berkeley.edu">Email</a>.</p>
+</main>
+
+<footer class="blog-foot">
+  <span>© 2026 CUA-Lite — any data, any agent, any computer.</span>
+  <a href="/blog/">← All posts</a>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+  const fig = document.querySelector(".v2c");
+  if (!fig) return;
+  const label = fig.querySelector(".v2c-label");
+  const stage = fig.querySelector(".v2c-stage");
+  const clones = fig.querySelector(".v2c-clones");   // beat 3 · one container packs into many (grid, diagonal fill)
+  for (let i = 0; i < 12; i++) { const s = document.createElement("span"); s.style.transitionDelay = ((Math.floor(i / 6) + (i % 6)) * 32) + "ms"; clones.appendChild(s); }
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let timers = [];
+  const clear = () => { timers.forEach(clearTimeout); timers = []; };
+  function timeline() {   // beat 1 (OSWorld VM) held → shed → beat 2 (container + agent loop + evaluator) → beat 3 (pack)
+    fig.classList.remove("s1", "s2", "s3");
+    label.textContent = "OSWorld";
+    timers.push(setTimeout(() => fig.classList.add("s1"), 1600));
+    timers.push(setTimeout(() => { fig.classList.add("s2"); label.textContent = "Lite.OSWorld"; }, 2550));
+    timers.push(setTimeout(() => fig.classList.add("s3"), 4450));
+  }
+  function loopReset() {   // fade out, reset instantly (no reverse-animation), fade back in, replay
+    clear();
+    stage.style.opacity = "0";
+    timers.push(setTimeout(() => {
+      fig.classList.add("notrans"); fig.classList.remove("s1", "s2", "s3"); label.textContent = "OSWorld";
+      void fig.offsetWidth; fig.classList.remove("notrans");
+      stage.style.opacity = "1"; timeline();
+    }, 340));
+  }
+  const CYCLE = 7000;
+  if (reduce) { fig.classList.add("s2"); label.textContent = "Lite.OSWorld"; return; }
+  if ("IntersectionObserver" in window) {
+    let started = false;
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (e.isIntersecting && !started) { started = true; timeline(); setInterval(loopReset, CYCLE); }
+    }), { rootMargin: "0px 0px -15% 0px" });
+    io.observe(fig);
+  } else { timeline(); setInterval(loopReset, CYCLE); }
+})();
+</script>
+<script src="/js/lspop.js"></script>
+</body>
+</html>
