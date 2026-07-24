@@ -1,0 +1,13 @@
+{
+  "n_turns": 8,
+  "episode_return": 1.0,
+  "terminated": true,
+  "truncated": false,
+  "duration_seconds": 2898.63,
+  "timing": {
+    "act_seconds_total": 70.09,
+    "observe_seconds_total": 0.33,
+    "predict_seconds_total": 50.08,
+    "n_timed_turns": 8
+  }
+}

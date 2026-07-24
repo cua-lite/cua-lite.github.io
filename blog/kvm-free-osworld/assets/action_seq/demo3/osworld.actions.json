@@ -1,0 +1,310 @@
+[
+  {
+    "turn": 0,
+    "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_00/00_screenshot.png",
+    "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_00/04_screenshot_annotated.png",
+    "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_00/01_prompt.txt",
+    "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_00/02_response.txt",
+    "agent_content_text": "Action: Click on the \"Table\" menu in the menu bar.",
+    "agent_tool": {
+      "name": "computer_use",
+      "arguments": {
+        "action": "left_click",
+        "coordinate": [
+          211,
+          69
+        ]
+      }
+    },
+    "lite_content_text": "Click on the \"Table\" menu in the menu bar.",
+    "lite_tool": {
+      "name": "click",
+      "arguments": {
+        "coordinate": [
+          211,
+          69
+        ]
+      }
+    },
+    "executed_actions": [
+      {
+        "call": "pyautogui.click(405, 74, button='left')"
+      }
+    ],
+    "reward": null,
+    "terminated": false,
+    "truncated": false,
+    "timing_seconds": {
+      "observe": 0.040204259974416345,
+      "predict": 6.969640236988198,
+      "act": 2.7428962209960446
+    }
+  },
+  {
+    "turn": 1,
+    "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_01/00_screenshot.png",
+    "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_01/04_screenshot_annotated.png",
+    "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_01/01_prompt.txt",
+    "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_01/02_response.txt",
+    "agent_content_text": "Action: Click on the \"Insert Table...\" option in the Table menu.",
+    "agent_tool": {
+      "name": "computer_use",
+      "arguments": {
+        "action": "left_click",
+        "coordinate": [
+          234,
+          92
+        ]
+      }
+    },
+    "lite_content_text": "Click on the \"Insert Table...\" option in the Table menu.",
+    "lite_tool": {
+      "name": "click",
+      "arguments": {
+        "coordinate": [
+          234,
+          92
+        ]
+      }
+    },
+    "executed_actions": [
+      {
+        "call": "pyautogui.click(449, 99, button='left')"
+      }
+    ],
+    "reward": null,
+    "terminated": false,
+    "truncated": false,
+    "timing_seconds": {
+      "observe": 0.04239206202328205,
+      "predict": 7.42566208698554,
+      "act": 2.499869742023293
+    }
+  },
+  {
+    "turn": 2,
+    "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_02/00_screenshot.png",
+    "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_02/04_screenshot_annotated.png",
+    "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_02/01_prompt.txt",
+    "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_02/02_response.txt",
+    "agent_content_text": "Action: Triple-click on the columns input field to select its current value.",
+    "agent_tool": {
+      "name": "computer_use",
+      "arguments": {
+        "action": "triple_click",
+        "coordinate": [
+          451,
+          364
+        ]
+      }
+    },
+    "lite_content_text": "Triple-click on the columns input field to select its current value.",
+    "lite_tool": {
+      "name": "click",
+      "arguments": {
+        "coordinate": [
+          451,
+          364
+        ],
+        "clicks": 3
+      }
+    },
+    "executed_actions": [
+      {
+        "call": "pyautogui.tripleClick(865, 393, button='left')"
+      }
+    ],
+    "reward": null,
+    "terminated": false,
+    "truncated": false,
+    "timing_seconds": {
+      "observe": 0.04223418899346143,
+      "predict": 8.236510168993846,
+      "act": 2.6465488959802315
+    }
+  },
+  {
+    "turn": 3,
+    "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_03/00_screenshot.png",
+    "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_03/04_screenshot_annotated.png",
+    "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_03/01_prompt.txt",
+    "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_03/02_response.txt",
+    "agent_content_text": "Action: Type \"7\" into the columns input field.",
+    "agent_tool": {
+      "name": "computer_use",
+      "arguments": {
+        "action": "type",
+        "text": "7"
+      }
+    },
+    "lite_content_text": "Type \"7\" into the columns input field.",
+    "lite_tool": {
+      "name": "type",
+      "arguments": {
+        "text": "7"
+      }
+    },
+    "executed_actions": [
+      {
+        "call": "pyautogui.typewrite('7')"
+      }
+    ],
+    "reward": null,
+    "terminated": false,
+    "truncated": false,
+    "timing_seconds": {
+      "observe": 0.039255682029761374,
+      "predict": 6.935814578959253,
+      "act": 2.4379120839876123
+    }
+  },
+  {
+    "turn": 4,
+    "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_04/00_screenshot.png",
+    "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_04/04_screenshot_annotated.png",
+    "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_04/01_prompt.txt",
+    "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_04/02_response.txt",
+    "agent_content_text": "Action: Triple-click on the rows input field to select its current value.",
+    "agent_tool": {
+      "name": "computer_use",
+      "arguments": {
+        "action": "triple_click",
+        "coordinate": [
+          591,
+          364
+        ]
+      }
+    },
+    "lite_content_text": "Triple-click on the rows input field to select its current value.",
+    "lite_tool": {
+      "name": "click",
+      "arguments": {
+        "coordinate": [
+          591,
+          364
+        ],
+        "clicks": 3
+      }
+    },
+    "executed_actions": [
+      {
+        "call": "pyautogui.tripleClick(1134, 393, button='left')"
+      }
+    ],
+    "reward": null,
+    "terminated": false,
+    "truncated": false,
+    "timing_seconds": {
+      "observe": 0.03739528497681022,
+      "predict": 6.416769382019993,
+      "act": 2.4233821269590408
+    }
+  },
+  {
+    "turn": 5,
+    "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_05/00_screenshot.png",
+    "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_05/04_screenshot_annotated.png",
+    "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_05/01_prompt.txt",
+    "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_05/02_response.txt",
+    "agent_content_text": "Action: Type \"5\" into the rows input field.",
+    "agent_tool": {
+      "name": "computer_use",
+      "arguments": {
+        "action": "type",
+        "text": "5"
+      }
+    },
+    "lite_content_text": "Type \"5\" into the rows input field.",
+    "lite_tool": {
+      "name": "type",
+      "arguments": {
+        "text": "5"
+      }
+    },
+    "executed_actions": [
+      {
+        "call": "pyautogui.typewrite('5')"
+      }
+    ],
+    "reward": null,
+    "terminated": false,
+    "truncated": false,
+    "timing_seconds": {
+      "observe": 0.04112918901955709,
+      "predict": 5.889696643978823,
+      "act": 2.428224647010211
+    }
+  },
+  {
+    "turn": 6,
+    "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_06/00_screenshot.png",
+    "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_06/04_screenshot_annotated.png",
+    "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_06/01_prompt.txt",
+    "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_06/02_response.txt",
+    "agent_content_text": "Action: Click the \"Insert\" button at the bottom right of the Insert Table dialog.",
+    "agent_tool": {
+      "name": "computer_use",
+      "arguments": {
+        "action": "left_click",
+        "coordinate": [
+          634,
+          746
+        ]
+      }
+    },
+    "lite_content_text": "Click the \"Insert\" button at the bottom right of the Insert Table dialog.",
+    "lite_tool": {
+      "name": "click",
+      "arguments": {
+        "coordinate": [
+          634,
+          746
+        ]
+      }
+    },
+    "executed_actions": [
+      {
+        "call": "pyautogui.click(1217, 805, button='left')"
+      }
+    ],
+    "reward": null,
+    "terminated": false,
+    "truncated": false,
+    "timing_seconds": {
+      "observe": 0.07324501196853817,
+      "predict": 6.558817746990826,
+      "act": 2.4237835370004177
+    }
+  },
+  {
+    "turn": 7,
+    "screenshot_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_07/00_screenshot.png",
+    "screenshot_annotated_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_07/04_screenshot_annotated.png",
+    "prompt_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_07/01_prompt.txt",
+    "response_source": "/home/haoranliu/cua-lite-all-agents/.exps/eval/osworld/2026-07-18T17-00_65ea6496ef/run_0/meituan_EvoCUA-8B-20260105/eval/66399b0d-8fda-4618-95c4-bfc6191617e9/sample_00/turn_07/02_response.txt",
+    "agent_content_text": "Action: Task completed successfully; terminate with success.",
+    "agent_tool": {
+      "name": "computer_use",
+      "arguments": {
+        "action": "terminate",
+        "status": "success"
+      }
+    },
+    "lite_content_text": "Task completed successfully; terminate with success.",
+    "lite_tool": {
+      "name": "terminate",
+      "arguments": {
+        "status": "success"
+      }
+    },
+    "executed_actions": [],
+    "reward": 1.0,
+    "terminated": true,
+    "truncated": false,
+    "timing_seconds": {
+      "observe": 0.04366658802609891,
+      "predict": 5.804097908956464,
+      "act": 2.402583389019128
+    }
+  }
+]
