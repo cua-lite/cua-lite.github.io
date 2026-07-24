@@ -94,6 +94,26 @@
 @media (prefers-reduced-motion: reduce) {
   .v2c-lyr, .v2c-kvm, .v2c-ctr, .v2c-clones span, .v2c-clones span i b { transition: none; }
 }
+/* ---- OSWorld ↔ Lite.OSWorld head-to-head — the site's highlight idiom (accent wash + inset bar)
+   on the winning column; numeric cells are skeletons until the benchmark writeup lands ---- */
+.cmp { max-width: 500px; margin: 26px auto 30px; border: 1px solid var(--panel-edge); border-radius: 14px; background: var(--panel-fill); overflow: hidden; }
+.cmp-tbl { width: 100%; border-collapse: collapse; }
+.cmp-tbl th, .cmp-tbl td { padding: 12px 18px; text-align: left; vertical-align: middle; }
+.cmp-tbl thead th { font-family: var(--mono); font-size: 13px; letter-spacing: .3px; font-weight: 700; color: var(--text); }
+.cmp-tbl thead th.cmp-hi { color: var(--accent); box-shadow: inset 0 2.5px 0 var(--accent); }   /* accent cap on the winning column */
+.cmp-tbl tbody th[scope="row"] { font-family: var(--mono); font-size: 11px; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); font-weight: 500; white-space: nowrap; }
+.cmp-tbl tbody td { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.cmp-tbl tbody td.cmp-hi { color: var(--text); font-weight: 600; }
+.cmp-tbl tbody tr + tr th, .cmp-tbl tbody tr + tr td { border-top: 1px solid var(--line); }
+.cmp-hi { background: rgba(189,90,56,.06); }   /* soft accent wash — same idiom as the leaderboard leader */
+.cmp-skel { display: inline-block; width: 54px; height: 9px; border-radius: 5px; background: linear-gradient(90deg, var(--line-2), rgba(60,48,36,.09)); }
+.cmp-cap { padding: 12px 18px 14px; font-family: var(--mono); font-size: 11.5px; line-height: 1.5; color: var(--muted); border-top: 1px solid var(--line); background: rgba(60,48,36,.015); }
+.cmp-pending { color: var(--dim); }
+@media (max-width: 480px) {
+  .cmp-tbl th, .cmp-tbl td { padding: 10px 12px; }
+  .cmp-tbl thead th, .cmp-tbl tbody td { font-size: 12px; }
+  .cmp-tbl tbody th[scope="row"] { white-space: normal; }
+}
 .blog-foot { max-width: 680px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); }
 .blog-foot a { color: var(--dim); }
 .blog-foot a:hover { color: var(--text); }
@@ -138,11 +158,14 @@
   That fidelity is exactly what keeps it from scaling.</p>
 
   <h2>The VM tax</h2>
-  <p><b>A faithful desktop, one heavy machine at a time.</b> The classic OSWorld environment
-  runs a full VM per task: it needs <code>/dev/kvm</code>, nested virtualization the host has
-  to grant, and a dedicated machine for every trajectory. On a laptop that's fine. To collect
-  or grade thousands of rollouts it's a wall — most cloud instances, CI runners, and
-  containers-in-containers never hand you KVM, and one VM per trajectory doesn't pack.</p>
+  <p><b>A faithful desktop, one heavy machine at a time.</b> OSWorld runs a full VM per task —
+  it needs <code>/dev/kvm</code> and nested virtualization the host has to grant. Fine on a
+  laptop; a wall at scale, where cloud instances, CI runners, and nested containers rarely hand
+  you KVM, and one VM per trajectory doesn't pack.</p>
+
+  <p><b>Lite.OSWorld keeps the desktop and drops the machine.</b> The same tasks and the same
+  evaluators run on a real GNOME desktop in a plain Docker container — no hypervisor, no
+  <code>/dev/kvm</code> — so it boots anywhere Docker runs, pools warm across tasks, and parallelizes.</p>
 
   <figure class="flow-demo v2c" aria-label="OSWorld's KVM virtual machine sheds its heavy VM and /dev/kvm dependency to become the Lite.OSWorld container, which then packs into many">
     <div class="v2c-stage">
@@ -164,13 +187,22 @@
     <figcaption class="v2c-note">A desktop sealed in a VM — every task boots QEMU/KVM.</figcaption>
   </figure>
 
-  <h2>Drop the machine</h2>
-  <p><b>Lite.OSWorld keeps the desktop and drops the machine.</b> The same apps run on a real
-  GNOME desktop in a plain Docker container — a software display, no GPU, no hypervisor, no
-  <code>/dev/kvm</code> — all on one shared sandbox base. It is the same OSWorld tasks and the
-  same OSWorld evaluators, just on a container instead of a VM. So it boots without nested
-  virtualization, runs anywhere Docker runs, pools warm across tasks, and parallelizes —
-  everything a VM-per-task can't.</p>
+  <figure class="cmp" aria-label="OSWorld versus Lite.OSWorld, head to head">
+    <table class="cmp-tbl">
+      <thead>
+        <tr><td class="cmp-corner"></td><th scope="col">OSWorld</th><th scope="col" class="cmp-hi">Lite.OSWorld</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Runtime</th><td>QEMU/KVM VM</td><td class="cmp-hi">Docker container</td></tr>
+        <tr><th scope="row">Host requirement</th><td>/dev/kvm, nested virt</td><td class="cmp-hi">Any Docker host</td></tr>
+        <tr><th scope="row">Memory / desktop</th><td><span class="cmp-skel"></span></td><td class="cmp-hi"><span class="cmp-skel"></span></td></tr>
+        <tr><th scope="row">Cold start</th><td><span class="cmp-skel"></span></td><td class="cmp-hi"><span class="cmp-skel"></span></td></tr>
+        <tr><th scope="row">Parallel / host</th><td><span class="cmp-skel"></span></td><td class="cmp-hi"><span class="cmp-skel"></span></td></tr>
+        <tr><th scope="row">Tasks &amp; evaluators</th><td>OSWorld</td><td class="cmp-hi">Identical</td></tr>
+      </tbody>
+    </table>
+    <figcaption class="cmp-cap">Same tasks and evaluators, a smaller footprint per desktop. <span class="cmp-pending">Figures land with the benchmark writeup.</span></figcaption>
+  </figure>
 
   <h2>Still OSWorld?</h2>
   <p><b>A cheap copy is only worth it if it doesn't change the answer.</b> It doesn't. Give the
