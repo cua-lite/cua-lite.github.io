@@ -181,6 +181,9 @@
 .toc a + a { border-top: 1px solid var(--line); border-top-left-radius: 0; border-top-right-radius: 0; }
 .toc-n { flex: 0 0 auto; min-width: 18px; color: var(--accent-dim); font-size: 11px; letter-spacing: 1px; }
 .toc a:hover .toc-n { color: var(--accent); }
+.toc a.toc-hl { color: var(--accent); font-weight: 600; background: rgba(189,90,56,.07); box-shadow: inset 2.5px 0 0 var(--accent); }   /* the payoff entry — matches its highlighted section */
+.toc a.toc-hl:hover { background: rgba(189,90,56,.11); }
+.toc a.toc-hl .toc-n { color: var(--accent); }
 /* ---- the payoff section wears the blog index's "featured" highlight: accent wash + inset bar ---- */
 .hl-sec { margin: 40px 0 0; padding: 2px 26px 18px; background: rgba(189,90,56,.06); border-radius: 14px; box-shadow: inset 3px 0 0 var(--accent); }
 .hl-sec > h2 { margin-top: 22px; }
@@ -236,7 +239,7 @@
   <nav class="toc" aria-label="Contents">
     <a href="#vm-tax"><span class="toc-n">01</span>OSWorld's VM tax</a>
     <a href="#still-osworld"><span class="toc-n">02</span>Is Lite.OSWorld still OSWorld?</a>
-    <a href="#beyond"><span class="toc-n">03</span>Beyond OSWorld: Scalable Training Sandboxes</a>
+    <a href="#beyond" class="toc-hl"><span class="toc-n">03</span>Beyond OSWorld: Scalable Training Sandboxes</a>
   </nav>
 
   <h2 id="vm-tax">OSWorld's VM tax</h2>
