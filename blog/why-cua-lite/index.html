@@ -16,7 +16,7 @@
 <meta property="og:title" content="Why CUA-Lite — and a call for contributors" />
 <meta property="og:description" content="Why CUA-Lite exists and how it grows: unified computer-use data free on Hugging Face, one framework to eval, SFT, and RL any agent — and where contributions fit." />
 <meta property="og:url" content="https://cua-lite.github.io/blog/why-cua-lite/" />
-<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=4" />
+<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=5" />
 <link rel="stylesheet" href="/css/style.css" />
 <style>
 /* article layout — the quiet template: one narrow column, no animation */
@@ -486,7 +486,8 @@
   <p><b>Any agent plugs into any environment through one interface.</b>
   They meet in <code class="lg" tabindex="0">lite.gym</code> — screenshots up,
   actions down, in one action space plus each env's extra tools. The same loop
-  serves eval and RL.</p>
+  serves both eval and RL: a rollout is scored to rank an agent, or trained on to
+  improve it.</p>
   <figure class="flow-demo" aria-label="Any environment paired with any agent through lite.gym: screenshots up, actions down">
     <div class="pair-board" data-board="pair">
       <div class="pair-col">

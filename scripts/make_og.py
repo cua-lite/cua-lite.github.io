@@ -34,6 +34,7 @@ body{width:1200px;height:630px;overflow:hidden;color:var(--text);font-family:'Ur
 h1{font-family:'Fraunces';font-style:italic;color:var(--accent);
   font-variation-settings:'opsz' 144,'wght' 400,'SOFT' 0,'WONK' 0;
   font-size:84px;line-height:1.0;letter-spacing:-0.025em;margin-top:46px;}
+h1 .hinge{color:var(--muted);}   /* the connective "on" — a quiet grey hinge, matching the hero */
 .lead{margin-top:28px;font-size:26.5px;line-height:1.5;color:var(--muted);max-width:1010px;font-weight:450;}
 .lead b{color:var(--text);font-weight:680;}
 .lead .lc{color:var(--accent);font-weight:680;}
@@ -45,11 +46,11 @@ h1{font-family:'Fraunces';font-style:italic;color:var(--accent);
 .foot .url{color:var(--muted);}
 </style></head><body>
 <div class="brand"><span class="plane"></span><span class="name">CUA-Lite</span></div>
-<h1>Any agent,<br>any computer.</h1>
-<p class="lead">One open platform of unified data for <span class="lc">computer-use</span> agents — and one framework to <b>eval</b>, <b>SFT</b>, and <b>RL</b> any agent across desktop, web, and mobile.</p>
+<h1>Any agent, <span class="hinge">on</span><br>any computer.</h1>
+<p class="lead">Scalable <b>sandboxes</b> with verifiable tasks and unified <b>SFT data</b> — one framework to <b>eval</b>, <b>SFT</b> &amp; <b>RL</b> any <span class="lc">computer-use</span> agent, at scale.</p>
 <div class="spacer"></div>
 <div class="foot">
-  <div class="stats"><b>10+</b> datasets <i>·</i> <b>10+</b> agents <i>·</i> <b>15+</b> benchmarks <i>·</i> <b>3</b> platforms</div>
+  <div class="stats"><b>30k+</b> tasks <i>·</i> <b>10+</b> datasets <i>·</i> <b>10+</b> agents <i>·</i> <b>15+</b> benchmarks</div>
   <div class="url">cua-lite.github.io</div>
 </div>
 </body></html>"""
