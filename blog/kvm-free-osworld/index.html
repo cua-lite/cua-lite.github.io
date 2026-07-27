@@ -213,8 +213,8 @@
   <h1>KVM-free OS(World), <em>at scale.</em></h1>
 
   <p><b>To eval or train a computer-use agent, you need real desktops — a lot of them.</b>
-  OSWorld gives you a faithful one: LibreOffice, Chrome, VS Code, real files and windows.
-  But it ships as a virtual machine — and that's what keeps it from scaling.</p>
+  OSWorld gives you a faithful one: LibreOffice, Chrome, VS Code, files and windows.
+  But it ships as a heavy virtual machine — and that's what keeps it from scaling.</p>
 
   <nav class="toc" aria-label="Contents">
     <a href="#vm-tax"><span class="toc-n">01</span>OSWorld's VM tax</a>
@@ -227,7 +227,7 @@
   nested virtualization — fine on a laptop, a wall at scale, where cloud instances, CI runners,
   and nested containers rarely hand you KVM, and one VM per trajectory doesn't pack.</p>
 
-  <p><b>Lite.OSWorld keeps the desktop and drops the machine.</b> The same tasks and evaluators
+  <p><b>Lite.OSWorld keeps the desktop and drops the VM.</b> The same tasks and evaluators
   run on a real GNOME desktop in a plain Docker container — no hypervisor, no <code>/dev/kvm</code>
   — so it boots anywhere Docker runs, packing many to a host.</p>
 
@@ -291,7 +291,7 @@
     <figcaption class="hh-cap">Same model, same task — switch tabs, or hover a panel for the full rollout.</figcaption>
   </figure>
 
-  <p><b>And the same scores.</b> Thirteen models, graded on both — each lands on the equal-score
+  <p><b>Every model scores the same on both.</b> Thirteen of them land on the equal-score
   line, from the weakest to the strongest.</p>
 
   <figure class="par" aria-label="OSWorld versus Lite.OSWorld success rate across 13 models — every model lands on the equal-score diagonal">
@@ -302,10 +302,9 @@
   <section class="hl-sec" id="beyond">
   <h2>Beyond OSWorld: Scalable Training Sandboxes</h2>
   <p><b>The KVM-free container isn't an OSWorld trick — it's a base for a family of scalable CUA sandboxes.</b> The same base already
-  runs more worlds on the same terms — web-and-desktop tasks, real science desktops (GMAT flying
-  spacecraft, PyMOL turning proteins), and RL rollouts that train straight against the
-  environment. Scale doesn't buy a cheaper OSWorld; it buys more worlds, each open to every
-  agent and graded by a verifiable reward.</p>
+  runs more of them on the same terms — web and desktop tasks, real science desktops (GMAT flying
+  spacecraft, PyMOL turning proteins), each shipping verifiable tasks. Scale doesn't buy a cheaper
+  OSWorld; it buys efficient sandboxes to train and benchmark any agent, at scale.</p>
 
   <figure class="belt-fig" aria-label="Looping rollout trajectories across CUA-Lite training environments">
     <div class="belt-tabs" role="tablist">
@@ -320,8 +319,8 @@
   <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/tree/main/lite/gym/envs/lite" target="_blank" rel="noopener">Lite.* environments ↗</a> &nbsp;·&nbsp; <a href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">Rollout datasets ↗</a></p>
   </section>
 
-  <p class="post-close"><b>Any agent, on any computer — without the machine.</b> Try it, or bring
-  your own world —
+  <p class="post-close"><b>Any agent, on any computer — without the heavy VM.</b> Try it, or bring
+  your own sandboxes —
   <a href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a> ·
   <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Hugging Face</a> ·
   <a href="mailto:zhanhui@berkeley.edu">Email</a>.</p>
