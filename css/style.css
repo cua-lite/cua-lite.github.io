@@ -650,6 +650,28 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .src-contrib { font-family: var(--mono); font-size: var(--fs-sm); color: var(--muted); margin: -4px auto 30px; text-align: center; }
 .src-contrib a { color: var(--accent); }
 .src-contrib a:hover { text-decoration: underline; }
+
+/* ---- Sandboxes: training-env belt · a conveyor of looping rollout clips, one env family at a time ---- */
+.belt-fig { margin: 8px 0 18px; }
+.belt-tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 18px; }
+.belt-tab { font-family: var(--mono); font-size: 12px; letter-spacing: .2px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; color: var(--muted); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
+.belt-tab:hover { border-color: var(--accent-dim); color: var(--text); }
+.belt-tab.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.belt { position: relative; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.belt-track { display: flex; width: max-content; animation: beltscroll 44s linear infinite; }
+.belt:hover .belt-track { animation-play-state: paused; }
+@keyframes beltscroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.belt-tile { position: relative; flex: 0 0 auto; width: 190px; aspect-ratio: 16 / 10; margin-right: 16px; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--panel-edge); background: linear-gradient(158deg, #efe1cd, #e6d5bd); }
+.belt-tile::before { content: ""; position: absolute; inset: 22px 28px 20px; border: 1.5px solid rgba(255,255,255,.5); border-radius: 4px; }   /* a faint app window — a paused-looking frame */
+.belt-tile::after { content: ""; position: absolute; left: 28px; top: 29px; width: var(--w, 44%); height: 4px; border-radius: 2px; background: var(--accent); opacity: .5; }
+.belt-tag { position: absolute; bottom: 9px; left: 10px; z-index: 2; font-family: var(--mono); font-size: 10.5px; letter-spacing: .2px; padding: 2px 8px; border-radius: 999px; background: rgba(255,252,246,.85); color: var(--accent); }
+.belt-live { position: absolute; top: 10px; right: 11px; z-index: 2; display: flex; align-items: flex-end; gap: 2px; height: 11px; }   /* auto-playing indicator */
+.belt-live i { width: 2.5px; height: 4px; border-radius: 1px; background: var(--accent); animation: belteq .9s ease-in-out infinite; }
+.belt-live i:nth-child(2) { animation-delay: .18s; }
+.belt-live i:nth-child(3) { animation-delay: .36s; }
+@keyframes belteq { 0%, 100% { height: 3px; } 50% { height: 11px; } }
+.belt-cap { text-align: center; font-family: var(--mono); font-size: var(--fs-sm); letter-spacing: .2px; color: var(--muted); margin-top: 16px; }
+@media (prefers-reduced-motion: reduce) { .belt-track { animation: none; } .belt-live i { animation: none; height: 7px; } }
 /* hub chips (LiteSample, lite.gym) — hover pops the schema / interface card to the right */
 code.ls, code.lg, code.ad { position: relative; cursor: help; }
 .ls-pop { position: absolute; left: calc(100% + 14px); top: 50%; transform: translateY(-50%) translateX(-6px); z-index: 40;

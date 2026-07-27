@@ -790,7 +790,7 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
   const RM = "https://github.com/cua-lite/cua-lite/blob/main/lite/gym/envs/";
   const DS = "https://huggingface.co/datasets/cua-lite/";
   const POP = {
-    agents: { cap: "Proprietary &amp; open — drop in any of these", groups: [
+    agents: { groups: [
       { label: "Proprietary", items: [
         ["GPT", "https://platform.openai.com/docs/guides/tools-computer-use"],
         ["Claude", "https://docs.anthropic.com/en/docs/agents-and-tools/computer-use"] ] },
@@ -807,21 +807,19 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
         ["MAI-UI", "https://huggingface.co/Tongyi-MAI/MAI-UI-8B"],
         ["UI-Voyager", "https://huggingface.co/MarsXL/UI-Voyager"],
         ["GELab", "https://huggingface.co/stepfun-ai/GELab-Zero-4B-preview"] ] } ] },
-    platforms: { cap: "A unified action + observation space per platform", groups: [
-      { label: "", items: [["Desktop", "#benchmarks"], ["Web", "#benchmarks"], ["Mobile", "#benchmarks"]] } ] },
     // hero benchmark links point to the OFFICIAL upstream repos (extracted from the env READMEs);
     // cua-lite-native ones (Lite.OSWorld, MobileGym) point to the cua-lite env README.
-    benchmarks: { cap: "One command evaluates any agent on any of these", groups: [
+    benchmarks: { groups: [
       { label: "Grounding", items: [["OSWorld-G", "https://github.com/xlang-ai/OSWorld-G"], ["ScreenSpot-Pro", "https://github.com/likaixin2000/ScreenSpot-Pro-GUI-Grounding"]] },
       { label: "Desktop", items: [["OSWorld", "https://github.com/xlang-ai/OSWorld"], ["Lite.OSWorld", RM+"lite/osworld/README.md"], ["OSWorld-2", "https://github.com/xlang-ai/OSWorld"], ["CUABench", "https://github.com/trycua/cua"]] },
       { label: "Web", items: [["WebGym", "https://github.com/microsoft/webgym"], ["WebVoyager", "https://github.com/MinorJerry/WebVoyager"], ["Online-Mind2Web", "https://github.com/OSU-NLP-Group/Online-Mind2Web"], ["MiniWoB", "https://github.com/Farama-Foundation/miniwob-plusplus"], ["WebArena", "https://github.com/web-arena-x/webarena"], ["VisualWebArena", "https://github.com/web-arena-x/visualwebarena"]] },
       { label: "Mobile", items: [["AndroidWorld", "https://github.com/google-research/android_world"], ["AndroidLab", "https://github.com/THUDM/Android-Lab"], ["MobileWorld", "https://github.com/Tongyi-MAI/MobileWorld"], ["MobileGym", "https://github.com/Purewhiter/mobilegym"]] } ] },
     // groups filled live from the shared HF source below (same one the Data/Train pickers use)
-    datasets: { cap: "One schema, on the Hub — teacher rollouts + preprocessed corpora, ready to SFT or RL any agent", groups: [] },
+    datasets: { groups: [] },
   };
   const renderPop = (pop) => {
     const d = POP[pop.dataset.pop]; if (!d) return;
-    let h = `<b>${d.cap}</b>`;
+    let h = "";
     d.groups.forEach((g) => {
       h += '<span class="pop-grp">';
       if (g.label) h += `<span class="pop-cat">${g.label}</span>`;
@@ -1149,6 +1147,28 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
 
   renderComp();   // populate box 1 for the default env before the manifest resolves
   show(cur);
+})();
+
+/* ---------- Sandboxes: training-env belt · a conveyor of looping rollout clips; pills switch the env family ----------
+   Placeholder frames for now — swap each tile for a muted autoplay <video> when clips land. */
+(function () {
+  "use strict";
+  const fig = document.querySelector(".belt-fig");
+  if (!fig) return;
+  const track = fig.querySelector(".belt-track"), tabs = [...fig.querySelectorAll(".belt-tab")];
+  const WS = [42, 55, 34, 60, 48, 38];   // vary the "content line" so the frames aren't identical
+  const tile = (env, i) => {
+    const d = document.createElement("div"); d.className = "belt-tile"; d.style.setProperty("--w", WS[i % WS.length] + "%");
+    d.innerHTML = '<span class="belt-live"><i></i><i></i><i></i></span><span class="belt-tag"></span>';
+    d.querySelector(".belt-tag").textContent = env;
+    return d;
+  };
+  const fill = (env) => { track.innerHTML = ""; for (let k = 0; k < 2; k++) for (let i = 0; i < WS.length; i++) track.appendChild(tile(env, i)); };   // ×2 = seamless loop
+  fill("Lite.OSWorld");
+  tabs.forEach((t) => t.addEventListener("click", () => {
+    tabs.forEach((o) => { const on = o === t; o.classList.toggle("is-on", on); o.setAttribute("aria-selected", on); });
+    fig.querySelectorAll(".belt-tag").forEach((g) => { g.textContent = t.textContent; });   // relabel in place — no scroll jump
+  }));
 })();
 
 /* LiteSample hover popover lives in js/lspop.js — shared with the blog (one implementation). */
