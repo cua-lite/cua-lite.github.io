@@ -385,11 +385,32 @@
   </figure>
 
   <p><b>CUA-Lite puts all of it in one place</b> — all a computer-use agent
-  needs, open to share, simple to run: (1)&nbsp;<b>unified data</b>, 10+ datasets
-  and fresh GPT-5.5 rollouts, free on
-  <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Hugging&nbsp;Face</a>;
-  (2)&nbsp;<b>one framework</b> to eval, SFT, and RL any agent across desktop,
-  web, and mobile. Here is how each contribution compounds:</p>
+  needs, open to share, simple to run: (1)&nbsp;<b>sandboxes with verifiable
+  tasks</b>, scalable worlds that grade themselves; (2)&nbsp;<b>unified SFT
+  data</b>, 10+ datasets and fresh rollouts, free on
+  <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Hugging&nbsp;Face</a> —
+  all reached through <b>one framework</b> to eval, SFT, and RL any agent. Here is
+  how each contribution compounds:</p>
+
+  <h2>Sandboxes &amp; verifiable tasks</h2>
+  <p><b>One lightweight sandbox scales to every world, and every task grades
+  itself.</b> KVM-free, it packs many to a machine and runs in parallel; the same
+  graded task serves training and benchmarking alike.</p>
+  <figure class="belt-fig" aria-label="Looping task trajectories across CUA-Lite sandboxes">
+    <div class="belt-tabs" role="tablist">
+      <button class="belt-tab is-on" type="button" role="tab" aria-selected="true">Lite.OSWorld</button>
+      <button class="belt-tab" type="button" role="tab" aria-selected="false">Lite.ScaleCUA</button>
+      <button class="belt-tab" type="button" role="tab" aria-selected="false">Lite.CUAGym</button>
+      <button class="belt-tab" type="button" role="tab" aria-selected="false">Lite.CUAWorld</button>
+    </div>
+    <div class="belt"><div class="belt-track" aria-hidden="true"></div></div>
+    <figcaption class="belt-cap">Looping task trajectories — clips land with the benchmark writeup.</figcaption>
+  </figure>
+  <p class="post-call"><b class="call">Call for sandbox contributors.</b> A sandbox only
+  matters while people run it. Add yours, and every agent trains and benchmarks on it —
+  now and later. One integration, and the whole field builds on it.</p>
+
+  <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">Env guide ↗</a> &nbsp;·&nbsp; <a href="/#leaderboard">Leaderboard ↗</a></p>
 
   <h2>Datasets</h2>
   <p><b>Convert a dataset once, and every agent can train on it.</b>
@@ -418,11 +439,10 @@
     </div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
-  <p><b>Every model wants your training data packed its own way — CUA-Lite ships a
-  ready harness for each.</b> That's the <code class="ad" tabindex="0">adapter</code>
-  in the figure above: it packs a <code class="ls" tabindex="0">LiteSample</code> row
-  into the exact shape a model trains on, with the building blocks to add your own.
-  The next figure plays out Qwen3.5's.</p>
+  <p><b>CUA-Lite ships an <code class="ad" tabindex="0">adapter</code> per model,
+  packing a unified <code class="ls" tabindex="0">LiteSample</code> into the exact
+  training format each one needs.</b> The figure above shows one, with the building
+  blocks to add your own. The next figure plays out Qwen3.5's.</p>
 
   <figure class="flow-demo pack intro-on" aria-label="A six-step trajectory in the Qwen3.5 view: history collapses past image_max, and prefix-extending steps pack into segments">
     <div class="pack-intro" aria-hidden="true"><svg class="pack-intro-wire" aria-hidden="true"><path class="piw"/><path class="piw"/></svg><span class="pi-dot" aria-hidden="true"></span><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><span>LiteSample</span><span class="node-glyph">{ }</span></span><span class="pack-adapter">adapter</span><span class="pair-chip" data-cat="model" data-logo="qwen">Qwen</span></div>
@@ -456,19 +476,17 @@
     <div class="pair-cmd" data-pack-line></div>
   </figure>
 
-  <p class="post-call"><b class="call">Call for data contributors.</b> Data collected for
-  one agent won't train another out of the box. In <code class="ls" tabindex="0">LiteSample</code>
-  it trains every agent — even models that don't exist yet. One conversion, and the
-  whole community can train on it.</p>
+  <p class="post-call"><b class="call">Call for data contributors.</b> Data only matters
+  while models can train on it. Share yours, and every agent trains on it — even models
+  that don't exist yet. One conversion, and the whole community trains on it.</p>
 
   <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/lite/data/preproc/AGENTS.md" target="_blank" rel="noopener">Preprocessing guide ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">Agent harnesses ↗</a> &nbsp;·&nbsp; <a href="https://github.com/cua-lite/cua-lite/blob/main/docs/sft.md" target="_blank" rel="noopener">SFT guide ↗</a></p>
 
-  <h2>Environments &amp; agents</h2>
-  <p><b>Add an env, and every agent runs it; add an agent, and it runs every
-  env.</b> They meet in <code class="lg" tabindex="0">lite.gym</code> —
-  screenshots flow up, actions flow down, in one action space plus each env's
-  extra tools. The same loop serves eval and RL: every env ships eval
-  tasks, and many add training splits with verifiable rewards.</p>
+  <h2>One framework: eval &amp; RL</h2>
+  <p><b>Any agent plugs into any environment through one interface.</b>
+  They meet in <code class="lg" tabindex="0">lite.gym</code> — screenshots up,
+  actions down, in one action space plus each env's extra tools. The same loop
+  serves eval and RL.</p>
   <figure class="flow-demo" aria-label="Any environment paired with any agent through lite.gym: screenshots up, actions down">
     <div class="pair-board" data-board="pair">
       <div class="pair-col">
@@ -492,12 +510,6 @@
     </div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
-  <p class="post-call"><b class="call">Call for env contributors.</b> An env only matters
-  while people run it. Behind <code class="lg" tabindex="0">lite.gym</code>, yours runs
-  against every agent, now and later, on <a href="/#leaderboard">one shared leaderboard</a>.
-  One integration, and the whole field trains and competes on it.</p>
-
-  <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">Env guide ↗</a> &nbsp;·&nbsp; <a href="/#leaderboard">Leaderboard ↗</a></p>
 
   <p class="post-close"><b>Bring a dataset, an env, or an agent — each one
   compounds.</b> Or just tell us what's missing —
@@ -866,6 +878,27 @@
   const sync = () => boards.forEach((fn) => fn());
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
   let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(sync, 120); });
+})();
+
+/* Sandboxes belt · a conveyor of looping clips; pills switch the env family (placeholder frames). */
+(function () {
+  "use strict";
+  const fig = document.querySelector(".belt-fig");
+  if (!fig) return;
+  const track = fig.querySelector(".belt-track"), tabs = [...fig.querySelectorAll(".belt-tab")];
+  const WS = [42, 55, 34, 60, 48, 38];
+  const tile = (env, i) => {
+    const d = document.createElement("div"); d.className = "belt-tile"; d.style.setProperty("--w", WS[i % WS.length] + "%");
+    d.innerHTML = '<span class="belt-live"><i></i><i></i><i></i></span><span class="belt-tag"></span>';
+    d.querySelector(".belt-tag").textContent = env;
+    return d;
+  };
+  const fill = (env) => { track.innerHTML = ""; for (let k = 0; k < 2; k++) for (let i = 0; i < WS.length; i++) track.appendChild(tile(env, i)); };
+  fill("Lite.OSWorld");
+  tabs.forEach((t) => t.addEventListener("click", () => {
+    tabs.forEach((o) => { const on = o === t; o.classList.toggle("is-on", on); o.setAttribute("aria-selected", on); });
+    fig.querySelectorAll(".belt-tag").forEach((g) => { g.textContent = t.textContent; });
+  }));
 })();
 </script>
 <script src="/js/lspop.js"></script>
