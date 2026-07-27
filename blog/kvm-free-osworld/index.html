@@ -121,20 +121,20 @@
 .hh-tab:hover { border-color: var(--accent-dim); color: var(--text); }
 .hh-tab.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
 .hh-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.hh-panel { position: relative; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; border: 1.5px solid var(--panel-edge); background: linear-gradient(158deg, #efe1cd, #e6d5bd); display: flex; align-items: center; justify-content: center; }
-.hh-panel::before { content: ""; position: absolute; inset: 26px 30px 24px; border: 1.5px solid rgba(255,255,255,.55); border-radius: 5px; }   /* a faint app window on the desktop */
+.hh-panel { position: relative; aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; border: 1.5px solid var(--panel-edge); background: linear-gradient(158deg, #efe1cd, #e6d5bd); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.hh-panel::before { content: ""; position: absolute; inset: 26px 30px 24px; border: 1.5px solid rgba(255,255,255,.55); border-radius: 5px; z-index: 1; pointer-events: none; }   /* a faint app window on the desktop */
 .hh-panel.hh-lite { border-color: var(--accent-dim); box-shadow: inset 0 0 0 1px rgba(189,90,56,.14); }
+.hh-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; background: #000; }
 .hh-tag { position: absolute; top: 10px; left: 10px; z-index: 2; font-family: var(--mono); font-size: 11px; letter-spacing: .2px; padding: 3px 10px; border-radius: 999px; background: rgba(255,252,246,.82); color: var(--muted); }
 .hh-panel.hh-lite .hh-tag { color: var(--accent); }
-/* the panels auto-play (no click): a live indicator + a scrubber that sweeps in lockstep across both */
+/* clicking a task tab swaps both panels' clips in lockstep; a live indicator + a scrubber track real playback */
 .hh-live { position: absolute; top: 12px; right: 12px; z-index: 2; display: flex; align-items: flex-end; gap: 2.5px; height: 13px; }
 .hh-live i { width: 3px; height: 4px; border-radius: 1px; background: var(--accent); animation: belteq .9s ease-in-out infinite; }
 .hh-live i:nth-child(2) { animation-delay: .18s; }
 .hh-live i:nth-child(3) { animation-delay: .36s; }
 .hh-scrub { position: absolute; left: 14px; right: 14px; bottom: 12px; height: 4px; border-radius: 2px; background: rgba(255,255,255,.5); overflow: hidden; z-index: 2; }
-.hh-scrub::after { content: ""; position: absolute; inset: 0 auto 0 0; width: 0; background: var(--accent); border-radius: 2px; animation: hhscrub 5s linear infinite; }
-@keyframes hhscrub { 0% { width: 0; } 90% { width: 100%; } 100% { width: 100%; } }
-@media (prefers-reduced-motion: reduce) { .hh-live i { animation: none; height: 8px; } .hh-scrub::after { animation: none; width: 62%; } }
+.hh-scrub-fill { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 2px; }
+@media (prefers-reduced-motion: reduce) { .hh-live i { animation: none; height: 8px; } }
 .hh-cap { text-align: center; font-family: var(--mono); font-size: 12px; letter-spacing: .2px; color: var(--muted); margin-top: 13px; }
 @media (max-width: 560px) { .hh-pair { grid-template-columns: 1fr; gap: 12px; } }
 /* ---- parity plot · OSWorld vs Lite.OSWorld scores, one dot per model on a y=x diagonal ---- */
@@ -164,8 +164,8 @@
 .belt:hover .belt-track { animation-play-state: paused; }
 @keyframes beltscroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .belt-tile { position: relative; flex: 0 0 auto; width: 172px; aspect-ratio: 16 / 10; margin-right: 14px; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--panel-edge); background: linear-gradient(158deg, #efe1cd, #e6d5bd); }
-.belt-tile::before { content: ""; position: absolute; inset: 20px 26px 18px; border: 1.5px solid rgba(255,255,255,.5); border-radius: 4px; }   /* a faint app window — a paused-looking frame */
-.belt-tile::after { content: ""; position: absolute; left: 26px; top: 27px; width: var(--w, 44%); height: 4px; border-radius: 2px; background: var(--accent); opacity: .5; }
+.belt-tile::before { content: ""; position: absolute; inset: 20px 26px 18px; border: 1.5px solid rgba(255,255,255,.5); border-radius: 4px; z-index: 1; pointer-events: none; }   /* a faint app window frame over the clip */
+.belt-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; background: #000; }
 .belt-tag { position: absolute; bottom: 8px; left: 9px; z-index: 2; font-family: var(--mono); font-size: 10px; letter-spacing: .2px; padding: 2px 8px; border-radius: 999px; background: rgba(255,252,246,.85); color: var(--accent); }
 .belt-live { position: absolute; top: 9px; right: 10px; z-index: 2; display: flex; align-items: flex-end; gap: 2px; height: 11px; }   /* auto-playing indicator */
 .belt-live i { width: 2.5px; height: 4px; border-radius: 1px; background: var(--accent); animation: belteq .9s ease-in-out infinite; }
@@ -173,7 +173,32 @@
 .belt-live i:nth-child(3) { animation-delay: .36s; }
 @keyframes belteq { 0%, 100% { height: 3px; } 50% { height: 11px; } }
 .belt-cap { text-align: center; font-family: var(--mono); font-size: 11.5px; letter-spacing: .2px; color: var(--muted); margin-top: 14px; }
+.belt-tile { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .belt-track { animation: none; } .belt-live i { animation: none; height: 7px; } }
+/* ---- belt hover peek · enlarge a tile's clip, show the instruction + a clickable action log ---- */
+.peek-scrim { position: fixed; inset: 0; background: rgba(30,22,14,.38); z-index: 59; opacity: 0; transition: opacity .18s ease; pointer-events: none; }
+.peek { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.97); z-index: 60; display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 0; background: var(--panel-fill, #fdf7ec); border: 1.5px solid var(--panel-edge); border-radius: 14px; overflow: hidden; box-shadow: 0 24px 60px -18px rgba(30,22,14,.45); opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+  width: min(900px, calc(100vw - 32px)); height: min(70vh, 560px); }   /* fixed height so the clip fills its column instead of leaving dead space under it */
+.peek[hidden] { display: none; }
+.peek-scrim.is-on { opacity: 1; }   /* dim only — never intercepts the pointer, or the tile would lose hover the instant it opens */
+.peek.is-on { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+.peek-media { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.peek-head { flex: 0 0 auto; max-height: 34%; overflow-y: auto; background: var(--panel-fill, #fdf7ec); border-bottom: 1.5px solid var(--line-2); padding: 12px 15px; }   /* the task sits here, so the clip below stays unobstructed */
+.peek-domain { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.peek-instr { margin: 0; font-family: var(--mono); font-size: 11.5px; line-height: 1.55; letter-spacing: .1px; color: var(--text); }
+.peek-stage { position: relative; flex: 1 1 auto; min-height: 0; background: #000; }
+.peek-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }   /* contain — never crop the frame */
+.peek-actions { list-style: none; margin: 0; padding: 8px; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; border-left: 1.5px solid var(--line-2); }
+.peek-act { display: flex; align-items: flex-start; gap: 7px; width: 100%; text-align: left; font-family: var(--mono); font-size: 11px; line-height: 1.4; letter-spacing: .1px; color: var(--muted); background: transparent; border: 1px solid transparent; border-radius: 7px; padding: 6px 8px; cursor: pointer; transition: background .12s ease, color .12s ease, border-color .12s ease; }
+.peek-act:hover { background: var(--panel-2); color: var(--text); }
+.peek-act.is-on { background: rgba(189,90,56,.1); border-color: var(--accent-dim); color: var(--text); }
+.peek-act-n { flex: 0 0 auto; color: var(--accent); font-weight: 650; }
+.peek-act-t { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }   /* one line per call in the turn */
+@media (max-width: 640px) {
+  .peek { grid-template-columns: 1fr; grid-template-rows: auto auto; width: calc(100vw - 32px); height: auto; max-height: calc(100vh - 32px); }
+  .peek-stage { flex: 0 0 auto; aspect-ratio: 16 / 10; }
+  .peek-actions { border-left: none; border-top: 1.5px solid var(--line-2); max-height: 32vh; }
+}
 /* ---- table of contents — the blog index's postlist idiom, numbered (the sections are a sequence) ---- */
 .toc { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 12px; padding: 6px; margin: 2px 0 34px; }
 .toc a { display: flex; align-items: baseline; gap: 14px; padding: 10px 15px; border-radius: 8px; font-family: var(--mono); font-size: 13.5px; color: var(--text); transition: background .14s ease, color .14s ease; }
@@ -280,9 +305,9 @@
       <tbody>
         <tr><th scope="row">Runtime</th><td>QEMU/KVM VM</td><td class="cmp-hi">Docker container</td></tr>
         <tr><th scope="row">Host requirement</th><td>/dev/kvm, nested virt</td><td class="cmp-hi">Any Docker host</td></tr>
-        <tr><th scope="row">Memory</th><td><span class="cmp-skel"></span></td><td class="cmp-hi"><span class="cmp-skel"></span></td></tr>
-        <tr><th scope="row">Cold start</th><td><span class="cmp-skel"></span></td><td class="cmp-hi"><span class="cmp-skel"></span></td></tr>
-        <tr><th scope="row">Parallelism</th><td><span class="cmp-skel"></span></td><td class="cmp-hi"><span class="cmp-skel"></span></td></tr>
+        <tr><th scope="row">Memory</th><td>4.1 GB</span></td><td class="cmp-hi">0.9 GB</span></td></tr>
+        <tr><th scope="row">Cold start</th><td>29.9 s</span></td><td class="cmp-hi">23.8 s</span></td></tr>
+        <tr><th scope="row">Parallelism</th><td>baseline</span></td><td class="cmp-hi">~4.6× more instance</span></td></tr>
         <tr><th scope="row">Task suite</th><td>OSWorld</td><td class="cmp-hi">Identical</td></tr>
       </tbody>
     </table>
@@ -297,19 +322,19 @@
 
   <figure class="hh" aria-label="The same agent rollout in OSWorld and Lite.OSWorld, side by side">
     <div class="hh-tabs" role="tablist">
-      <button class="hh-tab is-on" type="button" role="tab" aria-selected="true">Chrome</button>
-      <button class="hh-tab" type="button" role="tab" aria-selected="false">Calc</button>
-      <button class="hh-tab" type="button" role="tab" aria-selected="false">Writer</button>
-      <button class="hh-tab" type="button" role="tab" aria-selected="false">Impress</button>
-      <button class="hh-tab" type="button" role="tab" aria-selected="false">GIMP</button>
-      <button class="hh-tab" type="button" role="tab" aria-selected="false">VLC</button>
-      <button class="hh-tab" type="button" role="tab" aria-selected="false">VS&nbsp;Code</button>
+      <button class="hh-tab is-on" type="button" role="tab" aria-selected="true" data-task="chrome">Chrome</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false" data-task="calc">Calc</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false" data-task="writer">Writer</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false" data-task="impress">Impress</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false" data-task="gimp">GIMP</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false" data-task="vlc">VLC</button>
+      <button class="hh-tab" type="button" role="tab" aria-selected="false" data-task="vscode">VS&nbsp;Code</button>
     </div>
     <div class="hh-pair">
-      <div class="hh-panel"><span class="hh-tag">OSWorld</span><span class="hh-live" aria-hidden="true"><i></i><i></i><i></i></span><span class="hh-scrub" aria-hidden="true"></span></div>
-      <div class="hh-panel hh-lite"><span class="hh-tag">Lite.OSWorld</span><span class="hh-live" aria-hidden="true"><i></i><i></i><i></i></span><span class="hh-scrub" aria-hidden="true"></span></div>
+      <div class="hh-panel"><video class="hh-vid" muted loop playsinline preload="metadata"></video><span class="hh-tag">OSWorld</span><span class="hh-live" aria-hidden="true"><i></i><i></i><i></i></span><span class="hh-scrub" aria-hidden="true"><span class="hh-scrub-fill"></span></span></div>
+      <div class="hh-panel hh-lite"><video class="hh-vid" muted loop playsinline preload="metadata"></video><span class="hh-tag">Lite.OSWorld</span><span class="hh-live" aria-hidden="true"><i></i><i></i><i></i></span><span class="hh-scrub" aria-hidden="true"><span class="hh-scrub-fill"></span></span></div>
     </div>
-    <figcaption class="hh-cap">Same model, same task — <span class="cmp-pending">clips land with the benchmark writeup.</span></figcaption>
+    <figcaption class="hh-cap">Same model, same task — switch tabs, or hover a panel for the full rollout.</figcaption>
   </figure>
 
   <p><b>And the same scores.</b> Thirteen models, graded on both — each lands on the equal-score
@@ -336,7 +361,7 @@
       <button class="belt-tab" type="button" role="tab" aria-selected="false">Lite.CUAWorld</button>
     </div>
     <div class="belt"><div class="belt-track" aria-hidden="true"></div></div>
-    <figcaption class="belt-cap">Looping rollout trajectories — <span class="cmp-pending">clips land with the benchmark writeup.</span></figcaption>
+    <figcaption class="belt-cap">Looping rollout trajectories — hover a tile for the full rollout.</figcaption>
   </figure>
   <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/tree/main/lite/gym/envs/lite" target="_blank" rel="noopener">Lite.* environments ↗</a> &nbsp;·&nbsp; <a href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">Rollout datasets ↗</a></p>
   </section>
@@ -347,6 +372,21 @@
   <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Hugging Face</a> ·
   <a href="mailto:zhanhui@berkeley.edu">Email</a>.</p>
 </main>
+
+<!-- shared rollout viewer — both clip sections hover into this one panel -->
+<div class="peek-scrim"></div>
+<div class="peek" hidden>
+  <div class="peek-media">
+    <div class="peek-head">
+      <span class="peek-domain"></span>
+      <p class="peek-instr"></p>
+    </div>
+    <div class="peek-stage">
+      <video class="peek-vid" muted loop playsinline preload="none"></video>
+    </div>
+  </div>
+  <ol class="peek-actions"></ol>
+</div>
 
 <footer class="blog-foot">
   <span>© 2026 CUA-Lite — any data, any agent, any computer.</span>
@@ -429,17 +469,144 @@
 })();
 </script>
 <script>
-/* Still OSWorld? · task switcher — one row of tabs drives both panels in lockstep.
-   Placeholder for now (no clips yet); when real clips land, swap panel sources here. */
+/* Shared rollout viewer. Hovering any bound clip enlarges it: the task instruction runs
+   along the clip's bottom edge, the action log sits on the right, and clicking an action
+   freezes the clip on the screenshot captured just before that action ran — click the
+   screenshot to resume. Data: assets/rollouts.json (regenerate with build-manifests.py). */
+const Rollouts = (function () {
+  "use strict";
+  const ready = fetch("assets/rollouts.json").then((r) => r.json()).catch(() => ({ hh: {}, belt: {} }));
+  const peek = document.querySelector(".peek"), scrim = document.querySelector(".peek-scrim");
+  if (!peek || !scrim) return { ready, bind() {} };
+
+  const vid = peek.querySelector(".peek-vid");
+  const instr = peek.querySelector(".peek-instr"), domain = peek.querySelector(".peek-domain");
+  const list = peek.querySelector(".peek-actions");
+  let openKey = null, timer = null, turns = [], marked = -1;
+
+  /* keep the log in step with playback: highlight the turn currently on screen */
+  function sync() {
+    if (!turns.length) return;
+    const t = vid.currentTime + 0.01;
+    let i = 0;
+    for (let k = 0; k < turns.length; k++) if (turns[k].t <= t) i = k;
+    if (i === marked) return;
+    marked = i;
+    [...list.children].forEach((li, k) => li.firstChild.classList.toggle("is-on", k === i));
+    const row = list.children[i];
+    if (row) row.scrollIntoView({ block: "nearest" });
+  }
+
+  function seek(i) {
+    const t = turns[i].t + 0.05;      // nudge inside the frame so we don't land on its boundary
+    vid.currentTime = vid.duration ? Math.min(t, vid.duration - 0.01) : t;
+    vid.play().catch(() => {});       // stay playing — the clip runs on from that turn
+    marked = -1; sync();
+  }
+
+  function open(key, clip) {
+    clearTimeout(timer);                     // cancel a pending close, incl. re-entering the same clip
+    if (!clip || key === openKey) return;
+    openKey = key;
+    turns = clip.turns; marked = -1;
+    domain.textContent = clip.domain;
+    instr.textContent = clip.instruction;
+    if (vid.getAttribute("src") !== clip.video) vid.src = clip.video;   // same clip re-opens instantly
+    vid.play().catch(() => {});
+    list.innerHTML = "";
+    clip.turns.forEach((t, i) => {
+      const li = document.createElement("li"), b = document.createElement("button");
+      b.type = "button"; b.className = "peek-act";
+      b.innerHTML = '<span class="peek-act-n"></span><span class="peek-act-t"></span>';
+      b.firstChild.textContent = i + 1;
+      b.lastChild.textContent = t.action;
+      b.addEventListener("click", () => seek(i));
+      li.appendChild(b); list.appendChild(li);
+    });
+    peek.hidden = false;
+    requestAnimationFrame(() => { peek.classList.add("is-on"); scrim.classList.add("is-on"); });
+  }
+
+  function close() {
+    clearTimeout(timer);
+    peek.classList.remove("is-on"); scrim.classList.remove("is-on");
+    openKey = null;
+    timer = setTimeout(() => { peek.hidden = true; vid.pause(); }, 180);   // after the fade
+  }
+  const arm = (delay) => { clearTimeout(timer); timer = setTimeout(close, delay); };
+
+  vid.addEventListener("timeupdate", sync);
+  peek.addEventListener("mouseenter", () => clearTimeout(timer));
+  peek.addEventListener("mouseleave", () => arm(160));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  document.addEventListener("click", (e) => {   // the scrim is click-through, so dismiss from here
+    if (openKey && !peek.contains(e.target) && !e.target.closest("[data-peek]")) close();
+  });
+
+  return {
+    ready,
+    /* resolve() runs at hover time and returns {key, clip}, so tab switches stay live */
+    bind(el, resolve) {
+      el.dataset.peek = "";
+      el.addEventListener("mouseenter", () => { const r = resolve(); if (r) open(r.key, r.clip); });
+      el.addEventListener("mouseleave", () => arm(320));   // grace period to travel into the peek
+    },
+  };
+})();
+</script>
+<script>
+/* Still OSWorld? · task switcher — one row of tabs drives both panels in lockstep. */
 (function () {
   "use strict";
   const hh = document.querySelector(".hh");
   if (!hh) return;
   const tabs = [...hh.querySelectorAll(".hh-tab")];
-  tabs.forEach((t) => t.addEventListener("click", () => {
-    tabs.forEach((o) => { const on = o === t; o.classList.toggle("is-on", on); o.setAttribute("aria-selected", on); });
-    // future: point both .hh-panel clips at the selected task's OSWorld / Lite.OSWorld sources
+  const panels = [...hh.querySelectorAll(".hh-panel")];
+  const SIDES = ["os", "liteos"];   // panel order: OSWorld, then Lite.OSWorld
+  let DATA = null, active = false, task = "chrome";
+
+  const videos = panels.map((panel) => {
+    const video = panel.querySelector(".hh-vid"), fill = panel.querySelector(".hh-scrub-fill");
+    video.addEventListener("timeupdate", () => {
+      if (video.duration) fill.style.width = (video.currentTime / video.duration * 100) + "%";
+    });
+    return video;
+  });
+
+  const clipFor = (i) => DATA && DATA.hh[task] && DATA.hh[task][SIDES[i]];
+  panels.forEach((panel, i) => Rollouts.bind(panel, () => {
+    const clip = clipFor(i);
+    return clip && { key: "hh:" + task + ":" + SIDES[i], clip };
   }));
+
+  function loadTask(next, play) {
+    task = next;
+    videos.forEach((v, i) => {
+      const clip = clipFor(i);
+      if (!clip) return;
+      v.src = clip.video;
+      if (play) v.play().catch(() => {});
+    });
+  }
+
+  tabs.forEach((t) => t.addEventListener("click", () => {
+    if (t.classList.contains("is-on") || !DATA) return;
+    tabs.forEach((o) => { const on = o === t; o.classList.toggle("is-on", on); o.setAttribute("aria-selected", on); });
+    loadTask(t.dataset.task, active);
+  }));
+
+  const start = () => { active = true; videos.forEach((v) => v.play().catch(() => {})); };
+
+  Rollouts.ready.then((data) => {
+    DATA = data;
+    loadTask(tabs.find((t) => t.classList.contains("is-on")).dataset.task, false);
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.isIntersecting && !active) { start(); io.disconnect(); }
+      }), { rootMargin: "0px 0px -15% 0px" });
+      io.observe(hh);
+    } else { start(); }
+  });
 })();
 </script>
 <script>
@@ -494,25 +661,48 @@
 </script>
 <script>
 /* training-env belt · a conveyor of looping rollout clips; pills switch the env family.
-   Placeholder frames for now — swap each tile for a muted autoplay <video> when clips land. */
+   Tiles are labelled with the task's app domain and hover into the shared Rollouts peek. */
 (function () {
   "use strict";
   const fig = document.querySelector(".belt-fig");
   if (!fig) return;
   const track = fig.querySelector(".belt-track"), tabs = [...fig.querySelectorAll(".belt-tab")];
-  const WS = [42, 55, 34, 60, 48, 38];   // vary the "content line" so the frames aren't identical
-  const tile = (env, i) => {
-    const d = document.createElement("div"); d.className = "belt-tile"; d.style.setProperty("--w", WS[i % WS.length] + "%");
-    d.innerHTML = '<span class="belt-live"><i></i><i></i><i></i></span><span class="belt-tag"></span>';
-    d.querySelector(".belt-tag").textContent = env;
+  let DATA = null, active = false;
+
+  const tile = (fam, i, clip) => {
+    const d = document.createElement("div"); d.className = "belt-tile";
+    d.innerHTML = '<video class="belt-vid" muted loop playsinline preload="auto"></video><span class="belt-live" aria-hidden="true"><i></i><i></i><i></i></span><span class="belt-tag"></span>';
+    d.querySelector(".belt-vid").src = clip.video;
+    d.querySelector(".belt-tag").textContent = clip.domain;
+    Rollouts.bind(d, () => ({ key: "belt:" + fam + ":" + i, clip }));
     return d;
   };
-  const fill = (env) => { track.innerHTML = ""; for (let k = 0; k < 2; k++) for (let i = 0; i < WS.length; i++) track.appendChild(tile(env, i)); };   // ×2 = seamless loop
-  fill("Lite.OSWorld");
+
+  const fill = (fam) => {
+    track.innerHTML = "";
+    const clips = (DATA.belt && DATA.belt[fam]) || [];
+    for (let k = 0; k < 2; k++) clips.forEach((c, i) => track.appendChild(tile(fam, i, c)));   // ×2 = seamless loop
+    if (active) fig.querySelectorAll(".belt-vid").forEach((v) => v.play().catch(() => {}));
+  };
+
   tabs.forEach((t) => t.addEventListener("click", () => {
+    if (t.classList.contains("is-on") || !DATA) return;
     tabs.forEach((o) => { const on = o === t; o.classList.toggle("is-on", on); o.setAttribute("aria-selected", on); });
-    fig.querySelectorAll(".belt-tag").forEach((g) => { g.textContent = t.textContent; });   // relabel in place — no scroll jump
+    fill(t.textContent.trim());
   }));
+
+  const start = () => { active = true; fig.querySelectorAll(".belt-vid").forEach((v) => v.play().catch(() => {})); };
+
+  Rollouts.ready.then((data) => {
+    DATA = data;
+    fill(tabs.find((t) => t.classList.contains("is-on")).textContent.trim());
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.isIntersecting && !active) { start(); io.disconnect(); }
+      }), { rootMargin: "0px 0px -15% 0px" });
+      io.observe(fig);
+    } else { start(); }
+  });
 })();
 </script>
 <script src="/js/lspop.js"></script>

@@ -7,3 +7,13 @@ __pycache__/
 /tmp/
 *.local.png
 .DS_Store
+my_logs/
+
+# Raw rollout data (~1.4 GB): per-turn screenshots, prompts and traces that
+# assets/build-manifests.py reads to produce assets/rollouts.json. The published page
+# needs only rollouts.json plus the trajectory.mp4 clips it references, so the source
+# trees stay local — regenerating the manifest requires them on disk.
+blog/kvm-free-osworld/assets/**/turn_*/
+blog/kvm-free-osworld/assets/**/*.parquet
+blog/kvm-free-osworld/assets/**/summary.json
+blog/kvm-free-osworld/assets/**/error.txt

@@ -1,0 +1,1954 @@
+{
+ "hh": {
+  "calc": {
+   "os": {
+    "domain": "calc \u00b7 OSWorld",
+    "instruction": "Please calculate the ages of the employees according to their birthday. Finish the work and don't touch irrelevant regions, even if they are blank.",
+    "video": "assets/osworld/calc/os/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(217, 308)",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"=DATEDIF(C2,TODAY(),\\\"Y\")",
+      "t": 1.0
+     },
+     {
+      "action": "key(\"enter\")",
+      "t": 2.0
+     },
+     {
+      "action": "click(599, 613)",
+      "t": 3.0
+     },
+     {
+      "action": "drag(224, 837)",
+      "t": 4.0
+     },
+     {
+      "action": "click(224, 306)",
+      "t": 5.0
+     },
+     {
+      "action": "drag(224, 837)",
+      "t": 6.0
+     },
+     {
+      "action": "click(224, 306)",
+      "t": 7.0
+     },
+     {
+      "action": "drag(224, 837)",
+      "t": 8.0
+     },
+     {
+      "action": "click(224, 306)",
+      "t": 9.0
+     },
+     {
+      "action": "drag(224, 837)",
+      "t": 10.0
+     },
+     {
+      "action": "click(224, 306)",
+      "t": 11.0
+     },
+     {
+      "action": "drag(224, 837)",
+      "t": 12.0
+     },
+     {
+      "action": "click(224, 306)",
+      "t": 13.0
+     }
+    ]
+   },
+   "liteos": {
+    "domain": "calc \u00b7 Lite.OSWorld",
+    "instruction": "Please calculate the ages of the employees according to their birthday. Finish the work and don't touch irrelevant regions, even if they are blank.",
+    "video": "assets/osworld/calc/liteos/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(226, 235)",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"=DATEDIF(C2,TODAY(),\\\"Y\")",
+      "t": 1.0
+     },
+     {
+      "action": "key(\"enter\")",
+      "t": 2.0
+     },
+     {
+      "action": "click(601, 641)",
+      "t": 3.0
+     },
+     {
+      "action": "drag(232, 767)",
+      "t": 4.0
+     },
+     {
+      "action": "click(224, 238)",
+      "t": 5.0
+     },
+     {
+      "action": "drag(232, 767)",
+      "t": 6.0
+     },
+     {
+      "action": "click(224, 238)",
+      "t": 7.0
+     },
+     {
+      "action": "drag(232, 767)",
+      "t": 8.0
+     },
+     {
+      "action": "click(224, 238)",
+      "t": 9.0
+     },
+     {
+      "action": "drag(232, 767)",
+      "t": 10.0
+     },
+     {
+      "action": "click(224, 238)",
+      "t": 11.0
+     },
+     {
+      "action": "drag(232, 767)",
+      "t": 12.0
+     },
+     {
+      "action": "click(224, 238)",
+      "t": 13.0
+     }
+    ]
+   }
+  },
+  "chrome": {
+   "os": {
+    "domain": "chrome \u00b7 OSWorld",
+    "instruction": "Book an appointment to apply for a transportation access pass at the Charlie Card store on the first Monday eight months later, 10:15 am, fill in my details (James Smith, james.smith@gmail.com). And do not click \"book\" directly. Let me review it.",
+    "video": "assets/osworld/chrome/os/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(398, 135)",
+      "t": 0.0
+     },
+     {
+      "action": "click(554, 335)",
+      "t": 1.0
+     },
+     {
+      "action": "click(347, 616)",
+      "t": 2.0
+     },
+     {
+      "action": "click(279, 740)",
+      "t": 3.0
+     },
+     {
+      "action": "click(659, 662)",
+      "t": 4.0
+     },
+     {
+      "action": "wait(2)",
+      "t": 5.0
+     },
+     {
+      "action": "click(367, 574)",
+      "t": 5.0
+     },
+     {
+      "action": "click(315, 863)",
+      "t": 6.0
+     },
+     {
+      "action": "click(315, 863)",
+      "t": 7.0
+     },
+     {
+      "action": "click(315, 863)",
+      "t": 8.0
+     },
+     {
+      "action": "click(315, 863)",
+      "t": 9.0
+     },
+     {
+      "action": "click(315, 863)",
+      "t": 10.0
+     }
+    ]
+   },
+   "liteos": {
+    "domain": "chrome \u00b7 Lite.OSWorld",
+    "instruction": "Book an appointment to apply for a transportation access pass at the Charlie Card store on the first Monday eight months later, 10:15 am, fill in my details (James Smith, james.smith@gmail.com). And do not click \"book\" directly. Let me review it.",
+    "video": "assets/osworld/chrome/liteos/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(396, 135)",
+      "t": 0.0
+     },
+     {
+      "action": "click(554, 335)",
+      "t": 1.0
+     },
+     {
+      "action": "wait(2)",
+      "t": 2.0
+     },
+     {
+      "action": "click(354, 616)",
+      "t": 2.0
+     },
+     {
+      "action": "click(279, 740)",
+      "t": 3.0
+     },
+     {
+      "action": "click(656, 662)",
+      "t": 4.0
+     },
+     {
+      "action": "wait(2)",
+      "t": 5.0
+     },
+     {
+      "action": "click(368, 570)",
+      "t": 5.0
+     },
+     {
+      "action": "click(315, 863)",
+      "t": 6.0
+     },
+     {
+      "action": "click(315, 863)",
+      "t": 7.0
+     },
+     {
+      "action": "click(315, 863)",
+      "t": 8.0
+     },
+     {
+      "action": "click(315, 863)",
+      "t": 9.0
+     },
+     {
+      "action": "click(315, 863)",
+      "t": 10.0
+     }
+    ]
+   }
+  },
+  "gimp": {
+   "os": {
+    "domain": "gimp \u00b7 OSWorld",
+    "instruction": "Could you tone down the brightness of my photo?",
+    "video": "assets/osworld/gimp/os/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(16, 494)",
+      "t": 0.0
+     },
+     {
+      "action": "click(47, 67)",
+      "t": 1.0
+     },
+     {
+      "action": "click(65, 138)",
+      "t": 2.0
+     },
+     {
+      "action": "click(529, 666)",
+      "t": 3.0
+     },
+     {
+      "action": "click(193, 67)",
+      "t": 4.0
+     },
+     {
+      "action": "click(228, 252)",
+      "t": 5.0
+     },
+     {
+      "action": "drag(232, 245)",
+      "t": 6.0
+     },
+     {
+      "action": "click(296, 392)",
+      "t": 7.0
+     },
+     {
+      "action": "terminate(status=\"success\")",
+      "t": 8.0
+     }
+    ]
+   },
+   "liteos": {
+    "domain": "gimp \u00b7 Lite.OSWorld",
+    "instruction": "Could you tone down the brightness of my photo?",
+    "video": "assets/osworld/gimp/liteos/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(271, 134)",
+      "t": 0.0
+     },
+     {
+      "action": "click(304, 329)",
+      "t": 1.0
+     },
+     {
+      "action": "drag(304, 317)",
+      "t": 2.0
+     },
+     {
+      "action": "click(380, 474)",
+      "t": 3.0
+     },
+     {
+      "action": "terminate(status=\"success\")",
+      "t": 4.0
+     }
+    ]
+   }
+  },
+  "impress": {
+   "os": {
+    "domain": "impress \u00b7 OSWorld",
+    "instruction": "Could you help me export an Impress file to a .png image file and save it as res.png on the Desktop? Follow the default export setting is fine.",
+    "video": "assets/osworld/impress/os/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(47, 68)",
+      "t": 0.0
+     },
+     {
+      "action": "click(77, 442)",
+      "t": 1.0
+     },
+     {
+      "action": "click(77, 442)",
+      "t": 2.0
+     },
+     {
+      "action": "click(77, 442)",
+      "t": 3.0
+     },
+     {
+      "action": "click(77, 442)",
+      "t": 4.0
+     },
+     {
+      "action": "click(77, 442)",
+      "t": 5.0
+     }
+    ]
+   },
+   "liteos": {
+    "domain": "impress \u00b7 Lite.OSWorld",
+    "instruction": "Could you help me export an Impress file to a .png image file and save it as res.png on the Desktop? Follow the default export setting is fine.",
+    "video": "assets/osworld/impress/liteos/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(47, 68)",
+      "t": 0.0
+     },
+     {
+      "action": "click(77, 457)",
+      "t": 1.0
+     },
+     {
+      "action": "click(77, 457)",
+      "t": 2.0
+     },
+     {
+      "action": "click(77, 457)",
+      "t": 3.0
+     },
+     {
+      "action": "click(77, 457)",
+      "t": 4.0
+     },
+     {
+      "action": "click(77, 457)",
+      "t": 5.0
+     }
+    ]
+   }
+  },
+  "vlc": {
+   "os": {
+    "domain": "vlc \u00b7 OSWorld",
+    "instruction": "Can you change the color of the volume slider to black-ish color? I often use the player in a low-light environment, and a darker color scheme would be less straining on my eyes, especially during nighttime usage.",
+    "video": "assets/osworld/vlc/os/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(491, 342)",
+      "t": 0.0
+     },
+     {
+      "action": "click(514, 554)",
+      "t": 1.0
+     },
+     {
+      "action": "click(356, 246)",
+      "t": 2.0
+     },
+     {
+      "action": "click(307, 246)",
+      "t": 3.0
+     },
+     {
+      "action": "click(532, 373)",
+      "t": 4.0
+     },
+     {
+      "action": "click(651, 416)",
+      "t": 5.0
+     },
+     {
+      "action": "click(651, 416)",
+      "t": 6.0
+     },
+     {
+      "action": "click(651, 416)",
+      "t": 7.0
+     },
+     {
+      "action": "click(651, 416)",
+      "t": 8.0
+     },
+     {
+      "action": "click(651, 416)",
+      "t": 9.0
+     }
+    ]
+   },
+   "liteos": {
+    "domain": "vlc \u00b7 Lite.OSWorld",
+    "instruction": "Can you change the color of the volume slider to black-ish color? I often use the player in a low-light environment, and a darker color scheme would be less straining on my eyes, especially during nighttime usage.",
+    "video": "assets/osworld/vlc/liteos/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(517, 323)",
+      "t": 0.0
+     },
+     {
+      "action": "click(542, 536)",
+      "t": 1.0
+     },
+     {
+      "action": "click(517, 323)",
+      "t": 2.0
+     },
+     {
+      "action": "click(382, 230)",
+      "t": 3.0
+     },
+     {
+      "action": "click(332, 230)",
+      "t": 4.0
+     },
+     {
+      "action": "click(558, 355)",
+      "t": 5.0
+     },
+     {
+      "action": "click(678, 395)",
+      "t": 6.0
+     },
+     {
+      "action": "click(678, 395)",
+      "t": 7.0
+     },
+     {
+      "action": "click(678, 395)",
+      "t": 8.0
+     },
+     {
+      "action": "click(678, 395)",
+      "t": 9.0
+     },
+     {
+      "action": "click(678, 395)",
+      "t": 10.0
+     }
+    ]
+   }
+  },
+  "vscode": {
+   "os": {
+    "domain": "vscode \u00b7 OSWorld",
+    "instruction": "Please help me change the color theme of VS Code to Visual Studio Dark.",
+    "video": "assets/osworld/vscode/os/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(16, 185)",
+      "t": 0.0
+     },
+     {
+      "action": "click(46, 951)",
+      "t": 1.0
+     },
+     {
+      "action": "click(95, 890)",
+      "t": 2.0
+     },
+     {
+      "action": "click(303, 894)",
+      "t": 3.0
+     },
+     {
+      "action": "click(399, 270)",
+      "t": 4.0
+     },
+     {
+      "action": "response(\"The color theme has been successfully changed to Vi\u2026\")",
+      "t": 5.0
+     }
+    ]
+   },
+   "liteos": {
+    "domain": "vscode \u00b7 Lite.OSWorld",
+    "instruction": "Please help me change the color theme of VS Code to Visual Studio Dark.",
+    "video": "assets/osworld/vscode/liteos/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(47, 951)",
+      "t": 0.0
+     },
+     {
+      "action": "click(96, 905)",
+      "t": 1.0
+     },
+     {
+      "action": "click(339, 905)",
+      "t": 2.0
+     },
+     {
+      "action": "click(437, 267)",
+      "t": 3.0
+     },
+     {
+      "action": "response(\"The color theme has been changed to Visual Studio D\u2026\")",
+      "t": 4.0
+     }
+    ]
+   }
+  },
+  "writer": {
+   "os": {
+    "domain": "writer \u00b7 OSWorld",
+    "instruction": "Please help me make the first letter of each word to uppercase.",
+    "video": "assets/osworld/writer/os/trajectory.mp4",
+    "turns": [
+     {
+      "action": "key(\"ctrl\", \"a\")",
+      "t": 0.0
+     },
+     {
+      "action": "click(152, 68)",
+      "t": 1.0
+     },
+     {
+      "action": "click(157, 90)",
+      "t": 2.0
+     },
+     {
+      "action": "click(326, 466)",
+      "t": 3.0
+     },
+     {
+      "action": "terminate(status=\"success\")",
+      "t": 4.0
+     }
+    ]
+   },
+   "liteos": {
+    "domain": "writer \u00b7 Lite.OSWorld",
+    "instruction": "Please help me make the first letter of each word to uppercase.",
+    "video": "assets/osworld/writer/liteos/trajectory.mp4",
+    "turns": [
+     {
+      "action": "key(\"ctrl\", \"a\")",
+      "t": 0.0
+     },
+     {
+      "action": "click(152, 68)",
+      "t": 1.0
+     },
+     {
+      "action": "click(157, 90)",
+      "t": 2.0
+     },
+     {
+      "action": "click(337, 481)",
+      "t": 3.0
+     },
+     {
+      "action": "terminate(status=\"success\")",
+      "t": 4.0
+     }
+    ]
+   }
+  }
+ },
+ "belt": {
+  "Lite.OSWorld": [
+   {
+    "domain": "calc",
+    "instruction": "Fill all the blank cells in B1:E30 with the value in the cell above it. Finish the work and don't touch irrelevant regions, even if they are blank.",
+    "video": "assets/beyond_os/osworld/osworld_libreoffice_calc_01b269ae/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "drag(130, 240, 130, 319)\nkey(\"ctrl\", \"d\")",
+      "t": 0.0
+     },
+     {
+      "action": "drag(130, 324, 130, 538)",
+      "t": 1.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 2.0
+     },
+     {
+      "action": "drag(130, 523, 130, 621)",
+      "t": 3.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 4.0
+     },
+     {
+      "action": "drag(130, 624, 130, 721)",
+      "t": 5.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 6.0
+     },
+     {
+      "action": "drag(177, 238, 177, 278)",
+      "t": 7.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 8.0
+     },
+     {
+      "action": "drag(177, 287, 177, 305)",
+      "t": 9.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 10.0
+     },
+     {
+      "action": "drag(177, 321, 177, 388)",
+      "t": 11.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 12.0
+     },
+     {
+      "action": "drag(177, 406, 177, 454)",
+      "t": 13.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 14.0
+     },
+     {
+      "action": "drag(177, 471, 177, 507)",
+      "t": 15.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 16.0
+     },
+     {
+      "action": "drag(177, 521, 177, 555)",
+      "t": 17.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 18.0
+     },
+     {
+      "action": "drag(177, 572, 177, 603)",
+      "t": 19.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 20.0
+     },
+     {
+      "action": "drag(177, 623, 177, 706)",
+      "t": 21.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 22.0
+     },
+     {
+      "action": "key(\"ctrl\", \"s\")",
+      "t": 23.0
+     }
+    ]
+   },
+   {
+    "domain": "chrome",
+    "instruction": "Could you help me unzip the downloaded extension file from /home/user/Desktop/ to /home/user/Desktop/ and configure it in Chrome's extensions?",
+    "video": "assets/beyond_os/osworld/osworld_chrome_6766f2b8/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "key(\"ctrl\", \"alt\", \"t\")",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"ls -l /home/user/Desktop\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"ls -la /home/user/Desktop && ls -la /home/user/Desk\u2026\")",
+      "t": 2.0
+     },
+     {
+      "action": "click(289, 81)\ntype(\"chrome://extensions\")\nkey(\"enter\")",
+      "t": 3.0
+     },
+     {
+      "action": "click(433, 92)",
+      "t": 4.0
+     },
+     {
+      "action": "type(\"chrome://extensions\")\nkey(\"enter\")",
+      "t": 5.0
+     },
+     {
+      "action": "click(988, 131)",
+      "t": 6.0
+     },
+     {
+      "action": "click(81, 183)",
+      "t": 7.0
+     },
+     {
+      "action": "click(241, 392)",
+      "t": 8.0
+     },
+     {
+      "action": "click(337, 194)",
+      "t": 9.0
+     },
+     {
+      "action": "click(806, 94)",
+      "t": 10.0
+     }
+    ]
+   },
+   {
+    "domain": "files",
+    "instruction": "My glasses are broken, and I'm having trouble seeing small things clearly. Could you help me enlarge the text on my screen so it's easier to read?",
+    "video": "assets/beyond_os/osworld/osworld_os_3ce045a0/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(967, 14)",
+      "t": 0.0
+     },
+     {
+      "action": "click(869, 133)",
+      "t": 1.0
+     },
+     {
+      "action": "click(276, 153)\ntype(\"large text\")\nkey(\"enter\")",
+      "t": 2.0
+     },
+     {
+      "action": "scroll(341, 827, direction=\"down\", amount=5)",
+      "t": 3.0
+     },
+     {
+      "action": "click(312, 696)",
+      "t": 4.0
+     },
+     {
+      "action": "click(712, 363)",
+      "t": 5.0
+     }
+    ]
+   },
+   {
+    "domain": "gimp",
+    "instruction": "Set the minimum number of undo steps to 100.",
+    "video": "assets/beyond_os/osworld/osworld_gimp_7b7617bd/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(133, 138)",
+      "t": 0.0
+     },
+     {
+      "action": "click(164, 684)",
+      "t": 1.0
+     },
+     {
+      "action": "click(347, 606)\nkey(\"ctrl\", \"a\")\ntype(\"100\")",
+      "t": 2.0
+     },
+     {
+      "action": "click(473, 893)",
+      "t": 3.0
+     },
+     {
+      "action": "click(133, 138)",
+      "t": 4.0
+     },
+     {
+      "action": "click(164, 684)",
+      "t": 5.0
+     },
+     {
+      "action": "click(427, 893)",
+      "t": 6.0
+     }
+    ]
+   },
+   {
+    "domain": "impress",
+    "instruction": "Could you help me export an Impress file to a .png image file and save it as res.png on the Desktop? Follow the default export setting is fine.",
+    "video": "assets/beyond_os/osworld/osworld_libreoffice_impress_455d3c66/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(46, 71)",
+      "t": 0.0
+     },
+     {
+      "action": "click(68, 435)",
+      "t": 1.0
+     },
+     {
+      "action": "key(\"ctrl\", \"a\")\ntype(\"res.png\")",
+      "t": 2.0
+     },
+     {
+      "action": "click(818, 941)",
+      "t": 3.0
+     },
+     {
+      "action": "click(651, 858)",
+      "t": 4.0
+     },
+     {
+      "action": "click(806, 84)",
+      "t": 5.0
+     },
+     {
+      "action": "click(604, 743)",
+      "t": 6.0
+     },
+     {
+      "action": "click(19, 563)",
+      "t": 7.0
+     },
+     {
+      "action": "click(291, 160, clicks=2)",
+      "t": 8.0
+     },
+     {
+      "action": "click(203, 164, clicks=2)",
+      "t": 9.0
+     }
+    ]
+   },
+   {
+    "domain": "multi-app",
+    "instruction": "The guidelines for submitting our essay work are provided in the \"reminder.docx\" on the Desktop. My essay is stored as a docx file in /home/user. Please assist me in organizing the files for submission according to the specified requirements.",
+    "video": "assets/beyond_os/osworld/osworld_multi_apps_8df7e444/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(45, 70)",
+      "t": 0.0
+     },
+     {
+      "action": "click(66, 119)",
+      "t": 1.0
+     },
+     {
+      "action": "click(236, 145)",
+      "t": 2.0
+     },
+     {
+      "action": "click(441, 480)\nclick(807, 69)",
+      "t": 3.0
+     },
+     {
+      "action": "click(120, 102)",
+      "t": 4.0
+     },
+     {
+      "action": "type(\"Recruitment_and_retention_of_health_professionals_a\u2026\")\nclick(815, 94)",
+      "t": 5.0
+     },
+     {
+      "action": "click(18, 565)",
+      "t": 6.0
+     },
+     {
+      "action": "click(469, 281)\nclick(203, 455)",
+      "t": 7.0
+     },
+     {
+      "action": "click(470, 244)",
+      "t": 8.0
+     },
+     {
+      "action": "click(36, 14)",
+      "t": 9.0
+     },
+     {
+      "action": "type(\"terminal\")",
+      "t": 10.0
+     },
+     {
+      "action": "click(519, 168)",
+      "t": 11.0
+     },
+     {
+      "action": "type(\"zip essay_submission.zip \\\"Recruitment_and_retention\u2026\")\nkey(\"enter\")",
+      "t": 12.0
+     },
+     {
+      "action": "type(\"unzip -l essay_submission.zip\")\nkey(\"enter\")",
+      "t": 13.0
+     }
+    ]
+   },
+   {
+    "domain": "thunderbird",
+    "instruction": "Could you help me open up the profile management tabpage in Thunderbird? I want the profile management tabpage inside Thunderbird app, but not the profile chooser dialog during app launch.",
+    "video": "assets/beyond_os/osworld/osworld_thunderbird_7b1e1ff9/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(940, 80)",
+      "t": 0.0
+     },
+     {
+      "action": "click(936, 420)",
+      "t": 1.0
+     },
+     {
+      "action": "click(852, 332)",
+      "t": 2.0
+     },
+     {
+      "action": "key(\"ctrl\", \"f\")\ntype(\"profiles\")\nkey(\"enter\")",
+      "t": 3.0
+     },
+     {
+      "action": "click(240, 536)",
+      "t": 4.0
+     }
+    ]
+   },
+   {
+    "domain": "vlc",
+    "instruction": "I am reading lecture note in PDF while a music video is running in VLC media player. But I find I need to switch to the player every time I need to pause/start.Could you help me change the setting to allow pausing the video using keyboard shortcut without minimizing the PDF reader? I want to focus on the lecture note and don't be disturbed by the app switching.",
+    "video": "assets/beyond_os/osworld/osworld_vlc_386dbd0e/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "key(\"alt\", \"tab\")",
+      "t": 0.0
+     },
+     {
+      "action": "click(519, 327)",
+      "t": 1.0
+     },
+     {
+      "action": "click(543, 540)",
+      "t": 2.0
+     },
+     {
+      "action": "click(588, 224)",
+      "t": 3.0
+     },
+     {
+      "action": "click(586, 419, clicks=2)",
+      "t": 4.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"p\")",
+      "t": 5.0
+     },
+     {
+      "action": "click(656, 817)",
+      "t": 6.0
+     },
+     {
+      "action": "click(781, 833)",
+      "t": 7.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"p\")",
+      "t": 8.0
+     },
+     {
+      "action": "key(\"alt\", \"tab\")",
+      "t": 9.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"p\")",
+      "t": 10.0
+     },
+     {
+      "action": "key(\"space\")",
+      "t": 11.0
+     },
+     {
+      "action": "key(\"meta\")",
+      "t": 12.0
+     },
+     {
+      "action": "type(\"keyboard\")",
+      "t": 13.0
+     },
+     {
+      "action": "click(388, 135)",
+      "t": 14.0
+     },
+     {
+      "action": "click(541, 808)",
+      "t": 15.0
+     },
+     {
+      "action": "type(\"custom\")",
+      "t": 16.0
+     },
+     {
+      "action": "click(379, 277)",
+      "t": 17.0
+     },
+     {
+      "action": "scroll(589, 731, direction=\"down\", amount=4)",
+      "t": 18.0
+     },
+     {
+      "action": "click(418, 724)",
+      "t": 19.0
+     },
+     {
+      "action": "click(518, 389)",
+      "t": 20.0
+     },
+     {
+      "action": "type(\"VLC Play/Pause\")\nclick(505, 508)\ntype(\"dbus-send --type=method_call --dest=org.mpris.Media\u2026\")",
+      "t": 21.0
+     },
+     {
+      "action": "click(538, 550)",
+      "t": 22.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"p\")",
+      "t": 23.0
+     },
+     {
+      "action": "click(630, 415)",
+      "t": 24.0
+     },
+     {
+      "action": "click(761, 153)",
+      "t": 25.0
+     },
+     {
+      "action": "click(657, 278)",
+      "t": 26.0
+     },
+     {
+      "action": "click(761, 153)",
+      "t": 27.0
+     },
+     {
+      "action": "click(781, 833)",
+      "t": 28.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"p\")",
+      "t": 29.0
+     }
+    ]
+   }
+  ],
+  "Lite.ScaleCUA": [
+   {
+    "domain": "calc",
+    "instruction": "First complete columns B (millions) and C (billions) as labeled, rounded to one decimal with a space before the unit. Then add a 'Total' row in A9 with the sum of all Parameter values, and show that total in millions in B9 and billions in C9, same format.",
+    "video": "assets/beyond_os/scalecua/scalecua_osworld_rl_libreoffice_calc_21df9241_f8d7_4509_b7f1_37e501a823f7_traj_verify_2/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "click(131, 240)\ntype(\"0.0 M 0.0 B 0.0 M 0.0 B 0.0 M 0.0 B 0.0 M 0.0 B 1.5\u2026\")",
+      "t": 0.0
+     },
+     {
+      "action": "click(80, 377)\ntype(\"Total 15151.5 M 15.2 B\")",
+      "t": 1.0
+     },
+     {
+      "action": "key(\"ctrl\", \"s\")",
+      "t": 2.0
+     },
+     {
+      "action": "wait(1)",
+      "t": 3.0
+     }
+    ]
+   },
+   {
+    "domain": "chrome",
+    "instruction": "Enable the 'Pause playback when minimized' option in VLC's interface preferences.",
+    "video": "assets/beyond_os/scalecua/scalecua_osworld_rl_chrome_386dbd0e_0241_4a0a_b6a2_6704fba26b1c_traj_verify_2/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"t\")",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"grep -R \\\"pause.*minimized\\\\|minimi\\\" -n ~/.config/vlc\u2026\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"vlc -H 2>/dev/null | grep -i -C2 \\\"pause.*minim\\\\|min\u2026\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"mkdir -p ~/.config/vlc; touch ~/.config/vlc/vlcrc; \u2026\")",
+      "t": 1.0
+     }
+    ]
+   },
+   {
+    "domain": "files",
+    "instruction": "Please mute the system volume completely.",
+    "video": "assets/beyond_os/scalecua/scalecua_osworld_rl_os_28cc3b7e_b194_4bc9_8353_d04c0f4d56d2_traj_verify_0/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "click(972, 12)",
+      "t": 1.0
+     },
+     {
+      "action": "click(962, 12)",
+      "t": 1.0
+     },
+     {
+      "action": "click(986, 13)",
+      "t": 2.0
+     },
+     {
+      "action": "click(843, 54)",
+      "t": 3.0
+     }
+    ]
+   },
+   {
+    "domain": "gimp",
+    "instruction": "Convert computer.png to palette-based (indexed) mode and rotate it 90 degrees clockwise, then export as rotated_palette_computer.png.",
+    "video": "assets/beyond_os/scalecua/scalecua_osworld_rl_gimp_06ca5602_62ca_47f6_ad4f_da151cde54cc_traj_verify_3/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "click(616, 654)",
+      "t": 0.0
+     },
+     {
+      "action": "wait(1)",
+      "t": 0.0
+     },
+     {
+      "action": "click(212, 138)",
+      "t": 1.0
+     },
+     {
+      "action": "mouse_move(235, 201)\nmouse_move(359, 201)",
+      "t": 2.0
+     },
+     {
+      "action": "click(399, 249)",
+      "t": 3.0
+     },
+     {
+      "action": "click(567, 743)\nwait(1)",
+      "t": 4.0
+     },
+     {
+      "action": "click(212, 138)\nmouse_move(231, 284)\nmouse_move(359, 284)",
+      "t": 5.0
+     },
+     {
+      "action": "click(425, 345)\nwait(1)",
+      "t": 6.0
+     },
+     {
+      "action": "key(\"ctrl\", \"shift\", \"e\")",
+      "t": 7.0
+     },
+     {
+      "action": "wait(1)",
+      "t": 9.0
+     },
+     {
+      "action": "key(\"ctrl\", \"a\")\ntype(\"rotated_palette_computer.png\")\nclick(657, 670)",
+      "t": 9.0
+     },
+     {
+      "action": "click(656, 669)\nwait(1)",
+      "t": 9.0
+     },
+     {
+      "action": "click(490, 569)\nwait(1)",
+      "t": 10.0
+     }
+    ]
+   },
+   {
+    "domain": "impress",
+    "instruction": "In saa-format-guide.pptx, change the font color of the 'FHSS Writing Lab' text on slide 1 to red.",
+    "video": "assets/beyond_os/scalecua/scalecua_osworld_rl_libreoffice_impress_ac9bb6cb_1888_43ab_81e4_a98a547918cd_traj_verify_4/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "drag(395, 695, 520, 695)",
+      "t": 0.0
+     },
+     {
+      "action": "click(803, 305)",
+      "t": 1.0
+     },
+     {
+      "action": "click(817, 416)",
+      "t": 2.0
+     },
+     {
+      "action": "click(803, 305)\nclick(827, 416)",
+      "t": 3.0
+     },
+     {
+      "action": "key(\"ctrl\", \"s\")",
+      "t": 4.0
+     }
+    ]
+   },
+   {
+    "domain": "multi-app",
+    "instruction": "Using the bubble sort tutorial, complete the 'bubbleSort' function in 'bubbleSort.py' on the Desktop, run it, and save the sorted output to 'res.txt'.",
+    "video": "assets/beyond_os/scalecua/scalecua_osworld_rl_multi_apps_20236825_b5df_46e7_89bf_62e1d640a897_traj_verify_0/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"t\")",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"cd ~/Desktop && ls -la && sed -n '1,200p' bubbleSor\u2026\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"python3 - <<'PY' from pathlib import Path p=Path('b\u2026\")",
+      "t": 2.0
+     }
+    ]
+   },
+   {
+    "domain": "thunderbird",
+    "instruction": "In the local Bills folder, star all emails, mark them all as unread, and tag them all as 'Important'.",
+    "video": "assets/beyond_os/scalecua/scalecua_osworld_rl_thunderbird_dd84e895_72fd_4023_a336_97689ded257c_traj_verify_3/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "click(103, 502)",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"a\")",
+      "t": 1.0
+     },
+     {
+      "action": "key(\"s\")\nkey(\"1\")\nkey(\"shift\", \"m\")",
+      "t": 2.0
+     },
+     {
+      "action": "click(941, 80)",
+      "t": 3.0
+     },
+     {
+      "action": "key(\"esc\")\nclick(312, 154, button=\"right\")",
+      "t": 4.0
+     },
+     {
+      "action": "mouse_move(408, 385)",
+      "t": 5.0
+     },
+     {
+      "action": "click(456, 409)",
+      "t": 6.0
+     }
+    ]
+   },
+   {
+    "domain": "writer",
+    "instruction": "In the Dolch sight words document, change the font color of the word 'eat' to red.",
+    "video": "assets/beyond_os/scalecua/scalecua_osworld_rl_libreoffice_writer_8472fece_c7dd_4241_8d65_9b3cd1a0b568_traj_verify_5/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"f\")\ntype(\"eat\")\nkey(\"enter\")\nkey(\"esc\")",
+      "t": 0.0
+     },
+     {
+      "action": "click(529, 138)",
+      "t": 1.0
+     },
+     {
+      "action": "key(\"ctrl\", \"s\")",
+      "t": 2.0
+     }
+    ]
+   }
+  ],
+  "Lite.CUAGym": [
+   {
+    "domain": "calc",
+    "instruction": "Insert a new sheet named 'Notes' and change its tab color to yellow.",
+    "video": "assets/beyond_os/cuagym/0f66dfa6-97a0-557f-97cd-8133dbb10c90/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "click(101, 968)",
+      "t": 0.0
+     },
+     {
+      "action": "click(291, 968, button=\"right\")",
+      "t": 1.0
+     },
+     {
+      "action": "click(340, 781)",
+      "t": 2.0
+     },
+     {
+      "action": "type(\"Notes\")\nkey(\"enter\")",
+      "t": 3.0
+     },
+     {
+      "action": "click(290, 968, button=\"right\")",
+      "t": 4.0
+     },
+     {
+      "action": "click(327, 928)",
+      "t": 5.0
+     },
+     {
+      "action": "click(458, 449)\nclick(564, 680)",
+      "t": 6.0
+     },
+     {
+      "action": "key(\"ctrl\", \"s\")",
+      "t": 7.0
+     }
+    ]
+   },
+   {
+    "domain": "desktop",
+    "instruction": "Create a Cargo workspace with two members: a library crate 'core-lib' and a binary crate 'cli-app' that depends on core-lib.",
+    "video": "assets/beyond_os/cuagym/5a8dda41-2037-524c-b326-0cf8e507916e/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"`\")",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"cargo new core-lib --lib && cargo new cli-app --bin\u2026\")\nkey(\"enter\")",
+      "t": 1.0
+     }
+    ]
+   },
+   {
+    "domain": "gimp",
+    "instruction": "Export all 6 slides as individual PNG images to the folder '~/slide_exports/', naming each file 'slide_01.png' through 'slide_06.png'.",
+    "video": "assets/beyond_os/cuagym/f68881b9-8e6e-584e-baf0-1ed4695c1939/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"t\")",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"esc\")\nkey(\"ctrl\", \"alt\", \"t\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"mkdir -p ~/slide_exports && find ~ -name 'osworld_i\u2026\")",
+      "t": 2.0
+     },
+     {
+      "action": "type(\"rm -rf ~/slide_exports/* /tmp/loexp && mkdir -p /tm\u2026\")",
+      "t": 3.0
+     },
+     {
+      "action": "key(\"enter\")",
+      "t": 4.0
+     }
+    ]
+   },
+   {
+    "domain": "impress",
+    "instruction": "Rename the title on slide 3 to 'Key Findings' and add the speaker note 'Emphasize data quality here' to slide 3.",
+    "video": "assets/beyond_os/cuagym/c6119caf-c1fa-506d-8345-30f3f83a8fec/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "click(95, 511)",
+      "t": 0.0
+     },
+     {
+      "action": "click(455, 269, clicks=2)\nkey(\"ctrl\", \"a\")\ntype(\"Key Findings\")",
+      "t": 1.0
+     },
+     {
+      "action": "key(\"esc\")\nclick(93, 71)",
+      "t": 2.0
+     },
+     {
+      "action": "click(106, 143)",
+      "t": 3.0
+     },
+     {
+      "action": "click(396, 615)\ntype(\"Emphasize data quality here\")",
+      "t": 4.0
+     },
+     {
+      "action": "key(\"ctrl\", \"s\")",
+      "t": 5.0
+     },
+     {
+      "action": "wait(1)",
+      "t": 5.0
+     }
+    ]
+   },
+   {
+    "domain": "vlc",
+    "instruction": "Create new playlist from all .mp4 files in /home/user/Movies/ directory.",
+    "video": "assets/beyond_os/cuagym/db14afa7-ef67-5cbd-865f-0b4eabdf855b/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"t\")",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"find /home/user/Movies -maxdepth 1 -type f -iname '\u2026\")\nkey(\"enter\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"ls -la /home/user; find /home/user -maxdepth 3 -typ\u2026\")\nkey(\"enter\")",
+      "t": 2.0
+     },
+     {
+      "action": "type(\"find /home/user -type f | sed 's#^#/##' | head -50;\u2026\")\nkey(\"enter\")",
+      "t": 3.0
+     },
+     {
+      "action": "type(\"mkdir -p /home/user/Movies find /home/user/Movies -\u2026\")\nkey(\"enter\")",
+      "t": 4.0
+     }
+    ]
+   },
+   {
+    "domain": "vscode",
+    "instruction": "Set up a Python project with type checking: install mypy and pyright via pip in the terminal, configure VSCode to enable type checking mode 'basic' for Pylance, and create a mypy.ini file in ~/project with strict mode enabled and disallow_untyped_defs = True.",
+    "video": "assets/beyond_os/cuagym/01620a3b-8a5a-5d95-9e5b-798cc947b25b/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"t\")",
+      "t": 1.0
+     },
+     {
+      "action": "key(\"ctrl\", \"shift\", \"`\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"python3 -m pip install mypy pyright && mkdir -p ~/p\u2026\")",
+      "t": 2.0
+     },
+     {
+      "action": "wait(1)",
+      "t": 3.0
+     },
+     {
+      "action": "type(\"python3 -m pip show mypy pyright >/dev/null && echo\u2026\")",
+      "t": 3.0
+     }
+    ]
+   },
+   {
+    "domain": "writer",
+    "instruction": "Add a header to my contract that reads 'CONFIDENTIAL' on every page.",
+    "video": "assets/beyond_os/cuagym/2804f50f-9013-58e1-9121-42d6f083df94/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "click(119, 71)",
+      "t": 0.0
+     },
+     {
+      "action": "mouse_move(174, 680)",
+      "t": 1.0
+     },
+     {
+      "action": "mouse_move(339, 681)",
+      "t": 2.0
+     },
+     {
+      "action": "click(473, 680)",
+      "t": 3.0
+     },
+     {
+      "action": "key(\"ctrl\", \"e\")\ntype(\"CONFIDENTIAL\")",
+      "t": 4.0
+     },
+     {
+      "action": "key(\"ctrl\", \"s\")",
+      "t": 5.0
+     }
+    ]
+   },
+   {
+    "domain": "calc",
+    "instruction": "Edit the existing comment on cell C7 of the 'Audit' sheet to append the text ' \u2013 Resolved by J. Smith on 2024-03-15' to the existing comment text in LibreOffice Calc.",
+    "video": "assets/beyond_os/cuagym/4ff2ada2-435e-536b-8e5b-88bf9c064df6/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "click(232, 331)\nkey(\"shift\", \"f4\")",
+      "t": 0.0
+     },
+     {
+      "action": "click(232, 331, button=\"right\")",
+      "t": 1.0
+     },
+     {
+      "action": "click(272, 592)",
+      "t": 2.0
+     },
+     {
+      "action": "click(153, 271)\nkey(\"end\")\ntype(\"\u2013 Resolved by J. Smith on 2024-03-15\")",
+      "t": 3.0
+     },
+     {
+      "action": "key(\"ctrl\", \"s\")",
+      "t": 4.0
+     },
+     {
+      "action": "key(\"esc\")\nkey(\"ctrl\", \"s\")",
+      "t": 5.0
+     }
+    ]
+   }
+  ],
+  "Lite.CUAWorld": [
+   {
+    "domain": "gmat",
+    "instruction": "An emergency overflight tasking order has been issued to target Philadelphia. Read the specification document at ~/Desktop/overflight_spec.txt to extract the initial satellite state (SAR_1) and the target geographic coordinates. Compute the exact along-track velocity change (\u0394V) required at the initial epoch so the satellite overflies the target at 40.0\u00b0N, 75.0\u00b0W (with a longitude tolerance of 0.05 degrees) after a propagation period of 2.8 days. Save the GMAT script to ~/Documents/missions/sar_targeting.script and write the results to ~/GMAT_output/overflight_report.txt using the keys: maneuver_dv_m_s (in meters per second), final_latitude_deg, and final_longitude_deg. Login: username=ga, password=password123",
+    "video": "assets/beyond_os/cuaworld/sar_ground_track_targeting/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "click(18, 81)",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"cat ~/Desktop/overflight_spec.txt\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"sed -n '1,120p' ~/Desktop/overflight_spec.txt\")",
+      "t": 2.0
+     },
+     {
+      "action": "type(\"clear; nl -ba ~/Desktop/overflight_spec.txt | head \u2026\")",
+      "t": 3.0
+     },
+     {
+      "action": "type(\"nl -ba ~/Desktop/overflight_spec.txt | sed -n '1,22\u2026\")",
+      "t": 4.0
+     },
+     {
+      "action": "type(\"ls /opt; which GMAT || true; find / -name GMAT -typ\u2026\")",
+      "t": 5.0
+     },
+     {
+      "action": "type(\"python3 - <<'PY' try: import astropy; print('astrop\u2026\")",
+      "t": 6.0
+     },
+     {
+      "action": "type(\"cat > /tmp/solve.py <<'PY' import math, numpy as np\u2026\")",
+      "t": 7.0
+     },
+     {
+      "action": "type(\"python3 - <<'PY' p='/tmp/solve.py' s=open(p).read()\u2026\")",
+      "t": 8.0
+     },
+     {
+      "action": "type(\"sed -i '/scipy/d' /tmp/solve.py; python3 /tmp/solve\u2026\")",
+      "t": 9.0
+     },
+     {
+      "action": "type(\"cat > /tmp/target.py <<'PY' import math mu=398600.4\u2026\")",
+      "t": 10.0
+     },
+     {
+      "action": "type(\"python3 - <<'PY' exec(open('/tmp/target.py').read()\u2026\")",
+      "t": 11.0
+     },
+     {
+      "action": "key(\"ctrl\", \"d\")",
+      "t": 12.0
+     },
+     {
+      "action": "type(\"mkdir -p ~/Documents/missions ~/GMAT_output cat > ~\u2026\")",
+      "t": 13.0
+     }
+    ]
+   },
+   {
+    "domain": "pymol",
+    "instruction": "Analyze the BRD4-MZ1-VHL ternary complex (PDB: 5T35) to quantify the induced protein-protein neo-interface and the target-ligand interface.\n\n1. Fetch the crystal structure '5T35' from the Protein Data Bank into PyMOL.\n2. The asymmetric unit contains two copies of the ternary complex (8 total protein chains). Focus your analysis ONLY on the first complex: VHL (chain A), Elongin C (chain B), Elongin B (chain C), BRD4 BD2 (chain D), and its associated PROTAC ligand (residue name: MZ1).\n3. Compute the size of the neo-interface: Determine the EXACT number of UNIQUE BRD4 protein residues (in chain D) that have at least one atom within 4.0 Angstroms of any atom in VHL (chain A).\n4. Compute the target-ligand interface: Determine the EXACT number of UNIQUE BRD4 protein residues (in chain D) that have at least one atom within 4.0 Angstroms of the PROTAC ligand (MZ1).\n5. Render a publication-quality PNG figure highlighting this ternary interaction. The figure should show BRD4 and VHL as distinct cartoon representations, and the bridging PROTAC molecule as sticks. Save the figure to '~/PyMOL_Data/images/protac_complex.png'.\n6. Write a plain-text report summarizing these findings to '~/PyMOL_Data/protac_report.txt'. The report MUST contain the 3-letter residue name of the PROTAC ligand, the exact integer count of BRD4 neo-interface residues, and the exact integer count of BRD4 ligand-interface residues.",
+    "video": "assets/beyond_os/cuaworld/protac_ternary_complex_analysis/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "type(\"fetch 5T35, async=0\")",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"python from pymol import cmd import os # selections\u2026\")",
+      "t": 1.0
+     },
+     {
+      "action": "key(\"enter\")",
+      "t": 2.0
+     },
+     {
+      "action": "type(\"python from pymol import cmd hets=[] cmd.iterate('5\u2026\")",
+      "t": 3.0
+     },
+     {
+      "action": "type(\"python from pymol import cmd import os cmd.select('\u2026\")",
+      "t": 4.0
+     },
+     {
+      "action": "key(\"enter\")",
+      "t": 5.0
+     },
+     {
+      "action": "type(\"python import os report='''BRD4-MZ1-VHL ternary com\u2026\")",
+      "t": 6.0
+     }
+    ]
+   },
+   {
+    "domain": "gmat",
+    "instruction": "You are a constellation deployment engineer for a rideshare mission. Simulate the deployment of four 10 kg cubesats (SatA, SatB, SatC, SatD) using the initial orbital state and ejection velocities (+0.5, +1.0, +1.5, and +2.0 m/s prograde) specified in ~/Desktop/dispenser_deployment_spec.txt. Propagate the spacecraft for 30 days using Earth 8x8 gravity without atmospheric drag. Calculate the final Semi-Major Axis (SMA) for each spacecraft and the angular separation in degrees between SatA and the other three satellites. Save the simulation script to ~/Documents/missions/dispenser_mission.script and write the results to ~/GMAT_output/dispenser_separation_report.txt using the following format:\n\nsat_A_sma_km: <value>\nsat_B_sma_km: <value>\nsat_C_sma_km: <value>\nsat_D_sma_km: <value>\nangle_A_to_B_deg: <value>\nangle_A_to_C_deg: <value>\nangle_A_to_D_deg: <value>\n\nLogin: username=ga, password=password123",
+    "video": "assets/beyond_os/cuaworld/smallsat_dispenser_phasing_analysis/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"t\")",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"cat ~/Desktop/dispenser_deployment_spec.txt\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"sed -n '1,60p' ~/Desktop/dispenser_deployment_spec.\u2026\")",
+      "t": 2.0
+     },
+     {
+      "action": "type(\"grep -E 'Epoch|SMA|Eccentricity|Inclination|RAAN|Pe\u2026\")",
+      "t": 3.0
+     },
+     {
+      "action": "type(\"grep -i 'semi\\\\|axis\\\\|sma' ~/Desktop/dispenser_deplo\u2026\")",
+      "t": 4.0
+     },
+     {
+      "action": "type(\"python3 - <<'PY' import math, os mu=398600.4418; a0\u2026\")",
+      "t": 5.0
+     },
+     {
+      "action": "type(\"cat > ~/Documents/missions/dispenser_mission.script\u2026\")",
+      "t": 6.0
+     }
+    ]
+   },
+   {
+    "domain": "pymol",
+    "instruction": "Fetch the human PTEN crystal structure (PDB: 1D5R). Color the Phosphatase domain (residues 14-185) and the C2 domain (residues 190-350) distinctly. Highlight the clinical cancer mutations C124, G129, R130, C211, and D331. Measure the CA-CA distances from the catalytic C124 to each of the other four mutated residues. Render a publication-quality figure and write a structural report mapping each mutation to its domain and recording the 4 distance measurements. Save the figure to ~/PyMOL_Data/images/pten_mutations.png and the report to ~/PyMOL_Data/pten_mutation_report.txt.",
+    "video": "assets/beyond_os/cuaworld/pten_cancer_mutation_mapping/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"run /tmp/pten_script.py\")\nkey(\"enter\")",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"t\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"cat > /tmp/pten_script.py <<'PY' from pymol import \u2026\")\nkey(\"enter\")",
+      "t": 2.0
+     },
+     {
+      "action": "click(143, 308)\ntype(\"run /tmp/pten_script.py\")\nkey(\"enter\")",
+      "t": 3.0
+     },
+     {
+      "action": "key(\"enter\")",
+      "t": 4.0
+     },
+     {
+      "action": "click(612, 550)\ntype(\"ls -l ~/PyMOL_Data/images/pten_mutations.png ~/PyMO\u2026\")\nkey(\"enter\")",
+      "t": 5.0
+     }
+    ]
+   },
+   {
+    "domain": "pymol",
+    "instruction": "Load the crystal structure of bovine pancreatic ribonuclease A (PDB ID: 7RSA) into PyMOL. Your task is to perform a stereochemical analysis to identify functionally critical cis-proline residues.\n\n1. Identify all Proline residues in the structure.\n2. Calculate the omega (\u03c9) dihedral angle for the peptide bond preceding each proline. (Recall that the omega angle is defined by the four atoms: C\u03b1(i-1) \u2013 C(i-1) \u2013 N(i) \u2013 C\u03b1(i)).\n3. Determine which prolines are in the *cis* conformation (omega angle near 0\u00b0 rather than ~180\u00b0).\n4. Create a text report containing ONLY the sequence numbers of the *cis*-prolines and their calculated omega angles (do not list the trans-prolines).\n5. Set up a visualization showing residues 92 and 93 in stick representation, centered and zoomed to clearly show the *cis* peptide bond.\n6. Save the visualization as a high-quality PNG figure to `/home/ga/PyMOL_Data/images/cis_pro93.png`.\n7. Save your text report to `/home/ga/PyMOL_Data/cis_proline_report.txt`.",
+    "video": "assets/beyond_os/cuaworld/rnase_cis_proline_analysis/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"exec \\\\ import os from pymol import cmd os.makedirs(\u2026\")",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"enter\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"print(open('/home/ga/PyMOL_Data/cis_proline_report.\u2026\")\nkey(\"enter\")",
+      "t": 2.0
+     },
+     {
+      "action": "type(\"exec(\\\"\\\"\\\"\\\\nimport os\\\\nfrom pymol import cmd\\\\nos.make\u2026\")\nkey(\"enter\")",
+      "t": 3.0
+     }
+    ]
+   },
+   {
+    "domain": "gmat",
+    "instruction": "Design an advanced heliocentric trajectory using the Oberth effect for an Interstellar Probe, starting from the initial Keplerian state provided in ~/Desktop/interstellar_oberth_baseline.txt (dropping from Jupiter to a close solar perihelion). Using a Sun-centered GMAT simulation (SunMJ2000Eq coordinate system), target a C3Energy of exactly 1500.0 km^2/s^2 with respect to the Sun via a prograde impulsive burn in the VNB frame at solar periapsis. Save the resulting GMAT script to ~/GMAT_output/oberth_maneuver.script. Record the required Delta V magnitude, the spacecraft's inertial velocity immediately after the burn, and the final C3 to ~/GMAT",
+    "video": "assets/beyond_os/cuaworld/solar_oberth_interstellar_escape/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"t\")",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"cat ~/Desktop/interstellar_oberth_baseline.txt\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"python3 - <<'PY' import math, os mu=132712440017.99\u2026\")",
+      "t": 2.0
+     },
+     {
+      "action": "type(\"cat > ~/GMAT_output/oberth_maneuver.script <<'EOF' \u2026\")",
+      "t": 3.0
+     }
+    ]
+   },
+   {
+    "domain": "pymol",
+    "instruction": "Fetch the closed-state SARS-CoV-2 spike glycoprotein (PDB: 6VXX) from the RCSB. Create a visualization showing the main protein chains as a surface representation and all N-acetyl-D-glucosamine (NAG) glycans as spheres. Save this high-resolution rendering to ~/PyMOL_Data/images/glycan_shield.png. Then, determine the exact number of unique NAG residues in the complex. Write a text report to ~/PyMOL_Data/glycan_report.txt that includes: 1) The total number of unique NAG residues in the entire 6VXX structure, 2) The number of unique NAG residues on Chain A, and 3) The number of unique NAG residues on Chain B.",
+    "video": "assets/beyond_os/cuaworld/sars_cov_2_glycan_shield_mapping/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"t\")",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"exec(\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"\\\"\\\"\\\" import os from pymol import cmd outdir=os.path.\u2026\")\nkey(\"enter\")",
+      "t": 2.0
+     },
+     {
+      "action": "wait(1)",
+      "t": 3.0
+     },
+     {
+      "action": "type(\"python import os from pymol import cmd outdir=os.pa\u2026\")\nkey(\"enter\")",
+      "t": 4.0
+     },
+     {
+      "action": "click(143, 308)\ntype(\"python print('hi') python end\")\nkey(\"enter\")",
+      "t": 4.0
+     },
+     {
+      "action": "click(130, 813)\ntype(\"python print('hi') python end\")\nkey(\"enter\")",
+      "t": 5.0
+     },
+     {
+      "action": "click(126, 310)\ntype(\"print 123\")",
+      "t": 6.0
+     },
+     {
+      "action": "key(\"a\")",
+      "t": 7.0
+     },
+     {
+      "action": "click(236, 309)\nkey(\"ctrl\", \"a\")\nkey(\"backspace\")\ntype(\"help\")\nkey(\"enter\")",
+      "t": 8.0
+     },
+     {
+      "action": "click(106, 309, clicks=2)\ntype(\"help\")",
+      "t": 9.0
+     },
+     {
+      "action": "key(\"ctrl\")\nkey(\"alt\")\nkey(\"shift\")\ntype(\"abc\")",
+      "t": 10.0
+     }
+    ]
+   },
+   {
+    "domain": "gmat",
+    "instruction": "You are a flight dynamics engineer at a commercial Earth observation company managing the 'AgriSat-1' satellite in a 600 km Sun-Synchronous Orbit (SSO).\n\nDue to launch injection errors, AgriSat-1 currently has a Local Time of Ascending Node (LTAN) of 11:00 AM, but its optical payload requires exactly 10:30 AM (10.5 hours) for consistent shadowing. You must design a maneuver to slightly change the inclination, wait 30 days for the relative RAAN to drift to the 10:30 AM sun-geometry, and compute the required Delta-V.\n\nYour task:\n1. Read the initial orbital state from ~/Desktop/agrisat_initial_state.txt.\n2. Create a GMAT script that uses a DifferentialCorrector to target a final LTAN of 10.5.\n3. Configure an Earth-only force model with ONLY J2 (Degree=2, Order=0) and NO drag or SRP. This ensures the LTAN drift is purely analytical.\n4. Set up the targeting sequence:\n   - Vary the Normal (or out-of-plane) component of an ImpulsiveBurn (in VNB frame).\n   - Apply the burn at the initial epoch.\n   - Propagate for exactly 30 days.\n   - Achieve a final Mean Local Time of Ascending Node (e.g., Spacecraft.Earth.MLTAN) equal to 10.5 (Tolerance 0.001).\n5. Write a report to ~/GMAT_output/ltan_drift_report.txt with EXACTLY these lines:\n   DeltaV_Normal_kms: <value>\n   Drift_Inclination_deg: <spacecraft inclination immediately after burn or at end of propagation>\n   Final_LTAN: <value>\n6. Save the GMAT script to ~/GMAT_output/ltan_campaign.script and run it to produce the outputs.\n\nLogin: username=ga, password=password123",
+    "video": "assets/beyond_os/cuaworld/sso_ltan_maintenance_campaign/sample_00/trajectory.mp4",
+    "turns": [
+     {
+      "action": "screenshot()",
+      "t": 0.0
+     },
+     {
+      "action": "key(\"ctrl\", \"alt\", \"t\")",
+      "t": 0.0
+     },
+     {
+      "action": "type(\"cat ~/Desktop/agrisat_initial_state.txt && ls ~/GMA\u2026\")\nkey(\"enter\")",
+      "t": 1.0
+     },
+     {
+      "action": "type(\"python3 - <<'PY' import math mu=398600.4418; Re=637\u2026\")",
+      "t": 2.0
+     },
+     {
+      "action": "key(\"enter\")",
+      "t": 3.0
+     },
+     {
+      "action": "type(\"which GMAT || which gmat || find / -name GMAT -o -n\u2026\")\nkey(\"enter\")",
+      "t": 4.0
+     },
+     {
+      "action": "type(\"mkdir -p ~/GMAT_output cat > ~/GMAT_output/ltan_dri\u2026\")\nkey(\"enter\")",
+      "t": 5.0
+     },
+     {
+      "action": "type(\"grep -n \\\"****\\\\|Error\\\\|missing\\\\|not\\\" /tmp/gmat_ltan.\u2026\")\nkey(\"enter\")",
+      "t": 6.0
+     },
+     {
+      "action": "key(\"enter\")",
+      "t": 7.0
+     },
+     {
+      "action": "type(\"cat /tmp/gmat_ltan2.log | head -80\")\nkey(\"enter\")",
+      "t": 8.0
+     },
+     {
+      "action": "key(\"enter\")",
+      "t": 9.0
+     }
+    ]
+   }
+  ]
+ }
+}
