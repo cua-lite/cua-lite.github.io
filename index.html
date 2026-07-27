@@ -416,7 +416,18 @@
   </div>
 </footer>
 
+<!-- shared rollout viewer — the Sandboxes belt hovers into this one panel (js/belt.js) -->
+<div class="peek-scrim"></div>
+<div class="peek" hidden>
+  <div class="peek-media">
+    <div class="peek-head"><span class="peek-domain"></span><p class="peek-instr"></p></div>
+    <div class="peek-stage"><video class="peek-vid" muted loop playsinline preload="none"></video></div>
+  </div>
+  <ol class="peek-actions"></ol>
+</div>
+
 <script src="js/main.js"></script>
+<script src="js/belt.js"></script>
 <script src="js/lspop.js"></script>
 </body>
 </html>

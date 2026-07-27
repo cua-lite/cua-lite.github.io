@@ -1149,26 +1149,5 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
   show(cur);
 })();
 
-/* ---------- Sandboxes: training-env belt · a conveyor of looping rollout clips; pills switch the env family ----------
-   Placeholder frames for now — swap each tile for a muted autoplay <video> when clips land. */
-(function () {
-  "use strict";
-  const fig = document.querySelector(".belt-fig");
-  if (!fig) return;
-  const track = fig.querySelector(".belt-track"), tabs = [...fig.querySelectorAll(".belt-tab")];
-  const WS = [42, 55, 34, 60, 48, 38];   // vary the "content line" so the frames aren't identical
-  const tile = (env, i) => {
-    const d = document.createElement("div"); d.className = "belt-tile"; d.style.setProperty("--w", WS[i % WS.length] + "%");
-    d.innerHTML = '<span class="belt-live"><i></i><i></i><i></i></span><span class="belt-tag"></span>';
-    d.querySelector(".belt-tag").textContent = env;
-    return d;
-  };
-  const fill = (env) => { track.innerHTML = ""; for (let k = 0; k < 2; k++) for (let i = 0; i < WS.length; i++) track.appendChild(tile(env, i)); };   // ×2 = seamless loop
-  fill("Lite.OSWorld");
-  tabs.forEach((t) => t.addEventListener("click", () => {
-    tabs.forEach((o) => { const on = o === t; o.classList.toggle("is-on", on); o.setAttribute("aria-selected", on); });
-    fig.querySelectorAll(".belt-tag").forEach((g) => { g.textContent = t.textContent; });   // relabel in place — no scroll jump
-  }));
-})();
-
+/* Sandboxes belt + rollout peek viewer live in js/belt.js — shared with the blog (one implementation). */
 /* LiteSample hover popover lives in js/lspop.js — shared with the blog (one implementation). */

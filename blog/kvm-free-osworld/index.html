@@ -153,52 +153,6 @@
 .par-tip b { color: var(--text); font-weight: 600; }
 .par-tip i { color: var(--accent); font-weight: 600; font-style: normal; }
 .par-cap { text-align: center; font-family: var(--mono); font-size: 11.5px; letter-spacing: .2px; color: var(--muted); margin-top: 12px; }
-/* ---- training-env belt · a conveyor of looping rollout clips, one env family at a time ---- */
-.belt-fig { margin: 22px 0 8px; }
-.belt-tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 16px; }
-.belt-tab { font-family: var(--mono); font-size: 12px; letter-spacing: .2px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; color: var(--muted); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
-.belt-tab:hover { border-color: var(--accent-dim); color: var(--text); }
-.belt-tab.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
-.belt { position: relative; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
-.belt-track { display: flex; width: max-content; animation: beltscroll 44s linear infinite; }
-.belt:hover .belt-track { animation-play-state: paused; }
-@keyframes beltscroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.belt-tile { position: relative; flex: 0 0 auto; width: 172px; aspect-ratio: 16 / 10; margin-right: 14px; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--panel-edge); background: linear-gradient(158deg, #efe1cd, #e6d5bd); }
-.belt-tile::before { content: ""; position: absolute; inset: 20px 26px 18px; border: 1.5px solid rgba(255,255,255,.5); border-radius: 4px; z-index: 1; pointer-events: none; }   /* a faint app window frame over the clip */
-.belt-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; background: #000; }
-.belt-tag { position: absolute; bottom: 8px; left: 9px; z-index: 2; font-family: var(--mono); font-size: 10px; letter-spacing: .2px; padding: 2px 8px; border-radius: 999px; background: rgba(255,252,246,.85); color: var(--accent); }
-.belt-live { position: absolute; top: 9px; right: 10px; z-index: 2; display: flex; align-items: flex-end; gap: 2px; height: 11px; }   /* auto-playing indicator */
-.belt-live i { width: 2.5px; height: 4px; border-radius: 1px; background: var(--accent); animation: belteq .9s ease-in-out infinite; }
-.belt-live i:nth-child(2) { animation-delay: .18s; }
-.belt-live i:nth-child(3) { animation-delay: .36s; }
-@keyframes belteq { 0%, 100% { height: 3px; } 50% { height: 11px; } }
-.belt-cap { text-align: center; font-family: var(--mono); font-size: 11.5px; letter-spacing: .2px; color: var(--muted); margin-top: 14px; }
-.belt-tile { cursor: pointer; }
-@media (prefers-reduced-motion: reduce) { .belt-track { animation: none; } .belt-live i { animation: none; height: 7px; } }
-/* ---- belt hover peek · enlarge a tile's clip, show the instruction + a clickable action log ---- */
-.peek-scrim { position: fixed; inset: 0; background: rgba(30,22,14,.38); z-index: 59; opacity: 0; transition: opacity .18s ease; pointer-events: none; }
-.peek { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.97); z-index: 60; display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 0; background: var(--panel-fill, #fdf7ec); border: 1.5px solid var(--panel-edge); border-radius: 14px; overflow: hidden; box-shadow: 0 24px 60px -18px rgba(30,22,14,.45); opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
-  width: min(900px, calc(100vw - 32px)); height: min(70vh, 560px); }   /* fixed height so the clip fills its column instead of leaving dead space under it */
-.peek[hidden] { display: none; }
-.peek-scrim.is-on { opacity: 1; }   /* dim only — never intercepts the pointer, or the tile would lose hover the instant it opens */
-.peek.is-on { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
-.peek-media { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-.peek-head { flex: 0 0 auto; max-height: 34%; overflow-y: auto; background: var(--panel-fill, #fdf7ec); border-bottom: 1.5px solid var(--line-2); padding: 12px 15px; }   /* the task sits here, so the clip below stays unobstructed */
-.peek-domain { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
-.peek-instr { margin: 0; font-family: var(--mono); font-size: 11.5px; line-height: 1.55; letter-spacing: .1px; color: var(--text); }
-.peek-stage { position: relative; flex: 1 1 auto; min-height: 0; background: #000; }
-.peek-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }   /* contain — never crop the frame */
-.peek-actions { list-style: none; margin: 0; padding: 8px; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; border-left: 1.5px solid var(--line-2); }
-.peek-act { display: flex; align-items: flex-start; gap: 7px; width: 100%; text-align: left; font-family: var(--mono); font-size: 11px; line-height: 1.4; letter-spacing: .1px; color: var(--muted); background: transparent; border: 1px solid transparent; border-radius: 7px; padding: 6px 8px; cursor: pointer; transition: background .12s ease, color .12s ease, border-color .12s ease; }
-.peek-act:hover { background: var(--panel-2); color: var(--text); }
-.peek-act.is-on { background: rgba(189,90,56,.1); border-color: var(--accent-dim); color: var(--text); }
-.peek-act-n { flex: 0 0 auto; color: var(--accent); font-weight: 650; }
-.peek-act-t { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }   /* one line per call in the turn */
-@media (max-width: 640px) {
-  .peek { grid-template-columns: 1fr; grid-template-rows: auto auto; width: calc(100vw - 32px); height: auto; max-height: calc(100vh - 32px); }
-  .peek-stage { flex: 0 0 auto; aspect-ratio: 16 / 10; }
-  .peek-actions { border-left: none; border-top: 1.5px solid var(--line-2); max-height: 32vh; }
-}
 /* ---- table of contents — the blog index's postlist idiom, numbered (the sections are a sequence) ---- */
 .toc { background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 12px; padding: 6px; margin: 2px 0 34px; }
 .toc a { display: flex; align-items: baseline; gap: 14px; padding: 10px 15px; border-radius: 8px; font-family: var(--mono); font-size: 13.5px; color: var(--text); transition: background .14s ease, color .14s ease; }
@@ -468,92 +422,7 @@
   } else { timeline(); setInterval(loopReset, CYCLE); }
 })();
 </script>
-<script>
-/* Shared rollout viewer. Hovering any bound clip enlarges it: the task instruction runs
-   along the clip's bottom edge, the action log sits on the right, and clicking an action
-   freezes the clip on the screenshot captured just before that action ran — click the
-   screenshot to resume. Data: assets/rollouts.json (regenerate with build-manifests.py). */
-const Rollouts = (function () {
-  "use strict";
-  const ready = fetch("assets/rollouts.json").then((r) => r.json()).catch(() => ({ hh: {}, belt: {} }));
-  const peek = document.querySelector(".peek"), scrim = document.querySelector(".peek-scrim");
-  if (!peek || !scrim) return { ready, bind() {} };
-
-  const vid = peek.querySelector(".peek-vid");
-  const instr = peek.querySelector(".peek-instr"), domain = peek.querySelector(".peek-domain");
-  const list = peek.querySelector(".peek-actions");
-  let openKey = null, timer = null, turns = [], marked = -1;
-
-  /* keep the log in step with playback: highlight the turn currently on screen */
-  function sync() {
-    if (!turns.length) return;
-    const t = vid.currentTime + 0.01;
-    let i = 0;
-    for (let k = 0; k < turns.length; k++) if (turns[k].t <= t) i = k;
-    if (i === marked) return;
-    marked = i;
-    [...list.children].forEach((li, k) => li.firstChild.classList.toggle("is-on", k === i));
-    const row = list.children[i];
-    if (row) row.scrollIntoView({ block: "nearest" });
-  }
-
-  function seek(i) {
-    const t = turns[i].t + 0.05;      // nudge inside the frame so we don't land on its boundary
-    vid.currentTime = vid.duration ? Math.min(t, vid.duration - 0.01) : t;
-    vid.play().catch(() => {});       // stay playing — the clip runs on from that turn
-    marked = -1; sync();
-  }
-
-  function open(key, clip) {
-    clearTimeout(timer);                     // cancel a pending close, incl. re-entering the same clip
-    if (!clip || key === openKey) return;
-    openKey = key;
-    turns = clip.turns; marked = -1;
-    domain.textContent = clip.domain;
-    instr.textContent = clip.instruction;
-    if (vid.getAttribute("src") !== clip.video) vid.src = clip.video;   // same clip re-opens instantly
-    vid.play().catch(() => {});
-    list.innerHTML = "";
-    clip.turns.forEach((t, i) => {
-      const li = document.createElement("li"), b = document.createElement("button");
-      b.type = "button"; b.className = "peek-act";
-      b.innerHTML = '<span class="peek-act-n"></span><span class="peek-act-t"></span>';
-      b.firstChild.textContent = i + 1;
-      b.lastChild.textContent = t.action;
-      b.addEventListener("click", () => seek(i));
-      li.appendChild(b); list.appendChild(li);
-    });
-    peek.hidden = false;
-    requestAnimationFrame(() => { peek.classList.add("is-on"); scrim.classList.add("is-on"); });
-  }
-
-  function close() {
-    clearTimeout(timer);
-    peek.classList.remove("is-on"); scrim.classList.remove("is-on");
-    openKey = null;
-    timer = setTimeout(() => { peek.hidden = true; vid.pause(); }, 180);   // after the fade
-  }
-  const arm = (delay) => { clearTimeout(timer); timer = setTimeout(close, delay); };
-
-  vid.addEventListener("timeupdate", sync);
-  peek.addEventListener("mouseenter", () => clearTimeout(timer));
-  peek.addEventListener("mouseleave", () => arm(160));
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
-  document.addEventListener("click", (e) => {   // the scrim is click-through, so dismiss from here
-    if (openKey && !peek.contains(e.target) && !e.target.closest("[data-peek]")) close();
-  });
-
-  return {
-    ready,
-    /* resolve() runs at hover time and returns {key, clip}, so tab switches stay live */
-    bind(el, resolve) {
-      el.dataset.peek = "";
-      el.addEventListener("mouseenter", () => { const r = resolve(); if (r) open(r.key, r.clip); });
-      el.addEventListener("mouseleave", () => arm(320));   // grace period to travel into the peek
-    },
-  };
-})();
-</script>
+<script src="/js/belt.js"></script>
 <script>
 /* Still OSWorld? · task switcher — one row of tabs drives both panels in lockstep. */
 (function () {
@@ -656,52 +525,6 @@ const Rollouts = (function () {
       tip.style.top = (db.top - pb.top - 7) + "px";
     });
     dot.addEventListener("mouseleave", () => { tip.hidden = true; });
-  });
-})();
-</script>
-<script>
-/* training-env belt · a conveyor of looping rollout clips; pills switch the env family.
-   Tiles are labelled with the task's app domain and hover into the shared Rollouts peek. */
-(function () {
-  "use strict";
-  const fig = document.querySelector(".belt-fig");
-  if (!fig) return;
-  const track = fig.querySelector(".belt-track"), tabs = [...fig.querySelectorAll(".belt-tab")];
-  let DATA = null, active = false;
-
-  const tile = (fam, i, clip) => {
-    const d = document.createElement("div"); d.className = "belt-tile";
-    d.innerHTML = '<video class="belt-vid" muted loop playsinline preload="auto"></video><span class="belt-live" aria-hidden="true"><i></i><i></i><i></i></span><span class="belt-tag"></span>';
-    d.querySelector(".belt-vid").src = clip.video;
-    d.querySelector(".belt-tag").textContent = clip.domain;
-    Rollouts.bind(d, () => ({ key: "belt:" + fam + ":" + i, clip }));
-    return d;
-  };
-
-  const fill = (fam) => {
-    track.innerHTML = "";
-    const clips = (DATA.belt && DATA.belt[fam]) || [];
-    for (let k = 0; k < 2; k++) clips.forEach((c, i) => track.appendChild(tile(fam, i, c)));   // ×2 = seamless loop
-    if (active) fig.querySelectorAll(".belt-vid").forEach((v) => v.play().catch(() => {}));
-  };
-
-  tabs.forEach((t) => t.addEventListener("click", () => {
-    if (t.classList.contains("is-on") || !DATA) return;
-    tabs.forEach((o) => { const on = o === t; o.classList.toggle("is-on", on); o.setAttribute("aria-selected", on); });
-    fill(t.textContent.trim());
-  }));
-
-  const start = () => { active = true; fig.querySelectorAll(".belt-vid").forEach((v) => v.play().catch(() => {})); };
-
-  Rollouts.ready.then((data) => {
-    DATA = data;
-    fill(tabs.find((t) => t.classList.contains("is-on")).textContent.trim());
-    if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver((es) => es.forEach((e) => {
-        if (e.isIntersecting && !active) { start(); io.disconnect(); }
-      }), { rootMargin: "0px 0px -15% 0px" });
-      io.observe(fig);
-    } else { start(); }
   });
 })();
 </script>

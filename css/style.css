@@ -649,27 +649,51 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .src-contrib a { color: var(--accent); }
 .src-contrib a:hover { text-decoration: underline; }
 
-/* ---- Sandboxes: training-env belt · a conveyor of looping rollout clips, one env family at a time ---- */
-.belt-fig { max-width: 660px; margin: 8px auto 18px; }   /* the section's shared content column — same 660px as .cov / .lb / .hf-embed */
-.belt-tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 18px; }
+/* ---- training-env belt · looping rollout clips, one env family at a time (driven by js/belt.js) ---- */
+.belt-fig { max-width: 660px; margin: 8px auto 18px; }   /* shared content column — same 660px as .cov / .lb / .hf-embed */
+.belt-tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 16px; }
 .belt-tab { font-family: var(--mono); font-size: 12px; letter-spacing: .2px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; color: var(--muted); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
 .belt-tab:hover { border-color: var(--accent-dim); color: var(--text); }
 .belt-tab.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
-.belt { position: relative; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.belt { position: relative; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
 .belt-track { display: flex; width: max-content; animation: beltscroll 44s linear infinite; }
 .belt:hover .belt-track { animation-play-state: paused; }
 @keyframes beltscroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.belt-tile { position: relative; flex: 0 0 auto; width: 190px; aspect-ratio: 16 / 10; margin-right: 16px; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--panel-edge); background: linear-gradient(158deg, #efe1cd, #e6d5bd); }
-.belt-tile::before { content: ""; position: absolute; inset: 22px 28px 20px; border: 1.5px solid rgba(255,255,255,.5); border-radius: 4px; }   /* a faint app window — a paused-looking frame */
-.belt-tile::after { content: ""; position: absolute; left: 28px; top: 29px; width: var(--w, 44%); height: 4px; border-radius: 2px; background: var(--accent); opacity: .5; }
-.belt-tag { position: absolute; bottom: 9px; left: 10px; z-index: 2; font-family: var(--mono); font-size: 10.5px; letter-spacing: .2px; padding: 2px 8px; border-radius: 999px; background: rgba(255,252,246,.85); color: var(--accent); }
-.belt-live { position: absolute; top: 10px; right: 11px; z-index: 2; display: flex; align-items: flex-end; gap: 2px; height: 11px; }   /* auto-playing indicator */
+.belt-tile { position: relative; flex: 0 0 auto; width: 172px; aspect-ratio: 16 / 10; margin-right: 14px; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--panel-edge); background: linear-gradient(158deg, #efe1cd, #e6d5bd); cursor: pointer; }
+.belt-tile::before { content: ""; position: absolute; inset: 20px 26px 18px; border: 1.5px solid rgba(255,255,255,.5); border-radius: 4px; z-index: 1; pointer-events: none; }   /* a faint app-window frame over the clip */
+.belt-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; background: #000; }
+.belt-tag { position: absolute; bottom: 8px; left: 9px; z-index: 2; font-family: var(--mono); font-size: 10px; letter-spacing: .2px; padding: 2px 8px; border-radius: 999px; background: rgba(255,252,246,.85); color: var(--accent); }
+.belt-live { position: absolute; top: 9px; right: 10px; z-index: 2; display: flex; align-items: flex-end; gap: 2px; height: 11px; }   /* auto-playing indicator */
 .belt-live i { width: 2.5px; height: 4px; border-radius: 1px; background: var(--accent); animation: belteq .9s ease-in-out infinite; }
 .belt-live i:nth-child(2) { animation-delay: .18s; }
 .belt-live i:nth-child(3) { animation-delay: .36s; }
 @keyframes belteq { 0%, 100% { height: 3px; } 50% { height: 11px; } }
-.belt-cap { text-align: center; font-family: var(--mono); font-size: var(--fs-sm); letter-spacing: .2px; color: var(--muted); margin-top: 16px; }
+.belt-cap { text-align: center; font-family: var(--mono); font-size: var(--fs-sm); letter-spacing: .2px; color: var(--muted); margin-top: 14px; }
 @media (prefers-reduced-motion: reduce) { .belt-track { animation: none; } .belt-live i { animation: none; height: 7px; } }
+/* ---- rollout peek · hover a clip to enlarge it, with instruction + clickable action log (js/belt.js) ---- */
+.peek-scrim { position: fixed; inset: 0; background: rgba(30,22,14,.38); z-index: 59; opacity: 0; transition: opacity .18s ease; pointer-events: none; }
+.peek { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.97); z-index: 60; display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 0; background: var(--panel-fill, #fdf7ec); border: 1.5px solid var(--panel-edge); border-radius: 14px; overflow: hidden; box-shadow: 0 24px 60px -18px rgba(30,22,14,.45); opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+  width: min(900px, calc(100vw - 32px)); height: min(70vh, 560px); }   /* fixed height so the clip fills its column */
+.peek[hidden] { display: none; }
+.peek-scrim.is-on { opacity: 1; }   /* dim only — never intercepts the pointer, or the tile would lose hover the instant it opens */
+.peek.is-on { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+.peek-media { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.peek-head { flex: 0 0 auto; max-height: 34%; overflow-y: auto; background: var(--panel-fill, #fdf7ec); border-bottom: 1.5px solid var(--line-2); padding: 12px 15px; }   /* the task sits here, so the clip below stays unobstructed */
+.peek-domain { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.peek-instr { margin: 0; font-family: var(--mono); font-size: 11.5px; line-height: 1.55; letter-spacing: .1px; color: var(--text); }
+.peek-stage { position: relative; flex: 1 1 auto; min-height: 0; background: #000; }
+.peek-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }   /* contain — never crop the frame */
+.peek-actions { list-style: none; margin: 0; padding: 8px; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; border-left: 1.5px solid var(--line-2); }
+.peek-act { display: flex; align-items: flex-start; gap: 7px; width: 100%; text-align: left; font-family: var(--mono); font-size: 11px; line-height: 1.4; letter-spacing: .1px; color: var(--muted); background: transparent; border: 1px solid transparent; border-radius: 7px; padding: 6px 8px; cursor: pointer; transition: background .12s ease, color .12s ease, border-color .12s ease; }
+.peek-act:hover { background: var(--panel-2); color: var(--text); }
+.peek-act.is-on { background: rgba(189,90,56,.1); border-color: var(--accent-dim); color: var(--text); }
+.peek-act-n { flex: 0 0 auto; color: var(--accent); font-weight: 650; }
+.peek-act-t { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }   /* one line per call in the turn */
+@media (max-width: 640px) {
+  .peek { grid-template-columns: 1fr; grid-template-rows: auto auto; width: calc(100vw - 32px); height: auto; max-height: calc(100vh - 32px); }
+  .peek-stage { flex: 0 0 auto; aspect-ratio: 16 / 10; }
+  .peek-actions { border-left: none; border-top: 1.5px solid var(--line-2); max-height: 32vh; }
+}
 /* hub chips (LiteSample, lite.gym) — hover pops the schema / interface card to the right */
 code.ls, code.lg, code.ad { position: relative; cursor: help; }
 .ls-pop { position: absolute; left: calc(100% + 14px); top: 50%; transform: translateY(-50%) translateX(-6px); z-index: 40;
