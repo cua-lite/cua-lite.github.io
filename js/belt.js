@@ -4,9 +4,10 @@
    A page opts in by rendering a .belt-fig (belt) and/or the .peek + .peek-scrim panel (viewer). */
 
 /* ---------- shared rollout viewer ----------
-   Hovering any bound clip enlarges it: the task instruction runs along the clip's top,
+   Clicking any bound clip enlarges it: the task instruction runs along the clip's top,
    the action log sits on the right, and clicking an action seeks the clip to that turn —
-   the log highlights whichever turn is on screen as playback runs. */
+   the log highlights whichever turn is on screen as playback runs. Click outside (or the
+   clip again, or Escape) to close. */
 const Rollouts = (function () {
   "use strict";
   const BASE = "/blog/kvm-free-osworld/";
@@ -78,23 +79,23 @@ const Rollouts = (function () {
     openKey = null;
     timer = setTimeout(() => { peek.hidden = true; vid.pause(); }, 180);   // after the fade
   }
-  const arm = (delay) => { clearTimeout(timer); timer = setTimeout(close, delay); };
 
   vid.addEventListener("timeupdate", sync);
-  peek.addEventListener("mouseenter", () => clearTimeout(timer));
-  peek.addEventListener("mouseleave", () => arm(160));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
-  document.addEventListener("click", (e) => {   // the scrim is click-through, so dismiss from here
+  document.addEventListener("click", (e) => {   // the scrim is click-through, so a click outside dismisses from here
     if (openKey && !peek.contains(e.target) && !e.target.closest("[data-peek]")) close();
   });
 
   return {
     ready,
-    /* resolve() runs at hover time and returns {key, clip}, so tab switches stay live */
+    /* resolve() runs at click time and returns {key, clip}, so tab switches stay live */
     bind(el, resolve) {
       el.dataset.peek = "";
-      el.addEventListener("mouseenter", () => { const r = resolve(); if (r) open(r.key, r.clip); });
-      el.addEventListener("mouseleave", () => arm(320));   // grace period to travel into the peek
+      el.style.cursor = "pointer";
+      el.addEventListener("click", () => {
+        const r = resolve(); if (!r) return;
+        r.key === openKey ? close() : open(r.key, r.clip);   // click a clip to open; click it again (or outside) to close
+      });
     },
   };
 })();
