@@ -275,8 +275,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   border: 1px solid var(--accent-dim); border-radius: 999px; padding: 7px 15px; margin-bottom: 22px; transition: background .14s ease; }
 .hero-chip:hover { background: #fff; }
 .chip-dot { width: 6px; height: 6px; background: var(--accent); }
-.cta-more { font-family: var(--mono); font-size: var(--fs-sm); letter-spacing: .3px; color: var(--accent); margin-left: 4px; }   /* the quiet third action */
-.cta-more:hover { text-decoration: underline; }
 .hero .lead { font-size: var(--fs-2xl); line-height: 1.62; color: var(--muted); max-width: 560px; margin: 0 0 18px; }
 .nb { white-space: nowrap; }   /* glue for phrases that must not break mid-unit */
 /* the two deliverables — a labeled list, so the parallel structure is visible before it is
@@ -652,7 +650,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .src-contrib a:hover { text-decoration: underline; }
 
 /* ---- Sandboxes: training-env belt · a conveyor of looping rollout clips, one env family at a time ---- */
-.belt-fig { margin: 8px 0 18px; }
+.belt-fig { max-width: 660px; margin: 8px auto 18px; }   /* the section's shared content column — same 660px as .cov / .lb / .hf-embed */
 .belt-tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 18px; }
 .belt-tab { font-family: var(--mono); font-size: 12px; letter-spacing: .2px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; color: var(--muted); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
 .belt-tab:hover { border-color: var(--accent-dim); color: var(--text); }

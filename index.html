@@ -38,8 +38,7 @@
       <a href="#benchmarks">Eval</a>
       <a href="#train">Train</a>
       <span class="nav-sep" aria-hidden="true"></span>
-      <a href="/blog/">Blog</a>
-      <span class="nav-cta"><a class="btn-solid sm" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Datasets</a><a class="btn-ghost sm" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a></span>
+      <span class="nav-cta"><a class="btn-solid sm" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Datasets</a><a class="btn-ghost sm" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a><a class="btn-ghost sm" href="/blog/">Blog</a></span>
     </nav>
   </div>
 </header>
@@ -53,7 +52,7 @@
       <p class="lead">All a <span class="lc">computer-use</span> agent needs — open to share, simple to run:</p>
       <ul class="lead-claims">
         <li>
-          <span class="claim-t"><b>Sandboxes</b> — efficient environments with verifiable tasks to train and benchmark CUAs <span class="nb">at scale</span>.</span>
+          <span class="claim-t"><b>Sandboxes</b> — efficient environments with <span class="nb">30k+ verifiable tasks</span> to train and benchmark CUAs <span class="nb">at scale</span>.</span>
         </li>
         <li>
           <span class="claim-t"><b>Data</b> — 10+ datasets plus fresh rollouts from <span class="nb">frontier CUAs</span>, in one unified format,
@@ -69,7 +68,7 @@
       <div class="cta-row">
         <a class="btn-solid" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Datasets</a>
         <a class="btn-ghost" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a>
-        <a class="cta-more" href="/blog/why-cua-lite/">Contribute&nbsp;↗</a>
+        <a class="btn-ghost" href="/blog/">Blog</a>
       </div>
       <ul class="stats">
         <li class="stat"><span class="stat-n">10+</span> datasets<span class="stat-pop" data-pop="datasets"></span></li>
@@ -197,7 +196,7 @@
   <div class="container">
     <p class="eyebrow">01 · Sandboxes</p>
     <h2>Efficient sandboxes, <em>at scale.</em></h2>
-    <p class="section-lead">Lightweight containers keep the full desktop and drop the VM — so many pack onto one machine and roll out in parallel. Every task ships a <span class="lead-tok">verifiable reward</span>, ready to train and benchmark any agent at scale.</p>
+    <p class="section-lead">Lightweight, KVM-free sandboxes pack many onto one machine and roll out in parallel. Every task ships a <span class="lead-tok">verifiable reward</span>, ready to train and benchmark any agent at scale.</p>
     <figure class="belt-fig reveal" aria-label="Looping rollout trajectories across CUA-Lite training environments">
       <div class="belt-tabs" role="tablist">
         <button class="belt-tab is-on" type="button" role="tab" aria-selected="true">Lite.OSWorld</button>
@@ -208,7 +207,7 @@
       <div class="belt"><div class="belt-track" aria-hidden="true"></div></div>
       <figcaption class="belt-cap">Looping rollout trajectories — clips land with the benchmark writeup.</figcaption>
     </figure>
-    <p class="src-contrib"><a href="https://github.com/cua-lite/cua-lite/tree/main/lite/gym/envs/lite" target="_blank" rel="noopener">Lite.* environments ↗</a> &nbsp;·&nbsp; <a href="/blog/kvm-free-osworld/">Read the writeup ↗</a></p>
+    <p class="src-contrib"><a href="https://github.com/cua-lite/cua-lite/tree/main/lite/gym/envs/lite" target="_blank" rel="noopener">Lite.* environments ↗</a> &nbsp;·&nbsp; <a href="/blog/kvm-free-osworld/">How it works ↗</a></p>
   </div>
 </section>
 
@@ -216,7 +215,7 @@
 <section class="section centered" id="data">
   <div class="container">
     <p class="eyebrow">02 · Data</p>
-    <h2>One schema, <em>any data.</em></h2>
+    <h2>One schema, <em>every dataset.</em></h2>
     <p class="section-lead">Every dataset ships in one schema — <code class="ls" tabindex="0">LiteSample</code> — as plain parquet + images on the Hub. No framework required: bring your own training stack, or let per-agent adapters make it model-ready to <a href="#train" data-goto-sft>SFT</a>. The platform fills from two sources:</p>
     <div class="src-two reveal">
       <a class="src" href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">
@@ -252,7 +251,7 @@
 <section class="section centered" id="benchmarks">
   <div class="container">
     <p class="eyebrow">03 · Eval</p>
-    <h2>Any agent, <em>any benchmark.</em></h2>
+    <h2>One command, <em>any benchmark.</em></h2>
     <p class="section-lead">One command, a unified action space per platform.<br />Eval any
       <span class="lead-tok">agent</span> on any <span class="lead-tok">benchmark</span>:</p>
     <div class="cmdbuild reveal" data-cmd="eval">
@@ -363,7 +362,7 @@
     <div class="cta-row center">
       <a class="btn-solid" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Datasets</a>
       <a class="btn-ghost" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a>
-      <a class="cta-more" href="/blog/why-cua-lite/">Contribute&nbsp;↗</a>
+      <a class="btn-ghost" href="/blog/">Blog</a>
     </div>
   </div>
 </section>
