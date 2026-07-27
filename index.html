@@ -28,6 +28,16 @@
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body id="top">
+<!-- NORTH STAR · homepage copy
+     The three pillars, in order: (01) Sandboxes — efficient, verifiable environments at scale;
+     (02) Data — unified computer-use samples (screenshots + actions), open on the Hub;
+     (03) Eval / SFT / RL — one framework, any agent, any platform. Each section h2 is a
+     declarative claim with a single accent noun ("…, any X."); a lead says what a thing IS
+     before how it's packaged.
+     PROSE HYGIENE (all paragraphs): no orphans — if a paragraph ends with a lone word or
+     short unit dangling on its last line, TRIM the copy until it wraps clean. Fix it by
+     cutting words, never with &nbsp; or text-wrap tricks (they only jag the right edge). -->
+
 
 <header class="nav">
   <div class="nav-inner">
@@ -52,7 +62,7 @@
       <p class="lead">All a <span class="lc">computer-use</span> agent needs — open to share, simple to run:</p>
       <ul class="lead-claims">
         <li>
-          <span class="claim-t"><b>Sandboxes</b> — efficient environments with <span class="nb">30k+ verifiable tasks</span> to train and benchmark CUAs <span class="nb">at scale</span>.</span>
+          <span class="claim-t"><b>Sandboxes</b> — efficient environments with <b class="nb">30k+ verifiable tasks</b> to train and benchmark CUAs <span class="nb">at scale</span>.</span>
         </li>
         <li>
           <span class="claim-t"><b>Data</b> — 10+ datasets plus fresh rollouts from <span class="nb">frontier CUAs</span>, in one unified format,
@@ -195,8 +205,8 @@
 <section class="section centered" id="sandboxes">
   <div class="container">
     <p class="eyebrow">01 · Sandboxes</p>
-    <h2>Efficient sandboxes, <em>at scale.</em></h2>
-    <p class="section-lead">Lightweight, KVM-free sandboxes pack many onto one machine and roll out in parallel. Every task ships a <span class="lead-tok">verifiable reward</span>, ready to train and benchmark any agent at scale.</p>
+    <h2>Efficient sandboxes, <em>any task.</em></h2>
+    <p class="section-lead">KVM-free sandboxes pack many per machine and roll out in parallel. Every task ships a <span class="lead-tok">verifiable reward</span>, ready to train and benchmark any agent at scale.</p>
     <figure class="belt-fig reveal" aria-label="Looping rollout trajectories across CUA-Lite training environments">
       <div class="belt-tabs" role="tablist">
         <button class="belt-tab is-on" type="button" role="tab" aria-selected="true">Lite.OSWorld</button>
@@ -215,8 +225,8 @@
 <section class="section centered" id="data">
   <div class="container">
     <p class="eyebrow">02 · Data</p>
-    <h2>One schema, <em>every dataset.</em></h2>
-    <p class="section-lead">Every dataset ships in one schema — <code class="ls" tabindex="0">LiteSample</code> — as plain parquet + images on the Hub. No framework required: bring your own training stack, or let per-agent adapters make it model-ready to <a href="#train" data-goto-sft>SFT</a>. The platform fills from two sources:</p>
+    <h2>One schema, <em>any dataset.</em></h2>
+    <p class="section-lead">Each sample is the screenshots an agent sees and the actions it takes — one step, or a whole trajectory. Every dataset ships as <code class="ls" tabindex="0">LiteSample</code> — plain parquet + images, ready to <a href="#train" data-goto-sft>SFT</a> with any stack. The platform fills from two sources:</p>
     <div class="src-two reveal">
       <a class="src" href="https://huggingface.co/collections/cua-lite/corpora" target="_blank" rel="noopener">
         <span class="src-k">SFT data at scale</span>
@@ -227,7 +237,7 @@
       <a class="src" href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">
         <span class="src-k">SFT data on demand</span>
         <span class="src-h"><span class="src-ico" aria-hidden="true"></span>Rollouts</span>
-        <span class="src-d">Roll out any teacher (GPT-5.5, Claude…) into the same schema and distill into any student. We ship the pipeline, not just the data — and we keep rolling.</span>
+        <span class="src-d">Roll out any teacher (GPT-5.5, Claude…) into the same schema and distill into any student — and we keep rolling.</span>
         <span class="src-go">Browse collection ↗</span>
       </a>
     </div>
@@ -385,7 +395,7 @@
    <div class="footer-inner">
     <div class="foot-brand">
       <a class="brand" href="#top"><span class="brand-plane"></span><span class="brand-name">CUA-Lite</span></a>
-      <p class="foot-tag">Computer-Use Agents Made Simple.<br />One open platform of unified data — and one<br />framework to eval, SFT, and RL any agent.</p>
+      <p class="foot-tag">Computer-Use Agents Made Simple.</p>
       <div class="foot-affil">
         <span class="foot-affil-label">Presented by</span>
         <a href="https://www.berkeley.edu/" target="_blank" rel="noopener" aria-label="UC Berkeley"><img class="foot-logo foot-logo-berkeley" src="assets/logos/berkeley.svg" alt="UC Berkeley" /></a>
