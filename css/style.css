@@ -300,18 +300,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .stat { position: static; cursor: default; display: inline-flex; align-items: baseline; gap: 5px; }
 .stat:not(:last-child)::after { content: "·"; margin: 0 12px; color: var(--dim); }
 .stat-n { color: var(--accent); font-weight: 700; font-size: var(--fs-xl); letter-spacing: 0; }
-/* affiliation lockup, echoed from the footer — muted, non-distracting */
-.hero-affil { display: flex; align-items: center; gap: 14px; margin-top: 22px; transition: opacity .18s var(--ease); }
-/* while a stat popover is open, hide the affiliation so it can't peek out beside the
-   panel. visibility (not opacity) — the heroIn entrance animation fill-freezes opacity
-   at 1 and would override a plain opacity:0. */
-.hero-head.stats-pop .hero-affil { visibility: hidden; }
-.affil-label { font-family: var(--mono); font-size: var(--fs-2xs); letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); }
-.hero-affil a { display: inline-flex; align-items: center; opacity: .42; filter: grayscale(1); transition: opacity .16s var(--ease), filter .16s var(--ease); }
-.hero-affil a:hover { opacity: .9; filter: grayscale(0); }
-.affil-logo { display: block; width: auto; }
-.affil-logo-berkeley { height: 16px; }
-.affil-logo-ms { height: 14px; }
 /* one shared panel-slot below the row — hover fills the whitespace instead of a cramped tooltip above */
 .stat-pop { position: absolute; top: 100%; left: 0; margin-top: 18px; z-index: 30; width: max-content; max-width: min(470px, calc(100vw - 40px)); white-space: normal;
   background: var(--panel-fill); border: 1px solid var(--panel-edge); border-radius: 14px;
