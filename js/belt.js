@@ -107,7 +107,7 @@ const Rollouts = (function () {
   "use strict";
   const fig = document.querySelector(".belt-fig");
   if (!fig) return;
-  const track = fig.querySelector(".belt-track"), tabs = [...fig.querySelectorAll(".belt-tab")];
+  const belt = fig.querySelector(".belt"), tabs = [...fig.querySelectorAll(".belt-tab")];
   let DATA = null, active = false;
 
   const tile = (fam, i, clip) => {
@@ -119,10 +119,22 @@ const Rollouts = (function () {
     return d;
   };
 
+  /* one marquee row: its clips laid twice for a seamless loop; `rev` scrolls it the other way */
+  const row = (fam, items, rev) => {
+    const tr = document.createElement("div");
+    tr.className = "belt-track" + (rev ? " belt-track-rev" : "");
+    tr.setAttribute("aria-hidden", "true");
+    for (let k = 0; k < 2; k++) items.forEach(([i, c]) => tr.appendChild(tile(fam, i, c)));   // ×2 = seamless loop
+    return tr;
+  };
+
   const fill = (fam) => {
-    track.innerHTML = "";
+    belt.innerHTML = "";
     const clips = (DATA.belt && DATA.belt[fam]) || [];
-    for (let k = 0; k < 2; k++) clips.forEach((c, i) => track.appendChild(tile(fam, i, c)));   // ×2 = seamless loop
+    const top = [], bot = [];
+    clips.forEach((c, i) => (i % 2 ? bot : top).push([i, c]));   // interleave so the two rows show different apps
+    belt.appendChild(row(fam, top, false));
+    belt.appendChild(row(fam, bot, true));                       // second row scrolls the opposite way — the rows stay staggered
     if (active) fig.querySelectorAll(".belt-vid").forEach((v) => v.play().catch(() => {}));
   };
 

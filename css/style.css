@@ -657,6 +657,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .belt-tab.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
 .belt { position: relative; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
 .belt-track { display: flex; width: max-content; animation: beltscroll 44s linear infinite; }
+.belt-track + .belt-track { margin-top: 12px; }   /* two staggered rows — 8 clips split 4 + 4 */
+.belt-track-rev { animation-direction: reverse; animation-delay: -22s; }   /* opposite direction + half-cycle phase → the rows never line up */
 .belt:hover .belt-track { animation-play-state: paused; }
 @keyframes beltscroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .belt-tile { position: relative; flex: 0 0 auto; width: 172px; aspect-ratio: 16 / 10; margin-right: 14px; border-radius: 10px; overflow: hidden; border: 1.5px solid var(--panel-edge); background: linear-gradient(158deg, #efe1cd, #e6d5bd); cursor: pointer; }
