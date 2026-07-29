@@ -653,7 +653,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .belt-fig { max-width: 660px; margin: 8px auto 18px; }   /* shared content column — same 660px as .cov / .lb / .hf-embed */
 .belt-tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 10px; }
 /* one-line plain-English gloss of the selected family, swapped by js/belt.js on tab change */
-.belt-fam-desc { text-align: center; font-family: var(--sans); font-size: 13.5px; line-height: 1.5; color: var(--muted); margin: 0 auto 15px; max-width: 620px; }
+.belt-fam-desc { text-align: center; font-family: var(--mono); font-size: var(--fs-sm); letter-spacing: .2px; color: var(--muted); margin: 0 auto 15px; }   /* same voice as .belt-cap — keeps the whole belt mono */
 .belt-tab { font-family: var(--mono); font-size: 12px; letter-spacing: .2px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; color: var(--muted); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
 .belt-tab:hover { border-color: var(--accent-dim); color: var(--text); }
 .belt-tab.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }

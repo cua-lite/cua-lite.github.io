@@ -127,7 +127,7 @@ const Rollouts = (function () {
     "Lite.CUAGym": "Web and desktop tasks across mock sites and real apps.",
     "Lite.CUAWorld": "40 professional apps across ~25 expert domains.",
   };
-  const desc = document.createElement("p");
+  const desc = document.createElement("div");   // a div, not a <p>, so blog `.post-wrap p` rules can't override its size
   desc.className = "belt-fam-desc";
   belt.parentNode.insertBefore(desc, belt);
 
