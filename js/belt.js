@@ -30,6 +30,15 @@ const Rollouts = (function () {
   const list = peek.querySelector(".peek-actions");
   let openKey = null, timer = null, turns = [], marked = -1;
 
+  /* the instruction caps at 3 lines; wrap it so a bottom fade can signal "there's more to scroll"
+     (a guaranteed cue on top of the themed scrollbar) */
+  const iwrap = document.createElement("div");
+  iwrap.className = "peek-instr-wrap";
+  instr.parentNode.insertBefore(iwrap, instr);
+  iwrap.appendChild(instr);
+  const updateMore = () => iwrap.classList.toggle("more", instr.scrollHeight - instr.scrollTop - instr.clientHeight > 2);
+  instr.addEventListener("scroll", updateMore);
+
   /* keep the log in step with playback: highlight the turn currently on screen */
   function sync() {
     if (!turns.length) return;
@@ -57,6 +66,7 @@ const Rollouts = (function () {
     turns = clip.turns; marked = -1;
     domain.textContent = clip.domain;
     instr.textContent = clip.instruction;
+    instr.scrollTop = 0; requestAnimationFrame(updateMore);   // reset scroll + show the "more" fade if the task overflows
     if (vid.getAttribute("src") !== clip.video) vid.src = clip.video;   // same clip re-opens instantly
     vid.play().catch(() => {});
     list.innerHTML = "";
@@ -110,6 +120,17 @@ const Rollouts = (function () {
   const belt = fig.querySelector(".belt"), tabs = [...fig.querySelectorAll(".belt-tab")];
   let DATA = null, active = false;
 
+  /* one-line plain-English gloss per family (source: each env's README) */
+  const FAM_DESC = {
+    "Lite.OSWorld": "369 benchmark tasks + 2k+ synthesized, across 10 desktop apps.",
+    "Lite.ScaleCUA": "20k+ tasks perturbed from OSWorld's evals.",
+    "Lite.CUAGym": "Web and desktop tasks across mock sites and real apps.",
+    "Lite.CUAWorld": "40 professional apps across ~25 expert domains.",
+  };
+  const desc = document.createElement("p");
+  desc.className = "belt-fam-desc";
+  belt.parentNode.insertBefore(desc, belt);
+
   const tile = (fam, i, clip) => {
     const d = document.createElement("div"); d.className = "belt-tile";
     d.innerHTML = '<video class="belt-vid" muted loop playsinline preload="auto"></video><span class="belt-live" aria-hidden="true"><i></i><i></i><i></i></span><span class="belt-tag"></span>';
@@ -129,6 +150,7 @@ const Rollouts = (function () {
   };
 
   const fill = (fam) => {
+    desc.textContent = FAM_DESC[fam] || "";
     belt.innerHTML = "";
     const clips = (DATA.belt && DATA.belt[fam]) || [];
     const top = [], bot = [];

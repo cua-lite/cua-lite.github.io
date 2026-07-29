@@ -651,7 +651,9 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* ---- training-env belt · looping rollout clips, one env family at a time (driven by js/belt.js) ---- */
 .belt-fig { max-width: 660px; margin: 8px auto 18px; }   /* shared content column — same 660px as .cov / .lb / .hf-embed */
-.belt-tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 16px; }
+.belt-tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 10px; }
+/* one-line plain-English gloss of the selected family, swapped by js/belt.js on tab change */
+.belt-fam-desc { text-align: center; font-family: var(--sans); font-size: 13.5px; line-height: 1.5; color: var(--muted); margin: 0 auto 15px; max-width: 620px; }
 .belt-tab { font-family: var(--mono); font-size: 12px; letter-spacing: .2px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; color: var(--muted); cursor: pointer; transition: border-color .15s ease, color .15s ease, background .15s ease; }
 .belt-tab:hover { border-color: var(--accent-dim); color: var(--text); }
 .belt-tab.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -674,15 +676,22 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 @media (prefers-reduced-motion: reduce) { .belt-track { animation: none; } .belt-live i { animation: none; height: 7px; } }
 /* ---- rollout peek · hover a clip to enlarge it, with instruction + clickable action log (js/belt.js) ---- */
 .peek-scrim { position: fixed; inset: 0; background: rgba(30,22,14,.38); z-index: 59; opacity: 0; transition: opacity .18s ease; pointer-events: none; }
-.peek { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.97); z-index: 60; display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 0; background: var(--panel-fill, #fdf7ec); border: 1.5px solid var(--panel-edge); border-radius: 14px; overflow: hidden; box-shadow: 0 24px 60px -18px rgba(30,22,14,.45); opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
-  width: min(900px, calc(100vw - 32px)); height: min(70vh, 560px); }   /* fixed height so the clip fills its column */
+.peek { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(.97); z-index: 60; display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 0; background: var(--panel-fill, #fdf7ec); border: 1.5px solid var(--panel-edge); border-radius: 14px; overflow: hidden; box-shadow: 0 24px 60px -18px rgba(30,22,14,.45); opacity: 0; pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+  width: min(1180px, calc(100vw - 40px)); height: min(86vh, 600px); }   /* sized so the 16:9 clip fills the stage with almost no letterbox */
 .peek[hidden] { display: none; }
 .peek-scrim.is-on { opacity: 1; }   /* dim only — never intercepts the pointer, or the tile would lose hover the instant it opens */
 .peek.is-on { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
 .peek-media { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-.peek-head { flex: 0 0 auto; max-height: 34%; overflow-y: auto; background: var(--panel-fill, #fdf7ec); border-bottom: 1.5px solid var(--line-2); padding: 12px 15px; }   /* the task sits here, so the clip below stays unobstructed */
+.peek-head { flex: 0 0 auto; background: var(--panel-fill, #fdf7ec); border-bottom: 1.5px solid var(--line-2); padding: 12px 15px; }   /* domain always visible; only the instruction scrolls (below) */
 .peek-domain { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
-.peek-instr { margin: 0; font-family: var(--mono); font-size: 11.5px; line-height: 1.55; letter-spacing: .1px; color: var(--text); }
+/* the instruction caps at exactly 3 lines (54px = 3 × 18px) so the clip stays large — the cut lands on a line boundary, never a half-line, and a themed scrollbar shows when there's more to read */
+.peek-instr-wrap { position: relative; }
+.peek-instr-wrap::after { content: ""; position: absolute; left: 0; right: 8px; bottom: 0; height: 14px; background: linear-gradient(transparent, var(--panel-fill, #fdf7ec)); opacity: 0; transition: opacity .15s ease; pointer-events: none; }   /* soft bottom hint (on top of the real scrollbar) shown only while there's more task text below the fold */
+.peek-instr-wrap.more::after { opacity: 1; }
+.peek-instr { margin: 0; font-family: var(--mono); font-size: 11.5px; line-height: 18px; letter-spacing: .1px; color: var(--text); max-height: 54px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--accent-dim) transparent; }
+.peek-instr::-webkit-scrollbar { width: 8px; -webkit-appearance: none; }
+.peek-instr::-webkit-scrollbar-thumb { background: var(--accent-dim); border-radius: 4px; border: 2px solid var(--panel-fill, #fdf7ec); }
+.peek-instr::-webkit-scrollbar-track { background: rgba(120,110,95,.1); border-radius: 4px; }
 .peek-stage { position: relative; flex: 1 1 auto; min-height: 0; background: #000; }
 .peek-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }   /* contain — never crop the frame */
 .peek-actions { list-style: none; margin: 0; padding: 8px; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; border-left: 1.5px solid var(--line-2); }
@@ -693,7 +702,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .peek-act-t { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }   /* one line per call in the turn */
 @media (max-width: 640px) {
   .peek { grid-template-columns: 1fr; grid-template-rows: auto auto; width: calc(100vw - 32px); height: auto; max-height: calc(100vh - 32px); }
-  .peek-stage { flex: 0 0 auto; aspect-ratio: 16 / 10; }
+  .peek-stage { flex: 0 0 auto; aspect-ratio: 16 / 9; }   /* clips are 1920×1080 — match so the phone view has no letterbox either */
   .peek-actions { border-left: none; border-top: 1.5px solid var(--line-2); max-height: 32vh; }
 }
 /* hub chips (LiteSample, lite.gym) — hover pops the schema / interface card to the right */
