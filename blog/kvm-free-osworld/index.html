@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>KVM-free OS(World) at Scale</title>
-<meta name="description" content="OSWorld is a faithful desktop — but a full KVM virtual machine per task, so it doesn't scale. Lite.OSWorld keeps the desktop, drops the VM: the same tasks and evaluators in a plain Docker container, so a desktop benchmark runs anywhere Docker does." />
+<meta name="description" content="Lite.OSWorld runs OSWorld's tasks KVM-free in a plain Docker container, at the same scores — the first of a series of lightweight sandboxes with verifiable tasks to train and benchmark any agent, at scale." />
 <link rel="preload" href="/assets/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/assets/fonts/Fraunces-Italic.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/assets/fonts/Urbanist.woff2" as="font" type="font/woff2" crossorigin />
@@ -14,9 +14,9 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=4" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="KVM-free OS(World) at Scale" />
-<meta property="og:description" content="Keep OSWorld's desktop, drop the VM: the same tasks and evaluators in a plain Docker container — a desktop benchmark that runs anywhere Docker does, at scale." />
+<meta property="og:description" content="OSWorld's tasks, KVM-free and at the same scores — the first of a series of lightweight sandboxes with verifiable tasks to train and benchmark any agent, at scale." />
 <meta property="og:url" content="https://cua-lite.github.io/blog/kvm-free-osworld/" />
-<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=5" />
+<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=6" />
 <link rel="stylesheet" href="/css/style.css" />
 <style>
 /* article layout — the quiet template, shared with /blog/why-cua-lite/ */
@@ -96,7 +96,7 @@
 }
 /* ---- OSWorld ↔ Lite.OSWorld head-to-head — the site's highlight idiom (accent wash + inset bar)
    on the winning column; numeric cells are skeletons until the benchmark writeup lands ---- */
-.cmp { max-width: 500px; margin: 26px auto 30px; border: 1px solid var(--panel-edge); border-radius: 14px; background: var(--panel-fill); overflow: hidden; }
+.cmp { max-width: 624px; margin: 26px auto 30px; border: 1px solid var(--panel-edge); border-radius: 14px; background: var(--panel-fill); overflow: hidden; }
 .cmp-tbl { width: 100%; border-collapse: collapse; }
 .cmp-tbl th, .cmp-tbl td { padding: 12px 18px; text-align: left; vertical-align: middle; }
 .cmp-tbl thead th { font-family: var(--mono); font-size: 13px; letter-spacing: .3px; font-weight: 700; color: var(--text); }
@@ -138,7 +138,7 @@
 .hh-cap { text-align: center; font-family: var(--mono); font-size: 12px; letter-spacing: .2px; color: var(--muted); margin-top: 13px; }
 @media (max-width: 560px) { .hh-pair { grid-template-columns: 1fr; gap: 12px; } }
 /* ---- parity plot · OSWorld vs Lite.OSWorld scores, one dot per model on a y=x diagonal ---- */
-.par { margin: 20px auto 6px; max-width: 360px; }
+.par { margin: 4px auto 6px; max-width: 430px; transform: translateX(-18px); }   /* nudge left so the plot grid reads centered (the y-axis label eats the left margin) */
 .par-plot { position: relative; }
 .par-svg { width: 100%; height: auto; display: block; font-family: var(--mono); overflow: visible; }
 .par-svg .ax { stroke: var(--line-2); stroke-width: 1; }
@@ -165,10 +165,10 @@
 .toc a.toc-hl .toc-n { color: var(--accent); }
 .toc-badge { margin-left: auto; align-self: center; font-family: var(--mono); font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent-dim); border-radius: 999px; padding: 3px 9px; white-space: nowrap; }
 /* ---- the payoff section wears the blog index's "featured" highlight: accent wash + inset bar ---- */
-.hl-sec { margin: 40px 0 0; padding: 2px 26px 18px; background: rgba(189,90,56,.06); border-radius: 14px; box-shadow: inset 3px 0 0 var(--accent); }
-.hl-sec > h2 { margin-top: 22px; }
-.hl-sec p.post-links { margin-bottom: 0; }   /* the section's own padding is the bottom space — no double gap */
-@media (max-width: 480px) { .hl-sec { padding: 2px 16px 14px; } }
+/* the payoff section — set apart by a full-width rule + eyebrow, aligned to the body margin (a section, not a callout box) */
+.hl-sec { margin: 56px 0 0; padding-top: 40px; border-top: 1px solid var(--line-2); }
+.hl-sec > h2 { margin-top: 8px; }
+.sec-eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
 .blog-foot { max-width: 680px; margin: 0 auto; padding: 20px 28px 44px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: var(--fs-sm); color: var(--dim); }
 .blog-foot a { color: var(--dim); }
 .blog-foot a:hover { color: var(--text); }
@@ -214,22 +214,22 @@
 
   <p><b>To eval or train a computer-use agent, you need real desktops — a lot of them.</b>
   OSWorld gives you a faithful one: LibreOffice, Chrome, VS Code, files and windows.
-  But it ships as a heavy virtual machine — and that's what keeps it from scaling.</p>
+  But it ships as a heavy virtual machine, and that's what keeps it from scaling.
+  <b>We propose a series of lightweight, KVM-free sandboxes where we reproduce benchmarks (e.g. OSWorld) and generate verifiable tasks to train any agent.</b></p>
 
   <nav class="toc" aria-label="Contents">
-    <a href="#vm-tax"><span class="toc-n">01</span>OSWorld's VM tax</a>
-    <a href="#still-osworld"><span class="toc-n">02</span>Is Lite.OSWorld still OSWorld?</a>
-    <a href="#beyond" class="toc-hl"><span class="toc-n">03</span>Beyond OSWorld: Scalable Training Sandboxes<span class="toc-badge">At scale</span></a>
+    <a href="#vm-tax"><span class="toc-n">01</span>OSWorld's VM tax: How we cut it with Lite.OSWorld</a>
+    <a href="#beyond" class="toc-hl"><span class="toc-n">02</span>Beyond OSWorld: Scalable Training Sandboxes<span class="toc-badge">At scale</span></a>
   </nav>
 
-  <h2 id="vm-tax">OSWorld's VM tax</h2>
-  <p><b>OSWorld's faithful desktop is a full VM per task.</b> It needs <code>/dev/kvm</code> and
-  nested virtualization — fine on a laptop, a wall at scale, where cloud instances, CI runners,
-  and nested containers rarely hand you KVM, and one VM per trajectory doesn't pack.</p>
+  <h2 id="vm-tax">OSWorld's VM tax: How we cut it with Lite.OSWorld</h2>
+  <p><b>OSWorld's faithful desktop is a full VM per task.</b> It needs <code>/dev/kvm</code>,
+  nested virtualization, and heavy resources — which cloud instances, CI runners, and
+  nested containers rarely provide, so it doesn't scale.</p>
 
-  <p><b>Lite.OSWorld keeps the desktop and drops the VM.</b> The same tasks and evaluators
-  run on a real GNOME desktop in a plain Docker container — no hypervisor, no <code>/dev/kvm</code>
-  — so it boots anywhere Docker runs, packing many to a host.</p>
+  <p><b>Lite.OSWorld (ours) keeps OSWorld's desktop and drops the VM.</b> The same tasks and evaluators
+  run on a GNOME desktop in a plain Docker container: no <code>/dev/kvm</code> and much
+  cheaper, so it boots anywhere Docker runs, packing many per host.</p>
 
   <figure class="flow-demo v2c" aria-label="OSWorld's KVM virtual machine sheds its heavy VM and /dev/kvm dependency to become the Lite.OSWorld container, which then packs into many">
     <div class="v2c-stage">
@@ -259,19 +259,18 @@
       <tbody>
         <tr><th scope="row">Runtime</th><td>QEMU/KVM VM</td><td class="cmp-hi">Docker container</td></tr>
         <tr><th scope="row">Host requirement</th><td>/dev/kvm, nested virt</td><td class="cmp-hi">Any Docker host</td></tr>
-        <tr><th scope="row">Memory</th><td>4.1 GB</span></td><td class="cmp-hi">0.9 GB</span></td></tr>
-        <tr><th scope="row">Cold start</th><td>29.9 s</span></td><td class="cmp-hi">23.8 s</span></td></tr>
-        <tr><th scope="row">Parallelism</th><td>baseline</span></td><td class="cmp-hi">~4.6× more instance</span></td></tr>
+        <tr><th scope="row">Memory</th><td>4.1 GB</td><td class="cmp-hi">0.9 GB</td></tr>
+        <tr><th scope="row">Cold start</th><td>29.9 s</td><td class="cmp-hi">23.8 s</td></tr>
+        <tr><th scope="row">Parallelism</th><td>baseline</td><td class="cmp-hi">~4.6× more instances</td></tr>
         <tr><th scope="row">Task suite</th><td>OSWorld</td><td class="cmp-hi">Identical</td></tr>
       </tbody>
     </table>
-    <figcaption class="cmp-cap">Same tasks and evaluators, a smaller footprint per desktop. <span class="cmp-pending">Figures land with the benchmark writeup.</span></figcaption>
+    <figcaption class="cmp-cap">Same tasks and evaluators, a smaller footprint per desktop.</figcaption>
   </figure>
 
-  <h2 id="still-osworld">Is Lite.OSWorld still OSWorld? Yes</h2>
-  <p><b>A cheap copy is only worth it if it doesn't change the answer.</b> It doesn't: the same
-  model runs the same task the same way on both, and lands on the same result. Same evaluators,
-  same reward — a score or training signal earned on the container carries straight back to the
+  <p><b>Lite.OSWorld gives the same result as the OSWorld VM — same task, same score.</b> The same
+  model runs the same task the same way in the container as in the VM, judged by the same
+  evaluators, so a score or training signal earned in the container carries straight back to the
   real benchmark.</p>
 
   <figure class="hh" aria-label="The same agent rollout in OSWorld and Lite.OSWorld, side by side">
@@ -291,20 +290,18 @@
     <figcaption class="hh-cap">Same model, same task — switch tabs, or click a panel for the full rollout.</figcaption>
   </figure>
 
-  <p><b>Every model scores the same on both.</b> Thirteen of them land on the equal-score
-  line, from the weakest to the strongest.</p>
-
   <figure class="par" aria-label="OSWorld versus Lite.OSWorld success rate across 13 models — every model lands on the equal-score diagonal">
     <div class="par-plot"><svg class="par-svg" viewBox="0 0 300 300" role="img" aria-hidden="true"></svg><span class="par-tip" hidden></span></div>
-    <figcaption class="par-cap">Success rate (%) · OSWorld vs Lite.OSWorld · hover a point for the model</figcaption>
+    <figcaption class="par-cap">Success rate (%) · hover a point for the model</figcaption>
   </figure>
 
   <section class="hl-sec" id="beyond">
+  <div class="sec-eyebrow">At scale</div>
   <h2>Beyond OSWorld: Scalable Training Sandboxes</h2>
-  <p><b>The KVM-free container isn't an OSWorld trick — it's a base for a family of scalable CUA sandboxes with verifiable tasks.</b> The same base
-  already runs more of them — web and desktop tasks, real science desktops (GMAT
-  flying spacecraft, PyMOL turning proteins). Scale doesn't buy a cheaper OSWorld; it buys efficient
-  sandboxes to train and benchmark any agent, at scale.</p>
+  <p><b>The KVM-free container isn't just for OSWorld — it's a base for a family of scalable CUA sandboxes with verifiable tasks.</b> The same base
+  already runs more of them: web and desktop tasks, real science desktops (GMAT
+  flying spacecraft, PyMOL turning proteins). <b>Efficient sandboxes to train and benchmark any
+  agent, at scale.</b></p>
 
   <figure class="belt-fig" aria-label="Looping rollout trajectories across CUA-Lite training environments">
     <div class="belt-tabs" role="tablist">
@@ -320,7 +317,7 @@
   </section>
 
   <p class="post-close"><b>Any agent, on any computer — without the heavy VM.</b> Try it, or bring
-  your own sandboxes —
+  your own sandboxes:
   <a href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a> ·
   <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Hugging Face</a> ·
   <a href="mailto:zhanhui@berkeley.edu">Email</a>.</p>
@@ -358,7 +355,7 @@
   const note = fig.querySelector(".v2c-note");
   const NOTES = [
     "A desktop sealed in a VM — every task boots QEMU/KVM.",
-    "Drop the machine — the same desktop, now a container.",
+    "Out of the VM — the same desktop, now a container.",
     "Replicate the container — rollouts run in parallel.",
   ];
   const COLS = 4;

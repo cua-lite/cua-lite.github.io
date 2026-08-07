@@ -38,6 +38,7 @@ h1 .hinge{color:var(--muted);}   /* the connective "on" — a quiet grey hinge, 
 .lead{margin-top:28px;font-size:26.5px;line-height:1.5;color:var(--muted);max-width:1010px;font-weight:450;}
 .lead b{color:var(--text);font-weight:680;}
 .lead .lc{color:var(--accent);font-weight:680;}
+.lead .sep{color:var(--accent);font-weight:800;margin:0 4px;}   /* bold accent divider between the three contributions */
 .spacer{flex:1;}
 .foot{display:flex;justify-content:space-between;align-items:baseline;
   font-family:'Geist Mono';font-size:19px;color:var(--dim);letter-spacing:0.01em;}
@@ -47,7 +48,7 @@ h1 .hinge{color:var(--muted);}   /* the connective "on" — a quiet grey hinge, 
 </style></head><body>
 <div class="brand"><span class="plane"></span><span class="name">CUA-Lite</span></div>
 <h1>Any agent, <span class="hinge">on</span><br>any computer.</h1>
-<p class="lead">Scalable <b>sandboxes</b> with verifiable tasks and unified <b>SFT data</b> — one framework to <b>eval</b>, <b>SFT</b> &amp; <b>RL</b> any <span class="lc">computer-use</span> agent, at scale.</p>
+<p class="lead">Scalable, efficient <b>sandboxes</b> with verifiable tasks <span class="sep">·</span> unified <b>SFT data</b> <span class="sep">·</span> unified <b>eval</b>, <b>SFT</b> &amp; <b>RL</b> pipeline — for any <span class="lc">computer-use</span> agent, at scale.</p>
 <div class="spacer"></div>
 <div class="foot">
   <div class="stats"><b>30k+</b> tasks <i>·</i> <b>10+</b> datasets <i>·</i> <b>10+</b> agents <i>·</i> <b>15+</b> benchmarks</div>
