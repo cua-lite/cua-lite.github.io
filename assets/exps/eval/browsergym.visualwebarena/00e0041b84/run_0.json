@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "env": "browsergym.visualwebarena",
+  "commit_dir": "2026-07-29T12-26_00e0041b84",
+  "run_id": "run_0",
+  "commit": {
+    "short_sha": "00e0041b84",
+    "subject": "add gpt vwa config"
+  },
+  "artifact_root": ".exps/eval/browsergym.visualwebarena/2026-07-29T12-26_00e0041b84/run_0",
+  "result_count": 4,
+  "status_counts": {
+    "complete": 3,
+    "partial": 1,
+    "empty": 0
+  },
+  "results": [
+    {
+      "model": "Qwen/Qwen3-VL-32B-Instruct",
+      "slug": "Qwen_Qwen3-VL-32B-Instruct",
+      "base_slug": "Qwen_Qwen3-VL-32B-Instruct",
+      "config_id": "default",
+      "status": "complete",
+      "num_valid": 910,
+      "num_tasks": 910,
+      "num_samples": 910,
+      "mean_episode_return": 0.1912087912087912,
+      "summary_path": ".exps/eval/browsergym.visualwebarena/2026-07-29T12-26_00e0041b84/run_0/Qwen_Qwen3-VL-32B-Instruct/summary.json",
+      "artifact_path": ".exps/eval/browsergym.visualwebarena/2026-07-29T12-26_00e0041b84/run_0/Qwen_Qwen3-VL-32B-Instruct"
+    },
+    {
+      "model": "Qwen/Qwen3.5-27B",
+      "slug": "Qwen_Qwen3.5-27B",
+      "base_slug": "Qwen_Qwen3.5-27B",
+      "config_id": "default",
+      "status": "complete",
+      "num_valid": 910,
+      "num_tasks": 910,
+      "num_samples": 910,
+      "mean_episode_return": 0.1879120879120879,
+      "summary_path": ".exps/eval/browsergym.visualwebarena/2026-07-29T12-26_00e0041b84/run_0/Qwen_Qwen3.5-27B/summary.json",
+      "artifact_path": ".exps/eval/browsergym.visualwebarena/2026-07-29T12-26_00e0041b84/run_0/Qwen_Qwen3.5-27B"
+    },
+    {
+      "model": "Qwen/Qwen3-VL-8B-Instruct",
+      "slug": "Qwen_Qwen3-VL-8B-Instruct",
+      "base_slug": "Qwen_Qwen3-VL-8B-Instruct",
+      "config_id": "default",
+      "status": "complete",
+      "num_valid": 910,
+      "num_tasks": 910,
+      "num_samples": 910,
+      "mean_episode_return": 0.08901098901098901,
+      "summary_path": ".exps/eval/browsergym.visualwebarena/2026-07-29T12-26_00e0041b84/run_0/Qwen_Qwen3-VL-8B-Instruct/summary.json",
+      "artifact_path": ".exps/eval/browsergym.visualwebarena/2026-07-29T12-26_00e0041b84/run_0/Qwen_Qwen3-VL-8B-Instruct"
+    },
+    {
+      "model": "gpt-5.5",
+      "slug": "gpt-5.5",
+      "base_slug": "gpt-5.5",
+      "config_id": "default",
+      "status": "partial",
+      "num_valid": 909,
+      "num_tasks": 910,
+      "num_samples": 910,
+      "mean_episode_return": 0.4004400440044004,
+      "summary_path": ".exps/eval/browsergym.visualwebarena/2026-07-29T12-26_00e0041b84/run_0/gpt-5.5/summary.json",
+      "artifact_path": ".exps/eval/browsergym.visualwebarena/2026-07-29T12-26_00e0041b84/run_0/gpt-5.5"
+    }
+  ]
+}
