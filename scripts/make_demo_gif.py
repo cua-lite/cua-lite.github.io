@@ -1,7 +1,8 @@
 """Render the hero device demo to high-res GIF + MP4 (for the cua-lite README).
 
 Captures the REAL page (the same demo that runs on the site) as native frames via
-Chromium's CDP screencast — no video-file screen recording — on a white background,
+Chromium's CDP screencast — no video-file screen recording — on a flat background
+(white by default, --bg to match another surface),
 then assembles crisp loops with ffmpeg. Key trick: CDP screencast captures at CSS
 resolution (it ignores device-scale), so we CSS-`zoom` the isolated demo up first
 and output at the captured native size (no upscaling — that's what kept it sharp).
@@ -32,10 +33,11 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# isolate the demo on white (blends into a GitHub README): drop the page's peach
+# isolate the demo on a flat background (white blends into a GitHub README; pass
+# --bg to match another surface, e.g. the site's own cream): drop the page's peach
 # washes, hide the nav + hero copy, and flatten the layout so only the demo remains.
 BASE_CSS = (
-    "body,.hero{background:#fff !important}"
+    "body,.hero{background:%(bg)s !important}"
     ".hero::before{display:none !important}"
     "header.nav,.hero-head{display:none !important}"
     ".hero{padding:0 !important;min-height:auto !important}"
@@ -65,7 +67,7 @@ def screencast(url: str, vw: int, vh: int, css: str, settle_ms: int, seconds: fl
         browser = p.chromium.launch()
         page = browser.new_page(viewport={"width": vw, "height": vh}, device_scale_factor=1)
         page.goto(url)
-        page.add_style_tag(content=BASE_CSS + css)
+        page.add_style_tag(content=css)
         page.wait_for_timeout(settle_ms)  # skip the entrance; the tour is starting
         demo = page.query_selector(".hero-demo").bounding_box()
         stage = page.query_selector(".stage").bounding_box()
@@ -85,6 +87,16 @@ def screencast(url: str, vw: int, vh: int, css: str, settle_ms: int, seconds: fl
             t = page.evaluate(f"() => document.querySelector('.{cls} {inner}').getBoundingClientRect().top")
             top = min(top, t)
         page.evaluate("(s) => document.querySelectorAll('.stage .device').forEach((d, i) => d.className = s[i])", saved)
+        # The probe left the tour mid-stride — the phone was activated last, its exit
+        # transition is still running, and the tour's own timers have advanced — so the first
+        # captured frames used to show the phone while the trace already read
+        # "--platform desktop". That frame is the poster a player shows before autoplay.
+        # Restoring class names isn't enough (the JS state moved on), so reload and let the
+        # page start its tour from the top; the measurements above survive, the layout is
+        # identical, and recording then begins exactly `settle_ms` into a fresh desktop task.
+        page.reload()
+        page.add_style_tag(content=css)
+        page.wait_for_timeout(settle_ms)
         cdp = page.context.new_cdp_session(page)
         idx = [0]
 
@@ -124,7 +136,9 @@ def build(meta, fps, rect, vw, vh, margin, max_width, gif_out, mp4_out, hold=0.0
         for k in range(n + 1):
             j = max(0, bisect.bisect_right(ts, k * step) - 1)
             Image.open(meta[j][1]).convert("RGB").crop(box).save(fr / f"f{k:04d}.png")
-        width = min(box[2] - box[0], max_width)  # native, downscale only if huge
+        # native, downscale only if huge; even — libx264/yuv420p rejects an odd width
+        # (the gif doesn't care, so an odd crop used to yield a gif and an empty mp4)
+        width = min(box[2] - box[0], max_width) // 2 * 2
         pat = str(fr / "f%04d.png"); pal = str(fr / "pal.png")
         vf = f"scale={width}:-1:flags=lanczos"
         _run(["ffmpeg", "-y", "-framerate", str(fps), "-i", pat,
@@ -147,6 +161,7 @@ def main() -> None:
     ap.add_argument("--hold", type=float, default=1.4, help="freeze the final (finished-mobile) frame this long before the loop restarts; ~matches the tour's mid-holds")
     ap.add_argument("--margin", type=int, default=28, help="white margin around the demo, px")
     ap.add_argument("--max-width", type=int, default=2600, help="downscale a crop only if it exceeds this")
+    ap.add_argument("--bg", default="#fff", help="flat background behind the demo; default white")
     ap.add_argument("--port", type=int, default=8971)
     ap.add_argument("--out", type=Path, default=ROOT / "assets")
     a = ap.parse_args()
@@ -164,7 +179,8 @@ def main() -> None:
         # pin the demo to its natural design width (547px) then zoom, so proportions match the
         # site and the rollout command wraps normally instead of overflowing/clipping.
         vw, vh = 1600, 2300
-        css = f".hero-demo{{width:547px !important;zoom:{a.zoom} !important;margin:20px auto !important}}"
+        base = BASE_CSS % {"bg": a.bg}
+        css = base + f".hero-demo{{width:547px !important;zoom:{a.zoom} !important;margin:20px auto !important}}"
         with tempfile.TemporaryDirectory() as td:
             raw = Path(td) / "raw"; raw.mkdir()
             print("capturing stacked layout ...")
@@ -184,7 +200,7 @@ def main() -> None:
         # top-align device + trace: the stage normally parks the device at its bottom
         # (justify-content:flex-end) leaving empty space on top; move it to the top and
         # pin a height that fits the tallest device (the phone) so nothing clips.
-        css = (f".hero-demo{{zoom:{a.zoom_side} !important;margin:24px auto !important;"
+        css = (base + f".hero-demo{{zoom:{a.zoom_side} !important;margin:24px auto !important;"
                "flex-direction:row !important;align-items:flex-start !important;gap:30px !important;width:max-content !important}"
                ".stage{flex:0 0 auto !important;width:470px !important;min-height:0 !important;height:470px !important}"
                ".stage .device{justify-content:flex-start !important}"

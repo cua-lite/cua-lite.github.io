@@ -356,11 +356,12 @@
   <h1>Why CUA-Lite — and a call for <em>contributors.</em></h1>
 
   <h2>Why CUA-Lite</h2>
-  <p><b>Computer-use agent resources are fragmented.</b> Every benchmark ships its
-  own runner, action space, and data format. Every dataset picks its
-  own schema, so data collected for one agent can't train another. Every project
-  rebuilds the same plumbing — screenshot loops, VM setup, eval scripts — before
-  a single rollout runs.</p>
+  <p><b>Computer-use agent resources are fragmented.</b> Sandboxes are heavy and
+  unstandardized: a virtual machine per task, each with its own interface and
+  action space. Every dataset picks its own schema, so data collected
+  for one agent can't train another. And no framework standardizes how computer-use
+  agents are evaluated and trained, so every project rebuilds the same plumbing —
+  agent loops, VM setup, eval scripts — before a single rollout runs.</p>
 
   <figure class="flow-demo mess" aria-label="Without a shared interface, pairings fail: different schemas, action spaces, harnesses">
     <div class="pair-board" data-board="mess">

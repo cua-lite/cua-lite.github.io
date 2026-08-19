@@ -215,7 +215,7 @@
   <p><b>To eval or train a computer-use agent, you need real desktops — a lot of them.</b>
   OSWorld gives you a faithful one: LibreOffice, Chrome, VS Code, files and windows.
   But it ships as a heavy virtual machine, and that's what keeps it from scaling.
-  <b>We propose a series of lightweight, KVM-free sandboxes where we reproduce benchmarks (e.g. OSWorld) and generate verifiable tasks to train any agent.</b></p>
+  <b>We propose a series of lightweight, KVM-free sandboxes with standardized interfaces, where we reproduce benchmarks (e.g. OSWorld) and generate verifiable tasks to train any agent.</b></p>
 
   <nav class="toc" aria-label="Contents">
     <a href="#vm-tax"><span class="toc-n">01</span>OSWorld's VM tax: How we cut it with Lite.OSWorld</a>
@@ -268,7 +268,7 @@
     <figcaption class="cmp-cap">Same tasks and evaluators, a smaller footprint per desktop.</figcaption>
   </figure>
 
-  <p><b>Lite.OSWorld gives the same result as the OSWorld VM — same task, same score.</b> The same
+  <p><b>Lite.OSWorld gives the same result as the OSWorld VM — same task, and a score that tracks it within a few points.</b> The same
   model runs the same task the same way in the container as in the VM, judged by the same
   evaluators, so a score or training signal earned in the container carries straight back to the
   real benchmark.</p>
@@ -290,7 +290,7 @@
     <figcaption class="hh-cap">Same model, same task — switch tabs, or click a panel for the full rollout.</figcaption>
   </figure>
 
-  <figure class="par" aria-label="OSWorld versus Lite.OSWorld success rate across 13 models — every model lands on the equal-score diagonal">
+  <figure class="par" aria-label="OSWorld versus Lite.OSWorld success rate across 13 models — every model lands within a few points of the equal-score diagonal">
     <div class="par-plot"><svg class="par-svg" viewBox="0 0 300 300" role="img" aria-hidden="true"></svg><span class="par-tip" hidden></span></div>
     <figcaption class="par-cap">Success rate (%) · hover a point for the model</figcaption>
   </figure>
@@ -505,7 +505,9 @@
   add("line", { class: "ax", x1: x0, y1: y1, x2: x1, y2: y1 });
   // y = x reference
   add("line", { class: "diag", x1: sx(0), y1: sy(0), x2: sx(MAX), y2: sy(MAX) });
-  add("text", { class: "diag-lbl", x: sx(MAX) - 2, y: sy(MAX) + 11, "text-anchor": "end" }, "equal score");
+  // in the empty upper-left triangle, not on the line it labels: at the top-right corner the
+  // text ran along the dashes and touched the plot border
+  add("text", { class: "diag-lbl", x: sx(30), y: sy(62), "text-anchor": "start" }, "equal score");
   // axis names
   add("text", { class: "axname", x: (x0 + x1) / 2, y: y1 + 26, "text-anchor": "middle" }, "OSWorld →");
   add("text", { class: "axname", x: -(y0 + y1) / 2, y: 12, transform: "rotate(-90)", "text-anchor": "middle" }, "Lite.OSWorld →");
