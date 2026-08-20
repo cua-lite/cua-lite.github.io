@@ -52,7 +52,7 @@ LiteSample(
 
 <span class="t-dim"># a use trajectory — 2 steps ↓</span>
 LiteSample(
-  LiteMetadata(<span class="t-str">"web"</span>, <span class="t-str">"use"</span>),
+  LiteMetadata(<span class="t-str">"browser"</span>, <span class="t-str">"use"</span>),
   messages=[
     user(<span class="t-str">"Find cua-lite on GitHub"</span>, img=0),
     assistant(type(<span class="t-str">"cua-lite"</span>)),

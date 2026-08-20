@@ -1,8 +1,8 @@
 /* ============================================================
    CUA-Lite — one agent, any computer.
    The same agent operates three platforms, each its own device:
-   desktop (a pixel CRT running LibreOffice Calc), web (a browser),
-   mobile (a phone). The lead words desktop/web/mobile are the control;
+   desktop (a pixel CRT running LibreOffice Calc), browser (web pages in a browser),
+   mobile (a phone). The lead words desktop/browser/mobile are the control;
    on load it tours all three once, then rests home and lets you drive.
    Shared engine: think → move → act, GPU-composited cursor.
    Reduced motion: the desktop finished frame, held still.
@@ -140,8 +140,8 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
   const fmt = (n) => n.toLocaleString("en-US");
   const sum = () => cells.reduce((a, e) => a + numOf(e), 0);
   const avg = () => sum() / cells.length;
-  // web
-  const wq = $("#wq"), wfield = $(".dev-web [data-t='search']");
+  // browser
+  const wq = $("#wq"), wfield = $(".dev-browser [data-t='search']");
   const ggHome = $("#gg-home"), ggResults = $("#gg-results"), ggSite = $("#gg-site"), bwHost = $("#bw-host");
   // mobile
   const mname = $("#mname"), minput = $(".dev-mobile [data-t='name']"), msave = $(".dev-mobile [data-t='save']");
@@ -167,11 +167,11 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
       ],
       finished() { fbar.className = "sh-formula typed"; fbar.textContent = "=AVERAGE(B2:B5)"; total.textContent = avg().toFixed(1); total.classList.add("filled", "sel"); },
     },
-    web: {
+    browser: {
       // Google → search "cua-lite" → open this very homepage
       env: "webvoyager",
       instr: "look up cua-lite",
-      device: $(".dev-web"),
+      device: $(".dev-browser"),
       reset() {
         wq.textContent = "Search Google or type a URL"; wq.className = "mk-ph";
         wfield.classList.remove("hot");
@@ -198,14 +198,14 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
       },
       steps: [
         { t: "name", onAct: () => minput.classList.add("hot") },
-        { t: "name", cap: 'type("yep — desktop, web & mobile")', typeLen: 26, onAct: () => typeInto(mname, "", "yep — desktop, web & mobile 🚀") },
+        { t: "name", cap: 'type("yep — desktop, browser & mobile")', typeLen: 30, onAct: () => typeInto(mname, "", "yep — desktop, browser & mobile 🚀") },
         { t: "save", onAct: () => at(120, () => { msent.classList.add("show"); msave.classList.add("sent"); mname.textContent = "iMessage"; mname.className = "mk-ph"; minput.classList.remove("hot"); }) },
         { done: true, cap: 'terminate("success")' },
       ],
       finished() { msent.classList.add("show"); msave.classList.add("sent"); mname.textContent = "iMessage"; mname.className = "mk-ph"; },
     },
   };
-  const ORDER = ["desktop", "web", "mobile"];
+  const ORDER = ["desktop", "browser", "mobile"];
 
   /* ---------- run one platform's task ---------- */
   const ts = (ms) => (ms / 1000).toFixed(1) + "s";
@@ -260,7 +260,7 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
     logLine('terminate("success")', "done", "2.0s");
     requestAnimationFrame(() => { ctx.cursor.style.transition = "none"; const c = centerOf(ctx, "fbar"); if (c) place(ctx, c.x, c.y); });
   }
-  // the intro tours all three machines ONCE (desktop → web → mobile), then
+  // the intro tours all three machines ONCE (desktop → browser → mobile), then
   // settles home on the finished desktop and invites you to drive. Calm and
   // confident, not a restless loop — the lead words steer it any time.
   let advances = 0, settled = false;
@@ -453,11 +453,11 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
   ];
   // which platforms each family actually supports (from scripts/configs/<family>/default/*.yaml).
   // A mobile-only model can't be paired with a desktop env — the env menu filters to these.
-  const ALL_PLATS = ["desktop", "web", "mobile", "grounding"];
+  const ALL_PLATS = ["desktop", "browser", "mobile", "grounding"];
   const FAMILY_PLATS = {
     gpt: ALL_PLATS, claude: ALL_PLATS, qwen3_vl: ALL_PLATS, qwen3_5: ALL_PLATS,
     qwen2_5_vl: ["desktop", "grounding"],
-    fara: ["web", "grounding"],
+    fara: ["browser", "grounding"],
     ui_tars: ["desktop", "mobile", "grounding"], ui_tars_15_v1: ["desktop", "mobile", "grounding"],
     scalecua: ["desktop", "grounding"], opencua: ["desktop", "grounding"], evocua: ["desktop", "grounding"],
     mai_ui: ["mobile", "grounding"],
@@ -468,8 +468,8 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
     "osworld": "desktop", "lite.osworld": "desktop", "osworld_2": "desktop", "cua.bench": "desktop",
     "cuaworld": "desktop",
     "screenspot_pro": "grounding", "osworld_g": "grounding",
-    "webgym": "web", "webharbor.webvoyager": "web", "online_mind2web": "web",
-    "browsergym.miniwob": "web", "browsergym.webarena": "web", "browsergym.visualwebarena": "web",
+    "webgym": "browser", "webharbor.webvoyager": "browser", "online_mind2web": "browser",
+    "browsergym.miniwob": "browser", "browsergym.webarena": "browser", "browsergym.visualwebarena": "browser",
     "androidworld": "mobile", "androidlab": "mobile", "mobileworld": "mobile", "mobilegym": "mobile",
   };
   const envsFor = (agent, envs) => envs.filter((e) => FAMILY_PLATS[agent.family].includes(ENV_PLAT[e]));
@@ -581,7 +581,7 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
     };
     const sync = () => { drvFamily.forEach((e) => (e.textContent = agent.family)); drvEnv.forEach((e) => (e.textContent = env)); drvAgent.forEach((e) => (e.textContent = agent.model)); drvDataset.forEach((e) => (e.textContent = ENV2ROW[env] || env)); if (cfg.table) { highlightBench(env); dimUnsupported(); } };
 
-    const PLAT_ORDER = { Grounding: 0, Desktop: 1, Web: 2, Mobile: 3 };
+    const PLAT_ORDER = { Grounding: 0, Desktop: 1, Browser: 2, Mobile: 3 };
     function makeSlot(slot, getList, getLabel, curLabel, onPick, groupBy) {
       const tok = document.createElement("button");
       tok.className = "cb-tok"; tok.type = "button"; tok.setAttribute("aria-haspopup", "listbox"); tok.setAttribute("aria-expanded", "false");
@@ -812,7 +812,7 @@ let sftSetModel = null;      // SFT configurator registers; the RL agent picker 
     benchmarks: { groups: [
       { label: "Grounding", items: [["OSWorld-G", "https://github.com/xlang-ai/OSWorld-G"], ["ScreenSpot-Pro", "https://github.com/likaixin2000/ScreenSpot-Pro-GUI-Grounding"]] },
       { label: "Desktop", items: [["OSWorld", "https://github.com/xlang-ai/OSWorld"], ["Lite.OSWorld", RM+"lite/osworld/README.md"], ["OSWorld-2", "https://github.com/xlang-ai/OSWorld"], ["CUABench", "https://github.com/trycua/cua"]] },
-      { label: "Web", items: [["WebGym", "https://github.com/microsoft/webgym"], ["WebVoyager", "https://github.com/MinorJerry/WebVoyager"], ["Online-Mind2Web", "https://github.com/OSU-NLP-Group/Online-Mind2Web"], ["MiniWoB", "https://github.com/Farama-Foundation/miniwob-plusplus"], ["WebArena", "https://github.com/web-arena-x/webarena"], ["VisualWebArena", "https://github.com/web-arena-x/visualwebarena"]] },
+      { label: "Browser", items: [["WebGym", "https://github.com/microsoft/webgym"], ["WebVoyager", "https://github.com/MinorJerry/WebVoyager"], ["Online-Mind2Web", "https://github.com/OSU-NLP-Group/Online-Mind2Web"], ["MiniWoB", "https://github.com/Farama-Foundation/miniwob-plusplus"], ["WebArena", "https://github.com/web-arena-x/webarena"], ["VisualWebArena", "https://github.com/web-arena-x/visualwebarena"]] },
       { label: "Mobile", items: [["AndroidWorld", "https://github.com/google-research/android_world"], ["AndroidLab", "https://github.com/THUDM/Android-Lab"], ["MobileWorld", "https://github.com/Tongyi-MAI/MobileWorld"], ["MobileGym", "https://github.com/Purewhiter/mobilegym"]] } ] },
     // groups filled live from the shared HF source below (same one the Data/Train pickers use)
     datasets: { groups: [] },

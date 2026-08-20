@@ -124,7 +124,7 @@ const Rollouts = (function () {
   const FAM_DESC = {
     "Lite.OSWorld": "369 benchmark tasks + 2k+ synthesized, across 10 desktop apps.",
     "Lite.ScaleCUA": "20k+ tasks perturbed from OSWorld's evals.",
-    "Lite.CUAGym": "Web and desktop tasks across mock sites and real apps.",
+    "Lite.CUAGym": "Browser and desktop tasks across mock sites and real apps.",
     "Lite.CUAWorld": "40 professional apps across ~25 expert domains.",
   };
   const desc = document.createElement("div");   // a div, not a <p>, so blog `.post-wrap p` rules can't override its size

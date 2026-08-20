@@ -68,7 +68,7 @@
 .pair-chip[data-logo="gemini"]  { --ic: url('/assets/logos/gemini.svg'); }
 .pair-chip[data-logo="ui-tars"] { --ic: url('/assets/logos/ui-tars.png'); }
 .pair-chip[data-logo="kimi"]    { --ic: url('/assets/logos/kimi.svg'); }
-.chip-tag { color: var(--dim); font-size: 10px; transition: color .25s ease; }   /* dim platform hint: desktop / web / mobile */
+.chip-tag { color: var(--dim); font-size: 10px; transition: color .25s ease; }   /* dim platform hint: desktop / browser / mobile */
 .pair-chip.ghost { background: transparent; color: var(--dim); }   /* the open slot — solid border like the rest, just no fill */
 .pair-chip.on { color: var(--accent); border-color: var(--accent); background: rgba(189,90,56,.10); box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 3px 10px -4px rgba(189,90,56,.4); }   /* the in-play chip warms and lifts */
 .pair-chip.ghost.on { color: var(--accent); background: rgba(189,90,56,.06); }   /* the slot lights up, still dashed — yours to fill */
@@ -109,23 +109,23 @@
 .seed-fold.unfolded .col-seed.to-gym { opacity: 0; transform: translate(155px, -40px) scale(.42); }   /* the platforms travel toward lite.gym and shrink into it — a hand-off into the gym, where the loop's screenshot device then appears */
 .seed-fold.unfolded:has(.col-seed.to-gym) .pair-node { animation: hubReceive .7s var(--ease) .34s; }   /* lite.gym gives a small pulse as the platforms land in it */
 @keyframes hubReceive { 40% { transform: scale(1.05); } }
-/* screenshot-trajectory frames — real device proportions like the homepage demos: desktop/web landscape, mobile portrait */
+/* screenshot-trajectory frames — real device proportions like the homepage demos: desktop/browser landscape, mobile portrait */
 .traj { position: relative; }
-.traj.desktop, .traj.web { width: 127px; height: 52px; }
-.traj.desktop .fr, .traj.web .fr { width: 82px; height: 52px; border-radius: 6px; }
+.traj.desktop, .traj.browser { width: 127px; height: 52px; }
+.traj.desktop .fr, .traj.browser .fr { width: 82px; height: 52px; border-radius: 6px; }
 .traj.mobile { width: 89px; height: 66px; }
 .traj.mobile .fr { width: 44px; height: 66px; border-radius: 10px; }
 .traj .fr { position: absolute; top: 0; overflow: hidden; background: #fff center / cover no-repeat; border: 1px solid rgba(40,30,15,.22); box-shadow: 2px 3px 6px -3px rgba(40,30,15,.30); }
 .traj.desktop .fr { background-image: url(/assets/traj/desktop.png); }   /* real screenshots of the hero demos — a dataset is recorded screens */
-.traj.web .fr { background-image: url(/assets/traj/web.png); }
+.traj.browser .fr { background-image: url(/assets/traj/web.png); }
 .traj.mobile .fr { background-image: url(/assets/traj/mobile.png); background-position: center top; }
 /* fig 4: environments open as the three GENERAL platforms — device forms (not a screenshot) */
 .plat .dev { display: block; position: relative; background: linear-gradient(180deg, #fff, #fdf7ec); border: 1.5px solid var(--accent-dim); box-shadow: 0 2px 5px -2px rgba(40,30,15,.13); }
-.plat.desktop .dev, .plat.web .dev { width: 90px; height: 54px; border-radius: 6px; }
+.plat.desktop .dev, .plat.browser .dev { width: 90px; height: 54px; border-radius: 6px; }
 .plat.mobile .dev { width: 44px; height: 70px; border-radius: 12px; }
 .plat.desktop::after { content: ""; display: block; width: 30px; height: 7px; margin: 0 auto; background: var(--accent-dim); opacity: .4; clip-path: polygon(28% 0, 72% 0, 100% 100%, 0 100%); }   /* monitor stand */
-.plat.web .dev::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 13px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); border-radius: 6px 6px 0 0; }   /* browser chrome */
-.plat.web .dev::after { content: ""; position: absolute; top: 5px; left: 7px; width: 3.5px; height: 3.5px; border-radius: 50%; background: var(--accent-dim); box-shadow: 6px 0 var(--accent-dim), 12px 0 var(--accent-dim); }   /* traffic lights */
+.plat.browser .dev::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 13px; background: var(--panel-2); border-bottom: 1px solid var(--line-2); border-radius: 6px 6px 0 0; }   /* browser chrome */
+.plat.browser .dev::after { content: ""; position: absolute; top: 5px; left: 7px; width: 3.5px; height: 3.5px; border-radius: 50%; background: var(--accent-dim); box-shadow: 6px 0 var(--accent-dim), 12px 0 var(--accent-dim); }   /* traffic lights */
 .plat.mobile .dev::before { content: ""; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 14px; height: 3px; border-radius: 2px; background: var(--line-2); }   /* notch */
 .ag-seed { position: relative; display: inline-flex; align-items: center; background: var(--panel-2); border: 1px solid var(--line-2); border-radius: 999px; padding: 9px 20px; box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 1px 1.5px rgba(40,30,15,.045); font-family: var(--mono); font-size: 13px; color: var(--muted); }
 .ag-seed::before, .ag-seed::after { content: ""; position: absolute; inset: 0; border-radius: 999px; background: var(--panel-2); border: 1px solid var(--line-2); z-index: -1; }
@@ -168,13 +168,13 @@
 .gym-shot { position: absolute; transform: translate(-50%, -100%); z-index: 3; opacity: 0; transition: opacity .3s ease; pointer-events: none; }
 .gym-shot.show { opacity: 1; }
 .gym-shot .scr { display: none; }
-.gym-shot[data-plat="desktop"] .scr.desktop, .gym-shot[data-plat="web"] .scr.web, .gym-shot[data-plat="mobile"] .scr.mobile { display: block; }
+.gym-shot[data-plat="desktop"] .scr.desktop, .gym-shot[data-plat="browser"] .scr.browser, .gym-shot[data-plat="mobile"] .scr.mobile { display: block; }
 .scr.desktop { width: 58px; height: 40px; background: #3d5163; border: 2px solid #23272f; border-radius: 4px; position: relative; }
 .scr.desktop::after { content: ""; position: absolute; left: 8px; top: 7px; right: 8px; bottom: 9px; background: #f4f2ea; border: 1px solid #23272f; border-radius: 2px;
   background-image: linear-gradient(#e7e2d2 0 6px, transparent 6px); }
-.scr.web { width: 58px; height: 40px; background: #f4f2ea; border: 2px solid #23272f; border-radius: 4px; position: relative; }
-.scr.web::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 9px; background: #e7e2d2; border-bottom: 1px solid #23272f; }
-.scr.web::after { content: ""; position: absolute; left: 5px; top: 2.5px; width: 26px; height: 4px; background: #fff; border-radius: 2px; border: .5px solid #b7ae98; }
+.scr.browser { width: 58px; height: 40px; background: #f4f2ea; border: 2px solid #23272f; border-radius: 4px; position: relative; }
+.scr.browser::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 9px; background: #e7e2d2; border-bottom: 1px solid #23272f; }
+.scr.browser::after { content: ""; position: absolute; left: 5px; top: 2.5px; width: 26px; height: 4px; background: #fff; border-radius: 2px; border: .5px solid #b7ae98; }
 .scr.mobile { width: 24px; height: 42px; background: #f4f2ea; border: 2px solid #23272f; border-radius: 6px; position: relative; }
 .scr.mobile::after { content: ""; position: absolute; left: 6px; bottom: 2px; right: 6px; height: 2px; border-radius: 2px; background: #23272f; }
 .gym-cur { position: absolute; width: 14px; height: 21px; background: url('/assets/pixel/cursor.png') top left/contain no-repeat;
@@ -421,7 +421,7 @@
     <div class="pair-board" data-board="data">
       <div class="pair-col">
         <span class="pair-k">Datasets</span>
-        <a data-cat="data" class="pair-chip" data-id="Multimodal-Mind2Web" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web<span class="chip-tag"> · web</span></a>
+        <a data-cat="data" class="pair-chip" data-id="Multimodal-Mind2Web" href="https://huggingface.co/datasets/cua-lite/Multimodal-Mind2Web" target="_blank" rel="noopener">Mind2Web<span class="chip-tag"> · browser</span></a>
         <a data-cat="data" class="pair-chip" data-id="GUIOdyssey" href="https://huggingface.co/datasets/cua-lite/GUIOdyssey" target="_blank" rel="noopener">GUIOdyssey<span class="chip-tag"> · mobile</span></a>
         <a data-cat="data" class="pair-chip" data-id="ScaleCUA" href="https://huggingface.co/datasets/cua-lite/ScaleCUA" target="_blank" rel="noopener">ScaleCUA<span class="chip-tag"> · all</span></a>
         <a data-cat="data" class="pair-chip" data-id="OpenCUA" href="https://huggingface.co/datasets/cua-lite/OpenCUA" target="_blank" rel="noopener">OpenCUA<span class="chip-tag"> · desktop</span></a>
@@ -494,9 +494,9 @@
       <div class="pair-col">
         <span class="pair-k">Environments</span>
         <a data-cat="env" class="pair-chip" data-id="osworld" href="https://github.com/xlang-ai/OSWorld" target="_blank" rel="noopener">OSWorld<span class="chip-tag"> · desktop</span></a>
-        <a data-cat="env" class="pair-chip" data-id="browsergym.webarena" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena<span class="chip-tag"> · web</span></a>
+        <a data-cat="env" class="pair-chip" data-id="browsergym.webarena" href="https://github.com/web-arena-x/webarena" target="_blank" rel="noopener">WebArena<span class="chip-tag"> · browser</span></a>
         <a data-cat="env" class="pair-chip" data-id="androidworld" href="https://github.com/google-research/android_world" target="_blank" rel="noopener">AndroidWorld<span class="chip-tag"> · mobile</span></a>
-        <a data-cat="env" class="pair-chip" data-id="webgym" href="https://github.com/microsoft/webgym" target="_blank" rel="noopener">WebGym<span class="chip-tag"> · web</span></a>
+        <a data-cat="env" class="pair-chip" data-id="webgym" href="https://github.com/microsoft/webgym" target="_blank" rel="noopener">WebGym<span class="chip-tag"> · browser</span></a>
         <a data-cat="env" class="pair-chip ghost" data-id="your-env" href="https://github.com/cua-lite/cua-lite/blob/main/docs/envs.md" target="_blank" rel="noopener">yours next</a>
       </div>
       <div class="pair-mid"><span class="pair-node"><span class="node-mark" aria-hidden="true"></span><code class="lg" tabindex="0">lite.gym</code><span class="node-glyph node-loop" aria-hidden="true"></span></span></div>
@@ -580,7 +580,7 @@
       labDown = document.createElement("span"); labDown.className = "flow-lab"; labDown.textContent = "click([632, 375])";
       board.appendChild(labUp); board.appendChild(labDown);
       shot = document.createElement("span"); shot.className = "gym-shot";
-      shot.innerHTML = '<span class="scr desktop"></span><span class="scr web"></span><span class="scr mobile"></span>';
+      shot.innerHTML = '<span class="scr desktop"></span><span class="scr browser"></span><span class="scr mobile"></span>';
       board.appendChild(shot);
       gcur = document.createElement("span"); gcur.className = "gym-cur";
       board.appendChild(gcur);
@@ -648,7 +648,7 @@
         const pulse = (x, y) => { ring.style.left = x + "px"; ring.style.top = y + "px";
           void ring.getBoundingClientRect(); ring.classList.add("hit"); };
         if (mode === "loop") {   // wire lands, then the loop runs once: screenshot up, click comes down and lands
-          const PLAT = { "osworld": "desktop", "browsergym.webarena": "web", "androidworld": "mobile", "webgym": "web" };
+          const PLAT = { "osworld": "desktop", "browsergym.webarena": "browser", "androidworld": "mobile", "webgym": "browser" };
           const plat = PLAT[left[a].dataset.id] || "desktop";
           shot.dataset.plat = plat;
           labDown.textContent = (plat === "mobile" ? "tap([632, 375])" : "click([632, 375])");
@@ -689,7 +689,7 @@
   // column seeds — datasets open as three platform screenshot-trajectory stacks, agents as a cursor; hidden until a figure opts in with .seed-fold
   function trajSeed() {
     const seed = document.createElement("div"); seed.className = "col-seed"; seed.setAttribute("aria-hidden", "true");
-    ["desktop", "web", "mobile"].forEach((plat) => {
+    ["desktop", "browser", "mobile"].forEach((plat) => {
       const t = document.createElement("div"); t.className = "traj " + plat;
       for (let i = 0; i < 4; i++) {
         const fr = document.createElement("span"); fr.className = "fr";
@@ -707,7 +707,7 @@
   }
   function platformSeed() {   // environments = the three GENERAL platforms, drawn as device forms (not a screenshot)
     const seed = document.createElement("div"); seed.className = "col-seed to-gym"; seed.setAttribute("aria-hidden", "true");
-    ["desktop", "web", "mobile"].forEach((plat) => {
+    ["desktop", "browser", "mobile"].forEach((plat) => {
       const d = document.createElement("div"); d.className = "plat " + plat;
       d.innerHTML = '<span class="dev"></span>';
       seed.appendChild(d);

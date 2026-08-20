@@ -77,7 +77,7 @@ def screencast(url: str, vw: int, vh: int, css: str, settle_ms: int, seconds: fl
         # timer won't fire during this ~0.6s probe — we restore the live classes afterward.
         saved = page.evaluate("() => [...document.querySelectorAll('.stage .device')].map(d => d.className)")
         top = float("inf")
-        for cls, inner in (("dev-desktop", ".crt"), ("dev-web", ".browser"), ("dev-mobile", ".phone")):
+        for cls, inner in (("dev-desktop", ".crt"), ("dev-browser", ".browser"), ("dev-mobile", ".phone")):
             page.evaluate(
                 "(cls) => document.querySelectorAll('.stage .device').forEach(d => {"
                 " d.classList.remove('exit'); d.classList.toggle('active', d.classList.contains(cls)); })",
@@ -156,7 +156,7 @@ def main() -> None:
     ap.add_argument("--zoom", type=float, default=2.4, help="CSS zoom for the stacked crops; default 1.9")
     ap.add_argument("--zoom-side", type=float, default=2.0, help="CSS zoom for the side/landscape crop; default 1.5")
     ap.add_argument("--fps", type=float, default=50, help="output fps; higher = smoother transitions")
-    ap.add_argument("--seconds", type=float, default=16, help="one full tour: desktop->web->mobile fully done + a dwell before the loop restarts (settle at ~17.9s from load)")
+    ap.add_argument("--seconds", type=float, default=16, help="one full tour: desktop->browser->mobile fully done + a dwell before the loop restarts (settle at ~17.9s from load)")
     ap.add_argument("--settle-ms", type=int, default=1200)
     ap.add_argument("--hold", type=float, default=1.4, help="freeze the final (finished-mobile) frame this long before the loop restarts; ~matches the tour's mid-holds")
     ap.add_argument("--margin", type=int, default=28, help="white margin around the demo, px")

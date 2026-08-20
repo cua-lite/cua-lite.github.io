@@ -388,11 +388,11 @@ def span_el(page, *selectors: str):
 def leaderboard_clip(browser, out: str, mark: Path) -> None:
     """One command, any benchmark — as a result, not a claim.
 
-    Walks four real boards (desktop → web → mobile → grounding); the eval command's
+    Walks four real boards (desktop → browser → mobile → grounding); the eval command's
     --env-id and the leaderboard update together, so the frame holds both. Every board is
     visited BEFORE the span is measured, and the heights pinned, so the tallest board
     can't get sliced off at the frame edge mid-tour."""
-    TOUR = [("Desktop", "osworld"), ("Web", "webharbor.webvoyager"),
+    TOUR = [("Desktop", "osworld"), ("Browser", "webharbor.webvoyager"),
             ("Mobile", "androidworld"), ("Grounding", "screenspot_pro"),
             ("Desktop", "osworld")]          # back to the first board: the clip loops
     HOLD = 3.2

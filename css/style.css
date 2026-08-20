@@ -251,7 +251,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   z-index: -1; pointer-events: none; filter: blur(13px);
   background: radial-gradient(50% 50% at 50% 50%, rgba(40,30,15,.42), rgba(40,30,15,.2) 46%, transparent 74%); }
 .dev-desktop::after { width: 220px; height: 26px; }
-.dev-web::after     { width: 440px; height: 30px; }
+.dev-browser::after { width: 440px; height: 30px; }
 .dev-mobile::after  { width: 196px; height: 28px; }
 .stage .device.active { opacity: 1; visibility: visible; transform: none; z-index: 2;
   transition: opacity .42s ease, transform .52s var(--ease), visibility 0s 0s; }
@@ -263,7 +263,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .stage.snappy .device { transition: opacity .26s ease, transform .34s var(--ease), visibility 0s .34s; }
 .stage.snappy .device.active { transition: opacity .28s ease, transform .36s var(--ease), visibility 0s 0s; }
 .stage.snappy .device.exit { transition: opacity .26s ease, transform .34s var(--ease), visibility 0s .34s; }
-.dev-desktop > .crt, .dev-web > .browser { width: 100%; }
+.dev-desktop > .crt, .dev-browser > .browser { width: 100%; }
 /* a soft ambient behind the CRT — a screen lit in a dark room, restrained */
 .hero-demo::before { content: ""; position: absolute; left: 30%; top: 50%; width: 62%; height: 108%;
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
@@ -463,7 +463,7 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   box-shadow: inset 0 -1.5px 0 var(--line-2); transition: color .25s ease, box-shadow .25s ease; }   /* quiet until active — the orange visibly travels with the demo */
 .plat:hover, .plat.on { color: var(--accent); box-shadow: inset 0 -2px 0 var(--accent); }
 
-/* ---------- WEB: a classic browser, standalone (no monitor) ----------
+/* ---------- BROWSER: a classic browser, standalone (no monitor) ----------
    window lights + a tab + a pill address bar make it unmistakably a browser.
    It opens on Google, searches cua-lite, and lands on this very homepage. */
 /* the browser is a light pixel window — silver chrome + charcoal outline like the
@@ -585,8 +585,8 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 
 /* ---------- shared agent status line ---------- */
 /* the rollout streams as a live log — the agent's run, line by line */
-/* reserve the tallest mode's height so cycling desktop/web/mobile never nudges
-   the page below (web's 6-line trace is the max) — zero layout drift */
+/* reserve the tallest mode's height so cycling desktop/browser/mobile never nudges
+   the page below (browser's 6-line trace is the max) — zero layout drift */
 /* the rollout trace is a dark terminal log (like the page's other terminals) so it
    stays legible on the cream page and reads as the machine's own output */
 .rollout { font-family: var(--mono); font-size: var(--fs-md); min-height: 284px; margin-top: 16px;

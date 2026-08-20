@@ -86,7 +86,7 @@ VM vs container — it visits 3 of the player's 7 task tabs). See the reply plan
 
 · Sandboxes — efficient environments with 30k+ verifiable tasks
 · Data — 10+ SFT datasets plus fresh rollouts from frontier CUAs
-· Eval, SFT, and RL any agent: desktop, web, mobile
+· Eval, SFT, and RL any agent: desktop, browser, mobile
 
 CUA-Lite — UC Berkeley · Microsoft
 github.com/cua-lite/cua-lite
@@ -154,7 +154,7 @@ environment readers already know, so it is the cheapest way into lightweight san
 
 That base runs a family of sandboxes, not one: each packs many to a machine, runs in parallel, and every task is verifiable — so the same task serves both training and benchmarking. 30k+ verifiable tasks so far.
 
-Three more of ours beyond Lite.OSWorld: Lite.ScaleCUA (20k+ tasks perturbed from OSWorld's evals), Lite.CUAGym (web and desktop tasks across mock sites and real apps), Lite.CUAWorld (40 professional apps across ~25 expert domains — GMAT flying spacecraft, PyMOL turning proteins).
+Three more of ours beyond Lite.OSWorld: Lite.ScaleCUA (20k+ tasks perturbed from OSWorld's evals), Lite.CUAGym (browser and desktop tasks across mock sites and real apps), Lite.CUAWorld (40 professional apps across ~25 expert domains — GMAT flying spacecraft, PyMOL turning proteins).
 ```
 
 **Source** "Why CUA-Lite" § Sandboxes & verifiable tasks (heading + bold lead) and the KVM-free
@@ -216,7 +216,7 @@ and an action, click or tap, comes back down.
 
 That interface is already running: 15+ benchmarks integrated, 11 with a leaderboard on the site today — every score on them is a run of ours.
 
-A unified action space per platform means one script evals any agent on any benchmark — swap --model-id and --env-id (and its config): desktop, web, mobile, grounding.
+A unified action space per platform means one script evals any agent on any benchmark — swap --model-id and --env-id (and its config): desktop, browser, mobile, grounding.
 ```
 
 **Source** Homepage `#benchmarks` — heading and section lead, verbatim; the counts come from the

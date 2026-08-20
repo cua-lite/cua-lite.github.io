@@ -19,7 +19,7 @@ css/style.css         # design system (palette, pixel surfaces, responsive)
 js/main.js            # console controller (agent×env → preview + reproduce code) + click sparkle
 assets/icons/         # pixel UI icons (blue PNGs used as background-image; + cursor)
 assets/pixel/         # cursor / sparkle
-assets/showcase/      # per-env rollout GIFs (Desktop/Web/Mobile), vendored from the main repo
+assets/showcase/      # per-env rollout GIFs (Desktop/Browser/Mobile), vendored from the main repo
 scripts/              # serve.sh · shot.py (visual-debug screenshots) · sync_assets.sh
 ```
 
