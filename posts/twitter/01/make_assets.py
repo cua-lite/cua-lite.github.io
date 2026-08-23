@@ -1,11 +1,11 @@
-"""Render every media asset the launch thread references into twitter/assets/.
+"""Render every media asset the launch thread references into posts/twitter/01/assets/.
 
-The thread's copy lives in twitter/README.md; this script produces the files it points
-at, so a re-run after a site edit keeps the thread in sync with the page.
+The thread's copy lives in posts/twitter/01/README.md; this script produces the files it
+points at, so a re-run after a site edit keeps the thread in sync with the page.
 
-    uv run python twitter/make_assets.py            # everything
-    uv run python twitter/make_assets.py 02 04b     # only assets whose name matches
-    uv run python twitter/make_assets.py gif        # only the .gif beside each .mp4
+    uv run python posts/twitter/01/make_assets.py            # everything
+    uv run python posts/twitter/01/make_assets.py 02 04b     # only assets whose name matches
+    uv run python posts/twitter/01/make_assets.py gif        # only the .gif beside each .mp4
 
 HOW THE MOTION IS CAPTURED — the site's flow figures ARE the argument (a still of a
 wire mid-draw says nothing), so most assets are clips. Three approaches were tried;
@@ -41,7 +41,7 @@ from pathlib import Path
 from PIL import Image
 from playwright.sync_api import sync_playwright
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent.parent   # posts/twitter/01/ -> repo root
 OUT = Path(__file__).resolve().parent / "assets"
 TMP = Path("/tmp/cua-twitter")
 PORT = 8146

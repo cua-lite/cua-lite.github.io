@@ -30,7 +30,7 @@ each clip is a figure the site already uses to make that argument, tabs and capt
 X buries mid-thread links. Post 5's is the one exception worth the reach: the data is the
 ask of that post, and "free on Hugging Face" with no address was the loudest gap a reader
 review found.
-**Regenerating the media:** `uv run python twitter/make_assets.py` (see `make_assets.py`).
+**Regenerating the media:** `uv run python posts/twitter/01/make_assets.py` (see `make_assets.py`).
 
 ### Pre-flight, before the first post goes out
 
