@@ -77,7 +77,7 @@ h1{font-family:'Fraunces';font-style:italic;color:var(--accent);
 
 BRAND = '<div class="brand"><span class="plane"></span><span class="name">CUA-Lite</span></div>'
 H1 = '<h1>VM-free<br>OS(World) at scale.</h1>'
-LEAD = '<p class="lead"><span class="lc">Verifiable rewards</span>, so one sandbox benchmarks and trains:</p>'
+LEAD = '<p class="lead">Scalable <span class="lc">CUA</span> sandboxes with verifiable tasks:</p>'
 CLAIMS = """<div class="claims">
   <p class="claim"><b class="lc">Lite.OSWorld</b>: OSWorld minus the VM, leaner &amp; parallel</p>
   <p class="claim"><b>Beyond OSWorld</b>: a growing family of training sandboxes</p>
@@ -110,7 +110,7 @@ _ZH_CSS = """
 """
 HEAD_ZH = HEAD.replace("</style>", _ZH_CSS + "</style>")
 
-LEAD_ZH = '<p class="lead">每个任务自带<span class="lc">可验证奖励</span>，一套沙盒既评测也训练（RL）：</p>'
+LEAD_ZH = '<p class="lead">可扩展的 <span class="lc">CUA</span> 沙盒，自带可验证任务：</p>'
 CLAIMS_ZH = """<div class="claims">
   <p class="claim"><b class="lc">Lite.OSWorld</b>：OSWorld 去掉虚拟机，更省、可并行</p>
   <p class="claim"><b>不止 OSWorld</b>：同一底座上持续扩展的训练沙盒</p>

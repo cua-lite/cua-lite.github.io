@@ -12,7 +12,7 @@ Lite.OSWorld = **我们**把它迁移成 VM-free 的产物（保留同样的任�
 
 > **重心（已修正）：** 核心 = 一系列**轻量、免虚拟机的沙盒 + 可验证任务**（训练/评测任何 agent、可扩展）；OSWorld 复现只是**抛砖引玉的第一个例子**。标题别让「OSWorld 同分」抢了核心。
 
-1. ⭐ VM-free OS(World)：可扩展的 CUA 沙盒生态　（对齐 red/01「…的开源生态」句式：双关做钩子，冒号后是干净的名词短语，不用清单式副标题）
+1. ⭐ VM-free OS(World)：可扩展的 CUA 沙盒环境　（对齐 red/01「…的开源生态」句式：双关做钩子，冒号后是干净的名词短语，不用清单式副标题）
 2. VM-free OS(World)：一套可扩展的 CUA 沙盒
 3. 不止 OSWorld：轻量、可验证的 CUA 沙盒　（纯中文核心版）
 4. VM-free OS(World)，at scale　（＝博客原标题，最省）
@@ -24,14 +24,14 @@ Lite.OSWorld = **我们**把它迁移成 VM-free 的产物（保留同样的任�
 **中文版**
 
 ```
-VM-free OS(World)：可扩展的 CUA 沙盒生态
+VM-free OS(World)：可扩展的 CUA 沙盒环境
 
-训练、评测 computer-use agent（CUA），都需要大量真实桌面。常用的 OSWorld 就提供了这样一个环境：完整的 Ubuntu、软件齐全；但它每跑一个任务就要开一台虚拟机，依赖 /dev/kvm、开销也大，难以规模化，而规模恰恰是训练和评测的关键。
+训练、评测 computer-use agent（CUA）都需要大量真实桌面环境。常用的 OSWorld 就是这样一个评测环境：完整的 Ubuntu、软件齐全；但每个任务都要开一台虚拟机，依赖 /dev/kvm、开销大，难以规模化。
 
-我们先从最熟悉的 OSWorld 做起。
+为此，我们要做的是一系列轻量、免虚拟机的 CUA 沙盒。先从最熟悉的 OSWorld 入手。
 
 ▪️ 去掉虚拟机
-把它迁移成 Lite.OSWorld：桌面、任务、评测器全部保留，只把运行方式换成普通 Docker 容器，不再需要 /dev/kvm。单实例内存降到原来的不足四分之一，同一台机器能并行的实例数大约是原来的 4.6 倍，自然就能规模化。
+把它迁移成 Lite.OSWorld：桌面、任务、评测器全部保留，只把运行方式换成普通 Docker 容器，不再需要虚拟机。单实例内存降到原来的不足四分之一，同一台机器能并行的实例数大约是原来的 4.6 倍，自然就能规模化。
 
 ▪️ 分数一致性
 便宜的复制品，只有不改变结论才有意义。13 个模型实测下来，容器里的分数和原版 OSWorld 基本一致；在 Lite.OSWorld 上得到的分数与训练信号，可以直接迁回原来的 benchmark。
@@ -41,7 +41,7 @@ Lite.OSWorld 只是起点。在同一套 VM-free 底座上，我们正扩展出�
 
 我们希望它长成一个社区驱动的开源 CUA 沙盒生态，欢迎带来你的环境或 agent。
 
-站点 cua-lite.github.io
+博客 cua-lite.github.io/blog/kvm-free-osworld
 GitHub github.com/cua-lite/cua-lite
 数据 huggingface.co/cua-lite
 UC Berkeley · Microsoft
@@ -56,9 +56,9 @@ UC Berkeley · Microsoft
 ```
 VM-free OS(World): scalable CUA sandboxes
 
-Training and benchmarking computer-use agents (CUAs) takes a lot of real desktops. OSWorld gives you one: a full Ubuntu with the software that comes with it. But every task boots its own virtual machine, needs /dev/kvm, and costs a lot to run, so it doesn't scale — and scale is exactly what training and benchmarking need.
+Training and benchmarking computer-use agents (CUAs) takes a lot of real desktop environments. OSWorld is one such benchmark: a full Ubuntu, software included. But every task boots its own virtual machine, needs /dev/kvm, and is too heavy to run at scale.
 
-We started with the benchmark everyone knows.
+Our answer is a series of lightweight, VM-free CUA sandboxes. We start with the one everyone knows: OSWorld.
 
 ▪️ Drop the VM
 Lite.OSWorld keeps OSWorld's desktop, tasks, and evaluators, and changes only how it runs: a plain Docker container, no /dev/kvm. Memory per instance falls to under a quarter, one host fits about 4.6× more instances, and it scales.
@@ -71,7 +71,7 @@ Lite.OSWorld is only the start. On the same VM-free base we are building more sa
 
 We hope this grows into a community-driven open-source CUA sandbox ecosystem — bring your environment or agent.
 
-Site cua-lite.github.io
+Blog cua-lite.github.io/blog/kvm-free-osworld
 GitHub github.com/cua-lite/cua-lite
 Data huggingface.co/cua-lite
 UC Berkeley · Microsoft
