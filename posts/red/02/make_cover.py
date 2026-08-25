@@ -28,27 +28,29 @@ HEAD = """<!doctype html><html><head><meta charset="utf-8"><style>
 html{background:#f2e4d0;}
 body{width:1080px;overflow:hidden;color:var(--text);font-family:'Urbanist',sans-serif;
   background:radial-gradient(120% 72% at 4% -4%, #fdf9f0 0%, #f8f0e0 46%, #f2e4d0 100%);
-  padding:84px 82px 70px;display:flex;flex-direction:column;}
+  padding:88px 84px 80px;display:flex;flex-direction:column;}
 .brand{display:flex;align-items:center;gap:16px;}
 .brand .plane{width:44px;height:44px;background:url('/assets/logo.svg') center/contain no-repeat;}
 .brand .name{font-weight:700;font-size:36px;letter-spacing:-0.01em;}
 h1{font-family:'Fraunces';font-style:italic;color:var(--accent);
   font-variation-settings:'opsz' 144,'wght' 400;font-size:112px;line-height:1.0;letter-spacing:-0.03em;margin-top:42px;}
 .mid{flex:1;display:flex;flex-direction:column;justify-content:center;}
-.claims{margin-top:52px;display:flex;flex-direction:column;gap:32px;}
-.claim{position:relative;padding-left:40px;font-size:33px;line-height:1.32;color:var(--muted);font-weight:450;}
+.lead{margin-top:46px;font-size:34px;line-height:1.32;color:var(--muted);font-weight:500;}
+.lead .lc{color:var(--accent);font-weight:600;}
+.claims{margin-top:32px;display:flex;flex-direction:column;gap:32px;}
+.claim{position:relative;padding-left:42px;font-size:34px;line-height:1.32;color:var(--muted);font-weight:450;}
 .claim::before{content:"";position:absolute;left:0;top:13px;width:14px;height:14px;border-radius:50%;background:var(--accent);}
 .claim b{color:var(--text);font-weight:680;}
 .claim .lc{color:var(--accent);font-weight:680;}
 .foot{border-top:1px solid var(--edge);padding-top:32px;font-family:'Geist Mono';color:var(--dim);}
-.foot .stats{font-size:23px;letter-spacing:0.01em;white-space:nowrap;}
+.foot .stats{font-size:32px;letter-spacing:0.01em;white-space:nowrap;}
 .foot .stats b{color:var(--accent);font-weight:600;}
-.foot .stats i{font-style:normal;color:var(--edge);margin:0 9px;}
-.foot .url{margin-top:15px;font-size:25px;color:var(--muted);}
+.foot .stats i{font-style:normal;color:var(--edge);margin:0 12px;}
+.foot .url{margin-top:22px;font-size:32px;color:var(--muted);}
 .url1{font-family:'Geist Mono';font-size:25px;color:var(--dim);margin-top:22px;}
 /* before/after (01b) */
 .vwrap{margin:54px 0 22px;}   /* spacing before the before/after (01b is content-height, so no float) */
-.ba{display:flex;align-items:flex-start;justify-content:center;gap:30px;}
+.ba{display:flex;align-items:flex-start;justify-content:center;gap:26px;}
 .col{display:flex;flex-direction:column;align-items:center;gap:12px;}
 .lab{font-family:'Geist Mono';font-size:23px;letter-spacing:0.5px;color:var(--muted);}
 .lab.lite{color:var(--accent);font-weight:600;}
@@ -65,38 +67,66 @@ h1{font-family:'Fraunces';font-style:italic;color:var(--accent);
   box-shadow:0 4px 10px -4px rgba(40,30,15,.35);}
 .kvm{margin-top:10px;font-family:'Geist Mono';font-size:21px;color:var(--muted);background:#efe7d6;border:1px solid #d9cbb0;
   border-radius:8px;padding:7px 15px;}
-.arrowcol{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:60px;}   /* aligns the arrow to the desktop-window centre */
+.arrowcol{display:flex;flex-direction:column;align-items:center;gap:4px;margin-top:104px;}   /* aligns the arrow to the desktop-window centre */
 .anno{font-family:'Geist Mono';font-size:22px;color:var(--accent);text-align:center;line-height:1.4;font-weight:600;}
-.arrow{font-size:60px;color:var(--accent);font-family:'Fraunces';line-height:1;}
+.arrow{font-size:56px;color:var(--accent);font-family:'Fraunces';line-height:0.7;}
 .ctr{border:2.5px dashed var(--accent);border-radius:15px;padding:20px 20px 15px;position:relative;background:rgba(189,90,56,.04);}
 .ctr .tag{position:absolute;top:-15px;left:18px;background:#faf1e0;padding:0 9px;font-family:'Geist Mono';font-size:19px;
   letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;}
 </style></head><body style="HEIGHT">"""
 
 BRAND = '<div class="brand"><span class="plane"></span><span class="name">CUA-Lite</span></div>'
-H1 = '<h1>KVM-free<br>OS(World) at scale.</h1>'
+H1 = '<h1>VM-free<br>OS(World) at scale.</h1>'
+LEAD = '<p class="lead"><span class="lc">Verifiable rewards</span>, so one sandbox benchmarks and trains:</p>'
 CLAIMS = """<div class="claims">
-  <p class="claim"><b class="lc">Lite.OSWorld</b> — OSWorld, minus the VM — leaner &amp; parallel</p>
-  <p class="claim"><b>Beyond OSWorld</b> — a whole family of sandboxes with verifiable tasks</p>
+  <p class="claim"><b class="lc">Lite.OSWorld</b>: OSWorld minus the VM, leaner &amp; parallel</p>
+  <p class="claim"><b>Beyond OSWorld</b>: a growing family of training sandboxes</p>
 </div>"""
 _WIN = ('<div class="win"><div class="win-bar"><i></i><i></i><i></i></div>'
         '<div class="win-body"><div class="win-card"><div class="r1"></div><div class="r2"></div></div></div></div>')
 BA = ('<div class="ba">'
       '<div class="col"><span class="lab">OSWorld · VM</span>' + _WIN +
       '<div class="slab">QEMU · KVM</div><div class="kvm">/dev/kvm</div></div>'
-      '<div class="arrowcol"><span class="anno">4.1→0.9 GB<br>~4.6× parallel</span><span class="arrow">→</span></div>'
+      '<div class="arrowcol"><span class="anno">~4.6× per host</span><span class="arrow">→</span></div>'
       '<div class="col"><span class="lab lite">Lite.OSWorld · container</span>'
-      '<div class="ctr"><span class="tag">Docker</span>' + _WIN + '</div></div>'
+      '<div class="ctr"><span class="tag">Docker</span>' + _WIN + '</div>'
+      '<div class="kvm">any Docker host</div></div>'
       '</div>')
 
-BODY_A = (BRAND + '<div class="mid">' + H1 + CLAIMS + '</div>'
-          '<div class="foot"><div class="stats"><b>Lite.OSWorld</b> <i>·</i> Lite.ScaleCUA <i>·</i> '
-          'Lite.CUAGym <i>·</i> Lite.CUAWorld</div>'
-          '<div class="url">cua-lite.github.io/blog/kvm-free-osworld</div></div>')
-BODY_B = (BRAND + H1 + CLAIMS + '<div class="vwrap">' + BA + '</div>' +
-          '<div class="url1">cua-lite.github.io/blog/kvm-free-osworld</div>')
+FOOT = ('<div class="foot"><div class="stats"><b>Lite.OSWorld</b> <i>·</i> Lite.CUAGym <i>·</i> '
+        'Lite.CUAWorld</div>'
+        '<div class="url">cua-lite.github.io/blog/kvm-free-osworld</div></div>')
+BODY_A = BRAND + '<div class="mid">' + H1 + LEAD + CLAIMS + '</div>' + FOOT
+BODY_B = BRAND + H1 + LEAD + CLAIMS + '<div class="vwrap">' + BA + '</div>' + FOOT
 
-VARIANTS = [("01a-cover.png", 1080, BODY_A), ("01b-cover.png", None, BODY_B)]   # 01b is content-height
+# Chinese covers: English Fraunces headline (the brand face) + localized body, same call as red/01.
+_ZH_CSS = """
+@font-face{font-family:'SansSC';src:url('/assets/fonts/SansSC-Regular.woff2') format('woff2');font-weight:400;font-style:normal;}
+@font-face{font-family:'SansSC';src:url('/assets/fonts/SansSC-Bold.woff2') format('woff2');font-weight:700;font-style:normal;}
+.claim,.lead{font-family:'Urbanist','SansSC',sans-serif;}
+.claim{line-height:1.5;}
+.brand .name{font-family:'Urbanist','SansSC',sans-serif;}
+.lab,.kvm,.anno,.foot .stats{font-family:'Geist Mono','SansSC',monospace;}
+"""
+HEAD_ZH = HEAD.replace("</style>", _ZH_CSS + "</style>")
+
+LEAD_ZH = '<p class="lead">每个任务自带<span class="lc">可验证奖励</span>，一套沙盒既评测也训练（RL）：</p>'
+CLAIMS_ZH = """<div class="claims">
+  <p class="claim"><b class="lc">Lite.OSWorld</b>：OSWorld 去掉虚拟机，更省、可并行</p>
+  <p class="claim"><b>不止 OSWorld</b>：同一底座上持续扩展的训练沙盒</p>
+</div>"""
+BA_ZH = (BA.replace('OSWorld · VM', 'OSWorld · 虚拟机')
+           .replace('Lite.OSWorld · container', 'Lite.OSWorld · 容器')
+           .replace('~4.6× per host', '并行 ~4.6×')
+           .replace('any Docker host', '任意 Docker 主机'))
+BODY_A_ZH = BRAND + '<div class="mid">' + H1 + LEAD_ZH + CLAIMS_ZH + '</div>' + FOOT
+BODY_B_ZH = BRAND + H1 + LEAD_ZH + CLAIMS_ZH + '<div class="vwrap">' + BA_ZH + '</div>' + FOOT
+
+# (name, height, body, head) — 01b variants are content-height
+VARIANTS = [("01a-cover.png",    1080, BODY_A,    HEAD),
+            ("01b-cover.png",    None, BODY_B,    HEAD),
+            ("01a-cover-zh.png", 1080, BODY_A_ZH, HEAD_ZH),
+            ("01b-cover-zh.png", None, BODY_B_ZH, HEAD_ZH)]
 
 
 def main() -> None:
@@ -108,9 +138,9 @@ def main() -> None:
         time.sleep(1.0)
         with sync_playwright() as p:
             b = p.chromium.launch()
-            for name, h, body in VARIANTS:
+            for name, h, body, head in VARIANTS:
                 style = f"height:{h}px" if h else ""   # h=None → content-height, full-page shot
-                tmp.write_text(HEAD.replace("HEIGHT", style) + body + "</body></html>")
+                tmp.write_text(head.replace("HEIGHT", style) + body + "</body></html>")
                 pg = b.new_page(viewport={"width": 1080, "height": h or 900}, device_scale_factor=2)
                 pg.goto(f"http://localhost:{PORT}/_red02_cover_tmp.html")
                 pg.wait_for_timeout(700)

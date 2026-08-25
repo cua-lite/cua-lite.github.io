@@ -36,9 +36,8 @@ review found.
 
 1. **`github.com/cua-lite/cua-lite` 404s today** — the repo is not public yet. It is linked
    from posts 1 and 9 (and from every page of the site). Either make it public first, or
-   swap both to `cua-lite.github.io`. Checked: site 200 · `huggingface.co/cua-lite` 200 ·
-   GitHub 404.
-2. **Confirm the footprint numbers in post 3 are measured.** The KVM post's own authoring
+   swap both to `cua-lite.github.io`. Checked 2026-08-22: site 200 · `huggingface.co/cua-lite` 200 · GitHub **200 (now public)**.
+2. **Confirm the footprint numbers in post 3 are measured.** The VM-free post's own authoring
    note still says the comparison table's cells "stay skeletons until measured"; the values
    landed later (commit `40a0451`). Post 3 rests on them. If any is an estimate, label it or
    cut it — one unmeasured number discredits the other three. Note 4.1 / 0.9 = 4.56, so
@@ -54,7 +53,7 @@ review found.
 The spine is the homepage's story. Post 2 names three gaps — heavy sandboxes, a per-dataset
 schema, no standard framework — and posts 3, 5 and 6 close them in that order, each opening
 by restating its gap in full and then turning on "Our answer is…". Posts 4, 7 and 8 extend
-the answer that precedes them rather than opening a new gap. The KVM-free post is cut in at 3 as the evidence for the
+the answer that precedes them rather than opening a new gap. The VM-free post is cut in at 3 as the evidence for the
 first: OSWorld is the environment everyone already knows, so it is the cheapest way into
 lightweight sandboxes and verifiable tasks. Post 9 closes on the line post 1 opened with.
 
@@ -62,7 +61,7 @@ lightweight sandboxes and verifiable tasks. Post 9 closes on the line post 1 ope
 |---|------|-------|
 | 1 | Any agent, on any computer | `01-hero.mp4` portrait (`01-hero-wide.mp4` = landscape) |
 | 2 | Computer-use agent resources are fragmented | `02-fragmented.mp4` |
-| 3 | KVM-free OS(World) at Scale | `03-vm-tax.mp4` |
+| 3 | VM-free OS(World) at Scale | `03-vm-tax.mp4` |
 | 4 | Sandboxes & verifiable tasks | `04-sandboxes.mp4` |
 | 5 | One schema, any dataset | `05-litesample.mp4` |
 | 6 | One framework: eval & RL | `06-litegym.mp4` |
@@ -84,7 +83,7 @@ VM vs container — it visits 3 of the player's 7 task tabs). See the reply plan
 ```
 1/9 · Any agent, on any computer
 
-· Sandboxes — efficient environments with 30k+ verifiable tasks
+· Sandboxes — efficient environments with 30k+ verifiable CUA tasks
 · Data — 10+ SFT datasets plus fresh rollouts from frontier CUAs
 · Eval, SFT, and RL any agent: desktop, browser, mobile
 
@@ -125,23 +124,23 @@ accumulating into a dead tangle.
 schema (5), framework (6–8). Posts 3, 5 and 6 each open by restating their gap in full and
 then turning on "Our answer is…", so a reader who meets that post cold still gets both halves.
 
-### 3 / 9 — KVM-free OS(World) at Scale
+### 3 / 9 — VM-free OS(World) at Scale
 
 ```
-3/9 · KVM-free OS(World) at Scale
+3/9 · VM-free OS(World) at Scale
 
-Gap 1 — sandboxes are heavy: a full VM per task, needing /dev/kvm. Our answer is a series of lightweight, KVM-free sandboxes. Lite.OSWorld (ours) keeps OSWorld's desktop and drops the VM: 4.1 → 0.9 GB memory, ~4.6× more instances per host.
+Gap 1 — sandboxes are heavy: a full VM per task, needing /dev/kvm. Our answer is a series of lightweight, VM-free sandboxes. Lite.OSWorld (ours) keeps OSWorld's desktop and drops the VM: a fraction of the memory, several times more instances per host.
 
-Same task, same score: across 13 models the container's scores match the VM's within 2.7 points on average, 5.0 at worst.
+Same task, same score: across 13 models the container's scores track the VM's within a few points.
 
 The same recipe reproduces other benchmarks and generates verifiable tasks to train on.
 ```
 
-**Source** The KVM-free post: its title as the heading, its thesis sentence and the Lite.OSWorld
+**Source** The VM-free post: its title as the heading, its thesis sentence and the Lite.OSWorld
 bold lead verbatim, then the comparison table and the parity plot.
 **Media** `assets/03-vm-tax.mp4` — the second sentence, beat for beat: the desktop sheds its
 Ubuntu.qcow2 / QEMU·KVM stack and its /dev/kvm dependency, becomes a container, then replicates
-into a grid of parallel rollouts (the "~4.6× more per host").
+into a grid of parallel rollouts (the "several times more instances per host").
 **Alt** An OSWorld desktop sealed in a VM sheds the VM to become a Docker container, which then
 multiplies into a grid of parallel rollouts.
 **Why here** Problem and fix in one post, because the clip already carries both. OSWorld is the
@@ -157,7 +156,7 @@ That base runs a family of sandboxes, not one: each packs many to a machine, run
 Three more of ours beyond Lite.OSWorld: Lite.ScaleCUA (20k+ tasks perturbed from OSWorld's evals), Lite.CUAGym (browser and desktop tasks across mock sites and real apps), Lite.CUAWorld (40 professional apps across ~25 expert domains — GMAT flying spacecraft, PyMOL turning proteins).
 ```
 
-**Source** "Why CUA-Lite" § Sandboxes & verifiable tasks (heading + bold lead) and the KVM-free
+**Source** "Why CUA-Lite" § Sandboxes & verifiable tasks (heading + bold lead) and the VM-free
 post's "Beyond OSWorld" lead, verbatim.
 **Media** `assets/04-sandboxes.mp4` — the post's own rollout belt, walked across all four
 families at 2.6s each (11s total). It opens on Lite.CUAWorld, whose GMAT and PyMOL desktops

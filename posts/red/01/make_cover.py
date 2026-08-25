@@ -55,12 +55,14 @@ h1 .hinge{color:var(--muted);}
 .devcol{display:flex;flex-direction:column;align-items:center;gap:20px;}
 .devcol img{display:block;filter:drop-shadow(0 10px 22px rgba(40,30,15,.20));}
 .d-desktop{height:244px;} .d-browser{height:244px;} .d-mobile{height:330px;}
-.dev-lab{font-family:'Geist Mono';font-size:22px;letter-spacing:0.06em;color:var(--dim);}
+.dev-lab{font-family:'Geist Mono';font-size:28px;letter-spacing:0.06em;color:var(--dim);}
 .foot{border-top:1px solid var(--edge);padding-top:34px;font-family:'Geist Mono';color:var(--dim);}
-.foot .stats{font-size:23.5px;letter-spacing:0.01em;white-space:nowrap;}
+/* one line, near body size. Only fits with THREE stats (four needed 1173px vs 912px available);
+   the three kept mirror the three bullets. 34px left just 1px of slack — too fragile — so 32px. */
+.foot .stats{font-size:32px;letter-spacing:0.01em;white-space:nowrap;}
+.foot .stats i{font-style:normal;color:var(--edge);margin:0 12px;}
 .foot .stats b{color:var(--accent);font-weight:600;}
-.foot .stats i{font-style:normal;color:var(--edge);margin:0 9px;}
-.foot .url{margin-top:16px;font-size:26px;color:var(--muted);}
+.foot .url{margin-top:22px;font-size:32px;color:var(--muted);}
 </style></head><body style="height:%HEIGHT%px;">
 """
 
@@ -68,8 +70,8 @@ h1 .hinge{color:var(--muted);}
 # localize only the body — bullets/labels/footer in Noto Sans SC (echoes Urbanist). This keeps the
 # brand face intact and sidesteps 电脑/设备; English-hero + Chinese-body is the premium bilingual look.
 _ZH_CSS = """
-@font-face{font-family:'SansSC';src:url('/posts/red/01/build/fonts/SansSC-Regular.woff2') format('woff2');font-weight:400;font-style:normal;}
-@font-face{font-family:'SansSC';src:url('/posts/red/01/build/fonts/SansSC-Bold.woff2') format('woff2');font-weight:700;font-style:normal;}
+@font-face{font-family:'SansSC';src:url('/assets/fonts/SansSC-Regular.woff2') format('woff2');font-weight:400;font-style:normal;}
+@font-face{font-family:'SansSC';src:url('/assets/fonts/SansSC-Bold.woff2') format('woff2');font-weight:700;font-style:normal;}
 .claim,.lead{font-family:'Urbanist','SansSC',sans-serif;}
 .claim{line-height:1.5;}
 .brand .name{font-family:'Urbanist','SansSC',sans-serif;}
@@ -82,7 +84,7 @@ HEAD_ZH = HEAD.replace("</style>", _ZH_CSS + "</style>")
 # with only the Latin "agent" kept in Fraunces italic). To use: set HEAD_ZH = HEAD.replace("</style>",
 # _ZH_CSS + _ZH_SERIF_CSS + "</style>") and swap H1→H1_ZH / H1B→H1B_ZH in the ZH bodies below.
 _ZH_SERIF_CSS = """
-@font-face{font-family:'SerifSC';src:url('/posts/red/01/build/fonts/SerifSC.woff2') format('woff2');font-weight:600;font-style:normal;}
+@font-face{font-family:'SerifSC';src:url('/assets/fonts/SerifSC.woff2') format('woff2');font-weight:600;font-style:normal;}
 h1{font-family:'SerifSC','Fraunces',serif;font-style:normal;font-weight:600;font-size:120px;line-height:1.1;letter-spacing:0.005em;}
 h1 .en{font-family:'Fraunces';font-style:italic;font-weight:400;letter-spacing:-0.02em;}
 """
@@ -110,7 +112,7 @@ DEVICES = f"""<div class="devices">
   <div class="devcol"><img class="d-mobile" src="{DEV}/dev-mobile.png" alt=""><span class="dev-lab">mobile</span></div>
 </div>"""
 FOOT = """<div class="foot">
-  <div class="stats"><b>30k+</b> tasks <i>·</i> <b>10+</b> datasets <i>·</i> <b>10+</b> agents <i>·</i> <b>15+</b> benchmarks</div>
+  <div class="stats"><b>30k+</b> tasks <i>·</i> <b>10+</b> datasets <i>·</i> <b>15+</b> benchmarks</div>
   <div class="url">cua-lite.github.io</div>
 </div>"""
 
@@ -133,7 +135,7 @@ DEVICES_ZH = f"""<div class="devices">
   <div class="devcol"><img class="d-mobile" src="{DEV}/dev-mobile.png" alt=""><span class="dev-lab">移动端</span></div>
 </div>"""
 FOOT_ZH = """<div class="foot">
-  <div class="stats"><b>30k+</b> 任务 <i>·</i> <b>10+</b> 数据集 <i>·</i> <b>10+</b> agent <i>·</i> <b>15+</b> benchmark</div>
+  <div class="stats"><b>30k+</b> 任务 <i>·</i> <b>10+</b> 数据集 <i>·</i> <b>15+</b> benchmark</div>
   <div class="url">cua-lite.github.io</div>
 </div>"""
 BODY_A_ZH = f'{BRAND}<div class="mid">{H1}{LEAD_ZH}{CLAIMS_A_ZH}</div>{FOOT_ZH}'

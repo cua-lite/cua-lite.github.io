@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>KVM-free OS(World) at Scale</title>
-<meta name="description" content="Lite.OSWorld runs OSWorld's tasks KVM-free in a plain Docker container, at the same scores — the first of a series of lightweight sandboxes with verifiable tasks to train and benchmark any agent, at scale." />
+<title>VM-free OS(World) at Scale</title>
+<meta name="description" content="Lite.OSWorld runs OSWorld's tasks VM-free in a plain Docker container, at the same scores — the first of a series of lightweight sandboxes with verifiable tasks to train and benchmark any agent, at scale." />
 <link rel="preload" href="/assets/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/assets/fonts/Fraunces-Italic.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/assets/fonts/Urbanist.woff2" as="font" type="font/woff2" crossorigin />
@@ -13,8 +13,8 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png?v=3" />
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=4" />
 <meta property="og:type" content="article" />
-<meta property="og:title" content="KVM-free OS(World) at Scale" />
-<meta property="og:description" content="OSWorld's tasks, KVM-free and at the same scores — the first of a series of lightweight sandboxes with verifiable tasks to train and benchmark any agent, at scale." />
+<meta property="og:title" content="VM-free OS(World) at Scale" />
+<meta property="og:description" content="OSWorld's tasks, VM-free and at the same scores — the first of a series of lightweight sandboxes with verifiable tasks to train and benchmark any agent, at scale." />
 <meta property="og:url" content="https://cua-lite.github.io/blog/kvm-free-osworld/" />
 <meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=6" />
 <link rel="stylesheet" href="/css/style.css" />
@@ -194,7 +194,7 @@
   <!-- NORTH STAR · the dedicated "Bring a world" banner was cut as low-value; the post should still
        land all three below (now via "More worlds" + the close), payoff-first;
        cut anything a scanner can't use (mechanism, scope lists, hedging):
-         (1) OUR CONTRIBUTION — what the KVM-free base already gives that makes joining pay off
+         (1) OUR CONTRIBUTION — what the VM-free base already gives that makes joining pay off
              (your world runs at scale the day you add it — anywhere Docker runs, against every agent, present AND future);
          (2) VALUE TO SELF — your world never rots: eval + training splits + verifiable rewards, and no VM to babysit;
          (3) VALUE TO THE COMMUNITY — you add a world to the shared pool everyone else evals and trains on.
@@ -210,12 +210,12 @@
        EXCEPTION: the parity-plot scores ARE real (assets/exps/eval/{osworld,lite.osworld}, same task set) —
        keep those exact numbers; the comparison table's footprint cells stay skeletons until measured. -->
   <p class="post-meta">2026-07-23 · Zhanhui Zhou · Haoran Liu</p>
-  <h1>KVM-free OS(World), <em>at scale.</em></h1>
+  <h1>VM-free OS(World), <em>at scale.</em></h1>
 
   <p><b>To eval or train a computer-use agent, you need real desktops — a lot of them.</b>
   OSWorld gives you a faithful one: LibreOffice, Chrome, VS Code, files and windows.
   But it ships as a heavy virtual machine, and that's what keeps it from scaling.
-  <b>We propose a series of lightweight, KVM-free sandboxes with standardized interfaces, where we reproduce benchmarks (e.g. OSWorld) and generate verifiable tasks to train any agent.</b></p>
+  <b>We propose a series of lightweight, VM-free sandboxes with standardized interfaces, where we reproduce benchmarks (e.g. OSWorld) and generate verifiable tasks to train any agent.</b></p>
 
   <nav class="toc" aria-label="Contents">
     <a href="#vm-tax"><span class="toc-n">01</span>OSWorld's VM tax: How we cut it with Lite.OSWorld</a>
@@ -298,7 +298,7 @@
   <section class="hl-sec" id="beyond">
   <div class="sec-eyebrow">At scale</div>
   <h2>Beyond OSWorld: Scalable Training Sandboxes</h2>
-  <p><b>The KVM-free container isn't just for OSWorld — it's a base for a family of scalable CUA sandboxes with verifiable tasks.</b> The same base
+  <p><b>The VM-free container isn't just for OSWorld — it's a base for a family of scalable CUA sandboxes with verifiable tasks.</b> The same base
   already runs more of them: browser and desktop tasks, real science desktops (GMAT
   flying spacecraft, PyMOL turning proteins). <b>Efficient sandboxes to train and benchmark any
   agent, at scale.</b></p>
