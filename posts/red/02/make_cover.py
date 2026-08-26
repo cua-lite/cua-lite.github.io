@@ -87,7 +87,7 @@ _WIN = ('<div class="win"><div class="win-bar"><i></i><i></i><i></i></div>'
 BA = ('<div class="ba">'
       '<div class="col"><span class="lab">OSWorld · VM</span>' + _WIN +
       '<div class="slab">QEMU · KVM</div><div class="kvm">/dev/kvm</div></div>'
-      '<div class="arrowcol"><span class="anno">~4.6× per host</span><span class="arrow">→</span></div>'
+      '<div class="arrowcol"><span class="anno">~5× more instances</span><span class="arrow">→</span></div>'
       '<div class="col"><span class="lab lite">Lite.OSWorld · container</span>'
       '<div class="ctr"><span class="tag">Docker</span>' + _WIN + '</div>'
       '<div class="kvm">any Docker host</div></div>'
@@ -117,7 +117,7 @@ CLAIMS_ZH = """<div class="claims">
 </div>"""
 BA_ZH = (BA.replace('OSWorld · VM', 'OSWorld · 虚拟机')
            .replace('Lite.OSWorld · container', 'Lite.OSWorld · 容器')
-           .replace('~4.6× per host', '并行 ~4.6×')
+           .replace('~5× more instances', '并行 ~5×')
            .replace('any Docker host', '任意 Docker 主机'))
 BODY_A_ZH = BRAND + '<div class="mid">' + H1 + LEAD_ZH + CLAIMS_ZH + '</div>' + FOOT
 BODY_B_ZH = BRAND + H1 + LEAD_ZH + CLAIMS_ZH + '<div class="vwrap">' + BA_ZH + '</div>' + FOOT

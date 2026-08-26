@@ -30,15 +30,15 @@ CUA-Lite：训练与评测 CUA 的开源平台
 训练与评测 CUA（computer-use agent）需要沙盒、数据与框架三个要素。CUA-Lite 是集成这三者的开源平台，覆盖桌面、浏览器与移动端。
 
 ▪️ 沙盒：高效、任务可验证
-免虚拟机（VM-free）的沙盒，内置 30k+ 个 CUA 任务，每个都自带可验证的奖励：能自动判分，所以同一个任务既能用来评测，也能直接作为 RL 的训练信号。这些沙盒既复现了 OSWorld 等外部 benchmark，也包含 CUAGym、CUAWorld 等自建训练环境。
+免虚拟机（VM-free）的沙盒，内置 30k+ 个自带可验证奖励的 CUA 任务，因此同一个沙盒既能用于评测，也能用于训练。其中既有 OSWorld 等外部 benchmark 的复现，也有 CUAGym、CUAWorld 等自建训练环境。
 
 ▪️ 数据：统一、开放
 10+ 个 SFT 数据集，以及前沿 CUA 产生的最新 rollout（交互轨迹），统一为一套格式，在 Hugging Face 免费开放。
 
 ▪️ 框架：评测、SFT、RL
 统一的 agent 与环境交互接口，任何 agent 均可接入任何环境。交互接口产出的同一份 rollout 三处复用：
-· 评测：打分用于排名，目前已接入 15+ 个 benchmark（OSWorld、OSWorld-2、WebArena、WebVoyager、AndroidWorld、MobileWorld 等）
-· SFT：轨迹格式统一，经适配器转成目标模型的格式，可用 GPT-5.5 的轨迹训练 Qwen3-VL
+· 评测：打分用于排名，目前已接入 15+ 个 benchmark（OSWorld、OSWorld-2、WindowsAgentArena、WebArena、WebVoyager、AndroidWorld、MobileWorld 等）
+· SFT：轨迹格式统一，经适配器转成目标模型的格式，于是一个模型的轨迹能训练另一个模型，例如用 GPT-5.5 的轨迹训练 Qwen3-VL
 · RL：用作学习信号，在环境中持续采样，支持 GRPO、GSPO 等算法（基于 Slime）
 
 沙盒、数据与框架，三者都在持续扩展。我们希望 CUA-Lite 最终成长为社区驱动的开源 CUA 生态，欢迎贡献你的数据集、环境或 agent。
@@ -56,18 +56,18 @@ UC Berkeley · Microsoft
 ```
 CUA-Lite — one open-source platform to train and benchmark CUAs
 
-Training and benchmarking CUAs (computer-use agents) takes three things: sandboxes, data, and a framework. CUA-Lite is the open-source platform that brings all three together, across desktop, browser, and mobile.
+Training and benchmarking CUAs (computer-use agents) takes three things: sandboxes, data, and a framework. CUA-Lite democratizes all three: one open-source platform, across desktop, browser, and mobile.
 
 ▪️ Sandboxes: efficient, with verifiable tasks
-VM-free sandboxes carrying 30k+ CUA tasks, and every task ships a verifiable reward: it scores automatically, so the same task can benchmark an agent or serve directly as the RL training signal. These sandboxes reproduce external benchmarks such as OSWorld, and include our own training environments like CUAGym and CUAWorld.
+VM-free sandboxes carrying 30k+ CUA tasks with verifiable rewards, so the same sandbox serves both benchmarking and training. These sandboxes reproduce external benchmarks such as OSWorld, and include our own training environments like CUAGym and CUAWorld.
 
 ▪️ Data: unified and open
 10+ SFT datasets, plus the latest rollouts (interaction trajectories) from frontier CUAs, all in one format and free on Hugging Face.
 
 ▪️ Framework: eval, SFT, RL
 One agent–environment interface, so any agent plugs into any environment. The rollouts it produces are reused three ways:
-· Eval — scored to rank agents; 15+ benchmarks integrated (OSWorld, OSWorld-2, WebArena, WebVoyager, AndroidWorld, MobileWorld, and more)
-· SFT — one trajectory format, rendered by each model's adapter into its own, so GPT-5.5 rollouts can fine-tune Qwen3-VL
+· Eval — scored to rank agents; 15+ benchmarks integrated (OSWorld, OSWorld-2, WindowsAgentArena, WebArena, WebVoyager, AndroidWorld, MobileWorld, and more)
+· SFT — one trajectory format, rendered by each model's adapter into its own, so any model's rollouts can fine-tune any other: GPT-5.5 → Qwen3-VL, for example
 · RL — used as the learning signal, sampled continuously in the environment; GRPO, GSPO and more, on Slime
 
 Sandboxes, data, and framework all keep growing. We hope CUA-Lite becomes a community-driven open-source CUA ecosystem — bring your datasets, environments, or agents.
@@ -77,7 +77,7 @@ GitHub github.com/cua-lite/cua-lite
 Data huggingface.co/cua-lite
 UC Berkeley · Microsoft
 
-#人工智能 #ai #agent #强化学习 #cua #webagent #guiagent #mobileagent #擦边
+#MachineLearning #AIAgents #ReinforcementLearning #ComputerUseAgents #OpenSource
 ```
 
 ---
@@ -118,7 +118,7 @@ UC Berkeley · Microsoft
 | 沙盒 — 高效环境 + 30k+ 可验证任务，大规模训练/评测 | 首页 hero 第 1 条，逐句 |
 | 数据 — 10+ SFT 数据集 + 前沿 CUA rollout，统一格式，HF 免费 | 首页 hero 第 2 条，逐句 |
 | eval / SFT / RL 任何 agent，桌面/浏览器/移动端 | 首页 hero 第 3 条，逐句 |
-| 免虚拟机 / 并行 / 一任务两用；转换一次任何 agent 都能训 | `blog/why-cua-lite` 对应三段的 bold lead |
+| 免虚拟机 / 并行 / **同一沙盒**训练与评测两用（**不是同一任务** —— 拿 benchmark 任务去训练会污染测试集）；转换一次任何 agent 都能训 | `blog/why-cua-lite` 对应三段的 bold lead |
 | 15+ benchmark 接入（正文只说「已接入 15+ 个 benchmark」，不再提榜单；实际 11 个有公开榜单） | coverage board · `assets/exps/eval/manifest.json` 非 pending 项 |
 | CUAGym / CUAWorld = **我们的** Lite.CUAGym / Lite.CUAWorld（外部 OSWorld 我们复现，Lite.* 是自建） | 首页 + blog belt-tab（`index.html:214-215`），与 red/02 封面命名一致 |
 | **跨模型 SFT**：轨迹统一格式 → 目标模型的适配器渲染成其推理格式 → 可用 A 模型的轨迹训 B 模型 | 代码库三处实据：`lite/core/samples.py` 的统一容器 `LiteSample`；`lite/agents/core/adapter/base.py` docstring「adapters are the boundary between canonical Lite trajectories and a model family's **wire format**」；`lite/train/export/export_sft.py:3` 导出时执行 `adapter.unroll(sample)`。`lite/agents/models/` 下有 14 个模型家族的适配器 |
@@ -128,7 +128,7 @@ UC Berkeley · Microsoft
 ## 发布前检查
 
 - ✅ **GitHub 已公开**（2026-08-22 实测 `HTTP 200`、`gh api private=false`），正文那行 `github.com/cua-lite/cua-lite` 可以保留。此前的 404 阻塞已解除。
-- ❌ **`WindowsAgentArena` 已从 benchmark 清单删除**：全仓库 grep（`index.html`、两篇 blog、`assets/exps/eval/manifest.json`）零命中，站点覆盖板 16 条里也没有它 —— 属于已证伪的 overclaim。清单现只留覆盖板上真实存在的 6 个。
+- ✅ **`WindowsAgentArena` 已恢复**（2026-08-25 更正）：代码库 `README.md:102` 明确列有 `WindowsAgentArena` `waa`，**它是真实接入的**。此前我判它为 overclaim 并删除，是因为**只查了站点**而没查代码库 —— 站点覆盖板（16 条）比代码库那份清单短，是**站点滞后**。→ 建议顺手把它补进站点覆盖板，否则读者点进去对不上。
 - **术语统一用 `VM-free`（2026-08-25 全站改定，原为 `KVM-free`，38 处）**：容器本来就不是虚拟机，所以 VM-free 属实；读者对 VM 的熟悉度也远高于 KVM；博客正文本身就写「VM tax」「drops the VM」，原先用 KVM-free 反而和自己的正文打架。**注意 URL slug `/blog/kvm-free-osworld/` 保持不变**（已发布，改了会断链）。
 - 「分数相当」只绑定在 **Lite.OSWorld** 上（13 模型实测，平均差 ~2.7、最差 5.0，博客原文为 "within a few points"）；不要写成「复现的所有 benchmark 都分数对齐」。
 - VM-free 的具体数字**不在本篇**（留给 02），本篇只说「免虚拟机（VM-free）」到属性层面。

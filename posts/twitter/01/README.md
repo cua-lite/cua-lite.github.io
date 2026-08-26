@@ -129,7 +129,7 @@ then turning on "Our answer is…", so a reader who meets that post cold still g
 ```
 3/9 · VM-free OS(World) at Scale
 
-Gap 1 — sandboxes are heavy: a full VM per task, needing /dev/kvm. Our answer is a series of lightweight, VM-free sandboxes. Lite.OSWorld (ours) keeps OSWorld's desktop and drops the VM: a fraction of the memory, several times more instances per host.
+Gap 1 — sandboxes are heavy: a full VM per task, needing /dev/kvm. Our answer is a series of lightweight, VM-free sandboxes. Lite.OSWorld (ours) keeps OSWorld's desktop and drops the VM: under a quarter of the memory, ~5× more instances per host.
 
 Same task, same score: across 13 models the container's scores track the VM's within a few points.
 
@@ -140,7 +140,7 @@ The same recipe reproduces other benchmarks and generates verifiable tasks to tr
 bold lead verbatim, then the comparison table and the parity plot.
 **Media** `assets/03-vm-tax.mp4` — the second sentence, beat for beat: the desktop sheds its
 Ubuntu.qcow2 / QEMU·KVM stack and its /dev/kvm dependency, becomes a container, then replicates
-into a grid of parallel rollouts (the "several times more instances per host").
+into a grid of parallel rollouts (the "~5× more instances per host").
 **Alt** An OSWorld desktop sealed in a VM sheds the VM to become a Docker container, which then
 multiplies into a grid of parallel rollouts.
 **Why here** Problem and fix in one post, because the clip already carries both. OSWorld is the
@@ -151,7 +151,7 @@ environment readers already know, so it is the cheapest way into lightweight san
 ```
 4/9 · Sandboxes & verifiable tasks
 
-That base runs a family of sandboxes, not one: each packs many to a machine, runs in parallel, and every task is verifiable — so the same task serves both training and benchmarking. 30k+ verifiable tasks so far.
+That base runs a family of sandboxes, not one: each packs many to a machine, runs in parallel, and every task is verifiable — so the same sandbox serves both training and benchmarking. 30k+ verifiable tasks so far.
 
 Three more of ours beyond Lite.OSWorld: Lite.ScaleCUA (20k+ tasks perturbed from OSWorld's evals), Lite.CUAGym (browser and desktop tasks across mock sites and real apps), Lite.CUAWorld (40 professional apps across ~25 expert domains — GMAT flying spacecraft, PyMOL turning proteins).
 ```

@@ -31,7 +31,7 @@ VM-free OS(World)：可扩展的 CUA 沙盒环境
 为此，我们要做的是一系列轻量、免虚拟机的 CUA 沙盒。先从最熟悉的 OSWorld 入手。
 
 ▪️ 去掉虚拟机
-把它迁移成 Lite.OSWorld：桌面、任务、评测器全部保留，只把运行方式换成普通 Docker 容器，不再需要虚拟机。单实例内存降到原来的不足四分之一，同一台机器能并行的实例数大约是原来的 4.6 倍，自然就能规模化。
+把它迁移成 Lite.OSWorld：桌面、任务、评测器全部保留，只把运行方式换成普通 Docker 容器，不再需要虚拟机。单实例内存降到原来的不足四分之一，同一台机器能并行的实例数大约是原来的 5 倍，自然就能规模化。
 
 ▪️ 分数一致性
 便宜的复制品，只有不改变结论才有意义。13 个模型实测下来，容器里的分数和原版 OSWorld 基本一致；在 Lite.OSWorld 上得到的分数与训练信号，可以直接迁回原来的 benchmark。
@@ -61,7 +61,7 @@ Training and benchmarking computer-use agents (CUAs) takes a lot of real desktop
 Our answer is a series of lightweight, VM-free CUA sandboxes. We start with the one everyone knows: OSWorld.
 
 ▪️ Drop the VM
-Lite.OSWorld keeps OSWorld's desktop, tasks, and evaluators, and changes only how it runs: a plain Docker container, no /dev/kvm. Memory per instance falls to under a quarter, one host fits about 4.6× more instances, and it scales.
+Lite.OSWorld keeps OSWorld's desktop, tasks, and evaluators, and changes only how it runs: a plain Docker container, no /dev/kvm. Memory per instance falls to under a quarter, one host fits about 5× more instances, and it scales.
 
 ▪️ Score parity
 A cheap copy is only worth it if it doesn't change the conclusion. Across 13 models, scores in the container track the original OSWorld within a few points; the scores and training signal you get from Lite.OSWorld carry straight back to the original benchmark.
@@ -78,7 +78,7 @@ UC Berkeley · Microsoft
 
 (Project overview in the previous post; this one is all about the sandboxes.)
 
-#人工智能 #ai #agent #强化学习 #cua #webagent #guiagent #mobileagent #擦边
+#MachineLearning #AIAgents #ReinforcementLearning #OSWorld #OpenSource
 ```
 
 ---
@@ -89,7 +89,7 @@ UC Berkeley · Microsoft
 
 1. **封面(4 张:英文 + 中文各两版,同版式;与 red/01 同一套排版系统)** — 标题 = blog H1「VM-free OS(World) at scale.」;lead 讲清「可验证」的因果(`Verifiable rewards, so one sandbox benchmarks and trains:` / 「每个任务自带可验证奖励,一套沙盒既评测也训练(RL):」),两条 bullet 分别是第一个例子与家族。lead 与 bullet 同字号 34px,**全部单行**。
    - `assets/01a-cover.png` / `assets/01a-cover-zh.png`(1:1) — 页脚是沙盒家族(Lite.OSWorld · Lite.CUAGym · Lite.CUAWorld)。
-   - `assets/01b-cover.png` / `assets/01b-cover-zh.png`(内容高) — 底部加 **VM → 容器** before/after;两栏结构对称(标签/窗口/运行时/宿主要求),右栏 `any Docker host` 与左栏 `/dev/kvm` 对位;箭头标 `~4.6× per host`。
+   - `assets/01b-cover.png` / `assets/01b-cover-zh.png`(内容高) — 底部加 **VM → 容器** before/after;两栏结构对称(标签/窗口/运行时/宿主要求),右栏 `any Docker host` 与左栏 `/dev/kvm` 对位;箭头标注见下方「数字口径」一条。
 2. **`assets/02-footprint.png`** — 「Keeps the desktop, drops the VM」+ 对比表(`.cmp`)。
 3. **`assets/03-hh.png`** — 「The same task, same behavior」+ VM/容器同任务**上下堆叠**(`.hh` 竖排,单栏全宽 → 每帧可读;OSWorld 在上、Lite.OSWorld 在下)。
 4. **`assets/04-parity.png`** — 「Container scores match the VM」+ 13 模型 parity 散点(`.par`)。
