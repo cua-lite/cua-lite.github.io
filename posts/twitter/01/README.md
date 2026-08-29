@@ -48,7 +48,7 @@ One standalone announcement plus eight follow-ups. Cross-platform conventions li
 
 **文案来源** — 取自站点和两篇博客，不自由发挥。post 1 的骨架来自 `posts/red/01` 的英文版，其余各条复用主页的主张和博客的 bold lead，只补把三个页面串成一条 thread 的连接词。
 
-**编号** — post 1 不带编号（它是完整的独立公告，🧵 已经在说「下面还有」）。posts 2–9 用 `[N/9]`，方括号让数字读作标签而不是句子的开头。分母保持 **9**（含 post 1）—— 读者在无编号的公告后看到 `[2/9]`，会推断刚才那条是 1/9；改成 1–8 反而让人以为漏了一条。
+**编号** — post 1 不带编号（它是完整的独立公告，🧵 已经在说「下面还有」）。posts 2–9 用 `[N/10]`，方括号让数字读作标签而不是句子的开头。分母保持 **9**（含 post 1）—— 读者在无编号的公告后看到 `[3/10]`，会推断刚才那条是 1/9；改成 1–8 反而让人以为漏了一条。
 
 **长度与折叠线** — X 在约 280 字符处折叠（URL 一律按 23 计）。**内容优先级最高，折叠线是 optional 的。** 不要为了让链接露出来而损害可读性 —— 作者原话：「不要为了这种 optional 的损坏了内容的可读性」。**post 9 的两个链接现在落在折叠线以下** —— 早先的约定要求它压进 280，但压到 280 要砍掉博客的 `One integration, and the whole field builds on it.`，按优先级 5「字数最弱」这笔交易不做。**规则是「核心提前」，不是「压进 280」**：为挤进折叠线而截断，代价大于收益，因为点开的人拿到的是残篇。post 1 约 1.5k，posts 2–9 在 333–741 之间，都需要 Premium 账号。**当前九条全部会折叠**，所以每条的核心必须在首屏内 —— 用 `check_thread.py` 量，不要目测。
 
@@ -67,23 +67,24 @@ One standalone announcement plus eight follow-ups. Cross-platform conventions li
 
 ## At a glance
 
-The spine is the homepage's story. Post 2 names three gaps — heavy sandboxes, a per-dataset
-schema, no standard framework — and posts 3, 5 and 6 close them in that order. Posts 4, 7 and 8
-extend the answer before them rather than opening a new gap. The VM-free post is cut in at 3 as
+The spine is the homepage's story. Post 3 names three gaps — heavy sandboxes, a per-dataset
+schema, no standard framework — and posts 4, 6 and 7 close them in that order. Posts 5, 8 and 9
+extend the answer before them rather than opening a new gap. The VM-free post is cut in at 4 as
 evidence for the first gap: OSWorld is the environment everyone already knows, so it is the
-cheapest way into lightweight sandboxes. Post 9 closes on the community ask post 1 ends with.
+cheapest way into lightweight sandboxes. Post 10 closes on the community ask post 1 ends with.
 
 | # | Beat | Media |
 |---|------|-------|
 | 1 | Introducing CUA-Lite — the whole argument, standalone | `01-hero.mp4` portrait (`01-hero-wide.mp4` = landscape) |
-| 2 | Computer-use agent resources are fragmented | `02-fragmented.mp4` |
-| 3 | VM-free OS(World) at Scale | `03-vm-tax.mp4` |
-| 4 | Sandboxes & verifiable tasks | `04-sandboxes.mp4` |
-| 5 | One schema, any dataset | `05-litesample.mp4` |
-| 6 | One framework: eval, SFT, RL | `06-litegym.mp4` |
-| 7 | One command, any benchmark | `07-leaderboard.mp4` |
-| 8 | SFT & RL, any open agent | `08b-rl.png` |
-| 9 | Call for contributors | `09-card.png` |
+| 2 | An open platform — site, code, data, leaderboard | none (X cards the last URL) |
+| 3 | Computer-use agent resources are fragmented | `02-fragmented.mp4` |
+| 4 | VM-free OS(World) at Scale | `03-vm-tax.mp4` |
+| 5 | Sandboxes & verifiable tasks | `04-sandboxes.mp4` |
+| 6 | One schema, any dataset | `05-litesample.mp4` |
+| 7 | One framework: eval, SFT, RL | `06-litegym.mp4` |
+| 8 | One command, any benchmark | `07-leaderboard.mp4` |
+| 9 | SFT & RL, any open agent | `08b-rl.png` |
+| 10 | Call for contributors | `09-card.png` |
 
 Spares (replies or a quote-tweet, not part of the nine) are listed under **Posting notes**.
 
@@ -96,8 +97,8 @@ Spares (replies or a quote-tweet, not part of the nine) are listed under **Posti
 | **凭推断写规则，还写进共享 README** | 「`Lite.*` / CUAGym / CUAWorld 是我们自建」 | 用别人项目的原名声明自有，**自动复制到 4 个文件** |
 | **措辞和产物拿反了** | 01 里**已通过审核的句子**我不用、自己另写（更差，还写出过事实错误：ScaleCUA 的说明、30k+ 挂在 generate 上）；01 里的**素材文件**我却直接软链过去用（名字带 01 的帖号，而且漏了 blog2 自己的 `figure.belt-fig`，02 竟在用 blog1 的图）| 判据是反的：**措辞复用**（经过审核，重写只会更差）·**产物回源重制**（生成成本低，且出处本身就是意义）。漏图的根因同「只查一个文件」——我枚举的是「01 的素材里哪些出自 blog2」，不是「blog2 有哪些图」 |
 | **按原文篇幅分帖，不按论点分量** | 02 照 blog2 的两节分帖：§1 长 → 4 帖，§2 短 → 1 帖。但**两节的长短和重要性恰好相反** —— 演示需要证据所以长，结论本来就短 | 例子被放大成主角，读者以为在发布一个 OSWorld 移植版。作者原话：「lite.osworld 只是一个例子让大家理解我的 sandboxes，而不是核心」 |
-| **约束一消失就丢结构** | 01 的 post 3 只有一帖空间，压缩强迫我写成「总述 → `Lite.OSWorld is the first of them`」，层级是对的；02 有六帖可填，反而让例子膨胀 | **空间变大时要主动重申层级**，不能指望篇幅限制替我把结构摆正 |
-| **手边有已通过审核的句子却另写一个** | 01 post 3 的 `CUA-Lite introduces lightweight, VM-free sandboxes behind one interface: they reproduce public benchmarks and generate verifiable tasks…` 正是 02 要的论点句，我却自己另写，而且写成了机制先行 | 写新 thread 前**先在既有 thread 里搜同一个论点**。这是「绕开现成资源自由发挥」在跨 thread 上的变体 |
+| **约束一消失就丢结构** | 01 的 post 4（当时编号 3）只有一帖空间，压缩强迫我写成「总述 → `Lite.OSWorld is the first of them`」，层级是对的；02 有六帖可填，反而让例子膨胀 | **空间变大时要主动重申层级**，不能指望篇幅限制替我把结构摆正 |
+| **手边有已通过审核的句子却另写一个** | 01 post 4 的 `CUA-Lite introduces lightweight, VM-free sandboxes behind one interface: they reproduce public benchmarks and generate verifiable tasks…` 正是 02 要的论点句，我却自己另写，而且写成了机制先行 | 写新 thread 前**先在既有 thread 里搜同一个论点**。这是「绕开现成资源自由发挥」在跨 thread 上的变体 |
 | **成批修改后不复审，靠下一轮 agent 兜** | 02 上第一轮审出的问题我一次性改完，第二轮冷读查出 **15 条,全部是我这次改出来的**；再改 18 处后又需要一轮 | 审核轮次永远收敛不了 —— 每轮查的是我上一轮的回归，不是原始缺陷。**改完先自查，再送审** |
 | **可机械化的检查靠人反复读** | 02 那 15 条里 4 条同属一类：注记引用了已被删除的句子（Why here 引 `The benchmark itself is untouched`、Bold 引已改写的短语） | 这类能发出去只因为「改文案」和「改引用它的注记」是两个动作，第二个总被跳过。**已做成 `STALE-NOTE` 检查** —— 与其多派一轮 agent，不如把这类写进脚本 |
 | **改脚本前不先验证假设** | 为修循环接缝加「首尾对称裁切」，实测接缝从 13.6 恶化到 45.4（`2×head` 不是整数个动画周期）；06 那条也是试了五次参数才去算几何不等式 | 都是花 20 秒 ffmpeg 就能先测出来的。**先测假设，再改代码** |
@@ -115,7 +116,7 @@ Spares (replies or a quote-tweet, not part of the nine) are listed under **Posti
 | **正文逐处署名** | 为满足「每次提及都署名」在正文撒 `xlang-ai's` / `CMU's` / `THUDM's` | 注意力被从「我们做了什么」引开；正确做法是**只在致谢帖逐个 @** |
 | **自己发明判据，而不是先问判据** | 加粗我定的是「只加可验证的主张」，作者的判据是「标题+加粗连读就是重点」—— 按后者，我选的两处**恰好复述了标题**，零信息 | 同一模式一轮内三次（加粗 / 内容 vs 折叠线 / 推文语法）。**判据是作者的，方案才是我的** |
 | **只 grep 一个文件就断言「源码里没有」** | `expert` 在 `js/belt.js`；`whole field builds on it` 在我从没读过的 `blog/why-cua-lite/`；语料数横跨 `README.md:244` 与 `preproc/` | 三次误判，其中两次我据此删掉了站点原文。**先枚举源文件集合再下结论**，不是「careful 一点」 |
-| **把 subagent 的结论当待办执行** | agent 说「post 3 首段是 post 4 的主语句」，我就删了 —— 作者当场指出 post 3 讲的就是沙盒，OSWorld 只是例子 | 审核结论要先过一遍「这和作者已定的决策冲突吗」，再决定采不采纳 |
+| **把 subagent 的结论当待办执行** | agent 说「post 3 首段是 post 4 的主语句」（当时的编号；现为 4 与 5），我就删了 —— 作者当场指出 post 3 讲的就是沙盒，OSWorld 只是例子 | 审核结论要先过一遍「这和作者已定的决策冲突吗」，再决定采不采纳 |
 | **改一句不读依赖它的下一句** | `the same tasks and evaluators` / `the same base` 两句**本身没坏**，是我删改了给它们做先行词的上文 | 语法完好、指代落空，我自己读不出来 → 已做成 ORPHAN-SAME 机器检查 |
 | **检查器假阳性反推文案** | 门禁把 `These sandboxes`（带名词）判成裸指代 | 差点把文案推回它刚被修掉的 `They re-host`；**报警先判是文案错还是规则错** |
 
@@ -128,11 +129,9 @@ Spares (replies or a quote-tweet, not part of the nine) are listed under **Posti
 ```
 Introducing CUA-Lite 🧵 — the open platform for computer-use agents, with open sandboxes, data and infra.
 
-Training and benchmarking CUAs (computer-use agents) takes three things: sandboxes, data, and a framework. CUA-Lite democratizes all three: 30k+ verifiable tasks in light-weight VM-free sandboxes, 10+ SFT datasets, and one unified framework for rollout, eval, SFT and RL across desktop, browser and mobile.
+Training and benchmarking CUAs (computer-use agents) takes three things: sandboxes, data, and a framework. Today all three are fragmented, so CUA-Lite standardizes and democratizes all three: 30k+ verifiable tasks in light-weight VM-free sandboxes, 10+ SFT datasets, and one unified framework for rollout, eval, SFT and RL across desktop, browser and mobile.
 
-Site: cua-lite.github.io
-Code: github.com/cua-lite/cua-lite
-Data: huggingface.co/cua-lite
+Sandboxes, data, and framework all keep growing. We hope CUA-Lite becomes a community-driven open-source CUA ecosystem — bring your datasets, environments, or agents.
 
 ▪️ Sandboxes: efficient, with verifiable tasks
 Lightweight VM-free sandboxes carrying 30k+ CUA tasks with verifiable rewards, so the same sandbox serves both benchmarking and training. These sandboxes re-host OSWorld, CUA-Gym, CUAWorld and other public task suites on one VM-free runtime, with significantly less CPU and memory.
@@ -145,8 +144,6 @@ One agent–environment interface, so any agent can run in any environment, and 
 · Eval — 15+ benchmarks integrated (OSWorld, OSWorld-2, WindowsAgentArena, WebArena, WebVoyager, AndroidWorld, MobileWorld, and more)
 · SFT — rollouts in one standardized format, then rendered by each model's adapter into that model's own training format, so any model's rollouts can fine-tune any other: GPT-5.5 → Qwen3-VL, for example
 · RL — support GRPO, GSPO and more, based on Slime
-
-Sandboxes, data, and framework all keep growing. We hope CUA-Lite becomes a community-driven open-source CUA ecosystem — bring your datasets, environments, or agents.
 ```
 
 **Bold** `30k+ verifiable tasks in light-weight VM-free sandboxes, 10+ SFT datasets, and one unified framework for rollout, eval, SFT and RL`
@@ -178,14 +175,40 @@ shape now follows [RSI-Exam's launch post](https://x.com/HuaxiuYaoML/status/2092
 link block. Not copied from it: its emoji bullets (🔁🔒📊), and its opening question — our first
 line has to carry the project name for search.
 
-### [2/9] Computer-use agent resources are fragmented
+### [2/10] An open platform — site, code, data, leaderboard
 
 ```
-[2/9] Computer-use agent resources are fragmented — CUA-Lite is built to close three gaps:
+[2/10] CUA-Lite is an open platform where everyone can benefit and contribute:
+
+Site: cua-lite.github.io
+Code: github.com/cua-lite/cua-lite
+Data: huggingface.co/cua-lite
+Leaderboard: cua-lite.github.io/#benchmarks
+```
+
+**Bold** `where everyone can benefit and contribute`
+
+**Media** none — X builds the card itself. **The card comes from the LAST URL in the tweet.** Here that is `cua-lite.github.io/#benchmarks`, a fragment of the homepage, so it carries the same tags and the card is the homepage's own (`summary_large_image`, `assets/og.png?v=7`, headline `An open platform for computer-use agents.`). That is what lets Site sit first in the reading order: the anchor at the end holds the card. Put a non-cua-lite.github.io URL last and the card becomes that site's instead. Verify with X's card validator before posting — this was reasoned, not tested.
+
+**Why here** The links used to sit mid-body in post 1. They were moved out on the advisor's note
+(«we should move this to the 2nd tweet thread for engagement optimization»): a lead post carrying a
+URL is widely held to lose reach, since the platform would rather the reader stayed. That belief is
+contested — X open-sourced the feed ranker in Jan 2026 and no explicit URL rule was found in it, and
+Musk said in Jul 2026 that link posts had not been penalised for over a year — so treat it as a
+practitioner heuristic, not a documented rule. It costs nothing here either way: the three lines sat
+below post 1's fold, so moving them frees nothing and loses nothing, and anyone who wants to click
+still finds them in the second tweet rather than the ninth.
+
+---
+
+### [3/10] Computer-use agent resources are fragmented
+
+```
+[3/10] Computer-use agent resources are fragmented — CUA-Lite is built to close three gaps:
 
 · Sandboxes are heavy and unstandardized — a VM per task, each with its own interface and action space
 · Every dataset has its own schema, so one agent's data can't train another
-· No framework standardizes eval, SFT or RL, so every project rebuilds the same plumbing — agent loops, sandboxes setup, eval scripts and training infra
+· No framework standardizes eval, SFT or RL, so every project rebuilds the same tooling — agent loops, sandboxes setup, eval scripts and training infra
 ```
 
 **Bold** `heavy and unstandardized` · `its own schema` · `No framework standardizes eval, SFT or RL`
@@ -197,15 +220,15 @@ each pairing dying in the same grey tangle.
 **Alt** Lines from Mind2Web, GUIOdyssey, OSWorld and WebArena to GPT, Claude, Qwen and Gemini,
 accumulating into a dead tangle.
 **Why here** Lists the three gaps in the order the thread closes them — sandboxes (3–4),
-schema (5), framework (6–8). Posts 3, 5 and 6 each restate their gap in one concrete clause
+schema (6), framework (7–9). Posts 4, 6 and 7 each restate their gap in one concrete clause
 and then answer it in the same breath — definitionally (`X is CUA-Lite's Y…`), not with the
 earlier `Our answer is…` turn, which 写作规约 §3 replaced and which survives in no post — so a
 reader who meets that post cold still gets both halves — **but as prose, not as a `Gap N` label**, which would need this post to have been read.
 
-### [3/9] VM-free OS(World) at Scale
+### [4/10] VM-free OS(World) at Scale
 
 ```
-[3/9] VM-free OS(World) at Scale
+[4/10] VM-free OS(World) at Scale
 
 CUA-Lite introduces lightweight, VM-free sandboxes behind one interface: they reproduce public benchmarks and generate verifiable tasks to train any agent, on a fraction of the hardware resources.
 
@@ -224,10 +247,10 @@ multiplies into a grid of parallel rollouts.
 **Why here** Problem and fix in one post, because the clip already carries both. OSWorld is the
 environment readers already know, so it is the cheapest way into lightweight sandboxes.
 
-### [4/9] Sandboxes & verifiable tasks
+### [5/10] Sandboxes & verifiable tasks
 
 ```
-[4/9] Sandboxes & verifiable tasks
+[5/10] Sandboxes & verifiable tasks
 
 The VM-free container isn't just for OSWorld — it's a base for CUA-Lite's family of sandboxes, which carry 30k+ verifiable tasks so far. The tasks range from everyday browser and desktop work to NASA's GMAT flying spacecraft and PyMOL turning proteins. Each sandbox runs many instances in parallel on one machine.
 
@@ -247,15 +270,15 @@ on it here.
 **Alt** A belt of looping agent rollouts across four sandbox families in the order shown —
 Lite.CUAWorld, Lite.CUAGym, Lite.ScaleCUA, Lite.OSWorld — each tab carrying its own line of
 task counts and apps.
-**Why here** Generalises post 3: one reproduced benchmark becomes the family the belt shows.
+**Why here** Generalises post 4: one reproduced benchmark becomes the family the belt shows.
 It takes the blog's Beyond-OSWorld lead as its source but does not open on those words — the post
-opens `The VM-free container isn't just for OSWorld`, which advances rather than restating post 3's
+opens `The VM-free container isn't just for OSWorld`, which advances rather than restating post 4's
 first sentence. (The literal heading `Beyond OSWorld` belongs to thread 02's post [5/6].)
 
-### [5/9] One schema, any dataset
+### [6/10] One schema, any dataset
 
 ```
-[5/9] One schema, any dataset
+[6/10] One schema, any dataset
 
 LiteSample is CUA-Lite's data schema, shared across every platform (desktop, browser, mobile), environment, agent and task type — convert a dataset once, and every agent can train on it.
 
@@ -272,13 +295,13 @@ plus the homepage Data claim.
 it into each model's own training format.
 **Alt** Mind2Web, GUIOdyssey, ScaleCUA and OpenCUA converge into LiteSample, which an adapter
 feeds to Qwen, UI-TARS, MAI-UI and Kimi.
-**Why here** Closes the second gap from post 2. Sandboxes are where an agent practises;
+**Why here** Closes the second gap from post 3. Sandboxes are where an agent practises;
 this is what it learns from first.
 
-### [6/9] One framework: eval, SFT, RL
+### [7/10] One framework: eval, SFT, RL
 
 ```
-[6/9] One framework: eval, SFT, RL
+[7/10] One framework: eval, SFT, RL
 
 lite.gym is CUA-Lite's one agent–environment interface, so any agent can run in any environment. You bring the agent; CUA-Lite ships the rollout loop, the sandboxes to run it in, and the eval and training stack that consumes the rollouts.
 
@@ -298,10 +321,10 @@ Qwen and Gemini; the board pairs them one at a time — a screenshot travels up 
 and an action, click or tap, comes back down.
 **Why here** Closes the third gap. Data and sandboxes only pay off if one framework drives them.
 
-### [7/9] One command, any benchmark
+### [8/10] One command, any benchmark
 
 ```
-[7/9] One command, any benchmark
+[8/10] One command, any benchmark
 
 15+ benchmarks are already integrated into CUA-Lite, and the leaderboard is live — every score on it is a run we did ourselves.
 
@@ -323,13 +346,13 @@ coverage board and `assets/exps/eval/manifest.json`.
 together, across four real boards.
 **Alt** An eval command's --env-id changes from OSWorld to WebVoyager to AndroidWorld to
 ScreenSpot-Pro, and the leaderboard under it reloads with each benchmark's scores.
-**Why here** Turns post 6's interface from a diagram into results. Opens on the count rather
+**Why here** Turns post 7's interface from a diagram into results. Opens on the count rather
 than on "That interface", so the number is the first thing a quoted screenshot shows.
 
-### [8/9] SFT & RL, any open agent
+### [9/10] SFT & RL, any open agent
 
 ```
-[8/9] SFT & RL, any open agent
+[9/10] SFT & RL, any open agent
 
 SFT on CUA-Lite's public rollout data, then reinforce in its envs — GRPO, GSPO and beyond, built on Slime. Train any open agent on any data and any env.
 ```
@@ -359,15 +382,15 @@ is viewport-relative. (An older note claimed this image was "twenty lines and tu
 both the line count and the real problem.)
 **Alt** A terminal showing MODEL_ID, ENV_ID and CONFIG_PATH passed to run_grpo.sh, with the
 model and env picked from dropdowns.
-**Why here** Posts 1 and 6 promise SFT and RL; this is the only post that shows them — without
+**Why here** Posts 1 and 7 promise SFT and RL; this is the only post that shows them — without
 it the thread proves eval and merely asserts training. It opens straight on SFT: the earlier
 first line ("The datasets and the sandboxes above are what you train on") was pure connective
 tissue, and connective tissue in the top line wastes the only part everyone sees.
 
-### [9/9] Call for contributors
+### [10/10] Call for contributors
 
 ```
-[9/9] Call for contributors
+[10/10] Call for contributors
 
 Sandboxes, data, and framework all keep growing. We hope CUA-Lite becomes a community-driven open-source CUA ecosystem — bring your datasets, environments, or agents.
 
@@ -426,7 +449,7 @@ If we are hosting your work and you want it credited or shown differently, tell 
 
 **Not claimed, on purpose:** no individual is named. The site lists nine authors (`index.html:386`); picking some for a tweet and not others is its own problem. If you want to thank a person, add their handle yourself — do not let this file guess one.
 
-**No number.** Post 1 opens unnumbered and this closes unnumbered — the two bookends sit outside `[N/9]`, which stays a count of the argument itself. Adding `[10/10]` would also silently renumber every earlier post.
+**No number.** Post 1 opens unnumbered and this closes unnumbered — the two bookends sit outside `[N/10]`, which stays a count of the argument itself. Adding `[10/10]` would also silently renumber every earlier post.
 
 **Media** none, or reuse `09-card.png`. This is the one post where a bare text block is right: an acknowledgement with a graphic attached reads as a campaign.
 
@@ -503,7 +526,7 @@ handle; leave them as plain text rather than tagging a corporate account.
 
 ## Posting notes
 
-- **每帖一图，post 8 例外**（SFT + RL 两张，作者指定）。其余帖两图会各自减半宽度，which is what made
+- **每帖一图，post 9 例外**（SFT + RL 两张，作者指定）。其余帖两图会各自减半宽度，which is what made
   the training terminal unreadable; the RL half goes in a reply instead. Every clip loops
   silently under ~60s; X autoplays them muted.
 - **Clips are cut to loop and to open on motion.** Each is trimmed to a whole number of its
@@ -515,17 +538,17 @@ handle; leave them as plain text rather than tagging a corporate account.
   ends on the phone and restarts on the desktop — inherent to a three-device tour, and it is
   the project's own canonical demo). Openings were re-cut too: 02 and 05 used to sit frozen
   for the first 2-3 seconds, which is the entire window a scrolling reader gives them.
-- **Links** live in posts 1 and 9, plus Hugging Face in post 5 — X buries mid-thread links.
+- **Links** live in posts 1, 2 and 10, plus Hugging Face in post 6 — X buries mid-thread links.
   Post 1 carries a clip, so X shows the clip instead of a link card. That's intended.
 - **Alt text** is worth pasting in: this audience uses it, and the figures are the argument.
 - **Spares**, for replies or a quote-tweet: `extra-footprint.png` and `extra-parity.png`
-  (the table and parity plot behind post 3's numbers) and `extra-side-by-side.mp4` (the
-  same model on the same task, VM vs container). The first reply to post 3 is the natural
+  (the table and parity plot behind post 4's numbers) and `extra-side-by-side.mp4` (the
+  same model on the same task, VM vs container). The first reply to post 4 is the natural
   place for them.
-- **Blog links**, if someone asks for detail: `/blog/kvm-free-osworld/` answers posts 3–4,
-  `/blog/why-cua-lite/` answers 2 and 5–9.
+- **Blog links**, if someone asks for detail: `/blog/kvm-free-osworld/` answers posts 4–5,
+  `/blog/why-cua-lite/` answers 3 and 6–10.
 
-## 提前写好的回复（post 1 / 3 / 8）
+## 提前写好的回复（post 1 / 4 / 9）
 
 Each post carries one media, so the evidence that does not fit goes in a reply on the same
 post — one tap away, and ready before anyone asks.
@@ -578,7 +601,7 @@ upstream authors reliably amplify work built on theirs. **Look the handles up on
 do not guess them.** (This file has already mis-attributed ScaleCUA once by copying a stale
 link instead of checking; a wrong @ is worse than none.)
 
-**Reply to post 3 — the receipts.** Post 3 asserts the numbers; this shows them.
+**Reply to post 4 — the receipts.** Post 4 asserts the numbers; this shows them.
 
 ```
 The receipts — same task suite, same evaluators, 13 models:
@@ -591,7 +614,7 @@ Full write-up: cua-lite.github.io/blog/kvm-free-osworld/
 — the same model on the same task, VM left, container right — is a good third, in a
 follow-up reply rather than the same post.)
 
-**Reply to post 8 — the SFT pipeline in full.** Post 8 shows the RL command; this is the
+**Reply to post 9 — the SFT pipeline in full.** Post 9 shows the RL command; this is the
 other half, at a size worth expanding.
 
 ```
@@ -616,4 +639,4 @@ download the corpus, export a model-ready parquet, run run_sft.sh.
 
 Every number is on the site. If the site changes, change it here too — and re-run
 `make_assets.py`, since the media is captured from those same pages. The one number still to
-confirm is post 3's footprint set; see **Pre-flight 1**.
+confirm is post 4's footprint set; see **Pre-flight 1**.

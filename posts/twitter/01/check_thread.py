@@ -189,7 +189,7 @@ def audit() -> dict[str, list[str]]:
         # deleted or rewritten. The author caught all three; the script caught none.
         for m in re.finditer(r"\b(?:the same|that same|those same|the original)\s+([a-z]+)", post, re.I):
             head, before = m.group(1).lower(), post[:m.start()].lower()
-            # DISTRIBUTIVE `same`: "every project rebuilds the same plumbing" means same
+            # DISTRIBUTIVE `same`: "every project rebuilds the same tooling" means same
             # ACROSS instances, not same as something named earlier — a different grammar,
             # and the site's own wording. Only anaphoric `same` needs an antecedent.
             clause = post[max(0, m.start() - 90):m.start()].lower()
