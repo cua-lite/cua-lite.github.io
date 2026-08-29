@@ -1,37 +1,68 @@
-"""Render every media asset the launch thread references into posts/twitter/01/assets/.
+"""Build every image and clip for the X/Twitter launch thread, from the live site.
 
-The thread's copy lives in posts/twitter/01/README.md; this script produces the files it
-points at, so a re-run after a site edit keeps the thread in sync with the page.
+═══ HOW TO REPRODUCE — read this first; the plain command does NOT work on this host ═══
 
-    uv run python posts/twitter/01/make_assets.py            # everything
-    uv run python posts/twitter/01/make_assets.py 02 04b     # only assets whose name matches
-    uv run python posts/twitter/01/make_assets.py gif        # only the .gif beside each .mp4
+1. Start Chrome yourself and point the script at it. Playwright's own launch() is broken
+   here (PITFALL 1), so capture goes through CDP:
 
-HOW THE MOTION IS CAPTURED — the site's flow figures ARE the argument (a still of a
-wire mid-draw says nothing), so most assets are clips. Three approaches were tried;
-only the third keeps them both sharp and true to the page:
+     ~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome \
+       --headless --no-sandbox --disable-gpu --disable-dev-shm-usage \
+       --remote-debugging-port=9401 --user-data-dir=/tmp/pw &
+     until curl -sf http://127.0.0.1:9401/json/version >/dev/null; do sleep 0.5; done
 
-  ✗ Playwright's record_video — low-bitrate VP8 at CSS-pixel size; anything cropped
-    out of it has to be upscaled and turns to mush.
-  ✗ CDP screencast — real frame timing, but it captures at CSS resolution and ignores
-    deviceScaleFactor entirely (verified). scripts/make_demo_gif.py works around that
-    by CSS-`zoom`ing the hero demo before capture, which is fine there because that
-    demo is pure CSS. It does NOT work for the pair-boards: their wires are drawn by JS
-    from getBoundingClientRect (visual px under zoom) into an SVG with no viewBox
-    (layout px), so every wire overshoots by the zoom factor. Widening the column
-    instead of zooming is worse — it stretches the boards away from how the site looks.
-  ✓ page.screenshot(clip=…, type="jpeg") on a DPR-2 context — ~5-20 fps at true device
-    pixels, natural layout, no upscaling anywhere. Frame timestamps are kept so the
-    concat list replays the real tempo.
+2. Render mp4s (the script starts its own http server for the site):
 
-Every clip is a capture of a figure the SITE already uses to make that argument —
-including its tabs, labels and caption. Nothing here composes a new visual.
+     CUA_LITE_CDP=http://127.0.0.1:9401 uv run python posts/twitter/01/make_assets.py
+     CUA_LITE_CDP=http://127.0.0.1:9401 uv run python posts/twitter/01/make_assets.py 04-sandboxes
 
-The hero clip is not re-invented here: scripts/make_demo_gif.py already renders it for
-the main repo's README, so this script just calls it (see hero()).
+3. SEPARATELY, build GIFs from those mp4s:
+
+     uv run python posts/twitter/01/make_assets.py gif
+
+   Steps 2 and 3 cannot be combined — PITFALL 2.
+
+On a host where Playwright works, drop step 1 and CUA_LITE_CDP; nothing else changes.
+
+═══ PITFALLS — each cost a debugging round and none is obvious from the traceback ═══
+
+1. Playwright cannot launch Chromium here. The child dies instantly with SIGTRAP and no
+   stderr, so the only symptom is "BrowserType.launch: Target page, context or browser has
+   been closed". Ruled out by bisection: every revision (1208/1217/1223/1228, headless_shell
+   and full chrome), with and without --no-sandbox / --single-process / --no-zygote; memory,
+   disk, /dev/shm and sandboxing are all fine; the same binary run by hand works. The break
+   is in Playwright's --remote-debugging-pipe path. connect_over_cdp() is unaffected — hence
+   CUA_LITE_CDP.
+
+2. `gif` SKIPS the capture. main() reads `if not only_gifs: build(...)`, so passing `gif`
+   alongside clip names silently renders nothing. And gifs() takes no filter: it rebuilds
+   EVERY GIF in assets/, not only the ones you named.
+
+3. The conda ffmpeg/ffprobe on this host cannot load libiconv.so.2 and dies on every call.
+   FFMPEG/FFPROBE therefore prefer /usr/bin explicitly. Do not simplify back to
+   shutil.which().
+
+4. /usr/bin ffmpeg is 4.4, which has no `-fps_mode` (added in 5.0). CFR carries the right
+   flag for the detected version; the wrong one exits 1 with "Unrecognized option".
+
+5. run() used to swallow stdout AND stderr, so every failure above surfaced as a bare
+   CalledProcessError and had to be reproduced by hand to learn anything. It now raises with
+   the tail of the real error plus the full command. Do not revert that.
+
+6. A crop can run off the captured frame. bounding_box() is measured BEFORE
+   Emulation.setPageScaleFactor, so at scale=2 a tall figure yields a crop past the frame
+   bottom — ffmpeg rejects it, once with a negative height. cast() now clamps to the frame.
+   Raising the viewport does NOT help (it pushes the element further down); if a figure still
+   looks cut, lower `scale` for that clip.
+
+7. Pacing does NOT come from HOLD/hold. cast() derives each frame's duration from CDP
+   screencast timestamps, and a screencast emits nothing while the page is still — a static
+   beat becomes one frame stretched to the 2.5 s cap. 07-leaderboard once shipped 5 boards in
+   16 s with a 6.5 s dead stretch while its HOLD read 3.2. retime() pins the finished file to
+   an exact duration and trims the opening dwell (`head=`). Tune retime(), not HOLD.
 """
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 import sys
@@ -46,8 +77,22 @@ OUT = Path(__file__).resolve().parent / "assets"
 TMP = Path("/tmp/cua-twitter")
 PORT = 8146
 BASE = f"http://localhost:{PORT}"
-FFMPEG = shutil.which("ffmpeg") or "/home/zzh/.local/bin/ffmpeg"
+# /usr/bin first: the conda build on this host cannot load libiconv.so.2 and dies on
+# every invocation, which is silent here because run() swallows stderr.
+FFMPEG = next((c for c in ("/usr/bin/ffmpeg", shutil.which("ffmpeg")) if c and Path(c).exists()), "ffmpeg")
+# ffmpeg 4.x uses -vsync; -fps_mode arrived in 5.0. Detect once — an unsupported flag
+# makes ffmpeg exit 1 with "Unrecognized option", which run() hides entirely.
+def _cfr_flag() -> list[str]:
+    try:
+        v = subprocess.run([FFMPEG, "-version"], capture_output=True, text=True).stdout
+        return ["-fps_mode", "cfr"] if int(re.search(r"ffmpeg version (\d+)", v).group(1)) >= 5 else ["-vsync", "cfr"]
+    except Exception:
+        return ["-vsync", "cfr"]
 
+
+FFPROBE = next((c for c in ("/usr/bin/ffprobe", shutil.which("ffprobe")) if c and Path(c).exists()), "ffprobe")
+
+CFR = _cfr_flag()
 DPR = 2                       # every capture is at 2× device pixels, never upscaled after
 BG = "0xfaf4e8"               # --bg, the site's ivory canvas
 BG_RGB = (250, 244, 232)
@@ -57,7 +102,22 @@ MAX_W = 1920                  # X's ceiling — downscale to it, never up
 
 
 def run(cmd: list[str]) -> None:
-    subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+    """Run a subprocess and, on failure, SHOW WHY.
+
+    The original swallowed stdout and stderr, so every ffmpeg failure surfaced as a bare
+    CalledProcessError and had to be reproduced by hand to learn anything. Three separate
+    pitfalls in this file were invisible for exactly that reason:
+      * the conda ffmpeg/ffprobe on this host cannot load libiconv.so.2 and dies instantly;
+      * `-fps_mode` does not exist before ffmpeg 5.0 ("Unrecognized option");
+      * a crop rectangle taller than the captured frame is rejected outright.
+    Each one cost a manual re-run to diagnose. Now the message comes back with the error.
+    """
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    if r.returncode:
+        err = (r.stderr or r.stdout or "").strip().splitlines()
+        raise RuntimeError(f"{cmd[0]} failed (exit {r.returncode}):\n  "
+                           + "\n  ".join(err[-6:] or ["<no output>"])
+                           + f"\n  full command: {' '.join(cmd)}")
 
 
 def serve_html(page, html: str) -> None:
@@ -191,7 +251,13 @@ FREEZE_HEIGHTS = """
 # Left-align the column and drop the sticky nav: with a page-scale factor the visible
 # region is the TOP-LEFT quarter of the layout viewport, so a centred figure would fall
 # outside it, and the fixed nav would sit on top of the frame.
-CAST_CSS = ("header.nav{display:none !important}"
+CAST_CSS = (# Hide every scrollbar. At scale=1 the page is tall relative to the viewport, so a
+            # scrollbar renders INSIDE the captured frame and lands in the crop — a grey
+            # bar down the right edge of the finished clip. Not visible at scale=2, which
+            # is why it went unnoticed until 06 moved to 1x.
+            "*{scrollbar-width:none !important}"
+            "*::-webkit-scrollbar{display:none !important;width:0 !important;height:0 !important}"
+            "header.nav{display:none !important}"
             ".post-wrap{margin-left:0 !important;padding-left:16px !important}"
             ".container{margin-left:0 !important;margin-right:auto !important}")
 
@@ -229,6 +295,19 @@ def cast(page, el, secs: float, tag: str, *, scale: int = 2, margin: int = 14,
     cdp = page.context.new_cdp_session(page)
     cdp.send("Emulation.setPageScaleFactor", {"pageScaleFactor": scale})
     page.wait_for_timeout(300)
+    # RE-MEASURE. setPageScaleFactor reflows the page, so the box measured above is stale —
+    # at scale=2 a figure that sat mid-viewport can end up below the captured frame, and the
+    # crop derived from the stale box then points outside it. Scroll it back into view and
+    # take the box again; `scale` is not applied twice because these coordinates are already
+    # in the zoomed layout.
+    # Do NOT re-measure here and do NOT set scale = 1. bounding_box() returns LAYOUT
+    # coordinates, which setPageScaleFactor does not change — so a "re-measure" returns the
+    # same numbers, and dropping the ×scale then crops only the top-left quarter of the
+    # figure. The ×scale is correct; what fails is a figure taller than viewport/scale, which
+    # lands past the captured frame. Fix that by giving the clip a taller `viewport`, not by
+    # touching the arithmetic here. Also do NOT call el.evaluate() after setPageScaleFactor:
+    # running page script at this point wedges the CDP session, and the process then blocks
+    # in do_poll forever with no error and no timeout.
 
     fdir = TMP / f"frames_{tag}"
     shutil.rmtree(fdir, ignore_errors=True)
@@ -304,8 +383,12 @@ def encode(fdir: Path, out: str, *, mark: Path | None = None, fps: int = 30,
     fw, fh = Image.open(sorted(fdir.glob("*.jpg"))[0]).size
     if crop:
         cx, cy, w, h = crop
-        cx, cy = max(0, cx), max(0, cy)
-        w, h = min(w, fw - cx) // 2 * 2, min(h, fh - cy) // 2 * 2
+        # Clamp the ORIGIN into the frame too, not just above zero. When cy lands past the
+        # frame bottom, `fh - cy` goes negative and min() happily returns a NEGATIVE height,
+        # which ffmpeg rejects with "Invalid too big or non positive size". Seen for real:
+        # crop=1364:-342:0:1083 against a 1364x741 frame.
+        cx, cy = max(0, min(cx, fw - 2)), max(0, min(cy, fh - 2))
+        w, h = max(2, min(w, fw - cx)) // 2 * 2, max(2, min(h, fh - cy)) // 2 * 2
     else:
         cx = cy = 0
         w, h = fw, fh
@@ -321,7 +404,7 @@ def encode(fdir: Path, out: str, *, mark: Path | None = None, fps: int = 30,
     else:
         cmd += ["-vf", vf + ",format=yuv420p"]
     tail = ["-c:v", "libx264", "-preset", "slow", "-crf", "19", "-pix_fmt", "yuv420p",
-            "-r", str(fps), "-fps_mode", "cfr", "-movflags", "+faststart"]
+            "-r", str(fps), *CFR, "-movflags", "+faststart"]
     if not dur:
         run(cmd + tail + [str(OUT / out)])
     else:
@@ -335,7 +418,7 @@ def encode(fdir: Path, out: str, *, mark: Path | None = None, fps: int = 30,
 
 def figure_clip(browser, out: str, url: str, selector: str, *, secs: float = 13,
                 settle: float = 7.0, viewport=(1400, 900), mark=None, extra_css: str = "",
-                cycle: float | None = None) -> None:
+                cycle: float | None = None, margin: int = 14, scale: int = 2) -> None:
     """Record one live figure at the site's own layout width, over full animation loops."""
     ctx = browser.new_context(viewport={"width": viewport[0], "height": viewport[1]})
     page = ctx.new_page()
@@ -349,7 +432,7 @@ def figure_clip(browser, out: str, url: str, selector: str, *, secs: float = 13,
         page.wait_for_timeout(200)
     page.evaluate(FREEZE_HEIGHTS)              # …then pin the flow so the crop can't drift
     page.wait_for_timeout(400)
-    fdir, crop = cast(page, el, secs, out.replace(".mp4", ""))
+    fdir, crop = cast(page, el, secs, out.replace(".mp4", ""), margin=margin, scale=scale)
     page.close()
     ctx.close()
     dur = (int(secs / cycle) * cycle) if cycle else None
@@ -395,7 +478,7 @@ def leaderboard_clip(browser, out: str, mark: Path) -> None:
     TOUR = [("Desktop", "osworld"), ("Browser", "webharbor.webvoyager"),
             ("Mobile", "androidworld"), ("Grounding", "screenspot_pro"),
             ("Desktop", "osworld")]          # back to the first board: the clip loops
-    HOLD = 3.2
+    HOLD = 1.7
     pick = """document.querySelector('.cov-tab[data-plat="%s"]').click();
         const r = [...document.querySelectorAll('.cov-panel.on .row')]
                     .find(r => r.dataset.env === '%s'); if (r) r.click();"""
@@ -539,7 +622,12 @@ def build(browser, ctx, mark: Path, want) -> None:
         still(ctx, "extra-parity.png", "/blog/kvm-free-osworld/", "figure.par", mark=mark,
               min_ar=None,      # the plot is portrait; padding it landscape wastes a third of the card
               js="""document.querySelector('.par-cap').textContent =
-                      'OSWorld vs Lite.OSWorld · 13 models · identical tasks';""")
+                      'OSWorld vs Lite.OSWorld · 13 models · same desktop, same evaluators';""")
+        # NOT `identical tasks`. This caption is OURS, injected here — not the blog's,
+        # whose caption is `Success rate (%) · hover a point for the model`. The two runs
+        # score 325 vs 321 tasks with different exclusion vocabularies, so `identical` is
+        # the one word the thread copy is forbidden to use (twitter/02 Pre-flight 5) — and
+        # it was contradicting that copy from inside the attached image.
 
     # 04 · the Lite.* family — the site's own rollout belt, walked across all four tabs
     if want("04-sandboxes"):
@@ -552,10 +640,17 @@ def build(browser, ctx, mark: Path, want) -> None:
         # hold still long enough to read, each family's caption gets its beat, and the clip
         # loops without the belt snapping sideways.
         tabbed_clip(browser, "04-sandboxes.mp4", "/blog/why-cua-lite/", ".belt-fig", ".belt-tab",
-                    mark, secs=11.0, hold=2.6, settle=8,
+                    mark, secs=14.0, hold=3.2, settle=10,
                     order=[3, 2, 1, 0],      # CUAWorld (GMAT/PyMOL) first — the unfamiliar one
                     extra_css=".belt-cap{visibility:hidden !important}"
                               ".belt-track{animation-play-state:paused !important}")
+        retime("04-sandboxes.mp4", 7.0, head=0.8)    # 4 families + the loop back to the first
+        # Capture SLOW, ship FAST. hold must be long enough for each tab's per-tile <video>
+        # elements to paint — at hold=1.5 the capture moved on before they did and the clip
+        # shipped with 2.3 s of solid black tiles across the whole Lite.CUAGym panel, 34% of
+        # its runtime, in the post that is the thread's payload. settle only settles the FIRST
+        # tab, so it does not cover this. The fast pacing the author asked for comes from
+        # retime() afterwards, not from starving the capture.
 
     # 05 · convert once, train anything: datasets fold into LiteSample, adapters pack it per model
     if want("05-litesample"):
@@ -570,13 +665,22 @@ def build(browser, ctx, mark: Path, want) -> None:
         figure_clip(browser, "06-litegym.mp4", "/blog/why-cua-lite/",
                     # 2 cycles only reached one env/agent pair; 4 walks the ladder across the
                     # board, which is what the post and its alt text describe
+                    # scale=1, NOT the default 2. At 2x the page is drawn twice as large in
+                    # a frame that stays viewport-sized, so a crop is only valid when
+                    # 2*(y+height) <= frame height, i.e. the figure must be under ~370 CSS px
+                    # tall. This one is ~500, so at 2x its bottom is ALWAYS off-frame and no
+                    # viewport height fixes it — a taller viewport just pushes it further
+                    # down (tried 1240: captured nothing but background). 1x costs sharpness
+                    # and still lands ~800px wide, which is above what X displays.
                     "figure.flow-demo:has([data-board='pair'])", secs=22, settle=10.5,
-                    cycle=5.2, mark=mark)
+                    cycle=5.2, mark=mark, margin=18, scale=1)
+        retime("06-litegym.mp4", 9.0)    # 19s of a mostly-static figure reads as a still
 
     # 07 · the boards those commands fill
     if want("07-leaderboard"):
         print("clip: 07-leaderboard")
         leaderboard_clip(browser, "07-leaderboard.mp4", mark)
+        retime("07-leaderboard.mp4", 8.8, head=0.65) # 5 boards; anything slower reads as a still
 
     # 08 · the training half: SFT on the corpora, RL in the envs. Two stills, not a clip:
     #      these panels are static terminals, so a capture of them was a 2 fps slideshow
@@ -605,6 +709,61 @@ def build(browser, ctx, mark: Path, want) -> None:
                     extra_css=".hh-cap{visibility:hidden !important}")
 
 
+def retime(out: str, target: float, *, head: float = 0.0, seam: bool = True) -> None:
+    """Force a finished clip to an exact duration.
+
+    Why this exists: `cast` derives each frame's on-screen duration from the CDP
+    screencast timestamps, and a screencast emits nothing while the page is still — so a
+    static beat becomes ONE frame stretched to the 2.5 s cap. Pacing therefore came out of
+    capture jitter, not out of the HOLD/hold constants, and no amount of tuning them fixed
+    it: 07-leaderboard shipped five boards in 16 s with a 6.5 s dead stretch in the middle
+    while its HOLD said 3.2. Re-timing the encoded file is the only place the duration is
+    actually knowable, so it is set here rather than hoped for upstream.
+    """
+    src = OUT / out
+    if not src.exists():
+        return
+    cur = float(subprocess.run([FFPROBE, "-v", "error", "-show_entries", "format=duration",
+                                "-of", "csv=p=0", str(src)],
+                               check=True, capture_output=True, text=True).stdout.strip())
+    # Early-out ONLY when there is nothing to do at all. Checking the duration alone made
+    # `head` a no-op whenever the render happened to land near `target`: 04-sandboxes came
+    # out at 7.367 s against a 7.5 s target, inside this tolerance, so its opening dwell was
+    # never trimmed and its loop seam never re-aligned — silently, with no log line.
+    if not head and abs(cur - target) < 0.15:
+        return
+    tmp = TMP / f"_retime_{out}"
+    # `head` drops the opening dwell — the first beat is the one a scroller judges, and held
+    # as long as the others the clip reads as a still and gets scrolled past.
+    #
+    # Cutting the head invalidates the loop. encode() already trimmed to a seam where the
+    # last frame matches the first (seam_cut), and X autoplays on repeat, so a mid-cycle
+    # end is a visible jump. Trimming the SAME amount off the tail does NOT fix it — that
+    # was tried and made the seam three times worse (13.6 -> 45.4), because 2*head is not a
+    # whole number of animation cycles. The only correct move is to re-find the seam after
+    # the head cut, which is what the caller does by passing `seam=True`.
+    # Trim on the INPUT side (-ss/-t BEFORE -i), then scale what is left to `target`.
+    # -t placed after -i caps the OUTPUT instead, so it fights the setpts: that mistake
+    # produced a 4.0 s clip against a 7.5 s target.
+    kept = cur - head if head else cur
+    pre = ["-ss", f"{head:.2f}"] if head else []
+    run([FFMPEG, "-y", "-loglevel", "error"] + pre + ["-i", str(src),
+         "-filter:v", f"setpts={target / kept:.4f}*PTS",
+         "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20",
+         "-r", "30", "-movflags", "+faststart", str(tmp)])
+    # shutil.move, NOT Path.replace: TMP is on /tmp and assets/ is on the repo disk, and
+    # os.replace() across filesystems raises OSError 18 "Invalid cross-device link".
+    if head and seam:
+        end = seam_cut(tmp, target)
+        cut = TMP / f"_seam_{out}"
+        run([FFMPEG, "-y", "-loglevel", "error", "-i", str(tmp), "-t", f"{end:.3f}",
+             "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", "-r", "30", *CFR,
+             "-movflags", "+faststart", str(cut)])
+        tmp = cut
+    shutil.move(str(tmp), str(src))
+    print(f"    retimed {out}: {cur:.1f}s -> {target:.1f}s")
+
+
 def main() -> None:
     only = [a for a in sys.argv[1:] if a != "gif"]
     only_gifs = "gif" in sys.argv[1:]
@@ -621,7 +780,14 @@ def main() -> None:
         time.sleep(1.2)
     try:
         with sync_playwright() as pw:
-            browser = pw.chromium.launch()
+            # CUA_LITE_CDP: connect to a Chrome you started yourself, instead of letting
+            # Playwright launch one. Needed on hosts where launch() dies with SIGTRAP (see
+            # the module docstring). Start it with:
+            #   chrome --headless --no-sandbox --disable-gpu --disable-dev-shm-usage \
+            #          --remote-debugging-port=9401 --user-data-dir=/tmp/pw
+            #   CUA_LITE_CDP=http://127.0.0.1:9401 uv run python .../make_assets.py 06-litegym
+            cdp = os.environ.get("CUA_LITE_CDP")
+            browser = pw.chromium.connect_over_cdp(cdp) if cdp else pw.chromium.launch()
             ctx = browser.new_context(viewport={"width": 1180, "height": 950}, device_scale_factor=DPR)
             mark = make_mark(ctx)
             if not only_gifs:

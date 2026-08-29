@@ -95,7 +95,7 @@
   .v2c-lyr, .v2c-kvm, .v2c-ctr, .v2c-clones span, .v2c-clones span i b { transition: none; }
 }
 /* ---- OSWorld ↔ Lite.OSWorld head-to-head — the site's highlight idiom (accent wash + inset bar)
-   on the winning column; numeric cells are skeletons until the benchmark writeup lands ---- */
+   on the winning column ---- */
 .cmp { max-width: 624px; margin: 26px auto 30px; border: 1px solid var(--panel-edge); border-radius: 14px; background: var(--panel-fill); overflow: hidden; }
 .cmp-tbl { width: 100%; border-collapse: collapse; }
 .cmp-tbl th, .cmp-tbl td { padding: 12px 18px; text-align: left; vertical-align: middle; }
@@ -205,10 +205,11 @@
        PROSE HYGIENE (all paragraphs): no orphans — if a paragraph ends with a lone word or short unit
        dangling on its last line, TRIM the copy until it wraps clean. Fix it by cutting words, never with
        &nbsp; or text-wrap tricks (they only jag the right edge).
-       FACTS: no measured numbers (image sizes, latencies, memory, boot times, parallel counts) — none are
-       grounded, keep it qualitative. The desktop is GNOME-Shell (NOT "Flashback").
-       EXCEPTION: the parity-plot scores ARE real (assets/exps/eval/{osworld,lite.osworld}, same task set) —
-       keep those exact numbers; the comparison table's footprint cells stay skeletons until measured. -->
+       FACTS: every number on this page is measured — the comparison table's footprint cells (memory,
+       cold start, parallelism) as well as the parity-plot scores (assets/exps/eval/{osworld,lite.osworld}).
+       Keep the exact values; do not round them for readability, and do not restate a derived figure as an
+       independent one (parallelism follows from memory: 4.1/0.9 = ~4.6x). The desktop is GNOME-Shell
+       (NOT "Flashback"). -->
   <p class="post-meta">2026-07-23 · Zhanhui Zhou · Haoran Liu</p>
   <h1>VM-free OS(World), <em>at scale.</em></h1>
 

@@ -16,10 +16,19 @@
 | 有公开榜单的 | 11 | `assets/exps/eval/manifest.json` 非 pending 项 |
 | parity 模型数 | **13** | 博客 parity 图数据 |
 | 适配器模型家族 | **14** | 代码库 `lite/agents/models/` |
+| 转换语料数 | **10 个已转换 / 9 个已发布**（对外写 `10+`） | `lite/data/preproc/` 有 10 个目录（含未发布的 `jedi`）；代码库 `README.md:244` 的 Corpora 集合只列 9 个；`README.md:30` 对外写 `10+`。**两个数都有出处，所以正文用 `10+`、致谢不带数字** —— 别在致谢里赌一个精确数 |
 | 内存 | **under a quarter / 不足四分之一** | 实为 0.9/4.1 = 22% |
-| 并行 | **~5× more instances / 并行 ~5×** | 4.1/0.9 = 4.56，四舍五入；**见下方风险** |
+| 并行 | **博客/正式文档写 `~4.6×`；推特正文写 `five times`** | 博客 `:264` 印的是 4.6×，由内存比推出（4.1/0.9），**不是第二次测量**。**取整只发生在推特正文里** —— 作者原话「文本就是说 5 倍」；博客的作者注要求 `Keep the exact values`，**不要反过来改博客**（01 上我犯过这个方向的错） |
 | 分数一致性 | **within a few points / 基本一致** | 博客 `:271` 原话 |
 | 精确 parity | mean\|Δ\|≈2.7 · worst 5.0 | **内部核对，任何平台的正文都不写** —— 对外一律用「within a few points / 基本一致」 |
+
+**「VM-free」的适用范围 —— 会被公开质疑的一条，务必看清：**
+
+| 这些是 VM-free | 这些**需要 KVM**，别混在一起说 |
+|---|---|
+| `Lite.OSWorld` · `Lite.ScaleCUA` · `Lite.CUAGym` · `Lite.CUAWorld` · `WebGym` 等 `Lite.*` / 浏览器桌面家族 | **WindowsAgentArena**（`waa/README.md`：每次 `reset()` 开一台 Windows-11 QEMU/KVM 虚拟机）· **AndroidWorld**（`androidworld/README.md`：`KVM required`）· **MobileWorld**（`mobileworld/README.md`：`KVM required`） |
+
+`30k+ 可验证任务` 和 `VM-free` 说的都是**左列**；`15+ benchmarks integrated` 是**更大的集合**，包含右列。两句放在同一条帖子里，读者会自动连成「所有 benchmark 都不用 VM」—— 冷读测试里 60 秒就被抓到，而且抓到之后连 parity 主张一起怀疑。**任何平台把 `VM-free` 和 benchmark 清单并列时，必须让范围显而易见。**
 
 **风险（发布前需确认）：** 博客 `blog/kvm-free-osworld/index.html:209-211` 仍有一段 authoring 注释写着
 `FACTS: no measured numbers (… memory, boot times, parallel counts) — none are grounded, keep it qualitative`，
@@ -107,4 +116,19 @@
 1. **别自由发挥** —— 站点和博客有 battle-tested 的句子。写任何标题/bullet 前先把对应的 heading / bold lead 抄出来再压缩。本轮翻车实例：`verifiable rewards`（博客 4 处都写 **tasks**）、把沙盒级两用写成**任务级**（＝污染测试集）。
 2. **别让排版删实质** —— 为挤单行/折叠线砍掉「训练」「可验证任务」「benchmark」，实测证明加回去都放得下。**先写完整，量了真放不下再删冗余**。
 3. **改一处要扫全篇** —— `democratizing`、`our own`、`~5×` 都出现过只改一处的漂移。
-4. **归属** —— OSWorld 等是**外部** benchmark（我们复现），`Lite.*` / CUAGym / CUAWorld 是**我们自建**，措辞里要有 `our own` /「自建」。
+4. **归属 —— 这条我写错过一次，代价很大，照抄代码仓库，不要推断。** 核实自 env README：
+   - ⚠️ **「ScaleCUA」是两个不同的项目，别再合并。** 环境 `lite.scalecua` / `Lite.ScaleCUA` = **THUDM 的 SCALE-CUA**（arXiv 2607.11185，HF 上 pin 的是 `extreme1228/ScaleCUA`）；SFT 语料 `lite/data/preproc/scalecua` = **OpenGVLab 的 ScaleCUA-Data**。依据是提交 `0598e30` 的正文：「a different project that happens to share the name … Note lite/data/preproc/scalecua is the OTHER ScaleCUA and is deliberately untouched.」**这条我错过两次**：先抄了 `docs` 里的旧链接写成 THUDM（当时是对的却以为错），又「修正」成 OpenGVLab（把对的改错了）。**动这个名字之前先读 `0598e30`。**
+   - **CUA-Gym** = [xlang-ai](https://github.com/xlang-ai/CUA-Gym) 的 · **CUAWorld** = [CMU gym-anything](https://github.com/cmu-l3/gym-anything)（MIT）· **ScaleCUA** = [THUDM](https://github.com/THUDM/SCALE-CUA) 的 · **OSWorld** = xlang-ai 的
+   - **沙盒镜像依赖关系（写「底座」相关句子前必读 —— twitter/01 上我写错过一次）：**
+     ```
+     cua-lite/sandbox.linux            共用 GNOME 桌面底座（FROM ubuntu:22.04）
+     ├── cua-lite/lite.osworld         FROM sandbox.linux
+     │   ├── lite.scalecua             无自有镜像，跑在 lite.osworld 上（docs/envs.md:286）
+     │   └── cua-lite/lite.cuagym      FROM lite.osworld（cuagym/scripts/install.sh:48）
+     └── cua-lite/lite.cuaworld.base   同一份 Dockerfile.linux 的 ga 变体（cuaworld/scripts/install.sh:316）
+     ```
+     **能说**「四个沙盒出自同一个 VM-free 底座」。**不能说**「都跑在 Lite.OSWorld 的容器里」（cuaworld 不是），也不能说「Lite.OSWorld 的容器就是家族底座」（真底座是它的上游）。博客原文是 **a** base for **a** family，别硬化成 the/whole。`sandbox.linux` 这个名字不必进对外文案。
+   - **我们的是 VM-free 运行时、统一接口和集成**，以及 `Lite.*` 这些名字 —— **不是任务、不是评测器、不是那 40 个软件**
+   - **归属放哪儿：正文用通行名，正式归属集中在结尾致谢。** 正文写 `OSWorld` / `CUA-Gym` / `CUAWorld`，**不写** `xlang-ai's OSWorld` / `CMU's gym-anything` —— 每处都挂所有者会把读者的注意力从「我们做了什么」引开，而且同一个名字要挂三遍。正式归属（真实仓库名 + 作者 @）集中在**致谢那条**，一次说清。作者原话：「你真的没必要 xlang-ai's CMU's THUDM's（只有最后致谢我觉得这个才需要）」。
+   - 所以**绝不能**写 `our own training environments like CUAGym and CUAWorld` /「CUAGym、CUAWorld 等自建训练环境」：那是用别人项目的原名声明自有。正确说法是 `re-host … on one VM-free runtime` /「外部任务集的迁移，统一跑在同一套 VM-free 运行时上」。
+   - 曾经的错误规则（「`Lite.*` / CUAGym / CUAWorld 是我们自建」）写在这里，于是自动复制进了 red/01 中英版、reddit/01、twitter/01 四处。**共享 README 里的规则会自我复制，写之前必须回源头核。**

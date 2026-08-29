@@ -105,13 +105,13 @@ UC Berkeley · Microsoft
 |---|---|
 | OSWorld = 重型 VM，需 /dev/kvm、嵌套虚拟化 | 博客 §01 段一，逐句 |
 | Lite.OSWorld（ours）= 迁移 OSWorld、VM-free、同任务同评测器 | 博客 §01 段二 + 对比表「Task suite: Identical」 |
-| 内存 4.1 → 0.9 GB · 并行 ~4.6× · 冷启动 29.9→23.8 s | 博客对比表 `.cmp`（**见发布前检查**） |
+| 内存 4.1 → 0.9 GB · 并行 ~5× · 冷启动 29.9→23.8 s | 博客对比表 `.cmp`（**见发布前检查**） |
 | 13 模型分数「基本一致」（正文用词） | parity plot 真实数据（`assets/exps/eval/{osworld,lite.osworld}`）。内部核对：mean\|Δ\|≈2.7 / worst 5.0（真实，但**按你要求不进正文**，只用定性「基本一致」；封面/图沿用「same scores · 13 models」） |
 | 不止 OSWorld：一系列带可验证任务的 CUA 沙盒 | 博客 §02「Beyond OSWorld」 |
 
 ## 发布前检查
 
-- **对比表数字（4.1→0.9 GB、~4.6×、29.9→23.8 s）**：博客里**仍有一段旧的 authoring 注释**把这些标成 placeholder（"stay skeletons until measured"），但作者（你）此前确认它们已是真实值（commit `40a0451`）。→ 正文按真实使用；**建议顺手删掉博客里那段过时注释**以免误导。若仍有存疑，就把这三项在正文里改成定性（「更省内存、一机多开」）。
+- **对比表数字（4.1→0.9 GB、~5×、29.9→23.8 s）**：博客里**仍有一段旧的 authoring 注释**把这些标成 placeholder（"stay skeletons until measured"），但作者（你）此前确认它们已是真实值（commit `40a0451`）。→ 正文按真实使用；**建议顺手删掉博客里那段过时注释**以免误导。若仍有存疑，就把这三项在正文里改成定性（「更省内存、一机多开」）。
 - parity：正文只说「基本一致」（与博客「within a few points」同为定性口径）；真实 mean 2.7 / worst 5.0 仅内部核对，不进正文。
 - ✅ **GitHub 已公开**（2026-08-22 实测 `HTTP 200`、`gh api private=false`），正文那行 `github.com/cua-lite/cua-lite` 可以保留。此前的 404 阻塞已解除。
 - **术语统一用 `VM-free`**（2026-08-25 全站从 `KVM-free` 改定）：容器不是虚拟机，VM-free 属实且读者更熟悉；博客正文本就写「VM tax」「drops the VM」。**URL slug `/blog/kvm-free-osworld/` 保持不变**（已发布，改了会断链），故会出现「标题 VM-free / 网址 kvm-free」的不对称，属预期。

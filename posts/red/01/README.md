@@ -30,7 +30,7 @@ CUA-Lite：训练与评测 CUA 的开源平台
 训练与评测 CUA（computer-use agent）需要沙盒、数据与框架三个要素。CUA-Lite 是集成这三者的开源平台，覆盖桌面、浏览器与移动端。
 
 ▪️ 沙盒：高效、任务可验证
-免虚拟机（VM-free）的沙盒，内置 30k+ 个自带可验证奖励的 CUA 任务，因此同一个沙盒既能用于评测，也能用于训练。其中既有 OSWorld 等外部 benchmark 的复现，也有 CUAGym、CUAWorld 等自建训练环境。
+免虚拟机（VM-free）的沙盒，内置 30k+ 个自带可验证奖励的 CUA 任务，因此同一个沙盒既能用于评测，也能用于训练。其中既有 OSWorld 等外部 benchmark 的复现，也有 CUA-Gym、CUAWorld 等外部任务集的迁移，统一跑在同一套 VM-free 运行时上。
 
 ▪️ 数据：统一、开放
 10+ 个 SFT 数据集，以及前沿 CUA 产生的最新 rollout（交互轨迹），统一为一套格式，在 Hugging Face 免费开放。
@@ -54,12 +54,12 @@ UC Berkeley · Microsoft
 **English**
 
 ```
-CUA-Lite — one open-source platform to train and benchmark CUAs
+Introducing CUA-Lite — one open-source platform to train and benchmark CUAs
 
 Training and benchmarking CUAs (computer-use agents) takes three things: sandboxes, data, and a framework. CUA-Lite democratizes all three: one open-source platform, across desktop, browser, and mobile.
 
 ▪️ Sandboxes: efficient, with verifiable tasks
-VM-free sandboxes carrying 30k+ CUA tasks with verifiable rewards, so the same sandbox serves both benchmarking and training. These sandboxes reproduce external benchmarks such as OSWorld, and include our own training environments like CUAGym and CUAWorld.
+VM-free sandboxes carrying 30k+ CUA tasks with verifiable rewards, so the same sandbox serves both benchmarking and training. These sandboxes re-host OSWorld, CUA-Gym, CUAWorld and other public task suites on one VM-free runtime — Lite.OSWorld, Lite.CUAGym, Lite.CUAWorld.
 
 ▪️ Data: unified and open
 10+ SFT datasets, plus the latest rollouts (interaction trajectories) from frontier CUAs, all in one format and free on Hugging Face.
@@ -107,7 +107,7 @@ UC Berkeley · Microsoft
 ## 系列规划
 
 - **01（本篇）** 总览：核心 = 首页 hero 三条（沙盒 / 数据 / 框架），正面框架。
-- **02** 沙盒专篇：reflect `blog/kvm-free-osworld`——VM-free 跑 OSWorld，4.1→0.9 GB、约多跑 4.6×、13 模型分数对齐等真实数字都放这篇。本篇结尾已埋钩子引流到它。
+- **02** 沙盒专篇：reflect `blog/kvm-free-osworld`——VM-free 跑 OSWorld，4.1→0.9 GB、约多跑 5×、13 模型分数对齐等真实数字都放这篇。本篇结尾已埋钩子引流到它。
 
 ## 来源（和站点保持一致，改站点也要改这里）
 
@@ -120,7 +120,7 @@ UC Berkeley · Microsoft
 | eval / SFT / RL 任何 agent，桌面/浏览器/移动端 | 首页 hero 第 3 条，逐句 |
 | 免虚拟机 / 并行 / **同一沙盒**训练与评测两用（**不是同一任务** —— 拿 benchmark 任务去训练会污染测试集）；转换一次任何 agent 都能训 | `blog/why-cua-lite` 对应三段的 bold lead |
 | 15+ benchmark 接入（正文只说「已接入 15+ 个 benchmark」，不再提榜单；实际 11 个有公开榜单） | coverage board · `assets/exps/eval/manifest.json` 非 pending 项 |
-| CUAGym / CUAWorld = **我们的** Lite.CUAGym / Lite.CUAWorld（外部 OSWorld 我们复现，Lite.* 是自建） | 首页 + blog belt-tab（`index.html:214-215`），与 red/02 封面命名一致 |
+| CUA-Gym（xlang-ai）/ CUAWorld（CMU gym-anything, MIT）是**外部项目**；`Lite.*` 是我们的迁移 —— 我们的是 VM-free 运行时与集成，不是任务和评测器 | 首页 + blog belt-tab（`index.html:214-215`），与 red/02 封面命名一致 |
 | **跨模型 SFT**：轨迹统一格式 → 目标模型的适配器渲染成其推理格式 → 可用 A 模型的轨迹训 B 模型 | 代码库三处实据：`lite/core/samples.py` 的统一容器 `LiteSample`；`lite/agents/core/adapter/base.py` docstring「adapters are the boundary between canonical Lite trajectories and a model family's **wire format**」；`lite/train/export/export_sft.py:3` 导出时执行 `adapter.unroll(sample)`。`lite/agents/models/` 下有 14 个模型家族的适配器 |
 | 例子「用 GPT-5.5 的轨迹训练 Qwen3-VL」 | 代码库 README：「roll out any teacher (e.g. GPT-5.5) … and distill into any student」+ SFT 示例正是 Qwen3-VL-2B on Lite.ScaleCUA |
 | RL「支持 GRPO、GSPO 等算法（基于 Slime）」 | 代码库有独立脚本 `scripts/train/run_grpo.sh` 与 `run_gspo.sh`（各带测试），README「GRPO and beyond on top of Slime」 |

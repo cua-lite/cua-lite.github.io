@@ -1,0 +1,31 @@
+{
+ "post 1": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
+  "fold? cuts mid-token (advisory): … reproduces OS|World's de…"
+ ],
+ "post 2": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
+  "R6 'desktop' twice inside the fold",
+  "fold? cuts mid-token (advisory): …e underneath i|t, and not…"
+ ],
+ "post 3": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
+  "ORPHAN-SAME 'the same machine' — 'machine' is never named earlier in this post",
+  "R6 'memory' twice inside the fold",
+  "R6 'quarter' twice inside the fold",
+  "R6 'under' twice inside the fold"
+ ],
+ "post 4": [],
+ "post 5": [
+  "fold? cuts mid-token (advisory): …rld — OSWorld'|s 369 benc…"
+ ],
+ "post 6": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
+  "R2? the CTA post's links fall below the fold (advisory — completeness outranks the character budget)",
+  "R6 'sandboxes' twice inside the fold",
+  "fold? cuts mid-token (advisory): …s both benchma|rking and …"
+ ],
+ "notes": [
+  "STALE-NOTE **Bold** cites text in no post: 'a family of CUA-Lite sandboxes carrying 30k+ verifiable tasks'"
+ ]
+}

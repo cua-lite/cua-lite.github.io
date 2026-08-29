@@ -1,0 +1,45 @@
+{
+ "post 1": [
+  "R6 'computer-use' twice inside the fold",
+  "R6 'three' twice inside the fold",
+  "fold? cuts mid-token (advisory): …ee: 30k+ verif|iable task…"
+ ],
+ "post 2": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
+  "fold? cuts mid-token (advisory): …her\n· No frame|work stand…"
+ ],
+ "post 3": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
+  "R6 'tasks' twice inside the fold",
+  "R6 'vm-free' twice inside the fold"
+ ],
+ "post 4": [
+  "fold? cuts mid-token (advisory): …t and PyMOL tu|rning prot…"
+ ],
+ "post 5": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
+  "R6 'agent' twice inside the fold",
+  "R6 'every' twice inside the fold"
+ ],
+ "post 6": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
+  "R6 'agent' twice inside the fold",
+  "fold? cuts mid-token (advisory): …llouts.\n\nThe r|ollouts li…"
+ ],
+ "post 7": [
+  "fold? cuts mid-token (advisory): …, Online-Mind2|Web, MiniW…"
+ ],
+ "post 8": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead"
+ ],
+ "post 9": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead"
+ ],
+ "post 10": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
+  "fold? cuts mid-token (advisory): …b (@StepFun_ai|), UI-TARS…"
+ ],
+ "thread": [
+  "R6 posts [1, 9] share a sentence (same content words): 'agents becomes bring community datasets driven ecosystem env'"
+ ]
+}
