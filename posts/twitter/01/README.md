@@ -206,7 +206,7 @@ still finds them in the second tweet rather than the ninth.
 ```
 [3/10] Computer-use agent resources are fragmented — CUA-Lite is built to close three gaps:
 
-· Sandboxes are heavy and unstandardized — a VM per task, each with its own interface and action space
+· Sandboxes are heavy and unstandardized — a full VM per task, each with its own interface and action space
 · Every dataset has its own schema, so one agent's data can't train another
 · No framework standardizes eval, SFT or RL, so every project rebuilds the same tooling — agent loops, sandboxes setup, eval scripts and training infra
 ```
@@ -308,7 +308,7 @@ lite.gym is CUA-Lite's one agent–environment interface, so any agent can run i
 The rollouts lite.gym produces are reused three ways:
 · Eval — scored by the benchmark's own evaluators, unchanged
 · SFT — rendered by each model's adapter into that model's own training format
-· RL — scored by the task's own verifiable reward, and those scores drive the GRPO updates
+· RL — scored by the task's own verifiable reward, and those scores drive the RL updates
 ```
 
 **Bold** `any agent can run in any environment` · `You bring the agent`
