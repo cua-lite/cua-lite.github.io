@@ -1,6 +1,6 @@
 # cua-lite.github.io
 
-Landing page for **[CUA-Lite](https://github.com/cua-lite/cua-lite)** — *Simple Computer Use Agents*.
+Landing page for **[CUA-Lite](https://github.com/cua-lite/cua-lite)** — *An Open Platform for Computer-Use Agents*.
 Live at **https://cua-lite.github.io/**.
 
 Design thesis: **an agent looks at a screen and acts on it.** The hero signature is a synthetic

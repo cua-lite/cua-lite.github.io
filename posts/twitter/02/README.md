@@ -143,7 +143,7 @@ Code: github.com/cua-lite/cua-lite
 
 CUA-Lite's Lite.OSWorld keeps OSWorld's desktop and drops the VM — LibreOffice, Chrome, GIMP, VLC, VS Code, real files and windows, on a GNOME desktop in a plain Docker container. We replaced the virtual machine underneath it, and nothing above it.
 
-The VM was the tax. OSWorld's faithful desktop is a full virtual machine per task — over 4 GB of memory, and it needs /dev/kvm and nested virtualization, which cloud instances, CI runners and nested containers rarely provide, so it doesn't scale.
+The VM was the tax. OSWorld's faithful desktop is a full virtual machine per task — over 4 GB of memory, and it needs /dev/kvm and nested virtualization, which cloud instances, CI runners, and nested containers rarely provide, so it doesn't scale.
 ```
 
 **Bold** `keeps OSWorld's desktop and drops the VM` · `over 4 GB of memory` · `so it doesn't scale`
@@ -214,7 +214,7 @@ The VM-free container isn't just for OSWorld — it's a base for a family of sca
 Every task carries a verifiable reward, so the same sandbox that scores an agent can train one — SFT on its rollouts, or RL straight off the reward.
 ```
 
-**Bold** `a family of CUA-Lite sandboxes carrying 30k+ verifiable tasks`
+**Bold** `a family of scalable CUA-Lite sandboxes carrying 30k+ verifiable tasks`
 
 **Media** `assets/05-sandbox-family.mp4` — **blog 2's own `figure.belt-fig`**, not thread 01's belt. 01's clip comes from the other blog and shows different tiles; this one carries the four sandbox tabs and their per-sandbox gloss line, which is exactly what this post's copy lists.
 
@@ -224,10 +224,10 @@ Every task carries a verifiable reward, so the same sandbox that scores an agent
 
 **Why here** The payload, and it now names what the family contains instead of four bare proper nouns. Four unfamiliar `Lite.*` names with one shared gloss told a reader nothing; the glosses are what make the family real.
 
-### [6/6] CUA-Lite: the open-source platform to benchmark and train computer-use agents
+### [6/6] CUA-Lite: the open platform for computer-use agents
 
 ```
-[6/6] CUA-Lite: the open-source platform to benchmark and train computer-use agents
+[6/6] CUA-Lite: the open platform for computer-use agents
 
 Open sandboxes, open data, open infrastructure. The sandboxes share one interface, so one agent runs on all of them, and every task carries a verifiable reward, so each sandbox serves both benchmarking and training.
 
@@ -243,11 +243,11 @@ cua-lite.github.io
 
 **Media** `assets/06-card.png`
 
-**Alt** The CUA-Lite title card: "Any agent, on any computer", with the project's name and site.
+**Alt** The CUA-Lite title card: "An open platform for computer-use agents", with the project's name and site.
 
-**Source** Heading and `Try it, or bring your own sandboxes.` are `blog/kvm-free-osworld`'s own last line, verbatim. The two body sentences are `blog/why-cua-lite`'s Sandboxes section (`each sandbox serves both training and benchmarking`) and its call for contributors (`Add yours, and every agent trains and benchmarks on it — now and later`), both already approved in thread 01's post [9/9].
+**Source** `Try it, or bring your own sandboxes.` is `blog/kvm-free-osworld`'s own last line. (The heading is not — it is the author's own line; and the blog's closing sentence has since become `Computer-use agents, without the heavy VM.`, so only the ask survives verbatim.) The two body sentences are `blog/why-cua-lite`'s Sandboxes section (`each sandbox serves both training and benchmarking`) and its call for contributors (`Add yours, and every agent trains and benchmarks on it — now and later`), both already approved in thread 01's post [9/9].
 
-**Why here** The last post is the last thing a reader sees, so it names the project and says what it is, rather than repeating a slogan the attached card already displays in its own headline. The blog's closing line survives as the ask, `Try it, or bring your own sandboxes`. §2 gets two posts, not one — the blog's conclusion is short but it is the conclusion. Post 5 says what the family is; this says what it is for, and carries the ask. The blog's closing line had been used nowhere in either thread.
+**Why here** The last post is the last thing a reader sees, so it names the project — in the project's own line, the one the `<title>`, the og card, the citation block and thread 01's post 1 all carry. It used to read `the open-source platform to benchmark and train computer-use agents`; that was a second formulation of the same claim, and the body already says `each sandbox serves both benchmarking and training`, so the heading was spending the most-read line restating the body. The heading now states the claim and the body cashes it: **open** platform → **open** sandboxes, **open** data, **open** infrastructure. The blog's closing line survives as the ask, `Try it, or bring your own sandboxes`. §2 gets two posts, not one — the blog's conclusion is short but it is the conclusion. Post 5 says what the family is; this says what it is for, and carries the ask. The blog's closing line had been used nowhere in either thread.
 
 ---
 

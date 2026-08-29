@@ -16,9 +16,17 @@ Requirements: `ffmpeg` on PATH, plus this repo's dev deps (playwright, pillow).
 
     uv run python scripts/make_demo_gif.py                # defaults
     uv run python scripts/make_demo_gif.py --zoom 2.2     # bigger / crisper (larger files)
+Playwright's launch() cannot start Chromium on this host (SIGTRAP, no stderr — see
+posts/twitter/01/make_assets.py for the bisection). Start Chrome yourself and set CUA_LITE_CDP:
+
+    ~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome --headless --no-sandbox \
+      --disable-gpu --remote-debugging-port=9411 --user-data-dir=/tmp/pw &
+    CUA_LITE_CDP=http://127.0.0.1:9411 uv run python scripts/make_demo_gif.py
+
 """
 from __future__ import annotations
 
+import os
 import argparse
 import base64
 import bisect
@@ -47,6 +55,24 @@ BASE_CSS = (
 )
 
 
+def _wait_for_server(port: int, timeout: float = 15.0) -> None:
+    """Poll until the local server answers. A fixed sleep(1.0) is a race: it fails
+    intermittently on a loaded host with ERR_CONNECTION_REFUSED at the first goto,
+    which reads like a Playwright bug rather than a slow server."""
+    import urllib.error
+    import urllib.request
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            urllib.request.urlopen(f"http://localhost:{port}/", timeout=0.5)
+            return
+        except urllib.error.HTTPError:
+            return                      # answered (any status) = listening
+        except Exception:
+            time.sleep(0.15)
+    raise RuntimeError(f"local server on :{port} never came up within {timeout:.0f}s")
+
+
 def _run(cmd: list[str]) -> None:
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
@@ -64,7 +90,9 @@ def screencast(url: str, vw: int, vh: int, css: str, settle_ms: int, seconds: fl
     """
     meta: list[tuple[float, Path]] = []
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        cdp = os.environ.get("CUA_LITE_CDP")
+        browser = (p.chromium.connect_over_cdp(cdp) if cdp
+                 else p.chromium.launch())
         page = browser.new_page(viewport={"width": vw, "height": vh}, device_scale_factor=1)
         page.goto(url)
         page.add_style_tag(content=css)
@@ -172,7 +200,7 @@ def main() -> None:
     srv = subprocess.Popen(["python3", "-m", "http.server", str(a.port)], cwd=ROOT,
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
-        time.sleep(1.0)
+        _wait_for_server(a.port)
         url = f"http://localhost:{a.port}/index.html"
 
         # 1 & 2 — stacked layout: device-only (crop the stage) + device+trace (crop hero-demo).

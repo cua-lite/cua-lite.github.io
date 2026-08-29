@@ -115,7 +115,7 @@ Disclosure: I'm one of the authors. Happy to answer questions about the port, th
 
 ## 发布前检查
 
-- **parity 一律定性**（"within a few points"，与博客 `:271` 原话一致）。**精确聚合值不进正文** —— 它们在站点和博客上都查不到，读者点进去会对不上；要给就先补进博客的图注。
+- **parity 一律定性**（"within a few points"）。**注意：博客已于 2026-08-28 删掉这个限定语**，现行原话是 `the same result as the OSWorld VM, across 13 models`；Reddit 这一版**故意不跟进**，理由见下一条。**精确聚合值不进正文** —— 它们在站点和博客上都查不到，读者点进去会对不上；要给就先补进博客的图注。
 - **`Lite.OSWorld` 每次出现都要读得出是我们的**：正文首次出现写 `Lite.OSWorld, our port,`；标题用 `we dropped the VM from OSWorld`。别让它被当成 OSWorld 官方的精简版。
 - **`~5×` 只在正文出现且必须保留 `about`**。删掉 "What we'd flag" 之后，`about 5× more instances` 里那个 `about` 是**唯一**的 hedge 了 —— 它是 `../../README.md` 风险条目里标着「按博客 authoring 注释尚未实测」的三项之一。不进标题、不做主视觉（`02-footprint.png` 就是因此没进 `assets/`）。
 - **不要把分数结论写死**：`track … within a few points` 不能改成 `identical` / `the same` / `it doesn't change`。删掉自曝短板之后这句同样是唯一的 hedge。

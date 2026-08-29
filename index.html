@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CUA-Lite — Computer-Use Agents Made Simple</title>
+<title>CUA-Lite — An Open Platform for Computer-Use Agents</title>
 <meta name="description" content="Scalable, efficient sandboxes with verifiable tasks · unified SFT data · unified eval, SFT &amp; RL pipeline — for any computer-use agent, at scale." />
 <!-- preload above-the-fold faces so the hero renders in-font (no swap flash) -->
 <link rel="preload" href="assets/fonts/Fraunces.woff2" as="font" type="font/woff2" crossorigin />
@@ -15,25 +15,31 @@
 <link rel="icon" type="image/png" href="assets/favicon.png?v=3" />
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=4" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="CUA-Lite — Computer-Use Agents Made Simple" />
+<meta property="og:title" content="CUA-Lite — An Open Platform for Computer-Use Agents" />
 <meta property="og:description" content="Scalable, efficient sandboxes with verifiable tasks · unified SFT data · unified eval, SFT &amp; RL pipeline — for any computer-use agent, at scale." />
 <meta property="og:url" content="https://cua-lite.github.io/" />
-<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=6" />
+<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=7" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="CUA-Lite — Computer-Use Agents Made Simple" />
+<meta name="twitter:title" content="CUA-Lite — An Open Platform for Computer-Use Agents" />
 <meta name="twitter:description" content="Scalable, efficient sandboxes with verifiable tasks · unified SFT data · unified eval, SFT &amp; RL pipeline — for any computer-use agent, at scale." />
-<meta name="twitter:image" content="https://cua-lite.github.io/assets/og.png?v=6" />
+<meta name="twitter:image" content="https://cua-lite.github.io/assets/og.png?v=7" />
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body id="top">
 <!-- NORTH STAR · homepage copy
-     The three pillars, in order: (01) Sandboxes — efficient, verifiable environments at scale;
+     FOUR pillars, in order (the eyebrows are 01–04; Eval and Train are separate sections,
+     not one combined "Eval / SFT / RL" pillar as an earlier version of this note claimed):
+     (01) Sandboxes — efficient, verifiable environments at scale;
      (02) Data — unified computer-use samples (screenshots + actions), open on the Hub;
-     (03) Eval / SFT / RL — one framework, any agent, any platform. Each section h2 is a
-     declarative claim with a single accent noun ("…, any X."); a lead says what a thing IS
-     before how it's packaged.
+     (03) Eval — any agent on any benchmark;
+     (04) Train — SFT & RL, any OPEN agent. The qualifier is load-bearing and enforced in code:
+     js/main.js filters the RL and SFT model lists with `AGENTS.filter(a => !a.api)` because
+     closed-weight models (gpt, claude) cannot be fine-tuned or reinforced. Eval takes any agent;
+     SFT and RL do not. Never write unqualified "SFT and RL any agent".
+     Each section h2 is a declarative claim with a single accent noun ("…, any X."); a lead says
+     what a thing IS before how it's packaged.
      PROSE HYGIENE (all paragraphs): no orphans — if a paragraph ends with a lone word or
      short unit dangling on its last line, TRIM the copy until it wraps clean. Fix it by
      cutting words, never with &nbsp; or text-wrap tricks (they only jag the right edge). -->
@@ -57,9 +63,7 @@
 <section class="hero">
   <div class="container hero-grid">
     <div class="hero-head">
-      <p class="eyebrow">Computer-use agents made simple</p>
-      <h1><em>Any agent, <span class="h1-hinge">on</span></em><br /><em>any computer.</em></h1>
-      <p class="lead">One open-source platform with everything a <span class="lc">computer-use</span> agent needs:</p>
+      <h1><em>An open platform <span class="h1-hinge">for</span> <span class="nb">computer-use</span> agents.</em></h1>
       <ul class="lead-claims">
         <li>
           <span class="claim-t"><b>Sandboxes</b> — efficient environments with <b class="nb">30k+ verifiable tasks</b> to train and benchmark CUAs <span class="nb">at scale</span>.</span>
@@ -136,15 +140,14 @@
               </div>
               <div class="gg-results" id="gg-results" aria-hidden="true">
                 <div class="gg-rbar"><span class="gg-rlogo" aria-hidden="true"><b>G</b><b>o</b><b>o</b><b>g</b><b>l</b><b>e</b></span><span class="gg-rq">cua-lite</span><span class="gg-rmag" aria-hidden="true">⌕</span></div>
-                <a class="gg-item" data-t="open"><span class="gg-url">cua-lite.github.io</span><span class="gg-title">CUA-Lite — Computer-Use Agents Made Simple</span><span class="gg-snip">One open platform of unified data — and one framework to eval, SFT, and RL any computer-use agent.</span></a>
-                <a class="gg-item"><span class="gg-url">github.com › cua-lite</span><span class="gg-title">cua-lite/cua-lite: any agent, on any computer</span><span class="gg-snip">Unified action space and data format — OSWorld, WebArena, AndroidWorld and more.</span></a>
+                <a class="gg-item" data-t="open"><span class="gg-url">cua-lite.github.io</span><span class="gg-title">CUA-Lite — An Open Platform for <span class="nb">Computer-Use Agents</span></span><span class="gg-snip">Efficient sandboxes with 30k+ verifiable tasks, 10+ unified SFT datasets, and one framework to eval, SFT, and RL any agent.</span></a>
+                <a class="gg-item"><span class="gg-url">github.com › cua-lite</span><span class="gg-title">cua-lite/cua-lite: an open platform for <span class="nb">computer-use agents</span></span><span class="gg-snip">Unified action space and data format — OSWorld, WebArena, AndroidWorld and more.</span></a>
                 <a class="gg-item"><span class="gg-url">huggingface.co › cua-lite</span><span class="gg-title">CUA-Lite rollout datasets</span><span class="gg-snip">Unified corpora and GPT-5.5 rollouts, free to download.</span></a>
               </div>
               <div class="gg-site" id="gg-site" aria-hidden="true">
                 <div class="gs-nav"><span class="gs-brand"><span class="gs-plane" aria-hidden="true"></span>CUA-Lite</span><span class="gs-links" aria-hidden="true"><i></i><i></i><i></i></span></div>
                 <div class="gs-hero">
-                  <div class="gs-eyebrow">Computer-use agents made simple</div>
-                  <div class="gs-h1">Any agent, on <em>any computer.</em></div>
+                  <div class="gs-h1">An open platform for <em class="nb">computer-use agents.</em></div>
                   <div class="gs-cta"><a class="gs-btn" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">Star on GitHub</a><a class="gs-btn2" href="#sandboxes">Get started</a></div>
                 </div>
               </div>
@@ -327,7 +330,7 @@
   <div class="container">
     <p class="eyebrow">04 · Train</p>
     <h2>SFT &amp; RL, <em>any open agent.</em></h2>
-    <p class="section-lead">SFT on the corpora, then reinforce in the envs — GRPO and beyond, on
+    <p class="section-lead">SFT on the corpora, then reinforce in the envs — GRPO, GSPO and beyond, on
       <a href="https://github.com/THUDM/slime" target="_blank" rel="noopener">Slime</a>.<br />
       Train any <span class="lead-tok">open agent</span> on any <span class="lead-tok">data</span> and any <span class="lead-tok">env</span>:</p>
     <div class="train-tabs" role="tablist">
@@ -368,7 +371,7 @@
 <!-- ================= CLOSING CTA ================= -->
 <section class="section closing">
   <div class="container">
-    <p class="closing-line"><em>Any agent</em>, <em class="h1-hinge">on</em> <em>any computer.</em></p>
+    <p class="closing-line"><em>An open platform</em> <em class="h1-hinge">for</em> <em class="nb">computer-use agents.</em></p>
     <div class="cta-row center">
       <a class="btn-solid" href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Datasets</a>
       <a class="btn-ghost" href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a>
@@ -382,7 +385,7 @@
   <div class="container">
     <div class="cite-line">
       <span class="cite-eyebrow">Cite this work</span>
-      <p class="cite-title">CUA-Lite: Computer-Use Agents Made Simple</p>
+      <p class="cite-title">CUA-Lite: An Open Platform for <span class="nb">Computer-Use Agents</span></p>
       <p class="cite-authors"><a href="https://github.com/ZHZisZZ" target="_blank" rel="noopener">Zhanhui Zhou</a>, <a href="https://github.com/rowingchenn" target="_blank" rel="noopener">Weichen Zhang</a>, <a href="https://github.com/liu-hr22" target="_blank" rel="noopener">Haoran Liu</a>, <a href="https://lingjiechen2.github.io/" target="_blank" rel="noopener">Lingjie Chen</a>, <a href="https://tnshi.com/" target="_blank" rel="noopener">Tianneng Shi</a>,<br><a href="https://sites.google.com/site/kevinlin311tw/" target="_blank" rel="noopener">Kevin Lin</a>, <a href="https://zyang-ur.github.io/" target="_blank" rel="noopener">Zhengyuan Yang</a>, <a href="https://www.microsoft.com/en-us/research/people/lijuanw/" target="_blank" rel="noopener">Lijuan Wang</a>, and <a href="https://people.eecs.berkeley.edu/~dawnsong/" target="_blank" rel="noopener">Dawn Song</a></p>
       <p class="cite-meta">2026 · <a href="https://github.com/cua-lite/cua-lite#citation" target="_blank" rel="noopener">BibTeX&nbsp;↗</a></p>
     </div>
@@ -395,7 +398,7 @@
    <div class="footer-inner">
     <div class="foot-brand">
       <a class="brand" href="#top"><span class="brand-plane"></span><span class="brand-name">CUA-Lite</span></a>
-      <p class="foot-tag">Computer-Use Agents Made Simple.</p>
+      <p class="foot-tag">An open platform for <span class="nb">computer-use agents.</span></p>
       <div class="foot-affil">
         <span class="foot-affil-label">Presented by</span>
         <a href="https://www.berkeley.edu/" target="_blank" rel="noopener" aria-label="UC Berkeley"><img class="foot-logo foot-logo-berkeley" src="assets/logos/berkeley.svg" alt="UC Berkeley" /></a>
@@ -410,7 +413,7 @@
     </div>
    </div>
    <div class="footer-bottom">
-     <span class="foot-copy">© 2026 CUA-Lite — any data, any agent, any computer.</span>
+     <span class="foot-copy">© 2026 CUA-Lite — open sandboxes, data and infra.</span>
      <a class="foot-top" href="#top">Back to top ↑</a>
    </div>
   </div>

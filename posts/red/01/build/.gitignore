@@ -1,0 +1,6 @@
+# Render/measure probes written here by capture.py / capture_sections.py / make_cover.py.
+# They are scratch, never published. This rule used to live in the repo-root .gitignore as
+# `posts/*/build/_*.png` — one level too shallow to match `posts/red/NN/build/`, so it caught
+# nothing and 12 probe PNGs reached HEAD. Keeping it beside the directory removes the depth
+# from the pattern entirely.
+_*.png

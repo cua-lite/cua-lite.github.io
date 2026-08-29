@@ -8,9 +8,17 @@ the homepage hero. Two variants:
 
     uv run python posts/red/01/capture.py     # (re)make the device cutouts first
     uv run python posts/red/01/make_cover.py
+
+Playwright's launch() cannot start Chromium on this host (SIGTRAP, no stderr — see
+posts/twitter/01/make_assets.py for the bisection). Start Chrome yourself and set CUA_LITE_CDP:
+
+    ~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome --headless --no-sandbox \
+      --disable-gpu --remote-debugging-port=9411 --user-data-dir=/tmp/pw &
+    CUA_LITE_CDP=http://127.0.0.1:9411 uv run python posts/red/01/make_cover.py
 """
 from __future__ import annotations
 
+import os
 import subprocess
 import time
 from pathlib import Path
@@ -35,9 +43,14 @@ body{width:1080px;overflow:hidden;color:var(--text);font-family:'Urbanist',sans-
 .brand{display:flex;align-items:center;gap:17px;}
 .brand .plane{width:46px;height:46px;background:url('/assets/logo.svg') center/contain no-repeat;}
 .brand .name{font-weight:700;font-size:38px;letter-spacing:-0.01em;}
+/* 120px, not the 126px the retired slogan used: the widest line is now
+   "computer-use agents." — 901px at 126px against 912px available, i.e. 11px of
+   slack, the same fragility the .foot .stats note below rejects. 120px measures
+   858px (54px slack) and is visually indistinguishable. Never let the compound
+   "computer-use" wrap: that break is what the hinge on "for" exists to prevent. */
 h1{font-family:'Fraunces';font-style:italic;color:var(--accent);
   font-variation-settings:'opsz' 144,'wght' 400,'SOFT' 0,'WONK' 0;
-  font-size:126px;line-height:0.98;letter-spacing:-0.025em;}
+  font-size:120px;line-height:0.98;letter-spacing:-0.025em;}
 h1 .hinge{color:var(--muted);}
 .lead{margin-top:48px;font-size:34px;line-height:1.32;color:var(--muted);font-weight:500;white-space:nowrap;}  /* same size as the bullets; must stay one line */
 .lead .lc{color:var(--accent);font-weight:600;}
@@ -90,12 +103,15 @@ h1 .en{font-family:'Fraunces';font-style:italic;font-weight:400;letter-spacing:-
 """
 
 BRAND = '<div class="brand"><span class="plane"></span><span class="name">CUA-Lite</span></div>'
-H1 = '<h1>Any agent, <span class="hinge">on</span><br>any computer.</h1>'
-H1B = '<h1 style="margin-top:56px">Any agent, <span class="hinge">on</span><br>any computer.</h1>'  # brand→headline breathing room in the tall variant
-# Lead that introduces the bullets (homepage hero pattern) — names the computer-use agent once so
-# all three bullets inherit the CUA context; bullet 3 then drops "computer-use" and just says "agent".
-LEAD = '<p class="lead">One open-source platform for <span class="lc">computer-use</span> agents:</p>'
-LEAD_ZH = '<p class="lead">一个开源平台，提供 <span class="lc">computer-use</span> agent 所需的一切：</p>'
+H1 = '<h1>An open platform <span class="hinge">for</span><br>computer-use agents.</h1>'
+H1B = '<h1 style="margin-top:56px">An open platform <span class="hinge">for</span><br>computer-use agents.</h1>'  # brand→headline breathing room in the tall variant
+# The English lead is GONE. It used to read "One open-source platform for computer-use agents:",
+# which the headline now says verbatim — the homepage dropped its own subtitle for the same reason.
+# The headline still names the computer-use agent once, so bullet 3 can keep saying just "agent".
+# The Chinese lead STAYS: the headline is English on both covers (that is the bilingual design —
+# brand face intact, body localized), so on the ZH cover this line is the only Chinese statement
+# of what CUA-Lite is. It now glosses the new headline rather than the retired subtitle.
+LEAD_ZH = '<p class="lead">一个面向 <span class="lc">computer-use</span> agent 的开源平台：</p>'
 # Each bullet leads with its pillar noun (homepage pattern: Sandboxes / Data / Framework) so the
 # three read as parallel pillars and no two start with the same word.
 _C12 = """  <p class="claim"><b>Sandboxes</b> — efficient, <b class="lc">30k+</b> verifiable CUA tasks</p>
@@ -106,6 +122,9 @@ _C12 = """  <p class="claim"><b>Sandboxes</b> — efficient, <b class="lc">30k+<
 # keeping "across" instead of "on" overflows, and the colon form fits by only 1px, too fragile).
 CLAIMS = f'<div class="claims">\n{_C12}\n  <p class="claim"><b>Framework</b> — eval, SFT, RL on <b class="lc">desktop, browser, mobile</b></p>\n</div>'
 CLAIMS_A = CLAIMS_B = CLAIMS
+# no-lead variant for the English covers: .claims sits 34px under the lead, which was itself 48px
+# under the headline. With the lead gone the bullets need that 48px back, or they crowd the h1.
+CLAIMS_A_NL = CLAIMS_B_NL = CLAIMS.replace('<div class="claims">', '<div class="claims" style="margin-top:76px">')
 DEVICES = f"""<div class="devices">
   <div class="devcol"><img class="d-desktop" src="{DEV}/dev-desktop.png" alt=""><span class="dev-lab">desktop</span></div>
   <div class="devcol"><img class="d-browser" src="{DEV}/dev-browser.png" alt=""><span class="dev-lab">browser</span></div>
@@ -117,14 +136,15 @@ FOOT = """<div class="foot">
 </div>"""
 
 # 01a — compact: text (+ a platform line) centred in a short canvas.
-BODY_A = f'{BRAND}<div class="mid">{H1}{LEAD}{CLAIMS_A}</div>{FOOT}'
+BODY_A = f'{BRAND}<div class="mid">{H1}{CLAIMS_A_NL}</div>{FOOT}'
 # 01b — tall: text up top, hero devices labelled by platform along the bottom.
-BODY_B = f'{BRAND}{H1B}{LEAD}{CLAIMS_B}<div class="grow"></div>{DEVICES}<div class="grow"></div>{FOOT}'
+BODY_B = f'{BRAND}{H1B}{CLAIMS_B_NL}<div class="grow"></div>{DEVICES}<div class="grow"></div>{FOOT}'
 
 # --- Chinese siblings (English Fraunces headline + localized body) ---
-# Full-Chinese headline alternative (used only with _ZH_SERIF_CSS above): slogan「任何 agent，任何电脑。」
-H1_ZH = '<h1>任何 <span class="en">agent</span>，<br>任何电脑。</h1>'
-H1B_ZH = '<h1 style="margin-top:56px">任何 <span class="en">agent</span>，<br>任何电脑。</h1>'
+# Full-Chinese headline alternative (used only with _ZH_SERIF_CSS above). Not currently rendered,
+# so its width at 120px is UNVERIFIED — measure before switching it on.
+H1_ZH = '<h1>面向 <span class="en">computer-use agent</span><br>的开源平台。</h1>'
+H1B_ZH = '<h1 style="margin-top:56px">面向 <span class="en">computer-use agent</span><br>的开源平台。</h1>'
 _C12_ZH = """  <p class="claim"><b>沙盒</b>：高效、可扩展，内置 <b class="lc">30k+</b> 个可验证 CUA 任务</p>
   <p class="claim"><b>数据</b>：10+ 个 SFT 数据集、前沿 CUA rollout</p>"""
 CLAIMS_ZH = f'<div class="claims">\n{_C12_ZH}\n  <p class="claim"><b>框架</b>：评测、SFT、RL，覆盖 <b class="lc">桌面、浏览器与移动端</b></p>\n</div>'
@@ -150,14 +170,33 @@ VARIANTS = [
 ]
 
 
+def _wait_for_server(port: int, timeout: float = 15.0) -> None:
+    """Poll until the local server answers. A fixed sleep(1.0) is a race: it fails
+    intermittently on a loaded host with ERR_CONNECTION_REFUSED at the first goto,
+    which reads like a Playwright bug rather than a slow server."""
+    import urllib.error
+    import urllib.request
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            urllib.request.urlopen(f"http://localhost:{port}/", timeout=0.5)
+            return
+        except urllib.error.HTTPError:
+            return                      # answered (any status) = listening
+        except Exception:
+            time.sleep(0.15)
+    raise RuntimeError(f"local server on :{port} never came up within {timeout:.0f}s")
+
+
 def main() -> None:
     tmp = ROOT / "_red_cover_tmp.html"
     srv = subprocess.Popen(["python3", "-m", "http.server", str(PORT), "--directory", str(ROOT)],
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
-        time.sleep(1.0)
+        _wait_for_server(PORT)
         with sync_playwright() as p:
-            b = p.chromium.launch()
+            cdp = os.environ.get("CUA_LITE_CDP")
+            b = p.chromium.connect_over_cdp(cdp) if cdp else p.chromium.launch()
             for name, height, body, head in VARIANTS:
                 tmp.write_text(head.replace("%HEIGHT%", str(height)) + body + "</body></html>")
                 pg = b.new_page(viewport={"width": 1080, "height": height}, device_scale_factor=2)

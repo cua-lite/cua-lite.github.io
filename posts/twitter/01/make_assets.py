@@ -213,8 +213,22 @@ def still_span(ctx, out: str, url: str, selectors: list[str], *, wait: int = 180
     b = el.bounding_box()
     pad = 14
     raw = TMP / ("raw_" + out)
-    page.screenshot(path=str(raw), clip={"x": max(0, b["x"] - pad), "y": max(0, b["y"] - pad),
-                                         "width": b["width"] + 2 * pad, "height": b["height"] + 2 * pad})
+    # full_page is not optional: a clip that reaches past the viewport bottom is SILENTLY cut
+    # without it. 08a-sft's union runs to y=1362 in a 1200px viewport — 176px of the command
+    # block were missing from every capture, and the shipped PNG ends flush at the frame edge
+    # with no window border. (A note in this thread's README blamed `.term { overflow: hidden }`;
+    # measured, the live element is overflow:visible with clientHeight == scrollHeight.)
+    # full_page is not optional: a clip reaching past the viewport bottom is SILENTLY cut without
+    # it. 08a-sft's union runs to y=1362 in a 1200px viewport — 176px of the command block were
+    # missing from every capture. (This thread's README blamed `.term { overflow: hidden }`;
+    # measured, that element is overflow:visible with clientHeight == scrollHeight.)
+    # bounding_box() is viewport-relative but a full_page clip is DOCUMENT-relative, so the
+    # scroll offset has to be added back — without it the clip lands on a different section
+    # entirely, which is a louder failure than the one being fixed but a failure all the same.
+    sy = page.evaluate("window.scrollY")
+    page.screenshot(path=str(raw), full_page=True,
+                    clip={"x": max(0, b["x"] - pad), "y": max(0, b["y"] + sy - pad),
+                          "width": b["width"] + 2 * pad, "height": b["height"] + 2 * pad})
     page.close()
     img = Image.open(raw)
     cw, ch = frame_box(img.width, img.height, min_ar)

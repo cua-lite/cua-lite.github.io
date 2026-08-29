@@ -6,9 +6,17 @@ on-device, so we do NOT pre-round it — that avoids the white-corner / double-r
 artifacts of a baked-in radius. PLANE_PCT sets how much of the tile the plane fills.
 
     uv run python scripts/make_apple_icon.py
+Playwright's launch() cannot start Chromium on this host (SIGTRAP, no stderr — see
+posts/twitter/01/make_assets.py for the bisection). Start Chrome yourself and set CUA_LITE_CDP:
+
+    ~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome --headless --no-sandbox \
+      --disable-gpu --remote-debugging-port=9411 --user-data-dir=/tmp/pw &
+    CUA_LITE_CDP=http://127.0.0.1:9411 uv run python scripts/make_apple_icon.py
+
 """
 from __future__ import annotations
 
+import os
 import io
 from pathlib import Path
 
@@ -37,7 +45,9 @@ def main() -> None:
         f'<div class="t">{PLANE.format(w=PLANE_SVG_PX)}</div>'
     )
     with sync_playwright() as p:
-        b = p.chromium.launch()
+        cdp = os.environ.get("CUA_LITE_CDP")
+        b = (p.chromium.connect_over_cdp(cdp) if cdp
+           else p.chromium.launch())
         pg = b.new_page(viewport={"width": SIZE, "height": SIZE}, device_scale_factor=3)
         pg.set_content(html)
         pg.wait_for_timeout(120)

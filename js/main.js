@@ -1,5 +1,5 @@
 /* ============================================================
-   CUA-Lite — one agent, any computer.
+   CUA-Lite — an open platform for computer-use agents.
    The same agent operates three platforms, each its own device:
    desktop (a pixel CRT running LibreOffice Calc), browser (web pages in a browser),
    mobile (a phone). The lead words desktop/browser/mobile are the control;

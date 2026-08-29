@@ -1,0 +1,8 @@
+# Raw rollout data (~1.4 GB): per-turn screenshots, prompts and traces that
+# build-manifests.py reads to produce rollouts.json. The published page needs only
+# rollouts.json plus the trajectory.mp4 clips it references, so the source trees stay
+# local — regenerating the manifest requires them on disk.
+**/turn_*/
+**/*.parquet
+**/summary.json
+**/error.txt

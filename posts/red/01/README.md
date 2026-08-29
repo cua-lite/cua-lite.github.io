@@ -1,7 +1,7 @@
 # CUA-Lite — 小红书 01
 
 小红书系列第一篇。**定位：项目总览，核心就是首页 hero 的那三条**——
-「任何 agent，任何电脑 / computer-use agent 需要的一切」：① 沙盒与可验证任务、② 统一数据、③ 统一框架。
+「面向 computer-use agent 的开源平台」：① 沙盒与可验证任务、② 统一数据、③ 统一框架。
 正面框架，三条平铺，不由任何一块领跑。VM-free 只作为沙盒的一个属性一笔带过，具体数字留给 `red/02`（对应 `blog/kvm-free-osworld`）。
 
 **语言：** follow 站点（homepage + blog）的语气——朴素、准确、平行，不用网络口语、不堆 emoji、不造夸张利益点。措辞尽量沿用站点 battle-tested 的说法，每个数字都真实，来源见文末。小红书只借它的**结构**（短段落、清单、话题标签），不借它的口语腔。
@@ -11,12 +11,12 @@
 ## 标题（选一个；小红书标题上限约 20 字，字数已标注）
 
 1. ⭐ CUA-Lite：训练与评测 CUA 的开源平台　（22 字，略超；封面 lead 不带品牌名，故标题必须带 CUA-Lite）
-   　**用「平台」不用「生态」**：平台是现在**已经**成立的事实（沙盒+数据+框架），生态是结尾那句「希望长成社区驱动的开源 CUA 生态」的**愿景**；标题若已写「生态」，结尾的愿景就自相矛盾。与封面 lead「一个开源平台」也一致。
+   　**用「平台」不用「生态」**：平台是现在**已经**成立的事实（沙盒+数据+框架），生态是结尾那句「我们希望 CUA-Lite 最终成长为社区驱动的开源 CUA 生态」的**愿景**；标题若已写「生态」，结尾的愿景就自相矛盾。与封面 lead「一个开源平台」也一致。
 2. 训练与评测 CUA 的开源生态：沙盒 · 数据 · 框架　（21 字，点出三支柱）
 3. 训练与评测 CUA 的开源生态　（13 字，最稳，brand 由封面/正文承担）
-4. 任何 agent，任何电脑：CUA-Lite　（＝首页 slogan，配标题卡封面才直观）
+4. ~~任何 agent，任何电脑：CUA-Lite~~　（**作废**：首页 slogan 已换成 `An open platform for computer-use agents.`，其中文说法就是选项 1，不再是一个独立选项）
 
-> 「生态」是 aspirational 说法（正文结尾也点明是「希望长成社区驱动的开源生态」）；沙盒/数据/框架三支柱与核心贡献放正文首段，标题塞不下全部。
+> 「生态」是 aspirational 说法（正文结尾也点明是「我们希望 CUA-Lite 最终成长为社区驱动的开源 CUA 生态」）；沙盒/数据/框架三支柱与核心贡献放正文首段，标题塞不下全部。
 
 ---
 
@@ -89,8 +89,8 @@ UC Berkeley · Microsoft
 1. **封面（4 张：英文 + 中文各两版，同版式）**
    - `assets/01a-cover.png` / `assets/01a-cover-zh.png` — 紧凑版（1080×1240），纯文字。
    - `assets/01b-cover.png` / `assets/01b-cover-zh.png` — 竖版（1080×1440），文字上移，底部放 hero 的桌面/浏览器/移动端三设备（带完整边框、标平台名）。
-   - **定位 lead 引出三条 bullet**（与首页 hero 同步：`One open-source platform with everything a computer-use agent needs:` / 中文「一个开源平台，提供 computer-use agent 所需的一切：」）——先点名 CUA、给出「开源平台」定位，三条 bullet 才都落在 CUA 语境里；因此第三条 bullet 跟首页一样只说「any agent / 任何 agent」，不再重复 computer-use。封面 lead **不重复品牌名**（logo 已自证），首页/正文才带 CUA-Lite。
-   - **三条 bullet 以支柱名打头**（`Sandboxes / Data / Framework`＝`沙盒 / 数据 / 框架`，同首页），三条平行、无一重复起首词；`30k+ verifiable CUA tasks / 可验证 CUA 任务` 点明任务是给 CUA 的。排版硬约束：lead 与 bullet **同字号（34px）**、lead **必须单行**、平台清单不得从中间断开（现已缩短到单行，`.keep` 补丁已移除）。
+   - **英文封面不设 lead，标题直接引出三条 bullet**：标题 `An open platform for computer-use agents.` 已经点名 CUA 并给出「开源平台」定位，封面旧 lead「One open-source platform for computer-use agents:」成了原话重复。（首页那句副标题是**另一句**——「One open-source platform with everything a computer-use agent needs:」——两处出于同样的理由各自删掉，不要混引。）**中文封面保留 lead**「一个面向 computer-use agent 的开源平台：」：两版标题都是英文（品牌招牌脸），这句是整张封面唯一用中文说出 CUA-Lite 是什么的地方。封面 lead **不重复品牌名**（logo 已自证），首页/正文才带 CUA-Lite。
+   - **三条 bullet 以支柱名打头**（`Sandboxes / Data / Framework`＝`沙盒 / 数据 / 框架`，同首页），三条平行、无一重复起首词；`30k+ verifiable CUA tasks / 可验证 CUA 任务` 点明任务是给 CUA 的。排版硬约束：中文版 lead 与 bullet **同字号（34px）**、该 lead **必须单行**。（原先还有一条「平台清单不得从中间断开」——那条已经失效：`make_cover.py` 仍定义 `.plats` 样式，但没有任何 body 引用它，平台名现在只作为 Framework bullet 的行内文字出现。）
    - **中文版 = 英文 Fraunces 标题（品牌招牌脸）+ 中文正文**：保留品牌 slogan、避开「电脑/设备」取舍；正文/标签/页脚用**思源黑体（Noto Sans SC，对应 Urbanist）**。全中文标题（思源宋体 + Fraunces 斜体 `agent`）为可选项，见 `make_cover.py` 里 `_ZH_SERIF_CSS` / `H1_ZH` 注释。
 2. **`assets/02-sandboxes.png`** — 主页 01·Sandboxes **整段**：标题「Efficient sandboxes, any task.」+ 说明 + rollout belt（真实桌面 app：calc/files/impress/chrome/gimp/vlc…，两侧淡出）。
 3. **`assets/03-data.png`** — 主页 02·Data **整段**：标题「One schema, any dataset.」+ Corpora/Rollouts 双卡 + **真实 HF 数据表**（images/messages/metadata 列、直方图、样本行）。
@@ -113,8 +113,8 @@ UC Berkeley · Microsoft
 
 | 说法 | 来源 |
 |---|---|
-| 「任何 agent，任何电脑」slogan + 定位 lead「One open-source platform …」 | 首页 hero H1 + lead（`index.html`；封面、首页、`blog/why-cua-lite` 均已同步此 lead） |
-| **「开源」贯穿全篇**：标题「开源平台」→ 首段「是一个把三者集成在一起的开源平台」→ 结尾「希望长成社区驱动的开源 CUA 生态」 | 平台＝现状，生态＝愿景，前后不矛盾。首段必须用**判断句**（CUA-Lite **是**平台），写成「把三者统一在一个平台**上**」会读成 CUA-Lite 和平台是两个东西 |
+| **封面** lead「一个面向 computer-use agent 的开源平台：」 | 首页 hero H1 `An open platform for computer-use agents.` 的中译（`index.html`；og 卡片、封面、结尾 CTA、页脚、引用块与各 blog 页脚均已同步；首页原有的 eyebrow 与副标题已一并删除）。**注意：正文标题与开头用的是另一种说法**（「训练与评测 CUA 的开源平台」），这句只出现在封面图上——两者要不要统一见选项列表 |
+| **「开源」贯穿全篇**：标题「开源平台」→ 首段「是一个把三者集成在一起的开源平台」→ 结尾「我们希望 CUA-Lite 最终成长为社区驱动的开源 CUA 生态」 | 平台＝现状，生态＝愿景，前后不矛盾。首段必须用**判断句**（CUA-Lite **是**平台），写成「把三者统一在一个平台**上**」会读成 CUA-Lite 和平台是两个东西 |
 | 沙盒 — 高效环境 + 30k+ 可验证任务，大规模训练/评测 | 首页 hero 第 1 条，逐句 |
 | 数据 — 10+ SFT 数据集 + 前沿 CUA rollout，统一格式，HF 免费 | 首页 hero 第 2 条，逐句 |
 | eval / SFT / RL 任何 agent，桌面/浏览器/移动端 | 首页 hero 第 3 条，逐句 |
@@ -130,7 +130,7 @@ UC Berkeley · Microsoft
 - ✅ **GitHub 已公开**（2026-08-22 实测 `HTTP 200`、`gh api private=false`），正文那行 `github.com/cua-lite/cua-lite` 可以保留。此前的 404 阻塞已解除。
 - ✅ **`WindowsAgentArena` 已恢复**（2026-08-25 更正）：代码库 `README.md:102` 明确列有 `WindowsAgentArena` `waa`，**它是真实接入的**。此前我判它为 overclaim 并删除，是因为**只查了站点**而没查代码库 —— 站点覆盖板（16 条）比代码库那份清单短，是**站点滞后**。→ 建议顺手把它补进站点覆盖板，否则读者点进去对不上。
 - **术语统一用 `VM-free`（2026-08-25 全站改定，原为 `KVM-free`，38 处）**：容器本来就不是虚拟机，所以 VM-free 属实；读者对 VM 的熟悉度也远高于 KVM；博客正文本身就写「VM tax」「drops the VM」，原先用 KVM-free 反而和自己的正文打架。**注意 URL slug `/blog/kvm-free-osworld/` 保持不变**（已发布，改了会断链）。
-- 「分数相当」只绑定在 **Lite.OSWorld** 上（13 模型实测，平均差 ~2.7、最差 5.0，博客原文为 "within a few points"）；不要写成「复现的所有 benchmark 都分数对齐」。
+- 「分数相当」只绑定在 **Lite.OSWorld** 上（13 模型实测，平均差 ~2.7、最差 5.0；博客原文已改为 "the same result as the OSWorld VM, across 13 models"，原先的 "within a few points" 已删）；不要写成「复现的所有 benchmark 都分数对齐」。
 - VM-free 的具体数字**不在本篇**（留给 02），本篇只说「免虚拟机（VM-free）」到属性层面。
 - 数字若与站点不一致，以站点为准，同步改这里。
 - ✅ 原「15+ benchmark 都带公开榜单」的轻度 overclaim **已删除**：正文现在只说「已接入 15+ 个 benchmark」，不再声称都带榜单（实际 11 个有公开榜单，严谨且安全）。

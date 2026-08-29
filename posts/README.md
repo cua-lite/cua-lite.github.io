@@ -19,8 +19,8 @@
 | 转换语料数 | **10 个已转换 / 9 个已发布**（对外写 `10+`） | `lite/data/preproc/` 有 10 个目录（含未发布的 `jedi`）；代码库 `README.md:244` 的 Corpora 集合只列 9 个；`README.md:30` 对外写 `10+`。**两个数都有出处，所以正文用 `10+`、致谢不带数字** —— 别在致谢里赌一个精确数 |
 | 内存 | **under a quarter / 不足四分之一** | 实为 0.9/4.1 = 22% |
 | 并行 | **博客/正式文档写 `~4.6×`；推特正文写 `five times`** | 博客 `:264` 印的是 4.6×，由内存比推出（4.1/0.9），**不是第二次测量**。**取整只发生在推特正文里** —— 作者原话「文本就是说 5 倍」；博客的作者注要求 `Keep the exact values`，**不要反过来改博客**（01 上我犯过这个方向的错） |
-| 分数一致性 | **within a few points / 基本一致** | 博客 `:271` 原话 |
-| 精确 parity | mean\|Δ\|≈2.7 · worst 5.0 | **内部核对，任何平台的正文都不写** —— 对外一律用「within a few points / 基本一致」 |
+| 分数一致性 | **the same result as the OSWorld VM, across 13 models / 基本一致** | 博客 `blog/kvm-free-osworld:272` 现行原话。**2026-08-28 改口径**：博客原先写 `a score that tracks it within a few points`，作者要求删掉这个对宣传不利的限定语。**但 Reddit 保留 hedge** —— `reddit/02` 的笔记记着理由：跑复现的人最多的就是那儿，写死了会被当场打脸 |
+| 精确 parity | mean\|Δ\|≈2.7 · worst 5.0 | **内部核对，任何平台的正文都不写。**对外分两档：**站点 / 博客 / Twitter / 小红书**用 `the same result as the OSWorld VM, across 13 models` / 「基本一致」；**Reddit 保留 hedge** `track … within a few points` —— 那儿跑复现的人最多，写死了会被当场打脸（见 `reddit/02` 的笔记）|
 
 **「VM-free」的适用范围 —— 会被公开质疑的一条，务必看清：**
 

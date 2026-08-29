@@ -89,6 +89,35 @@ def sentences(paragraph: str) -> list[str]:
     return [s.strip() for s in re.split(r"(?<=[.!?])\s+", paragraph) if s.strip()]
 
 
+def stale_notes() -> list[str]:
+    """Notes that cite a sentence the copy no longer contains.
+
+    Ported from thread 02's checker, which had it and 01 did not — even though 01's own
+    README claimed the check existed for both. That gap shipped three wrong **Bold** fields
+    in this file: one dropped "verifiable"/"light-weight"/"SFT" and swapped "framework" for
+    "interface"; one dropped "exact"; one invented a "one" the post never had. They survive
+    because editing the copy and editing the note that cites it are two actions, and the
+    second gets skipped. A machine holds both.
+
+    Only **Bold** and **Why here** are checked — a **Source** field quotes the BLOG or another
+    thread by design, so its quotations are not expected to appear in our own copy.
+    """
+    thread = README.read_text()
+    thread = thread[thread.index("## The thread"):]
+    joined = "\n".join(posts())
+    out = []
+    for note, line in re.findall(r"\*\*(Bold|Why here)\*\*([^\n]+)", thread):
+        # a note may cite thread 02 or the blog as precedent — that copy is not ours
+        if "02" in line or "thread 2" in line.lower() or "blog/" in line:
+            continue
+        for ph in re.findall(r"`([^`]+)`", line):
+            if re.search(r"\.(md|py|html|json|js|ya?ml)(:\d+)?$", ph) or ph.startswith("assets/"):
+                continue                       # a path or a file:line, not a quotation
+            if len(ph) > 12 and ph not in joined:
+                out.append(f"STALE-NOTE **{note}** cites text in no post: {ph!r}")
+    return out
+
+
 def audit() -> dict[str, list[str]]:
     ps = posts()
     fails: dict[str, list[str]] = {}
@@ -209,6 +238,10 @@ def audit() -> dict[str, list[str]]:
         if len(set(where)) > 1:
             fails.setdefault("thread", []).append(
                 f"R6 posts {sorted(set(where))} share a sentence (same content words): {s_[:60]!r}")
+
+    notes = stale_notes()
+    if notes:
+        fails.setdefault("notes", []).extend(notes)
 
     return fails
 

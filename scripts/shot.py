@@ -5,6 +5,13 @@
 Examples:
     uv run python scripts/shot.py index.html /tmp/hero.png 1440 900 1500
     uv run python scripts/shot.py http://localhost:8080 /tmp/full.png 1440 900 2000 --full
+Playwright's launch() cannot start Chromium on this host (SIGTRAP, no stderr — see
+posts/twitter/01/make_assets.py for the bisection). Start Chrome yourself and set CUA_LITE_CDP:
+
+    ~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome --headless --no-sandbox \
+      --disable-gpu --remote-debugging-port=9411 --user-data-dir=/tmp/pw &
+    CUA_LITE_CDP=http://127.0.0.1:9411 uv run python scripts/shot.py
+
 """
 from __future__ import annotations
 
@@ -24,7 +31,9 @@ def main() -> None:
         url = "file://" + os.path.abspath(url)
 
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        cdp = os.environ.get("CUA_LITE_CDP")
+        browser = (p.chromium.connect_over_cdp(cdp) if cdp
+                 else p.chromium.launch())
         page = browser.new_page(viewport={"width": w, "height": h}, device_scale_factor=2)
         page.goto(url)
         page.wait_for_timeout(wait)

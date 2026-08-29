@@ -64,7 +64,7 @@ Our answer is a series of lightweight, VM-free CUA sandboxes. We start with the 
 Lite.OSWorld keeps OSWorld's desktop, tasks, and evaluators, and changes only how it runs: a plain Docker container, no /dev/kvm. Memory per instance falls to under a quarter, one host fits about 5× more instances, and it scales.
 
 ▪️ Score parity
-A cheap copy is only worth it if it doesn't change the conclusion. Across 13 models, scores in the container track the original OSWorld within a few points; the scores and training signal you get from Lite.OSWorld carry straight back to the original benchmark.
+A cheap copy is only worth it if it doesn't change the conclusion. Across 13 models, scores in the container match the original OSWorld; the scores and training signal you get from Lite.OSWorld carry straight back to the original benchmark.
 
 ▪️ Beyond OSWorld: scalable training sandboxes
 Lite.OSWorld is only the start. On the same VM-free base we are building more sandboxes, each shipping verifiable rewards — so the same sandbox both benchmarks and trains (RL). From everyday browser and desktop work to professional software like GMAT for spacecraft trajectories and PyMOL for molecular structures.
@@ -112,7 +112,7 @@ UC Berkeley · Microsoft
 ## 发布前检查
 
 - **对比表数字（4.1→0.9 GB、~5×、29.9→23.8 s）**：博客里**仍有一段旧的 authoring 注释**把这些标成 placeholder（"stay skeletons until measured"），但作者（你）此前确认它们已是真实值（commit `40a0451`）。→ 正文按真实使用；**建议顺手删掉博客里那段过时注释**以免误导。若仍有存疑，就把这三项在正文里改成定性（「更省内存、一机多开」）。
-- parity：正文只说「基本一致」（与博客「within a few points」同为定性口径）；真实 mean 2.7 / worst 5.0 仅内部核对，不进正文。
+- parity：正文只说「基本一致」（博客现行口径为 "the same result as the OSWorld VM, across 13 models"，原先的 "within a few points" 已删）；真实 mean 2.7 / worst 5.0 仅内部核对，不进正文。
 - ✅ **GitHub 已公开**（2026-08-22 实测 `HTTP 200`、`gh api private=false`），正文那行 `github.com/cua-lite/cua-lite` 可以保留。此前的 404 阻塞已解除。
 - **术语统一用 `VM-free`**（2026-08-25 全站从 `KVM-free` 改定）：容器不是虚拟机，VM-free 属实且读者更熟悉；博客正文本就写「VM tax」「drops the VM」。**URL slug `/blog/kvm-free-osworld/` 保持不变**（已发布，改了会断链），故会出现「标题 VM-free / 网址 kvm-free」的不对称，属预期。
 - 「GMAT、PyMOL」只点名软件、不描述夸张动作（博客原文的「flying spacecraft / turning proteins」偏文学，红书从简以免 overclaim）。

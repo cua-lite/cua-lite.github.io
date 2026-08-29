@@ -16,7 +16,7 @@
 <meta property="og:title" content="VM-free OS(World) at Scale" />
 <meta property="og:description" content="OSWorld's tasks, VM-free and at the same scores — the first of a series of lightweight sandboxes with verifiable tasks to train and benchmark any agent, at scale." />
 <meta property="og:url" content="https://cua-lite.github.io/blog/kvm-free-osworld/" />
-<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=6" />
+<meta property="og:image" content="https://cua-lite.github.io/assets/og.png?v=7" />
 <link rel="stylesheet" href="/css/style.css" />
 <style>
 /* article layout — the quiet template, shared with /blog/why-cua-lite/ */
@@ -216,7 +216,7 @@
   <p><b>To eval or train a computer-use agent, you need real desktops — a lot of them.</b>
   OSWorld gives you a faithful one: LibreOffice, Chrome, VS Code, files and windows.
   But it ships as a heavy virtual machine, and that's what keeps it from scaling.
-  <b>We propose a series of lightweight, VM-free sandboxes with standardized interfaces, where we reproduce benchmarks (e.g. OSWorld) and generate verifiable tasks to train any agent.</b></p>
+  <b>We propose a series of lightweight, VM-free sandboxes with standardized interfaces, where we reproduce benchmarks (e.g. OSWorld) and generate verifiable tasks to train any agent, on a fraction of the hardware resources.</b></p>
 
   <nav class="toc" aria-label="Contents">
     <a href="#vm-tax"><span class="toc-n">01</span>OSWorld's VM tax: How we cut it with Lite.OSWorld</a>
@@ -269,7 +269,7 @@
     <figcaption class="cmp-cap">Same tasks and evaluators, a smaller footprint per desktop.</figcaption>
   </figure>
 
-  <p><b>Lite.OSWorld gives the same result as the OSWorld VM — same task, and a score that tracks it within a few points.</b> The same
+  <p><b>Lite.OSWorld gives the same result as the OSWorld VM, across 13 models.</b> The same
   model runs the same task the same way in the container as in the VM, judged by the same
   evaluators, so a score or training signal earned in the container carries straight back to the
   real benchmark.</p>
@@ -291,7 +291,7 @@
     <figcaption class="hh-cap">Same model, same task — switch tabs, or click a panel for the full rollout.</figcaption>
   </figure>
 
-  <figure class="par" aria-label="OSWorld versus Lite.OSWorld success rate across 13 models — every model lands within a few points of the equal-score diagonal">
+  <figure class="par" aria-label="OSWorld versus Lite.OSWorld success rate across 13 models — every model lands on or close to the equal-score diagonal">
     <div class="par-plot"><svg class="par-svg" viewBox="0 0 300 300" role="img" aria-hidden="true"></svg><span class="par-tip" hidden></span></div>
     <figcaption class="par-cap">Success rate (%) · hover a point for the model</figcaption>
   </figure>
@@ -299,7 +299,7 @@
   <section class="hl-sec" id="beyond">
   <div class="sec-eyebrow">At scale</div>
   <h2>Beyond OSWorld: Scalable Training Sandboxes</h2>
-  <p><b>The VM-free container isn't just for OSWorld — it's a base for a family of scalable CUA sandboxes with verifiable tasks.</b> The same base
+  <p><b>The VM-free container isn't just for OSWorld — it's a base for a family of scalable CUA-Lite sandboxes with verifiable tasks.</b> The same base
   already runs more of them: browser and desktop tasks, real science desktops (GMAT
   flying spacecraft, PyMOL turning proteins). <b>Efficient sandboxes to train and benchmark any
   agent, at scale.</b></p>
@@ -317,7 +317,7 @@
   <p class="post-links"><a href="https://github.com/cua-lite/cua-lite/tree/main/lite/gym/envs/lite" target="_blank" rel="noopener">Lite.* environments ↗</a> &nbsp;·&nbsp; <a href="https://huggingface.co/collections/cua-lite/rollouts" target="_blank" rel="noopener">Rollout datasets ↗</a></p>
   </section>
 
-  <p class="post-close"><b>Any agent, on any computer — without the heavy VM.</b> Try it, or bring
+  <p class="post-close"><b>Computer-use agents, without the heavy VM.</b> Try it, or bring
   your own sandboxes:
   <a href="https://github.com/cua-lite/cua-lite" target="_blank" rel="noopener">GitHub</a> ·
   <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Hugging Face</a> ·
@@ -340,7 +340,7 @@
 </div>
 
 <footer class="blog-foot">
-  <span>© 2026 CUA-Lite — any data, any agent, any computer.</span>
+  <span>© 2026 CUA-Lite — open sandboxes, data and infra.</span>
   <a href="/blog/">← All posts</a>
 </footer>
 

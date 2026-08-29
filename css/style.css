@@ -38,7 +38,6 @@
      it always pairs with those (see the Eval board). The named roles at each step:
 
        --fs-2xl 17.5  Card-title  sans 700  (feature card heading: .src-h, .post-title)
-                      Lead        sans 450 muted lh1.6  (hero opening line only)
        --fs-xl  16.5  Body        sans 450 muted lh≥1.6 (paragraphs, section leads, panel-note)
                       Feature     sans 700  (body-size emphatic: stat number, wordmark)
        --fs-lg  15    Button      sans 600–700  (pill buttons)
@@ -134,6 +133,31 @@ h2 { font-family: var(--serif); font-weight: 370; font-variation-settings: 'opsz
 h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings: 'opsz' 144, 'wght' 400, 'SOFT' 0, 'WONK' 0; }
 /* the hero's connective "on" — a quiet grey hinge so the eye stays on the two terracotta claims, not the joint */
 .hero-head h1 .h1-hinge, .closing-line .h1-hinge { color: var(--muted); }
+/* the hero line is 38 chars, not 27 — at the global 76px it wraps to three lines and
+   splits "computer-use" at its hyphen. 64px sets it as two lines with "for" closing line
+   one, the same shape the hero has always had. Size alone does NOT protect the compound:
+   below ~390px it still broke at the hyphen ("computer-" / "use agents."), so every element
+   that renders this line wraps the compound in .nb — the hero h1, .closing-line, .cite-title
+   (fixed --fs-lg, not even clamped) and the search-preview mock. Measure at 360px, not 1440px. */
+.hero-head h1 { font-size: clamp(42px, 4.6vw, 64px); margin-bottom: 32px; }
+/* below 375px the second line ("computer-use agents.", 300px at 42px) no longer fits the
+   289px content box, so it wraps to three lines and strands "agents." alone — the orphan the
+   .claim-t rule forbids. 375px is the modern phone floor (SE3 375, iPhone 15 390); only the
+   320px-class devices need the smaller step, so scope it rather than lowering the clamp floor
+   for every phone. Measured, not guessed: line widths 292 / 300 against 304px available at 375. */
+@media (max-width: 374px) { .hero-head h1 { font-size: 34px; } }
+/* and again below ~316px, where even 34px leaves "computer-use agents." (243px) wider than the
+   ~209px content box, so it wraps to three lines and strands "agents." — measured on a 5px grid,
+   not sampled: the orphan runs 280–310px and clears at 320px. */
+@media (max-width: 319px) { .hero-head h1 { font-size: 28px; } }
+/* Verified floor: 280px (Galaxy Fold cover screen, the narrowest shipping viewport). At 280px and
+   up, all five display instances of the line — h1, .closing-line, .cite-title, .foot-tag and the
+   search-preview mock's .gs-h1 — wrap with the compound intact and no one-word last line, measured
+   on a 5px grid from 260 to 1440. Below 280px both .closing-line and .gs-h1 strand the "for" hinge
+   (through 279px) and the h1 goes back to three lines with "agents." alone (through 271px); no
+   shipping device is that narrow, so there is no third step. The two .gg-title rows inside the browser
+   mockup are 14.5px UI chrome in a 313px frame — a two-line search result is correct there, and
+   only the hyphen split (which .nb prevents) would be a defect. */
 
 /* ---------- blog / report heading ladder ----------
    The editorial (non-landing) heading roles. Every post and the weekly report
@@ -225,7 +249,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .hero-head > *:nth-child(2) { animation-delay: .12s; }
 .hero-head > *:nth-child(3) { animation-delay: .24s; }
 .hero-head > *:nth-child(4) { animation-delay: .34s; }
-.hero-head > *:nth-child(5) { animation-delay: .42s; }
 .hero-demo { animation: heroIn .68s var(--ease) .46s both; }
 .stage { position: relative; min-height: 430px; }
 /* three platforms, one focal device — a true two-way crossfade.
@@ -269,13 +292,12 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
   transform: translate(-50%,-50%); z-index: -1; pointer-events: none;
   background: radial-gradient(46% 48% at 50% 50%, rgba(126,231,135,.07), rgba(90,150,230,.035) 55%, transparent 72%);
   filter: blur(28px); }
-/* announcement chip — a temporary slot above the eyebrow for time-boxed news
+/* announcement chip — a temporary slot above the headline for time-boxed news
    (releases etc.); currently unused. Evergreen links belong in the CTA row instead. */
 .hero-chip { display: inline-flex; align-items: center; gap: 9px; font-family: var(--mono); font-size: var(--fs-sm); color: var(--accent);
   border: 1px solid var(--accent-dim); border-radius: 999px; padding: 7px 15px; margin-bottom: 22px; transition: background .14s ease; }
 .hero-chip:hover { background: #fff; }
 .chip-dot { width: 6px; height: 6px; background: var(--accent); }
-.hero .lead { font-size: var(--fs-2xl); line-height: 1.62; color: var(--muted); max-width: 560px; margin: 0 0 18px; }
 .nb { white-space: nowrap; }   /* glue for phrases that must not break mid-unit */
 /* the two deliverables — a labeled list, so the parallel structure is visible before it is
    read; platform before framework, mirroring the pillar order (01 Data → 02 Eval → 03 Train) */
@@ -288,9 +310,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .lead-claims .hinge { color: var(--dim); font-style: italic; }
 .lead-claims a { color: var(--accent); border-bottom: 1px solid var(--accent-dim); padding-bottom: 1px; white-space: nowrap; }   /* never split a link across lines */
 .lead-claims a:hover { border-bottom-color: var(--accent); }
-/* (the intro lead itself carries no links — claim links are styled above) */
-.hero .lead b { color: var(--text); font-weight: 650; }
-.hero .lead .lc { color: var(--accent); font-weight: 650; white-space: nowrap; }  /* the orange "computer-use" anchor — never split at its hyphen */
 /* stats — concise by default, the full list on hover */
 /* one row so moving from any stat down into its hover panel never crosses another stat */
 .stats { position: relative; list-style: none; display: flex; flex-wrap: nowrap; align-items: baseline; gap: 0; padding: 0; margin: 46px 0 0;
@@ -526,7 +545,6 @@ h1 em, h2 em { font-style: italic; color: var(--accent); font-variation-settings
 .gs-links { display: flex; gap: 7px; }
 .gs-links i { width: 20px; height: 5px; border-radius: 2px; background: #2a2f38; }
 .gs-hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 0 24px; gap: 11px; }
-.gs-eyebrow { font-family: var(--mono); font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: #7a8a72; }
 .gs-h1 { font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.04; color: #fff; letter-spacing: -.5px; }
 .gs-h1 em { color: var(--accent); font-style: italic; }
 .gs-cta { display: flex; gap: 9px; margin-top: 7px; }
@@ -787,9 +805,6 @@ code.ad:hover .ls-pop, code.ad:focus .ls-pop, code.ad:focus-within .ls-pop { opa
    must NOT, or the token dropdown menu gets clipped to the terminal box */
 .cmdbuild .term { overflow: visible; }
 .lead-tok { color: var(--accent); border-bottom: 1px dashed var(--accent-dim); padding-bottom: 1px; }
-/* the two group-hinges in the hero lead ("for", "across") recede so the bold
-   clusters — substrate / workflow / platforms — read as distinct groups */
-.lead .hinge { color: var(--dim); font-style: italic; }
 /* the builder IS a .term (same shell as the quickstart), with editable tokens.
    term-body gives the shared code aesthetic; we only loosen the line-height so
    the clickable token chips have room to breathe. */

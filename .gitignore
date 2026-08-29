@@ -9,18 +9,8 @@ __pycache__/
 .DS_Store
 my_logs/
 
-# Raw rollout data (~1.4 GB): per-turn screenshots, prompts and traces that
-# assets/build-manifests.py reads to produce assets/rollouts.json. The published page
-# needs only rollouts.json plus the trajectory.mp4 clips it references, so the source
-# trees stay local — regenerating the manifest requires them on disk.
-blog/kvm-free-osworld/assets/**/turn_*/
-blog/kvm-free-osworld/assets/**/*.parquet
-blog/kvm-free-osworld/assets/**/summary.json
-blog/kvm-free-osworld/assets/**/error.txt
-
-# CJK cover-font sources (re-fetched by posts/red/01/subset_cjk.sh; only the tiny woff2 subsets are kept)
-posts/*/build/fonts_src/
-
-# stray render/measure probes (should never be committed)
+# stray render/measure probes at the repo root (per-directory ones live in that directory)
 /_*.html
-posts/*/build/_*.png
+
+# font sources fetched by scripts/subset_cjk.sh
+.cache/

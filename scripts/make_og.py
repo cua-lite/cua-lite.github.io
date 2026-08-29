@@ -6,9 +6,18 @@ Edit the HTML below when the hero changes, then re-run + bump og:image ?v= in
 index.html so the social caches re-fetch.
 
     uv run python scripts/make_og.py
+
+Playwright's launch() cannot start Chromium on this host (SIGTRAP, no stderr —
+see posts/twitter/01/make_assets.py for the bisection). Start Chrome yourself and
+point CUA_LITE_CDP at it:
+
+    ~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome --headless \
+      --no-sandbox --disable-gpu --remote-debugging-port=9411 --user-data-dir=/tmp/pw &
+    CUA_LITE_CDP=http://127.0.0.1:9411 uv run python scripts/make_og.py
 """
 from __future__ import annotations
 
+import os
 import subprocess
 import time
 from pathlib import Path
@@ -47,7 +56,7 @@ h1 .hinge{color:var(--muted);}   /* the connective "on" — a quiet grey hinge, 
 .foot .url{color:var(--muted);}
 </style></head><body>
 <div class="brand"><span class="plane"></span><span class="name">CUA-Lite</span></div>
-<h1>Any agent, <span class="hinge">on</span><br>any computer.</h1>
+<h1>An open platform <span class="hinge">for</span><br>computer-use agents.</h1>
 <p class="lead">Scalable, efficient <b>sandboxes</b> with verifiable tasks <span class="sep">·</span> unified <b>SFT data</b> <span class="sep">·</span> unified <b>eval</b>, <b>SFT</b> &amp; <b>RL</b> pipeline — for any <span class="lc">computer-use</span> agent, at scale.</p>
 <div class="spacer"></div>
 <div class="foot">
@@ -57,15 +66,34 @@ h1 .hinge{color:var(--muted);}   /* the connective "on" — a quiet grey hinge, 
 </body></html>"""
 
 
+def _wait_for_server(port: int, timeout: float = 15.0) -> None:
+    """Poll until the local server answers. A fixed sleep(1.0) is a race: it fails
+    intermittently on a loaded host with ERR_CONNECTION_REFUSED at the first goto,
+    which reads like a Playwright bug rather than a slow server."""
+    import urllib.error
+    import urllib.request
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            urllib.request.urlopen(f"http://localhost:{port}/", timeout=0.5)
+            return
+        except urllib.error.HTTPError:
+            return                      # answered (any status) = listening
+        except Exception:
+            time.sleep(0.15)
+    raise RuntimeError(f"local server on :{port} never came up within {timeout:.0f}s")
+
+
 def main() -> None:
     tmp = ROOT / "_og_tmp.html"
     tmp.write_text(HTML)
     srv = subprocess.Popen(["python3", "-m", "http.server", str(PORT), "--directory", str(ROOT)],
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
-        time.sleep(1.0)
+        _wait_for_server(PORT)
         with sync_playwright() as p:
-            b = p.chromium.launch()
+            cdp = os.environ.get("CUA_LITE_CDP")
+            b = p.chromium.connect_over_cdp(cdp) if cdp else p.chromium.launch()
             pg = b.new_page(viewport={"width": 1200, "height": 630}, device_scale_factor=2)
             pg.goto(f"http://localhost:{PORT}/_og_tmp.html")
             pg.wait_for_timeout(700)  # let the webfonts settle

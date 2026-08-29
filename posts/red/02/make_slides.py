@@ -6,9 +6,17 @@ content (no forced portrait → wide figures never float in dead space). One cre
 accents. Figures from build/fig/ (capture_sections.py).
 
     uv run python posts/red/02/make_slides.py
+Playwright's launch() cannot start Chromium on this host (SIGTRAP, no stderr — see
+posts/twitter/01/make_assets.py for the bisection). Start Chrome yourself and set CUA_LITE_CDP:
+
+    ~/.cache/ms-playwright/chromium-1228/chrome-linux64/chrome --headless --no-sandbox \
+      --disable-gpu --remote-debugging-port=9411 --user-data-dir=/tmp/pw &
+    CUA_LITE_CDP=http://127.0.0.1:9411 uv run python posts/red/02/make_slides.py
+
 """
 from __future__ import annotations
 
+import os
 import subprocess
 import time
 from pathlib import Path
@@ -54,14 +62,34 @@ SLIDES = [
 ]
 
 
+def _wait_for_server(port: int, timeout: float = 15.0) -> None:
+    """Poll until the local server answers. A fixed sleep(1.0) is a race: it fails
+    intermittently on a loaded host with ERR_CONNECTION_REFUSED at the first goto,
+    which reads like a Playwright bug rather than a slow server."""
+    import urllib.error
+    import urllib.request
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        try:
+            urllib.request.urlopen(f"http://localhost:{port}/", timeout=0.5)
+            return
+        except urllib.error.HTTPError:
+            return                      # answered (any status) = listening
+        except Exception:
+            time.sleep(0.15)
+    raise RuntimeError(f"local server on :{port} never came up within {timeout:.0f}s")
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     srv = subprocess.Popen(["python3", "-m", "http.server", str(PORT), "--directory", str(ROOT)],
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
-        time.sleep(1.0)
+        _wait_for_server(PORT)
         with sync_playwright() as p:
-            b = p.chromium.launch()
+            cdp = os.environ.get("CUA_LITE_CDP")
+            b = (p.chromium.connect_over_cdp(cdp) if cdp
+                 else p.chromium.launch())
             for num, fig, eyebrow, title in SLIDES:
                 tmp = ROOT / f"_red02_slide_{fig}.html"
                 tmp.write_text(CARD.format(eyebrow=eyebrow, title=title, src=f"{FIGURL}/{fig}.png"))
