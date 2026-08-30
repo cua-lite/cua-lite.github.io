@@ -2,6 +2,12 @@
 
     uv run python posts/rdi/make_post.py
 
+Verify against the BUILT page, never the source you just edited. Two separate rounds of this
+port were "verified" against a stale artifact: once because a 70 KB script was bundled but no
+<script> tag loaded it, once because this file had a SyntaxError and `make_post.py && preview.sh`
+therefore never reached the build — while a trailing `; echo $?` swallowed the failure. Both
+times the old behaviour was reported as "the fix did not work".
+
 Berkeley RDI's site is Jekyll, but a blog post does NOT have to be a Jekyll page. Their own
 `blog/peer-preservation/index.html` carries no front matter and no `layout:` — its own doctype,
 head, 20 KB of inline CSS, inline JS and `@keyframes` — and Jekyll copies it byte for byte
@@ -97,14 +103,26 @@ SHIM = """<script>
     i.addEventListener("load", function () { f.classList.add("loaded"); });
     f.appendChild(i);
   }
+  // On the homepage a platform tab also re-points the leaderboard, via a hook the eval command
+  // builder registers — and that builder does not exist on this page, so without this the board
+  // is pinned to OSWorld forever and a reader can never see any other benchmark's scores.
+  // The cards themselves already drive the board (that handler lives in the leaderboard's own
+  // IIFE), so switching tabs just clicks the first card of the panel now showing.
   var tabs = [].slice.call(document.querySelectorAll("#benchmarks .cov-tab"));
   var panels = [].slice.call(document.querySelectorAll("#benchmarks .cov-panel"));
+  var cards = [].slice.call(document.querySelectorAll("#benchmarks .row[data-env]"));
+  var mark = function (row) { cards.forEach(function (c) { c.classList.toggle("hl", c === row); }); };
+  cards.forEach(function (c) { c.addEventListener("click", function () { mark(c); }); });
   tabs.forEach(function (t) {
     t.addEventListener("click", function () {
       tabs.forEach(function (x) { x.classList.toggle("on", x === t); });
       panels.forEach(function (p) { p.classList.toggle("on", p.dataset.plat === t.dataset.plat); });
+      var first = document.querySelector("#benchmarks .cov-panel.on .row[data-env]");
+      if (first) { first.click(); }
     });
   });
+  var start = document.querySelector("#benchmarks .cov-panel.on .row[data-env]");
+  if (start) { mark(start); }
 })();
 </script>
 """
@@ -126,7 +144,9 @@ PORT_CSS = ("<style>/* port-only layout corrections; see make_post.py for why ea
 
 OFFLINE_CSS = ("<style>/* if the cross-origin clips cannot load, show the reason, not an empty box */\n"
                ".belt-offline .belt-tabs, .belt-offline .belt { display: none; }\n"
-               ".belt-offline .belt-cap { padding-top: 0; }\n</style>\n")
+               ".belt-offline .belt-cap { padding-top: 0; }\n"
+               ".hh-offline .hh-tabs, .hh-offline .hh-board { display: none; }\n"
+               ".hh-offline .hh-cap { padding-top: 0; }\n</style>\n")
 
 REVEAL_OFF = ("<style>/* main.js drives the components here, not the homepage's entrance "
               "animation */\n.js-reveal .reveal { opacity: 1; transform: none; transition: none; }"
@@ -251,6 +271,10 @@ JS_REWRITES = {
          ' f.classList.add("belt-offline");'
          ' const c = f.querySelector(".belt-cap");'
          ' if (c) c.textContent = "Rollout clips are served from cua-lite.github.io and could not be loaded.";'
+         ' }); document.querySelectorAll(".hh").forEach((f) => {'
+         ' f.classList.add("hh-offline");'
+         ' const c = f.querySelector(".hh-cap");'
+         ' if (c) c.textContent = "Side-by-side rollouts are served from cua-lite.github.io and could not be loaded.";'
          ' }); return { hh: {}, belt: {} }; });'),
     ],
     # The leaderboard reads its scores from a path relative to the page, which on
@@ -271,6 +295,17 @@ JS_REWRITES = {
         # "0 runs / eval pending". Only the drill caught it — the code looked right.
         (r'(const foot = document\.getElementById\("lb-foot"\);)',
          '\\1\\n  let lbDown = false;\\n  const lbOffline = () => { lbDown = true; };'),
+        # The footer was only half of it: the big centred message still read "No committed runs
+        # yet — results land here once OSWorld is evaluated", i.e. it asserted the benchmark had
+        # never been run, when 13 agents have been scored. Fixing the footer alone left the
+        # loudest text on the card still false.
+        (r'(const msg = kind === "empty")',
+         'const msg = lbDown'
+         ' ? `<span class="lb-none-t">Scores unavailable</span>'
+         '<span class="lb-none-d">this board is served from '
+         '<a href="https://cua-lite.github.io/#benchmarks" target="_blank" rel="noopener">cua-lite.github.io</a>'
+         ', which could not be reached.</span>`'
+         ' : \\1'.replace("\\1", "kind === \"empty\"")),
         (r'foot\.innerHTML = kind === "empty"',
          'foot.innerHTML = lbDown'
          ' ? `<span>scores unavailable</span><span>served from cua-lite.github.io</span>`'
@@ -406,11 +441,9 @@ def merge(base: str, donor: str) -> str:
     # Satisfying the selector is better than forking the script for one page.
     gym = element(base, LITEGYM_START, "the lite.gym figure")
     cov = element(home, COV_START, "the benchmark grid")
-    # The homepage marks the leaderboard's current env with `row hl`; without it no cell is
-    # selected while the board below plainly shows OSWorld, so the two read as unrelated.
-    if 'data-env="osworld"' not in cov:
-        sys.exit("the benchmark grid has no osworld row to mark as selected")
-    cov = cov.replace('<a class="row" data-env="osworld"', '<a class="row hl" data-env="osworld"', 1)
+    # No hard-coded `row hl` here. A first cut pinned it to OSWorld so that *some* cell looked
+    # selected; then clicking BROWSER left the highlight sitting on a hidden panel. The shim
+    # moves it instead — see SHIM.
 
     bench = ('  <div id="benchmarks">\n'
              + cov + "\n\n"
