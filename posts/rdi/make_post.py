@@ -58,6 +58,65 @@ DONOR_SECTION = (r'<h2 id="vm-tax">', r'<figure class="par".*?</figure>')
 # it is a sub-part of Sandboxes, which is what `.post-wrap h3` in style.css exists for.
 DONOR_ANCHOR = '  <figure class="belt-fig"'
 
+# The second donor section. `why-cua-lite`'s belt and `kvm-free-osworld`'s are the same figure
+# with the same four tabs, so the merged page would show it twice; kvm-free's comes with the
+# paragraph that actually names what the family runs (GMAT, PyMOL) and ends on "at scale", so
+# its version replaces the bare one rather than joining it.
+DONOR2_SECTION = (r'<h2>Beyond OSWorld: Scalable Training Sandboxes</h2>',
+                  r'<figure class="belt-fig".*?</figure>')
+BELT_START = '  <figure class="belt-fig" aria-label="Looping task trajectories across CUA-Lite sandboxes">'
+
+# Homepage blocks. Each is a live component: the dataset browser and the leaderboard both come
+# from index.html, and both are driven by js/main.js, which the bundle now carries.
+HOME = "index.html"
+HF_START = '    <figure class="hf-embed reveal">'
+COV_START = '    <div class="cov reveal" id="leaderboard">'
+LB_START = '    <div class="lb reveal" id="lb"'
+DATA_CALL = '  <p class="post-call"><b class="call">Call for data contributors.</b>'
+LITEGYM_START = '  <figure class="flow-demo" aria-label="Any environment paired with any agent'
+
+# main.js gates every `.reveal` behind a `.js-reveal` class it sets on <html>, so importing it
+# switches on the homepage's scroll choreography. We want its components, not its entrance:
+# on someone else's site an observer that misses one element leaves that element permanently
+# invisible, and a guest post should not introduce a whole class of blank-figure failure.
+# main.js keeps the dataset browser and the coverage tabs inside one IIFE that opens with
+# `const stage = document.getElementById("stage"); if (!stage) return;` — the homepage hero.
+# On an article page that guard fires, so both blocks were shipping dead: the browser stuck on
+# its loading skeleton forever, and the platform tabs inert. Splitting the guard is not an
+# option — the hero half defines `clampMenu` and `reduce`, which the later half calls — and
+# forking main.js for one page is worse. So the port re-binds exactly the two behaviours it
+# needs, and strips the one control it cannot honestly wire (the dataset dropdown reads a list
+# that only the homepage's collections fetch populates).
+SHIM = """<script>
+(function () {
+  var f = document.getElementById("hf-frame");
+  if (f && !f.querySelector("iframe")) {
+    var i = document.createElement("iframe");
+    i.loading = "lazy"; i.title = "CUA-Lite datasets on Hugging Face";
+    i.src = "https://huggingface.co/datasets/cua-lite/WebGym/embed/viewer/default/train";
+    i.addEventListener("load", function () { f.classList.add("loaded"); });
+    f.appendChild(i);
+  }
+  var tabs = [].slice.call(document.querySelectorAll("#benchmarks .cov-tab"));
+  var panels = [].slice.call(document.querySelectorAll("#benchmarks .cov-panel"));
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () {
+      tabs.forEach(function (x) { x.classList.toggle("on", x === t); });
+      panels.forEach(function (p) { p.classList.toggle("on", p.dataset.plat === t.dataset.plat); });
+    });
+  });
+})();
+</script>
+"""
+
+OFFLINE_CSS = ("<style>/* if the cross-origin clips cannot load, show the reason, not an empty box */\n"
+               ".belt-offline .belt-tabs, .belt-offline .belt { display: none; }\n"
+               ".belt-offline .belt-cap { padding-top: 0; }\n</style>\n")
+
+REVEAL_OFF = ("<style>/* main.js drives the components here, not the homepage's entrance "
+              "animation */\n.js-reveal .reveal { opacity: 1; transform: none; transition: none; }"
+              "\n</style>\n")
+
 TITLE = "CUA-Lite: An Open Platform for Computer-Use Agents"
 # The <h1> needs the two hyphenated compounds glued: at 320px and below, Chrome breaks
 # "Computer-Use" at its hyphen and the title reads as two words. `.nb` is the site's existing
@@ -76,6 +135,16 @@ DATE = "August 2026"
 # is reachable only by direct URL — the single easiest thing to forget, hence it is generated,
 # not hand-edited. Description is thread 01's opening, verbatim.
 CARD_DATE = "2026-08-29"
+# The post runs four sections deep, which is one more than either source page had, so it gets
+# the same numbered contents nav `kvm-free-osworld` uses — and its `.toc` CSS is already here,
+# carried in with that page's stylesheet. Ids are written out rather than slugified so they are
+# stable, readable anchors that a reader can link to. The highlight marks the section carrying
+# the post's distinctive claim; the badge says what the heading itself does not.
+TOC = [("why", "Why CUA-Lite", None),
+       ("sandboxes", "Sandboxes & verifiable tasks", "At scale"),
+       ("datasets", "Datasets", None),
+       ("framework", "One framework: eval & RL", None)]
+
 CARD_DESC = ("Training and benchmarking computer-use agents takes three things: sandboxes, data, "
              "and a framework, and today all three are fragmented. CUA-Lite standardizes and "
              "democratizes all three: 30k+ verifiable tasks in VM-free sandboxes, 10+ SFT "
@@ -92,6 +161,7 @@ BUNDLE = [
     ("css/style.css", "css/style.css"),
     ("js/belt.js", "js/belt.js"),
     ("js/lspop.js", "js/lspop.js"),
+    ("js/main.js", "js/main.js"),        # drives the HF browser and the leaderboard
     ("assets/fonts/Fraunces.woff2", "assets/fonts/Fraunces.woff2"),
     ("assets/fonts/Fraunces-Italic.woff2", "assets/fonts/Fraunces-Italic.woff2"),
     ("assets/fonts/Urbanist.woff2", "assets/fonts/Urbanist.woff2"),
@@ -108,7 +178,13 @@ BUNDLE = [
 # Whole directories copied as-is. `assets/logos/` is referenced two ways — by the inline
 # <style>'s url('/assets/logos/…') and by style.css's relative url('../assets/logos/…') — so
 # enumerating individual files here just invites the next missing one.
-BUNDLE_DIRS = ["assets/logos", "assets/icons", "assets/pixel"]
+BUNDLE_DIRS = ["assets/icons", "assets/pixel"]
+
+# assets/logos/ is copied FILE BY FILE, not wholesale: the directory also holds berkeley.svg
+# and microsoft.svg, which nothing on this page references. Committing an unused UC Berkeley
+# logo into UC Berkeley's own repository is not a good look, and dead bytes in a PR invite
+# questions that have nothing to do with the post.
+LOGO_DIR = "assets/logos"
 
 # Ordered: the local-bundle rules must run before the catch-all that absolutises what is left.
 REWRITES = [
@@ -145,7 +221,68 @@ STRIPS = [
 ]
 
 # belt.js resolves the rollout clips off a hardcoded site-absolute base.
-JS_REWRITES = {"js/belt.js": [(r'"/blog/kvm-free-osworld/"', f'"{SITE}/blog/kvm-free-osworld/"')]}
+# Both scripts fetch from cua-lite.github.io. On our own site that is same-origin — a failure
+# means the whole site is down. Here we are a third party on someone else's permanent URL, so
+# the failure paths matter, and both of them lie:
+#   * belt.js swallows the error and renders an empty strip under four dead tabs;
+#   * main.js renders the leaderboard's "0 runs / eval pending" ghost, which sits directly under
+#     the sentence "the leaderboard is live" and reads as "we have no results".
+# Neither is acceptable on a host's domain. Say what actually happened instead.
+JS_REWRITES = {
+    "js/belt.js": [
+        (r'"/blog/kvm-free-osworld/"', f'"{SITE}/blog/kvm-free-osworld/"'),
+        (r'\.catch\(\(\) => \(\{ hh: \{\}, belt: \{\} \}\)\);',
+         '.catch(() => { document.querySelectorAll(".belt-fig").forEach((f) => {'
+         ' f.classList.add("belt-offline");'
+         ' const c = f.querySelector(".belt-cap");'
+         ' if (c) c.textContent = "Rollout clips are served from cua-lite.github.io and could not be loaded.";'
+         ' }); return { hh: {}, belt: {} }; });'),
+    ],
+    # The leaderboard reads its scores from a path relative to the page, which on
+    # rdi.berkeley.edu would resolve inside the post's own directory.
+    "js/main.js": [
+        (r'const ROOT = "assets/exps/eval/"', f'const ROOT = "{SITE}/assets/exps/eval/"'),
+        (r'\.catch\(\(\) => \{ if \(fresh\(\)\) renderGhost\("empty"\); \}\);',
+         '.catch(() => { if (fresh()) { renderGhost("empty"); lbOffline(); } });'),
+        # The manifest is fetched first, so when the origin is unreachable THIS is the catch that
+        # fires — an offline drill (routing cua-lite.github.io to abort) still showed "0 runs /
+        # eval pending" until this one was covered too. Guarding only the per-run fetch tested
+        # nothing, because that fetch never happens.
+        (r'\.then\(\(r\) => \(r\.ok \? r\.json\(\) : \{\}\)\)\.catch\(\(\) => \(\{\}\)\)',
+         '.then((r) => (r.ok ? r.json() : {})).catch(() => { lbOffline(); return {}; })'),
+        # One helper, defined next to the element it writes to.
+        # A flag, not a direct write: renderGhost() sets foot.innerHTML immediately afterwards,
+        # so the first version of this fix was overwritten and the offline drill still showed
+        # "0 runs / eval pending". Only the drill caught it — the code looked right.
+        (r'(const foot = document\.getElementById\("lb-foot"\);)',
+         '\\1\\n  let lbDown = false;\\n  const lbOffline = () => { lbDown = true; };'),
+        (r'foot\.innerHTML = kind === "empty"',
+         'foot.innerHTML = lbDown'
+         ' ? `<span>scores unavailable</span><span>served from cua-lite.github.io</span>`'
+         ' : kind === "empty"'),
+    ],
+}
+
+
+def element(html: str, start: str, what: str) -> str:
+    """The whole element beginning with the line `start`, closed at the same indent.
+
+    A tag-counting scan is the obvious approach and it is wrong here: `<div` also occurs inside
+    attribute values, so counting reported the benchmark-coverage block as 7 lines when it is 34.
+    The homepage is consistently indented, so the matching close is the first line that is
+    exactly this line's indent plus `</tag>`."""
+    lines = html.split("\n")
+    hits = [i for i, l in enumerate(lines) if l.startswith(start)]
+    if len(hits) != 1:
+        sys.exit(f"{what}: expected 1 match for {start!r}, found {len(hits)}")
+    i = hits[0]
+    indent = start[:len(start) - len(start.lstrip())]
+    tag = re.match(r"\s*<([a-z]+)", start).group(1)
+    close = f"{indent}</{tag}>"
+    for j in range(i + 1, len(lines)):
+        if lines[j] == close:
+            return "\n".join(lines[i:j + 1])
+    sys.exit(f"{what}: no closing {close!r}")
 
 
 def _blocks(html: str, tag: str, *, external: bool = False) -> list[str]:
@@ -203,18 +340,105 @@ def merge(base: str, donor: str) -> str:
         sys.exit(f"donor section not found ({start} … {end}) — {DONOR} was restructured.")
     section = m.group(0).replace('<h2 id="vm-tax">', "<h3>").replace("</h2>", "</h3>", 1)
 
+    # The splice drops the donor page's lede, so the merged post's first prose mention of
+    # OSWorld was "OSWorld's faithful desktop is a full VM per task" — an adjective with no
+    # antecedent, in front of a whole subsection and four figures about a benchmark the reader
+    # was never introduced to. These two sentences are that lede, verbatim; the "faithful"
+    # echo one paragraph later is the source page's own.
+    lede = re.search(r"<p><b>To eval or train a computer-use agent.*?scaling\.", donor, re.S)
+    if not lede:
+        sys.exit("the donor's OSWorld lede moved; the merged post would name OSWorld unintroduced")
+    intro = "  <p>" + re.sub(r"</?b>", "", lede.group(0)[len("<p><b>"):]) + "</p>\n"
+    section = section.replace("</h3>", "</h3>\n" + intro, 1)
+
     if base.count(DONOR_ANCHOR) != 1:
         sys.exit(f"insertion anchor is not unique in {SOURCE}: {DONOR_ANCHOR!r}")
     base = base.replace(DONOR_ANCHOR, section + "\n\n" + DONOR_ANCHOR, 1)
+
+    m2 = re.search(DONOR2_SECTION[0] + r".*?" + DONOR2_SECTION[1], donor, re.S)
+    if not m2:
+        sys.exit(f"donor section 2 not found — {DONOR} was restructured.")
+    beyond = m2.group(0).replace("<h2>", "<h3>", 1).replace("</h2>", "</h3>", 1)
+    old_belt = element(base, BELT_START, "the base page's belt figure")
+    base = base.replace(old_belt, beyond, 1)
+
+    home = (ROOT / HOME).read_text()
+    hf = element(home, HF_START, "the Hugging Face dataset browser")
+    drop = re.search(r'<span class="hf-ds" id="hf-select">.*?</span></span>', hf, re.S)
+    if not drop:
+        sys.exit("the dataset dropdown markup moved; check it is still safe to strip")
+    hf = hf.replace(drop.group(0), '<span class="hf-ds">WebGym</span>', 1)
+    if base.count(DATA_CALL) != 1:
+        sys.exit("the data call-out moved; cannot place the dataset browser")
+    base = base.replace(DATA_CALL, hf + "\n\n" + DATA_CALL, 1)
+
+    # The benchmark grid and the leaderboard are the evidence for the framework section's own
+    # claim ("15+ benchmarks are already integrated, and the leaderboard is live"), so they go
+    # directly after the figure that claim sits under.
+    # Both blocks go inside a #benchmarks wrapper. main.js reads the coverage cards as its
+    # single source of environments via `#benchmarks .cov-panel .row[data-env]`, and switches
+    # the tabs via `#benchmarks .cov-tab` — without that ancestor the leaderboard initialises,
+    # renders its bar, and then sits empty forever, having never fetched a single score.
+    # Satisfying the selector is better than forking the script for one page.
+    gym = element(base, LITEGYM_START, "the lite.gym figure")
+    bench = ('  <div id="benchmarks">\n'
+             + element(home, COV_START, "the benchmark grid") + "\n\n"
+             + element(home, LB_START, "the leaderboard") + "\n  </div>")
+    base = base.replace(gym, gym + "\n\n" + bench, 1)
 
     # Append the donor's inline CSS/JS after the base's own, so the base still wins any tie.
     # Duplicated rules are inert (check_merge proved they are identical); the donor's script is
     # self-contained and only touches .v2c / .hh / .par, which now exist on this page.
     css = "\n".join(_blocks(donor, "style"))
     js = "\n".join(_blocks(donor, "script"))
+    # An empty result reads exactly like a successful one: check_merge() would then compare {}
+    # against the base, find no shared selectors, and report clean — strongest precisely when
+    # the thing it guards has vanished. The .v2c/.hh/.par figures would ship unstyled and dead.
+    for name, blob, probe in (("style", css, ".v2c"), ("script", js, ".par-svg")):
+        if probe not in blob:
+            sys.exit(f"the donor's inline {name} no longer contains {probe} — "
+                     f"the merged figures would ship broken")
     base = base.replace("</head>", f"<style>\n{css}\n</style>\n</head>", 1)
-    base = base.replace("</body>", f"<script>\n{js}\n</script>\n</body>", 1)
+    base = base.replace("</body>", f"<script>\n{js}\n</script>\n" + SHIM + "</body>", 1)
+    # Anchored on the PRE-rewrite path. merge() runs before REWRITES, so the page still says
+    # "/js/belt.js" here; targeting the rewritten "js/belt.js" matched nothing and shipped a
+    # bundle containing main.js that no <script> tag ever loaded — silently, because a bare
+    # str.replace that matches nothing is indistinguishable from one that worked.
+    tag = '<script src="/js/belt.js">'
+    if base.count(tag) != 1:
+        sys.exit(f"cannot place the main.js tag: {tag!r} appears {base.count(tag)} times")
+    base = base.replace(tag, '<script src="/js/main.js"></script>\n' + tag, 1)
+    base = base.replace("</head>", REVEAL_OFF + OFFLINE_CSS + "</head>", 1)
     return base
+
+
+def add_toc(html: str) -> str:
+    """Give each h2 an id and insert the numbered contents nav after the resource row."""
+    heads = re.findall(r"<h2>(.*?)</h2>", html, re.S)
+    if len(heads) != len(TOC):
+        sys.exit(f"{len(heads)} h2 sections but TOC lists {len(TOC)} — update TOC in this script:\n  "
+                 + "\n  ".join(re.sub(r"\s+", " ", h).strip() for h in heads))
+    for (slug, label, _), raw in zip(TOC, heads):
+        plain = re.sub(r"\s+", " ", re.sub(r"<[^>]*>", "", raw)).strip().replace("&amp;", "&")
+        if plain != label:
+            sys.exit(f"section drifted: TOC says {label!r}, page says {plain!r}")
+        html = html.replace(f"<h2>{raw}</h2>", f'<h2 id="{slug}">{raw}</h2>', 1)
+
+    rows = []
+    for i, (slug, label, badge) in enumerate(TOC, 1):
+        cls = ' class="toc-hl"' if badge else ""
+        tag = f'<span class="toc-badge">{badge}</span>' if badge else ""
+        rows.append(f'    <a href="#{slug}"{cls}><span class="toc-n">{i:02d}</span>'
+                    f'{label.replace("&", "&amp;")}{tag}</a>')
+    nav = '  <nav class="toc" aria-label="Contents">\n' + "\n".join(rows) + "\n  </nav>\n"
+
+    # Anchor on the resource row itself. "</p> … <h2" is not unique — every section ends that
+    # way — and a nav dropped at the first match would land mid-article.
+    html, n = re.subn(r'(<p class="post-links post-res">.*?</p>\n)',
+                      lambda m: m.group(1) + "\n" + nav, html, count=1, flags=re.S)
+    if n != 1:
+        sys.exit("could not place the contents nav: the resource row moved")
+    return html
 
 
 def retitle(html: str) -> str:
@@ -244,16 +468,30 @@ def retitle(html: str) -> str:
     # `.post-meta` is 2.5px-tracked uppercase mono, built for a one-line date — nine names in
     # it read as a wall. The subtitle and byline get their own rules, in the template's own
     # tokens so they stay part of the ladder rather than looking bolted on.
-    html = html.replace("/* headings (h1 Title", TITLE_CSS + "/* headings (h1 Title", 1)
-    html = re.sub(r"<title>[^<]*</title>", f"<title>{TITLE}</title>", html, count=1)
-    html = re.sub(r'(<meta property="og:title" content=")[^"]*',
-                  lambda mm: mm.group(1) + TITLE, html, count=1)
+    anchor = "/* headings (h1 Title"      # a source COMMENT — the most editable text there is
+    if html.count(anchor) != 1:
+        sys.exit(f"cannot inject the title-block CSS: {anchor!r} appears {html.count(anchor)} times")
+    html = html.replace(anchor, TITLE_CSS + anchor, 1)
+    for pat, rep, what in ((r"<title>[^<]*</title>", lambda m: f"<title>{TITLE}</title>", "<title>"),
+                           (r'(<meta property="og:title" content=")[^"]*', None, "og:title")):
+        rep = rep or (lambda m: m.group(1) + TITLE)
+        html, n = re.subn(pat, rep, html, count=1)
+        if n != 1:
+            sys.exit(f"{what} not rewritten — the post would ship under the source page's title")
     # One description, three places. The source page's own description opens "Why CUA-Lite
     # exists" — the same cold-reader problem the title had — and leaving it would give this
     # post two different summaries: this one in the <head>, CARD_DESC on RDI's blog index.
     # og:image must be served by the host, not by us: a social preview that depends on a
     # third-party origin breaks the moment that origin does, and the bundle already ships the
     # same file as assets/card.png for the blog index.
+    # The precedent post ships four twitter:* tags; without twitter:card the 2400x1260 card
+    # is cropped to a small square when the post is shared.
+    tw = (f'<meta name="twitter:card" content="summary_large_image" />\n'
+          f'<meta name="twitter:title" content="{TITLE}" />\n'
+          f'<meta name="twitter:description" content="{CARD_DESC}" />\n'
+          f'<meta name="twitter:image" content="https://rdi.berkeley.edu/blog/{SLUG}/assets/card.png" />\n')
+    html = html.replace('<meta property="og:type"', tw + '<meta property="og:type"', 1)
+
     html, n = re.subn(r'(<meta property="og:image" content=")[^"]*',
                       lambda mm: mm.group(1) + f"https://rdi.berkeley.edu/blog/{SLUG}/assets/card.png",
                       html, count=1)
@@ -274,6 +512,11 @@ def port() -> Path:
                  f"  git clone git@github.com:ZHZisZZ/rdi-berkeley.github.io.git {CLONE}")
     shutil.rmtree(out, ignore_errors=True)
 
+    # Which logos does the finished page reference? Compute it from the merged HTML *and* the
+    # stylesheet, before copying, so the bundle carries exactly those.
+    html_probe = (merge((ROOT / SOURCE).read_text(), (ROOT / DONOR).read_text())
+                  + (ROOT / "css/style.css").read_text())
+
     for src, rel in BUNDLE:
         dst = out / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
@@ -287,16 +530,48 @@ def port() -> Path:
     for rel in BUNDLE_DIRS:
         shutil.copytree(ROOT / rel, out / rel, dirs_exist_ok=True)
 
+    # Only the logos this page actually references (see LOGO_DIR's note above).
+    (out / LOGO_DIR).mkdir(parents=True, exist_ok=True)
+    wanted = set(re.findall(r"assets/logos/([\w.-]+)", html_probe))
+    if not wanted:
+        sys.exit("no assets/logos/* referenced — the figure chips changed; check before shipping")
+    for f in sorted((ROOT / LOGO_DIR).iterdir()):
+        if f.name in wanted:
+            shutil.copy2(f, out / LOGO_DIR / f.name)
+
     html = merge((ROOT / SOURCE).read_text(), (ROOT / DONOR).read_text())
-    html = retitle(html)
+    html = add_toc(retitle(html))
+    # These two point at our homepage's sections — but this page now carries the benchmark grid
+    # and the live leaderboard itself. Sending a reader to another domain for content that is
+    # 20 lines below them is a defect, and neither link carries target="_blank", so it navigates
+    # away in place. Run BEFORE the rewrites, while the paths are still site-absolute.
+    for frm, to in (('href="/#benchmarks"', 'href="#benchmarks"'),
+                    ('href="/#leaderboard"', 'href="#leaderboard"')):
+        if frm not in html:
+            sys.exit(f"self-link rewrite found no {frm!r} — the source changed")
+        html = html.replace(frm, to)
+
     for pat, sub in REWRITES:
         html = re.sub(pat, sub, html)
+    # The source pages carry long authoring comments (the NORTH STAR block: "cut anything a
+    # scanner can't use (mechanism, scope lists, hedging)", the prose-hygiene rules). Those are
+    # ours to follow, not to publish on rdi.berkeley.edu, where View Source shows them next to
+    # the copy they govern. Strip every HTML comment; <style>/<script> bodies are unaffected
+    # because `<!--` does not occur inside them.
+    html = re.sub(r"<!--.*?-->\n?", "", html, flags=re.S)
+
     for rule in STRIPS:
         pat, sub, want = (*rule, 1)[:3]
         html, n = re.subn(pat, sub, html, flags=re.S)
         if n != want:
             sys.exit(f"strip matched {n} times, expected {want} — source restructured: {pat!r}")
-    html = html.replace(f"{SITE}/blog/why-cua-lite/", f"https://rdi.berkeley.edu/blog/{SLUG}/")
+    # og:url is the only place the source page's own canonical URL survives; unrewritten, every
+    # share of the guest post credits cua-lite.github.io. Derive the slug from SOURCE rather than
+    # repeating it, so renaming the source file cannot leave this behind.
+    src_url = f"{SITE}/blog/{Path(SOURCE).parent.name}/"
+    if src_url not in html:
+        sys.exit(f"og:url still points at {src_url} and no rewrite matched")
+    html = html.replace(src_url, f"https://rdi.berkeley.edu/blog/{SLUG}/")
     (out / "index.html").write_text(html)
 
     # A leftover "/…" would 404 against rdi.berkeley.edu's root, and a missing font degrades

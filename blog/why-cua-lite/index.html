@@ -34,6 +34,9 @@
 .post-wrap p.post-links { font-family: var(--mono); font-size: var(--fs-sm); margin: 0 0 22px; }
 .post-links a { color: var(--accent); white-space: nowrap; }   /* a link wraps as a unit, never mid-name */
 .post-close { border-top: 1px solid var(--line); margin-top: 40px; padding-top: 24px; }
+.post-wrap p.post-ack { font-size: var(--fs-md); line-height: 1.65; color: var(--dim);
+  border-top: 1px solid var(--line); margin-top: 40px; padding-top: 24px; }   /* credit, not argument — set below the body */
+.post-wrap p.post-ack b { color: var(--muted); font-weight: 600; }
 /* ---- animated flow figures: a pairing lights up and one wire plugs through the hub ---- */
 .flow-demo { margin: 6px 0 20px; background: radial-gradient(135% 105% at 50% -12%, #fffdf7, var(--panel-fill) 72%); border: 1px solid var(--panel-edge); border-radius: 14px; padding: 20px 20px 16px;
   box-shadow: inset 0 1px 0 var(--panel-hi), 0 1px 2px rgba(40,30,15,.04), 0 16px 34px -24px rgba(40,30,15,.30); }   /* lift off the page like the homepage's panels — warm ink shadow, top inner highlight */
@@ -394,9 +397,9 @@
   compounds:</p>
 
   <h2>Sandboxes &amp; verifiable tasks</h2>
-  <p><b>Lightweight, VM-free sandboxes pack many to a machine, each with
-  verifiable tasks.</b> They run in parallel, and each serves both training and
-  benchmarking.</p>
+  <p><b>CUA-Lite introduces lightweight, VM-free sandboxes behind one
+  interface.</b> They reproduce public benchmarks and generate verifiable tasks to
+  train any agent, on a fraction of the hardware resources.</p>
   <figure class="belt-fig" aria-label="Looping task trajectories across CUA-Lite sandboxes">
     <div class="belt-tabs" role="tablist">
       <button class="belt-tab is-on" type="button" role="tab" aria-selected="true">Lite.OSWorld</button>
@@ -433,7 +436,7 @@
         <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
         <a data-logo="ui-tars" data-cat="model" class="pair-chip" data-id="ByteDance-Seed/UI-TARS-1.5-7B" href="https://huggingface.co/ByteDance-Seed/UI-TARS-1.5-7B" target="_blank" rel="noopener">UI-TARS</a>
         <a data-cat="model" class="pair-chip" data-id="Tongyi-MAI/MAI-UI-8B" href="https://huggingface.co/Tongyi-MAI/MAI-UI-8B" target="_blank" rel="noopener">MAI-UI</a>
-        <a data-logo="kimi" data-cat="model" class="pair-chip" data-id="moonshotai/Kimi-VL-A3B-Instruct" href="https://huggingface.co/moonshotai/Kimi-VL-A3B-Instruct" target="_blank" rel="noopener">Kimi</a>
+        <a data-logo="microsoft" data-cat="model" class="pair-chip" data-id="microsoft/Fara-7B" href="https://huggingface.co/microsoft/Fara-7B" target="_blank" rel="noopener">Fara</a>
         <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
@@ -507,13 +510,20 @@
         <a data-logo="openai" data-cat="model" class="pair-chip" data-id="gpt-5.5" href="https://platform.openai.com/docs/guides/tools-computer-use" target="_blank" rel="noopener">GPT</a>
         <a data-logo="claude" data-cat="model" class="pair-chip" data-id="claude-opus-4-7" href="https://docs.anthropic.com/en/docs/agents-and-tools/computer-use" target="_blank" rel="noopener">Claude</a>
         <a data-logo="qwen" data-cat="model" class="pair-chip" data-id="Qwen/Qwen3-VL-8B-Instruct" href="https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct" target="_blank" rel="noopener">Qwen</a>
-        <a data-logo="gemini" data-cat="model" class="pair-chip" data-id="gemini-2.5" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
+        <a data-logo="gemini" data-cat="model" class="pair-chip" data-id="gemini-3.6-flash" href="https://deepmind.google/technologies/gemini/" target="_blank" rel="noopener">Gemini</a>
         <a data-cat="model" class="pair-chip ghost" href="https://github.com/cua-lite/cua-lite/tree/main/lite/agents" target="_blank" rel="noopener">yours next</a>
       </div>
       <svg class="pair-wire" aria-hidden="true"><path class="w1"/><path class="w2"/></svg>
     </div>
     <div class="pair-cmd" data-cmd-line></div>
   </figure>
+
+  <p class="post-ack"><b>CUA-Lite is the platform; it wouldn't be possible without the
+  task suites, benchmarks and datasets other teams built.</b> OSWorld, OSWorld-2, OSWorld-G,
+  CUA-Gym, gym-anything, SCALE-CUA, WindowsAgentArena, WebGym, WebArena, VisualWebArena,
+  MiniWoB and BrowserGym, Online-Mind2Web and Mind2Web, WebVoyager, WebHarbor, ScreenSpot-Pro,
+  AndroidWorld, AndroidLab, MobileWorld and MobileGym. If we are hosting your work and you want
+  it credited or shown differently, tell us and we will fix it.</p>
 
   <p class="post-close"><b>Bring a dataset, an env, or an agent — each one
   compounds.</b> Or just tell us what's missing —
