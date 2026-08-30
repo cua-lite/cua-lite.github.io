@@ -133,6 +133,10 @@ REWRITES = [
 # restructured source fails loudly instead of silently republishing the nav.
 STRIPS = [
     (r'<header class="nav">.*?</header>\s*', ""),
+    # Our favicons would put the CUA-Lite mark in the browser tab on rdi.berkeley.edu — the
+    # same borrowed-identity problem as the nav, one line lower. peer-preservation declares
+    # none and inherits the host's. Three <link rel=icon> lines, so this strip expects 3.
+    (r'\s*<link rel="(?:apple-touch-)?icon"[^>]*>', "", 3),
     (r'<footer class="blog-foot">.*?</footer>',
      '<footer class="blog-foot">\n'
      '  <span><a href="https://cua-lite.github.io">cua-lite.github.io</a>'
@@ -244,7 +248,23 @@ def retitle(html: str) -> str:
     html = re.sub(r"<title>[^<]*</title>", f"<title>{TITLE}</title>", html, count=1)
     html = re.sub(r'(<meta property="og:title" content=")[^"]*',
                   lambda mm: mm.group(1) + TITLE, html, count=1)
-    return html + ""
+    # One description, three places. The source page's own description opens "Why CUA-Lite
+    # exists" — the same cold-reader problem the title had — and leaving it would give this
+    # post two different summaries: this one in the <head>, CARD_DESC on RDI's blog index.
+    # og:image must be served by the host, not by us: a social preview that depends on a
+    # third-party origin breaks the moment that origin does, and the bundle already ships the
+    # same file as assets/card.png for the blog index.
+    html, n = re.subn(r'(<meta property="og:image" content=")[^"]*',
+                      lambda mm: mm.group(1) + f"https://rdi.berkeley.edu/blog/{SLUG}/assets/card.png",
+                      html, count=1)
+    if n != 1:
+        sys.exit("og:image meta not found")
+    for pat in (r'(<meta name="description" content=")[^"]*',
+                r'(<meta property="og:description" content=")[^"]*'):
+        html, n = re.subn(pat, lambda mm: mm.group(1) + CARD_DESC, html, count=1)
+        if n != 1:
+            sys.exit(f"description meta not found: {pat!r}")
+    return html
 
 
 def port() -> Path:
@@ -271,10 +291,11 @@ def port() -> Path:
     html = retitle(html)
     for pat, sub in REWRITES:
         html = re.sub(pat, sub, html)
-    for pat, sub in STRIPS:
+    for rule in STRIPS:
+        pat, sub, want = (*rule, 1)[:3]
         html, n = re.subn(pat, sub, html, flags=re.S)
-        if n != 1:
-            sys.exit(f"strip matched {n} times, expected 1 — source restructured: {pat!r}")
+        if n != want:
+            sys.exit(f"strip matched {n} times, expected {want} — source restructured: {pat!r}")
     html = html.replace(f"{SITE}/blog/why-cua-lite/", f"https://rdi.berkeley.edu/blog/{SLUG}/")
     (out / "index.html").write_text(html)
 
