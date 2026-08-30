@@ -98,13 +98,20 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 92px;
+html { overflow-x: clip;
+  scroll-behavior: smooth; scroll-padding-top: 92px;
   /* reserve the scrollbar gutter — short pages (blog) must not re-center the layout
      relative to long ones on classic-scrollbar browsers. NOT overflow-y: scroll,
      which breaks Chromium's smooth on-load scroll to #hash anchors. */
   scrollbar-gutter: stable; }
 body {
-  overflow-x: clip;   /* absolutely-positioned hover cards never widen the page */
+  /* overflow-x lives on <html>, not here. With <html> at the default `visible`, an
+     overflow on <body> is PROPAGATED to the viewport and <body> itself is treated as
+     `visible` — so this rule silently did nothing, and the closed .ls-pop hover card
+     (430px, absolutely positioned) widened the document by up to 179px between 940px
+     and 1400px. `clip` rather than `hidden`: it does not create a scroll container, so
+     position:sticky still works. The open card stays fully visible — lspop.js shifts it
+     back inside the viewport on pointerenter. */
   margin: 0; color: var(--text);
   /* soft warm peach washes over ivory — microsoft.ai's ambient warmth, viewport-fixed */
   background:

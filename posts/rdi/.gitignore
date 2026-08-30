@@ -1,0 +1,9 @@
+# The PR working copy: a clone of rdi-berkeley.github.io (a fork of Berkeley RDI's site).
+# It is its own git repository with its own history and remotes, and must never enter this
+# repo's index — 522 MB of someone else's site, plus a nested repo would land here as a
+# stray gitlink.
+#
+# A nested repo is invisible to this repo's `git status`, so if this rule ever stops
+# matching, nothing warns you. Verify after touching it:
+#     git add -An posts/rdi/ | grep rdi-berkeley && echo LEAK
+rdi-berkeley.github.io/

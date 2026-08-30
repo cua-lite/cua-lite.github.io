@@ -356,10 +356,10 @@
   <h1>Why CUA-Lite — and a call for <em>contributors.</em></h1>
 
   <h2>Why CUA-Lite</h2>
-  <p><b>Computer-use agent resources are fragmented.</b> Sandboxes are heavy and
+  <p><b><span class="nb">Computer-use</span> agent resources are fragmented.</b> Sandboxes are heavy and
   unstandardized: a full virtual machine per task, each with its own interface and
   action space. Every dataset picks its own schema, so data collected
-  for one agent can't train another. And no framework standardizes how computer-use
+  for one agent can't train another. And no framework standardizes how <span class="nb">computer-use</span>
   agents are evaluated and trained, so every project rebuilds the same tooling —
   agent loops, VM setup, eval scripts — before a single rollout runs.</p>
 
@@ -386,7 +386,7 @@
   </figure>
 
   <p><b>CUA-Lite puts all of it in one place</b> —
-  everything a computer-use agent needs: (1)&nbsp;<b>sandboxes with verifiable
+  everything a <span class="nb">computer-use</span> agent needs: (1)&nbsp;<b>sandboxes with 30k+ verifiable
   tasks</b> for benchmarking and training at scale; (2)&nbsp;<b>unified SFT
   data</b>, 10+ datasets and fresh rollouts, free on
   <a href="https://huggingface.co/cua-lite" target="_blank" rel="noopener">Hugging&nbsp;Face</a> —
@@ -395,8 +395,8 @@
 
   <h2>Sandboxes &amp; verifiable tasks</h2>
   <p><b>Lightweight, VM-free sandboxes pack many to a machine, each with
-  verifiable tasks.</b> They run in parallel — and each sandbox serves both training
-  and benchmarking.</p>
+  verifiable tasks.</b> They run in parallel, and each serves both training and
+  benchmarking.</p>
   <figure class="belt-fig" aria-label="Looping task trajectories across CUA-Lite sandboxes">
     <div class="belt-tabs" role="tablist">
       <button class="belt-tab is-on" type="button" role="tab" aria-selected="true">Lite.OSWorld</button>
@@ -488,7 +488,9 @@
   They meet in <code class="lg" tabindex="0">lite.gym</code> — screenshots up,
   actions down, in one action space plus each env's extra tools. The same loop
   serves both eval and RL: a rollout is scored to rank an agent, or trained on to
-  improve it.</p>
+  improve it. <b>15+ benchmarks are already integrated</b>, and the
+  <a href="/#benchmarks">leaderboard</a> is live — every
+  score on it is a run we did ourselves.</p>
   <figure class="flow-demo" aria-label="Any environment paired with any agent through lite.gym: screenshots up, actions down">
     <div class="pair-board" data-board="pair">
       <div class="pair-col">
