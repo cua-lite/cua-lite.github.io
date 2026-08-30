@@ -13,7 +13,7 @@
 2. Render mp4s (the script starts its own http server for the site):
 
      CUA_LITE_CDP=http://127.0.0.1:9401 uv run python posts/twitter/01/make_assets.py
-     CUA_LITE_CDP=http://127.0.0.1:9401 uv run python posts/twitter/01/make_assets.py 04-sandboxes
+     CUA_LITE_CDP=http://127.0.0.1:9401 uv run python posts/twitter/01/make_assets.py 07-sandboxes
 
 3. SEPARATELY, build GIFs from those mp4s:
 
@@ -56,7 +56,7 @@ On a host where Playwright works, drop step 1 and CUA_LITE_CDP; nothing else cha
 
 7. Pacing does NOT come from HOLD/hold. cast() derives each frame's duration from CDP
    screencast timestamps, and a screencast emits nothing while the page is still — a static
-   beat becomes one frame stretched to the 2.5 s cap. 07-leaderboard once shipped 5 boards in
+   beat becomes one frame stretched to the 2.5 s cap. 05-leaderboard once shipped 5 boards in
    16 s with a 6.5 s dead stretch while its HOLD read 3.2. retime() pins the finished file to
    an exact duration and trims the opening dwell (`head=`). Tune retime(), not HOLD.
 """
@@ -623,9 +623,9 @@ def build(browser, ctx, mark: Path, want) -> None:
                     "figure.flow-demo.mess", secs=14, cycle=5.93, mark=mark)   # LEAD+3*BEAT+500+1900
 
     # 03 · the whole VM-tax argument in one loop: sealed VM → container → parallel rollouts
-    if want("03-vm-tax"):
-        print("clip: 03-vm-tax")
-        figure_clip(browser, "03-vm-tax.mp4", "/blog/kvm-free-osworld/",
+    if want("06-vm-tax"):
+        print("clip: 06-vm-tax")
+        figure_clip(browser, "06-vm-tax.mp4", "/blog/kvm-free-osworld/",
                     "figure.flow-demo.v2c", secs=15.5, cycle=7.0, mark=mark)
 
     # spares · the receipts behind post 3's numbers, for a reply or a quote-tweet
@@ -644,7 +644,7 @@ def build(browser, ctx, mark: Path, want) -> None:
         # it was contradicting that copy from inside the attached image.
 
     # 04 · the Lite.* family — the site's own rollout belt, walked across all four tabs
-    if want("04-sandboxes"):
+    if want("07-sandboxes"):
         print("clip: 05-family")
         # 44s is the belt's own scroll period (css: beltscroll 44s linear infinite), so a
         # clip of exactly that length wraps with the marquee back where it started; the four
@@ -653,12 +653,12 @@ def build(browser, ctx, mark: Path, want) -> None:
         # it is also just noise. Pause it (a state the site itself has, on hover): the tiles
         # hold still long enough to read, each family's caption gets its beat, and the clip
         # loops without the belt snapping sideways.
-        tabbed_clip(browser, "04-sandboxes.mp4", "/blog/why-cua-lite/", ".belt-fig", ".belt-tab",
+        tabbed_clip(browser, "07-sandboxes.mp4", "/blog/why-cua-lite/", ".belt-fig", ".belt-tab",
                     mark, secs=14.0, hold=3.2, settle=10,
                     order=[3, 2, 1, 0],      # CUAWorld (GMAT/PyMOL) first — the unfamiliar one
                     extra_css=".belt-cap{visibility:hidden !important}"
                               ".belt-track{animation-play-state:paused !important}")
-        retime("04-sandboxes.mp4", 7.0, head=0.8)    # 4 families + the loop back to the first
+        retime("07-sandboxes.mp4", 7.0, head=0.8)    # 4 families + the loop back to the first
         # Capture SLOW, ship FAST. hold must be long enough for each tab's per-tile <video>
         # elements to paint — at hold=1.5 the capture moved on before they did and the clip
         # shipped with 2.3 s of solid black tiles across the whole Lite.CUAGym panel, 34% of
@@ -667,16 +667,16 @@ def build(browser, ctx, mark: Path, want) -> None:
         # retime() afterwards, not from starving the capture.
 
     # 05 · convert once, train anything: datasets fold into LiteSample, adapters pack it per model
-    if want("05-litesample"):
+    if want("04-litesample"):
         print("clip: 06-litesample")
-        figure_clip(browser, "05-litesample.mp4", "/blog/why-cua-lite/",
+        figure_clip(browser, "04-litesample.mp4", "/blog/why-cua-lite/",
                     "figure.flow-demo:has([data-board='data'])", secs=12, settle=9.5,
                     cycle=5.2, mark=mark)          # runBoard's own setInterval(cycle, 5200)
 
     # 06 · the loop itself: screenshots up, actions down, any env ⇄ any agent through lite.gym
-    if want("06-litegym"):
+    if want("03-litegym"):
         print("clip: 07-litegym")
-        figure_clip(browser, "06-litegym.mp4", "/blog/why-cua-lite/",
+        figure_clip(browser, "03-litegym.mp4", "/blog/why-cua-lite/",
                     # 2 cycles only reached one env/agent pair; 4 walks the ladder across the
                     # board, which is what the post and its alt text describe
                     # scale=1, NOT the default 2. At 2x the page is drawn twice as large in
@@ -688,13 +688,13 @@ def build(browser, ctx, mark: Path, want) -> None:
                     # and still lands ~800px wide, which is above what X displays.
                     "figure.flow-demo:has([data-board='pair'])", secs=22, settle=10.5,
                     cycle=5.2, mark=mark, margin=18, scale=1)
-        retime("06-litegym.mp4", 9.0)    # 19s of a mostly-static figure reads as a still
+        retime("03-litegym.mp4", 9.0)    # 19s of a mostly-static figure reads as a still
 
     # 07 · the boards those commands fill
-    if want("07-leaderboard"):
-        print("clip: 07-leaderboard")
-        leaderboard_clip(browser, "07-leaderboard.mp4", mark)
-        retime("07-leaderboard.mp4", 8.8, head=0.65) # 5 boards; anything slower reads as a still
+    if want("05-leaderboard"):
+        print("clip: 05-leaderboard")
+        leaderboard_clip(browser, "05-leaderboard.mp4", mark)
+        retime("05-leaderboard.mp4", 8.8, head=0.65) # 5 boards; anything slower reads as a still
 
     # 08 · the training half: SFT on the corpora, RL in the envs. Two stills, not a clip:
     #      these panels are static terminals, so a capture of them was a 2 fps slideshow
@@ -730,7 +730,7 @@ def retime(out: str, target: float, *, head: float = 0.0, seam: bool = True) -> 
     screencast timestamps, and a screencast emits nothing while the page is still — so a
     static beat becomes ONE frame stretched to the 2.5 s cap. Pacing therefore came out of
     capture jitter, not out of the HOLD/hold constants, and no amount of tuning them fixed
-    it: 07-leaderboard shipped five boards in 16 s with a 6.5 s dead stretch in the middle
+    it: 05-leaderboard shipped five boards in 16 s with a 6.5 s dead stretch in the middle
     while its HOLD said 3.2. Re-timing the encoded file is the only place the duration is
     actually knowable, so it is set here rather than hoped for upstream.
     """
@@ -741,7 +741,7 @@ def retime(out: str, target: float, *, head: float = 0.0, seam: bool = True) -> 
                                 "-of", "csv=p=0", str(src)],
                                check=True, capture_output=True, text=True).stdout.strip())
     # Early-out ONLY when there is nothing to do at all. Checking the duration alone made
-    # `head` a no-op whenever the render happened to land near `target`: 04-sandboxes came
+    # `head` a no-op whenever the render happened to land near `target`: 07-sandboxes came
     # out at 7.367 s against a 7.5 s target, inside this tolerance, so its opening dwell was
     # never trimmed and its loop seam never re-aligned — silently, with no log line.
     if not head and abs(cur - target) < 0.15:
@@ -799,7 +799,7 @@ def main() -> None:
             # the module docstring). Start it with:
             #   chrome --headless --no-sandbox --disable-gpu --disable-dev-shm-usage \
             #          --remote-debugging-port=9401 --user-data-dir=/tmp/pw
-            #   CUA_LITE_CDP=http://127.0.0.1:9401 uv run python .../make_assets.py 06-litegym
+            #   CUA_LITE_CDP=http://127.0.0.1:9401 uv run python .../make_assets.py 03-litegym
             cdp = os.environ.get("CUA_LITE_CDP")
             browser = pw.chromium.connect_over_cdp(cdp) if cdp else pw.chromium.launch()
             ctx = browser.new_context(viewport={"width": 1180, "height": 950}, device_scale_factor=DPR)

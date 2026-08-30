@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gate every rule in README.md's 写作规约 at once, over all nine posts.
+"""Gate every rule in README.md's 写作规约 at once, over every post in the thread.
 
 Why this exists: the failure mode on this file has not been carelessness, it has been
 SERIAL constraint satisfaction — fixing whatever was most recently named and silently
@@ -79,10 +79,24 @@ def fold_cut(s: str) -> int:
     return len(s)
 
 
-def posts() -> list[str]:
+def _blocks() -> list[tuple[str, str]]:
     body = README.read_text()
     thread = body[body.index("## The thread"):]
-    return [b for _, b in re.findall(r"### ([^\n]+)\n\n```\n(.*?)\n```", thread, re.S)]
+    return re.findall(r"### ([^\n]+)\n\n```\n(.*?)\n```", thread, re.S)
+
+
+def posts() -> list[str]:
+    return [b for _, b in _blocks()]
+
+
+def titles() -> list[str]:
+    """Headings, so rules can key on WHAT a post is rather than on its number.
+
+    Every hard-coded post index in this file went stale the moment the thread was
+    reordered — and one of them (`if i != 9`, the CTA's link exemption) started
+    reporting the CTA's intended links as a hard failure. Match the heading instead.
+    """
+    return [t for t, _ in _blocks()]
 
 
 def sentences(paragraph: str) -> list[str]:
@@ -120,12 +134,14 @@ def stale_notes() -> list[str]:
 
 def audit() -> dict[str, list[str]]:
     ps = posts()
+    ts = titles()
     fails: dict[str, list[str]] = {}
     opener_shapes: dict[str, list[int]] = {}
     sentence_index: dict[str, list[int]] = {}
 
     for i, post in enumerate(ps, 1):
         bad: list[str] = []
+        is_cta = "call for contributors" in ts[i - 1].lower()
         cut = fold_cut(post)
         visible, hidden = post[:cut], post[cut:]
         blocks = post.split("\n\n")
@@ -133,16 +149,16 @@ def audit() -> dict[str, list[str]]:
         first = sentences(lead)[0] if sentences(lead) else lead
 
         # R1 — the fold has to carry something checkable.
-        # Strip the [N/9] label first: it supplies a digit and made this vacuous.
+        # Strip the [N/10] label first: it supplies a digit and made this vacuous.
         if not re.search(r"\d", re.sub(r"^\[\d+/\d+\]", "", visible)):
             # advisory: R1 also accepts a falsifiable claim, which no script can judge.
             bad.append("R1? no NUMBER above the fold — check it carries a falsifiable claim instead")
 
-        # R2 — a link above the fold competes with 'Show more' (post 9 is the CTA, exempt)
-        if i != 9 and URL_RE.search(visible):
+        # R2 — a link above the fold competes with 'Show more' (the CTA post is exempt)
+        if not is_cta and URL_RE.search(visible):
             bad.append(f"R2 link above the fold: {URL_RE.search(visible).group()}")
-        if i == 9 and URL_RE.search(hidden):
-            bad.append("R2? post 9's links fall below the fold (advisory — completeness outranks the character budget)")
+        if is_cta and URL_RE.search(hidden):
+            bad.append("R2? the CTA's links fall below the fold (advisory — completeness outranks the character budget)")
 
         # R3 — first sentence names the subject
         if BAD_OPENERS.match(lead):
@@ -160,7 +176,7 @@ def audit() -> dict[str, list[str]]:
         elif weight(post[:at]) > FOLD:
             bad.append(f"R4 'CUA-Lite' only appears below the fold (char {at})")
         if re.search(r"\bGap \d", post):
-            bad.append("R4 'Gap N' label — meaningless to a reader who skipped post 2")
+            bad.append("R4 'Gap N' label — meaningless to a reader who skipped the gap post")
 
         # R7 — a referent must sit in the same paragraph as the word pointing at it
         for b in blocks[1:]:
@@ -265,7 +281,7 @@ def main() -> int:
             for line in lines:
                 if line not in result.get(key, []):
                     print(f"FIXED {key}: {line}")
-    print(f"\n{total} finding(s) across 9 posts.")
+    print(f"\n{total} finding(s) across {len(posts())} posts.")
     return 1 if total else 0
 
 
