@@ -399,7 +399,7 @@ def merge(base: str, donor: str) -> str:
     # antecedent, in front of a whole subsection and four figures about a benchmark the reader
     # was never introduced to. These two sentences are that lede, verbatim; the "faithful"
     # echo one paragraph later is the source page's own.
-    lede = re.search(r"<p><b>To eval or train a computer-use agent.*?scaling\.", donor, re.S)
+    lede = re.search(r"<p><b>To eval or train a computer-use agent.*?heavy virtual machine\.", donor, re.S)
     if not lede:
         sys.exit("the donor's OSWorld lede moved; the merged post would name OSWorld unintroduced")
     # Keep the source's bold. Stripping it made this the only paragraph in the article with no
@@ -474,6 +474,30 @@ def merge(base: str, donor: str) -> str:
     base = base.replace(tag, '<script src="/js/main.js"></script>\n' + tag, 1)
     base = base.replace("</head>", REVEAL_OFF + OFFLINE_CSS + PORT_CSS + "</head>", 1)
     return base
+
+
+def guard_compounds(html: str) -> str:
+    """Stop hyphenated names breaking at their hyphen, in prose only.
+
+    A hyphen break in ordinary prose is ugly; in a PROJECT NAME it is a misspelling —
+    "Online-" / "Mind2Web" on two lines is not the project's name. The acknowledgement alone
+    carries eight such names, and the merged sections brought "VM-free" and "computer-use" in
+    unguarded. `.nb` (white-space: nowrap) is the site's existing device for this.
+
+    Applied to text nodes only: a URL or an attribute value must never gain a span, and a name
+    already inside `.nb` must not be wrapped twice."""
+    terms = ["Online-Mind2Web", "OSWorld-2", "OSWorld-G", "CUA-Gym", "SCALE-CUA", "gym-anything",
+             "ScreenSpot-Pro", "computer-use", "Computer-use", "VM-free", "MobileGym"]
+    def sub(m):
+        return f'<span class="nb">{m.group(0)}</span>'
+    body_at = html.index('<main class="post-wrap"')
+    head, body = html[:body_at], html[body_at:]
+    for t in terms:
+        # only where the term stands alone in text: not inside a tag, not part of a longer token,
+        # and not already wrapped.
+        body = re.sub(rf'(?<![\w/">-]){re.escape(t)}(?![\w/-])(?![^<]*>)',
+                      sub, body)
+    return head + body
 
 
 def add_toc(html: str) -> str:
@@ -604,7 +628,7 @@ def port() -> Path:
             shutil.copy2(f, out / LOGO_DIR / f.name)
 
     html = merge((ROOT / SOURCE).read_text(), (ROOT / DONOR).read_text())
-    html = add_toc(retitle(html))
+    html = guard_compounds(add_toc(retitle(html)))
     # These two point at our homepage's sections — but this page now carries the benchmark grid
     # and the live leaderboard itself. Sending a reader to another domain for content that is
     # 20 lines below them is a defect, and neither link carries target="_blank", so it navigates
