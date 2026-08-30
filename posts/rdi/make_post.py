@@ -109,6 +109,21 @@ SHIM = """<script>
 </script>
 """
 
+PORT_CSS = ("<style>/* port-only layout corrections; see make_post.py for why each exists */\n"
+            # measured 0px against 18-30px after every other figure — the iframe's bottom row and
+            # the pink call-out's top edge physically touch and read as one block
+            ".post-wrap figure.hf-embed { margin-bottom: 22px; }\n"
+            # the tab capsule is an inline-flex 412px block inside a 624px column; on the homepage
+            # its section centres it, here it sat flush left with 212px of dead space beside it
+            "#benchmarks .cov { text-align: center; }\n"
+            "#benchmarks .cov-body, #benchmarks .cov-panel { text-align: left; }\n"
+            # the composition side-panel is hidden below 1024px, but its trigger stayed visible —
+            # an affordance that does nothing. And at 1280 it cleared the window by 29px.
+            "@media (max-width: 1360px) { #lb-info { display: none; } }\n"
+            # an h3 sat 10px above its body copy while two ordinary paragraphs sit 22px apart,
+            # gluing the subsection heading to the text and flattening the h2/h3 ladder
+            ".post-wrap h3 { margin: 34px 0 14px; }\n</style>\n")
+
 OFFLINE_CSS = ("<style>/* if the cross-origin clips cannot load, show the reason, not an empty box */\n"
                ".belt-offline .belt-tabs, .belt-offline .belt { display: none; }\n"
                ".belt-offline .belt-cap { padding-top: 0; }\n</style>\n")
@@ -141,7 +156,7 @@ CARD_DATE = "2026-08-29"
 # stable, readable anchors that a reader can link to. The highlight marks the section carrying
 # the post's distinctive claim; the badge says what the heading itself does not.
 TOC = [("why", "Why CUA-Lite", None),
-       ("sandboxes", "Sandboxes & verifiable tasks", "At scale"),
+       ("sandboxes", "Sandboxes & verifiable tasks", None),
        ("datasets", "Datasets", None),
        ("framework", "One framework: eval & RL", None)]
 
@@ -339,6 +354,10 @@ def merge(base: str, donor: str) -> str:
     if not m:
         sys.exit(f"donor section not found ({start} … {end}) — {DONOR} was restructured.")
     section = m.group(0).replace('<h2 id="vm-tax">', "<h3>").replace("</h2>", "</h3>", 1)
+    # The four native headings are sentence case with no Title-Case subtitle; the two lifted ones
+    # arrive as "…: How we cut it…" / "…: Scalable Training Sandboxes". Matching the local ladder
+    # is the point of demoting them in the first place.
+    section = section.replace(": How we cut it with", ", and how we cut it with")
 
     # The splice drops the donor page's lede, so the merged post's first prose mention of
     # OSWorld was "OSWorld's faithful desktop is a full VM per task" — an adjective with no
@@ -348,7 +367,10 @@ def merge(base: str, donor: str) -> str:
     lede = re.search(r"<p><b>To eval or train a computer-use agent.*?scaling\.", donor, re.S)
     if not lede:
         sys.exit("the donor's OSWorld lede moved; the merged post would name OSWorld unintroduced")
-    intro = "  <p>" + re.sub(r"</?b>", "", lede.group(0)[len("<p><b>"):]) + "</p>\n"
+    # Keep the source's bold. Stripping it made this the only paragraph in the article with no
+    # bold lead, which breaks the project's hard rule that reading only the bold must stand alone
+    # as the whole argument — and two consecutive bold leads is exactly how the source reads.
+    intro = "  " + lede.group(0) + "</p>\n"
     section = section.replace("</h3>", "</h3>\n" + intro, 1)
 
     if base.count(DONOR_ANCHOR) != 1:
@@ -358,7 +380,9 @@ def merge(base: str, donor: str) -> str:
     m2 = re.search(DONOR2_SECTION[0] + r".*?" + DONOR2_SECTION[1], donor, re.S)
     if not m2:
         sys.exit(f"donor section 2 not found — {DONOR} was restructured.")
-    beyond = m2.group(0).replace("<h2>", "<h3>", 1).replace("</h2>", "</h3>", 1)
+    beyond = (m2.group(0).replace("<h2>", "<h3>", 1).replace("</h2>", "</h3>", 1)
+              .replace("Beyond OSWorld: Scalable Training Sandboxes",
+                       "Beyond OSWorld: scalable training sandboxes"))
     old_belt = element(base, BELT_START, "the base page's belt figure")
     base = base.replace(old_belt, beyond, 1)
 
@@ -381,8 +405,15 @@ def merge(base: str, donor: str) -> str:
     # renders its bar, and then sits empty forever, having never fetched a single score.
     # Satisfying the selector is better than forking the script for one page.
     gym = element(base, LITEGYM_START, "the lite.gym figure")
+    cov = element(home, COV_START, "the benchmark grid")
+    # The homepage marks the leaderboard's current env with `row hl`; without it no cell is
+    # selected while the board below plainly shows OSWorld, so the two read as unrelated.
+    if 'data-env="osworld"' not in cov:
+        sys.exit("the benchmark grid has no osworld row to mark as selected")
+    cov = cov.replace('<a class="row" data-env="osworld"', '<a class="row hl" data-env="osworld"', 1)
+
     bench = ('  <div id="benchmarks">\n'
-             + element(home, COV_START, "the benchmark grid") + "\n\n"
+             + cov + "\n\n"
              + element(home, LB_START, "the leaderboard") + "\n  </div>")
     base = base.replace(gym, gym + "\n\n" + bench, 1)
 
@@ -408,7 +439,7 @@ def merge(base: str, donor: str) -> str:
     if base.count(tag) != 1:
         sys.exit(f"cannot place the main.js tag: {tag!r} appears {base.count(tag)} times")
     base = base.replace(tag, '<script src="/js/main.js"></script>\n' + tag, 1)
-    base = base.replace("</head>", REVEAL_OFF + OFFLINE_CSS + "</head>", 1)
+    base = base.replace("</head>", REVEAL_OFF + OFFLINE_CSS + PORT_CSS + "</head>", 1)
     return base
 
 

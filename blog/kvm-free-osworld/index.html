@@ -138,7 +138,8 @@
 .hh-cap { text-align: center; font-family: var(--mono); font-size: 12px; letter-spacing: .2px; color: var(--muted); margin-top: 13px; }
 @media (max-width: 560px) { .hh-pair { grid-template-columns: 1fr; gap: 12px; } }
 /* ---- parity plot · OSWorld vs Lite.OSWorld scores, one dot per model on a y=x diagonal ---- */
-.par { margin: 4px auto 6px; max-width: 430px; transform: translateX(-18px); }   /* nudge left so the plot grid reads centered (the y-axis label eats the left margin) */
+.par { margin: 4px auto 6px; max-width: 430px; transform: translateX(-18px); }   /* the nudge centres the plot frame against its y-axis label */
+@media (max-width: 560px) { .par { transform: none; } }   /* below that the column is narrower than the figure, so the nudge pushes it out of the column */   /* nudge left so the plot grid reads centered (the y-axis label eats the left margin) */
 .par-plot { position: relative; }
 .par-svg { width: 100%; height: auto; display: block; font-family: var(--mono); overflow: visible; }
 .par-svg .ax { stroke: var(--line-2); stroke-width: 1; }
@@ -229,8 +230,8 @@
   nested containers rarely provide, so it doesn't scale.</p>
 
   <p><b>Lite.OSWorld (ours) keeps OSWorld's desktop and drops the VM.</b> The same tasks and evaluators
-  run on a GNOME desktop in a plain Docker container: no <code>/dev/kvm</code> and much
-  cheaper, so it boots anywhere Docker runs, packing many per host.</p>
+  run on a GNOME desktop in a plain Docker container. No <code>/dev/kvm</code>, so it runs
+  anywhere Docker does, at under a quarter of the memory and cpu.</p>
 
   <figure class="flow-demo v2c" aria-label="OSWorld's KVM virtual machine sheds its heavy VM and /dev/kvm dependency to become the Lite.OSWorld container, which then packs into many">
     <div class="v2c-stage">
