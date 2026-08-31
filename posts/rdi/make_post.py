@@ -163,8 +163,7 @@ TAGLINE = "Why CUA-Lite \u2014 and a call for contributors"
 # No institution superscripts: RDI's markdown posts carry them, but this repo holds no verified
 # affiliation for any of these names, and their own standalone post (peer-preservation) shows
 # no authors at all. An invented affiliation is worse than an absent one.
-AUTHORS = ("Zhanhui Zhou, Weichen Zhang, Haoran Liu, Lingjie Chen, Tianneng Shi, "
-           "Kevin Lin, Zhengyuan Yang, Lijuan Wang, Dawn Song")
+AUTHORS = "CUA-Lite Contributors"
 DATE = "August 2026"
 # The listing card. `blog.md` renders /blog from site.data.blogs, so a post without this entry
 # is reachable only by direct URL — the single easiest thing to forget, hence it is generated,
