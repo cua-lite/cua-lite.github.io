@@ -1101,7 +1101,6 @@ code.ad:hover .ls-pop, code.ad:focus .ls-pop, code.ad:focus-within .ls-pop { opa
 .foot-affil a:hover { opacity: .85; filter: grayscale(0); }
 .foot-logo { display: block; width: auto; }
 .foot-logo-berkeley { height: 17px; }
-.foot-logo-ms { height: 15px; }
 .footer-links { display: flex; flex-direction: column; gap: 11px; }
 .footer-links a { color: var(--muted); font-size: var(--fs-md); font-weight: 500; transition: color .12s ease; }
 .footer-links a:hover { color: var(--accent); }
