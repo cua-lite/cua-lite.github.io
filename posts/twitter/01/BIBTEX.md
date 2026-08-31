@@ -1,6 +1,8 @@
 # 上游归属存证
 
 从各 env 的 `README.md` bibtex 原样抽取，**不是推断**。改致谢里任何一个名字前先看这张表。
+**⚠️ 末作者那一列不可信,不要单凭它做署名决定。** 抽取脚本在 LaTeX 大括号处截断,已知坏行:`androidworld` 的 `Folawiyo Campbell{-`、`browsergym`(VisualWebArena) 的 `Po{-`(真实末作者是 **Daniel Fried**)、`screenspot_pro` 的 `Tat{-`、`osworld_2` 的 `Xiao Yu a`;`osworld_2` 的仓库列也错(实为 `xlang-ai/OSWorld-V2`)。**一作那一列各行抽查都是对的。**另外缺三个已上线的 env:`mobilegym` / `cua` / `captcha` —— 拿本表核对的人会以为它们无出处。
+
 重抽：见本文件末尾脚本。归属看 `author` 字段，**不要看 README 顶上的链接** —— WebArena 曾因此被错记成 ServiceNow（那是 BrowserGym 的作者）。
 
 | env | 论文 | 年 | 首作者 | 末作者 | 作者数 | 上游仓库 |

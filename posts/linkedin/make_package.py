@@ -40,6 +40,88 @@ def fenced_after(md: str, label: str) -> str:
     return m.group(1).strip() if m else ""
 
 
+def provenance(md: str, body: str, slug: str) -> None:
+    """Every body line must come from the thread's posts, from a blog, or be a declared deviation.
+
+    Why this exists: the rule "sentences come verbatim from twitter/01" used to be enforced by
+    eyeballing a 逐字率. That number stays high while whole sections are reordered and headings are
+    rewritten, because it counts sentences. On 2026-08-30 that gap let four content-level rewrites
+    through, each justified in the moment and none recorded.
+
+    The first version of this gate had five holes of its own, all found by audit:
+      · it skipped every `##` line, so a rewritten heading could never fail;
+      · it skipped every list block, so reordering the resource list was invisible;
+      · it skipped paragraphs starting with a digit, exempting a real prose sentence;
+      · its pool was the whole thread README, so a sentence that existed only in a Chinese design
+        note counted as "upstream";
+      · `…`-truncated Deviations entries whitelisted by prefix, so a 7-word entry authorised a
+        six-line paragraph.
+    All five are closed below. Headings and list lines are checked; the pool is the fenced posts
+    plus blog prose only; an entry must be substantial enough to identify what it licenses.
+    """
+    up = ROOT.parent.parent
+    thread = (up / "posts/twitter/01/README.md").read_text()
+    thread = thread[thread.index("## The thread"):]
+    posts = re.findall(r"### [^\n]+\n\n```\n(.*?)\n```", thread, re.S)
+    blogs = [re.sub(r"<[^>]+>", " ", f.read_text()) for f in sorted(up.glob("blog/*/index.html"))]
+    flat = lambda t: re.sub(r"[\u2018\u2019]", "'",
+                            re.sub(r"[\u2014\u2013]", "-", re.sub(r"\s+", " ", t))).strip()
+    pool = flat(" ".join(posts + blogs))
+    titles = {flat(re.sub(r"^\[\d+/\d+\] ", "", t)).rstrip(".")
+              for t in re.findall(r"### ([^\n]+)", thread)}
+
+    allowed, short, heads = set(), [], set()
+    m = re.search(r"\n## Deviations\s*\n(.*?)(?=\n## |\Z)", md, re.S)
+    if m:
+        # only the `- \`…\`` bullets are entries; the prose around them also uses backticks.
+        # A prose entry must be long enough to identify what it licenses; a HEADING entry is
+        # short by nature, so it is matched exactly against the heading instead.
+        for bullet in re.findall(r"^- (`[^\n]+)", m.group(1), re.M):
+            for q in re.findall(r"`([^`]+)`", bullet):
+                e = flat(q).rstrip(" .\u2026")
+                if len(e) >= 60:
+                    allowed.add(e)
+                elif e:
+                    heads.add(e.lstrip("# ").strip())
+    if short:
+        raise SystemExit(f"{slug}: Deviations entries too short to identify what they license "
+                         f"(need >=60 chars): {short}")
+
+    LINK = ("Site:", "Code:", "Data:", "Leaderboard:", "[assets/")
+    MARK = re.compile(r"^(?:[\u2192\u00b7\-]|\d+ \u00b7|[\U0001F300-\U0001FAFF\u2600-\u27BF][\uFE0F]?)\s+")
+    bad = []
+    for block in re.split(r"\n\s*\n", body):
+        lines = [l.strip() for l in block.split("\n") if l.strip()]
+        if not lines:
+            continue
+        if lines[0].startswith("## "):                   # headings: must be a thread post title
+            h = flat(re.sub(r"^##\s*\W*\s*", "", lines[0])).rstrip(".")
+            if h not in titles and h not in heads and not any(h in a or a in h for a in allowed):
+                bad.append(f"heading not a thread post title: {lines[0]}")
+            continue
+        if lines[0].startswith(LINK) or lines[0] == "---":
+            continue
+        # a list block is checked line by line (markers stripped); prose is joined first, so a
+        # wrapped sentence is not split down the middle
+        if MARK.match(lines[0]):
+            units = [MARK.sub("", l) for l in lines]
+        else:
+            units = [" ".join(lines)]
+        for unit in units:
+            for sent in re.split(r"(?<=[.!?]) +", flat(unit)):
+                if len(sent) < 26:
+                    continue
+                if sent in pool or any(sent.startswith(a) or a.startswith(sent) for a in allowed):
+                    continue
+                bad.append(sent)
+    if bad:
+        lines = "\n".join(f"    \u00b7 {b}" for b in bad)
+        raise SystemExit(
+            f"{slug}: {len(bad)} line(s) are neither verbatim upstream nor declared under\n"
+            f"  **Deviations** in README.md. Either take the upstream wording, change `twitter/01`\n"
+            f"  so both surfaces move together, or record the deviation and why:\n{lines}")
+
+
 def build(slug: str) -> None:
     here = ROOT / slug
     md = (here / "README.md").read_text()
@@ -55,6 +137,8 @@ def build(slug: str) -> None:
     cover = cover.group(1) if cover else None
     if not cover:
         raise SystemExit(f"{slug}: **Cover** names no assets/… file.")
+
+    provenance(md, body, slug)
 
     inline = re.findall(r"^\[(assets/[^\]]+)\]$", body, re.M)
     used = [cover] + inline

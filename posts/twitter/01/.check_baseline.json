@@ -1,7 +1,6 @@
 {
  "post 1": [
-  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
-  "fold? cuts mid-token (advisory): …ates and train|s the agen…"
+  "R6 'computer-use' twice inside the fold"
  ],
  "post 2": [
   "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
@@ -10,38 +9,32 @@
  ],
  "post 3": [
   "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
-  "fold? cuts mid-token (advisory): …rotocol for re|cording a …"
+  "fold? cuts mid-token (advisory): …nts & Environm|ents are f…"
  ],
  "post 4": [
   "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
   "R6 'agent' twice inside the fold"
  ],
  "post 5": [
-  "R6 'agent' twice inside the fold",
-  "R6 'every' twice inside the fold",
-  "R6 'litesample' twice inside the fold",
-  "fold? cuts mid-token (advisory): …teSample: publ|ic corpora…"
+  "NOUN-DROP 'each' with no noun after it: …each LiteSample into the e…",
+  "fold? cuts mid-token (advisory): …Face in LiteSa|mple — pub…"
  ],
  "post 6": [
-  "fold? cuts mid-token (advisory): …Browser: WebAr|ena, Visua…"
+  "fold? cuts mid-token (advisory): …CUABench\n🌐 Bro|wser: WebA…"
  ],
  "post 7": [
   "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
-  "R6 'vm-free' twice inside the fold",
-  "fold? cuts mid-token (advisory): …m: it reproduc|es OSWorld…"
+  "R6 'vm-free' twice inside the fold"
  ],
- "post 8": [
-  "fold? cuts mid-token (advisory): …yMOL turning p|roteins. E…"
- ],
+ "post 8": [],
  "post 9": [
-  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
-  "R6 'traces' twice inside the fold"
- ],
- "post 10": [
   "R1? no NUMBER above the fold — check it carries a falsifiable claim instead"
  ],
- "post 11": [
+ "post 10": [
   "R1? no NUMBER above the fold — check it carries a falsifiable claim instead",
-  "fold? cuts mid-token (advisory): …b (@StepFun_ai|), UI-TARS…"
+  "R8? folds to hide only a few words (advisory — character count is the WEAKEST constraint; never cut substance for it)"
+ ],
+ "post 11": [
+  "R1? no NUMBER above the fold — check it carries a falsifiable claim instead"
  ]
 }

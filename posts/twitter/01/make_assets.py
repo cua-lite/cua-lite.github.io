@@ -69,7 +69,7 @@ import sys
 import time
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageChops
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent.parent.parent   # posts/twitter/01/ -> repo root
@@ -178,7 +178,15 @@ def still(ctx, out: str, url: str, selector: str, *, wait: int = 2200, mark: Pat
     raw = TMP / ("raw_" + out)
     el.screenshot(path=str(raw))
     page.close()
-    img = Image.open(raw)
+    img = Image.open(raw).convert("RGB")
+    # Trim the capture's own uneven background border BEFORE framing. The union of several
+    # boxes carries whatever internal padding those elements have, so the four sides are not
+    # equal — 08a-sft measured 84/23/65/31 (top/bottom/left/right) even though frame_box adds
+    # a uniform MARGIN on all four. Trim first and the shipped margin is actually uniform.
+    box = (ImageChops.difference(img, Image.new("RGB", img.size, BG_RGB))
+           .convert("L").point(lambda v: 255 if v > 12 else 0).getbbox())
+    if box:
+        img = img.crop(box)
     cw, ch = frame_box(img.width, img.height, min_ar)
     sw, sh = fit_inside(img.width, img.height, cw, ch)
     if (sw, sh) != img.size:
@@ -230,7 +238,16 @@ def still_span(ctx, out: str, url: str, selectors: list[str], *, wait: int = 180
                     clip={"x": max(0, b["x"] - pad), "y": max(0, b["y"] + sy - pad),
                           "width": b["width"] + 2 * pad, "height": b["height"] + 2 * pad})
     page.close()
-    img = Image.open(raw)
+    img = Image.open(raw).convert("RGB")
+    # Trim the capture's own uneven background border BEFORE framing. The union of several
+    # boxes carries whatever internal padding those elements have, so the four sides are not
+    # equal — 08a-sft measured top 84 vs bottom/left/right ~62 even though frame_box adds a
+    # uniform MARGIN. (Measure with the bottom-right watermark strip excluded, or the mark
+    # itself reads as content and the numbers look wrong in the other direction.)
+    box = (ImageChops.difference(img, Image.new("RGB", img.size, BG_RGB))
+           .convert("L").point(lambda v: 255 if v > 12 else 0).getbbox())
+    if box:
+        img = img.crop(box)
     cw, ch = frame_box(img.width, img.height, min_ar)
     sw, sh = fit_inside(img.width, img.height, cw, ch)
     if (sw, sh) != img.size:
@@ -702,8 +719,13 @@ def build(browser, ctx, mark: Path, want) -> None:
     #      shows the pair side by side.
     if want("08a-sft"):
         print("stills: train")
+        # min_ar=None: this union is genuinely tall (toggle + selector + a 3-step terminal).
+        # Forcing it to the 1.2 floor pads ~250px of cream onto EACH side — 35% of the frame
+        # is margin and the code shrinks to match. X allows down to 1:3 and shows portrait
+        # media large on mobile, which is the trade frame_box()'s own docstring describes.
         still_span(ctx, "08a-sft.png", "/", [".train-tabs", ".panel-note", ".sft-cfg",
-                                             "[data-train-panel='sft'] .term"], mark=mark)
+                                             "[data-train-panel='sft'] .term"],
+                   mark=mark, min_ar=None)
     if want("08b-rl"):
         still_span(ctx, "08b-rl.png", "/", [".train-tabs", ".panel-note",
                                             "[data-train-panel='rl'] .term"], mark=mark,

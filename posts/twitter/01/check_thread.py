@@ -132,6 +132,97 @@ def stale_notes() -> list[str]:
     return out
 
 
+# A rule may legitimately quote copy that is NOT in the thread — when it is telling you
+# what NOT to write, or naming something already deleted. These markers say so.
+NEGATED = re.compile(
+    r"别|不要|不许|不用|不写|不能|不在|避免|曾|旧|删|去掉|一度|反而|等于|就是为同一|"
+    r"写成|改成|原句|站点|博客|README|抽取|已不|不成立|不采纳|错|假"
+)
+
+
+def stale_rules() -> list[str]:
+    """A rule that quotes a sentence the copy no longer contains is worse than no rule.
+
+    `stale_notes()` guards the per-post **Bold**/**Why here** fields. This guards the other
+    two thirds of the file — 写作规约, 其余约定, Pre-flight, 写作决定 — which is where the rot
+    actually accumulates, because those rules are written once and then outlive the copy they
+    were written about. After one round of edits this check found three rules quoting sentences
+    that had been deleted in the SAME session, plus four rules governing a `▪️` list that no
+    post had contained for days.
+
+    Lines that negate ("never write X", "the old wording was Y") are exempt — quoting absent
+    copy is the whole point there.
+    """
+    md = README.read_text()
+    rules = md[: md.index("## The thread")]
+    joined = " ".join(posts())
+    # A rule wraps across lines, so a backtick pair can straddle a newline — matching per
+    # physical line both misses quotes and mis-pairs the ones it finds. Group into bullets.
+    lines = rules.split("\n")
+    bullets: list[tuple[int, str]] = []
+    for n, line in enumerate(lines, 1):
+        starts = line.startswith(("- ", "  - ", "#", "|", "**", "1.", "2.", "3.", "4.", "5.")) or not line.strip()
+        if starts or not bullets:
+            bullets.append((n, line))
+        else:
+            ln, prev = bullets[-1]
+            bullets[-1] = (ln, prev + " " + line.strip())
+    out = []
+    for n, block in bullets:
+        if NEGATED.search(block):
+            continue
+        for q in re.findall(r"`([^`]+)`", block):
+            if len(q.split()) < 5 or "…" in q:
+                continue
+            if any(c in q for c in "/(){}=<>#*|"):
+                continue
+            if q not in joined:
+                out.append(f"STALE-RULE :{n} quotes copy no post contains: {q[:70]!r}")
+    return out
+
+
+def ack_attribution() -> list[str]:
+    """Every @ in the acknowledgements must be on a project the evidence table says it belongs to.
+
+    Why this exists: the costliest error class in this file is not a typo, it is crediting the
+    right-looking account for the WRONG work — it notifies a stranger and misattributes someone's
+    paper in public. It has happened three times: Fara to `@MicrosoftAI` (Microsoft's consumer org,
+    not Microsoft Research), AndroidWorld to `@GoogleResearch` (the project page says DeepMind), and
+    gym-anything's first author copy-pasted onto XLANG's CUA-Gym while editing the neighbouring
+    clause. All three read fine; none is catchable by eye in a 48-handle paragraph.
+
+    The evidence table under the post is already keyed by project (`@GoogleDeepMind` has one row for
+    Gemini and another for AndroidWorld). So the check is: parse `Project (@a, @b)` out of the post,
+    and require that at least one table row for each handle names that project. A handle with no row
+    at all is also a finding — it means it shipped without being looked up.
+    """
+    md = README.read_text()
+    ack = [b for t, b in _blocks() if "cknowledg" in t]
+    if not ack:
+        return []
+    rows: dict[str, list[str]] = {}
+    for h, desc in re.findall(r"^\|\s*`(@[A-Za-z0-9_]+)`\s*\|([^|]*)\|", md, re.M):
+        rows.setdefault(h, []).append(desc)
+    if not rows:
+        return []
+    flat = lambda t: re.sub(r"[^a-z0-9]", "", t.lower())
+    # "…@Org's Project (@a, @b)" / "and Project (@a)" / "with Project (@a)"
+    pat = re.compile(
+        r"(?:^|[\s,;])(?:and |with |all run through |our )?(?:@[A-Za-z0-9_]+'s )?"
+        r"([A-Za-z0-9][A-Za-z0-9.\-]*)\s+\((@[A-Za-z0-9_]+(?:,\s*@[A-Za-z0-9_]+)*)\)"
+    )
+    out = []
+    for m in pat.finditer(ack[0]):
+        proj = m.group(1)
+        for h in re.findall(r"@[A-Za-z0-9_]+", m.group(2)):
+            if h not in rows:
+                out.append(f"ACK {h} is credited on {proj} but has no row in the evidence table")
+            elif not any(flat(proj) in flat(d) for d in rows[h]):
+                claim = " / ".join(d.strip()[:48] for d in rows[h])
+                out.append(f"ACK {h} is credited on {proj}, but the evidence table says: {claim}")
+    return out
+
+
 def audit() -> dict[str, list[str]]:
     ps = posts()
     ts = titles()
@@ -258,6 +349,14 @@ def audit() -> dict[str, list[str]]:
     notes = stale_notes()
     if notes:
         fails.setdefault("notes", []).extend(notes)
+
+    ack = ack_attribution()
+    if ack:
+        fails.setdefault("ack", []).extend(ack)
+
+    stale = stale_rules()
+    if stale:
+        fails.setdefault("notes", []).extend(stale)
 
     return fails
 
