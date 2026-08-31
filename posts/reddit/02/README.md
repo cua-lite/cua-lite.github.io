@@ -100,8 +100,8 @@ Disclosure: I'm one of the authors. Happy to answer questions about the port, th
 
 **分工：动画负责钩住人，散点负责说服人。**
 
-- **领头 / 钩子：`03-vm-tax.mp4`（680 KB）** —— 在两个状态间循环：`OSWorld` 顶着 `Ubuntu.qcow2` + `QEMU·KVM` + `/dev/kvm`（「A desktop sealed in a VM」），切到 `Lite.OSWorld` 的虚线 `CONTAINER` 框（「Out of the VM — the same desktop, now a container」）。**这段动画就是本篇的论点本身**，不是泛泛的产品演示。`.gif`（3.1 MB）作备用；优先 mp4，Reddit 反正会把 GIF 转视频。
-- **评论区证据：`04-parity.png`（13 模型散点）** —— 散点是 r/ML 读者能一眼自行核验的东西（点是否落在对角线上），比任何文字都有说服力。
+- **领头 / 钩子：`vm-tax.mp4`（680 KB）** —— 在两个状态间循环：`OSWorld` 顶着 `Ubuntu.qcow2` + `QEMU·KVM` + `/dev/kvm`（「A desktop sealed in a VM」），切到 `Lite.OSWorld` 的虚线 `CONTAINER` 框（「Out of the VM — the same desktop, now a container」）。**这段动画就是本篇的论点本身**，不是泛泛的产品演示。`.gif`（3.1 MB）作备用；优先 mp4，Reddit 反正会把 GIF 转视频。
+- **评论区证据：`parity.png`（13 模型散点）** —— 散点是 r/ML 读者能一眼自行核验的东西（点是否落在对角线上），比任何文字都有说服力。
 
 **已删除的三张，各有明确理由：**
 
