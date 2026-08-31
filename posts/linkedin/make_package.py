@@ -1,4 +1,7 @@
-"""Build the hand-off package for whoever posts the LinkedIn article: LINKEDIN.md + linkedin.zip.
+"""Build the hand-off package for whoever posts on LinkedIn: ARTICLE.md + POST.md + linkedin.zip.
+
+Two surfaces, one source. The **article** is the long form; the **post** is the short one that
+links to it. Both come out of README.md so they cannot drift from each other or from the thread.
 
     uv run python posts/linkedin/make_package.py        # all articles
     uv run python posts/linkedin/make_package.py 01
@@ -8,7 +11,7 @@ numbered sequence of posts with per-post media and a fold budget, an article is 
 cover and a body with inline figures. Sharing one code path would mean a pile of `if platform ==`.
 What IS shared is the discipline, and every rule below was learnt the hard way over there:
 
-  · LINKEDIN.md is generated, never hand-written. A second hand-kept copy of the copy drifts from
+  · Both files are generated, never hand-written. A second hand-kept copy of the copy drifts from
     README.md the moment either is edited — that is the defect the twitter thread's own review
     rounds kept finding in its own annotations.
   · English only. The package goes to someone outside the project; the Chinese design notes in
@@ -70,32 +73,37 @@ def provenance(md: str, body: str, slug: str) -> None:
     titles = {flat(re.sub(r"^\[\d+/\d+\] ", "", t)).rstrip(".")
               for t in re.findall(r"### ([^\n]+)", thread)}
 
-    allowed, short, heads = set(), [], set()
+    allowed, exact, heads = set(), set(), set()
     m = re.search(r"\n## Deviations\s*\n(.*?)(?=\n## |\Z)", md, re.S)
     if m:
-        # only the `- \`…\`` bullets are entries; the prose around them also uses backticks.
-        # A prose entry must be long enough to identify what it licenses; a HEADING entry is
-        # short by nature, so it is matched exactly against the heading instead.
-        for bullet in re.findall(r"^- (`[^\n]+)", m.group(1), re.M):
-            for q in re.findall(r"`([^`]+)`", bullet):
+        # Entries are the `- …` bullets; the prose around them also uses backticks. A bullet
+        # can wrap across lines and the backtick span can wrap with it, so split into bullets
+        # first and read each whole — a line-anchored regex silently truncates a wrapped entry
+        # to its first line, which yields no closing backtick and no entry at all.
+        body_dev = m.group(1)
+        bullets = re.split(r"\n(?=- )", body_dev)
+        for bullet in bullets:
+            if not bullet.lstrip().startswith("- "):
+                continue
+            for q in re.findall(r"`([^`]+)`", bullet, re.S):
                 e = flat(q).rstrip(" .\u2026")
-                if len(e) >= 60:
-                    allowed.add(e)
-                elif e:
-                    heads.add(e.lstrip("# ").strip())
-    if short:
-        raise SystemExit(f"{slug}: Deviations entries too short to identify what they license "
-                         f"(need >=60 chars): {short}")
+                if not e:
+                    continue
+                # long entry → prefix match (it identifies a whole paragraph); short entry →
+                # EXACT match only, so a seven-word entry can never license six lines. Both
+                # also register as heading candidates, with any leading marker stripped.
+                (allowed if len(e) >= 60 else exact).add(e)
+                heads.add(re.sub(r"^[#\s]*[^\w]*\s*", "", e).strip())
 
-    LINK = ("Site:", "Code:", "Data:", "Leaderboard:", "[assets/")
-    MARK = re.compile(r"^(?:[\u2192\u00b7\-]|\d+ \u00b7|[\U0001F300-\U0001FAFF\u2600-\u27BF][\uFE0F]?)\s+")
+    LINK = ("Site:", "Code:", "Data:", "Leaderboard:", "Full write-up:", "Paper:", "[assets/")
+    MARK = re.compile(r"^(?:[\u2192\u00b7\u2022\-]|\d+ \u00b7|\d\uFE0F?\u20E3|[\U0001F300-\U0001FAFF\u2600-\u27BF][\uFE0F]?)\s*")   # \d\uFE0F\u20E3 = 1️⃣ keycap
     bad = []
     for block in re.split(r"\n\s*\n", body):
         lines = [l.strip() for l in block.split("\n") if l.strip()]
         if not lines:
             continue
         if lines[0].startswith("## "):                   # headings: must be a thread post title
-            h = flat(re.sub(r"^##\s*\W*\s*", "", lines[0])).rstrip(".")
+            h = flat(re.sub(r"^[#\s]*[^\w]*\s*", "", lines[0])).rstrip(".")
             if h not in titles and h not in heads and not any(h in a or a in h for a in allowed):
                 bad.append(f"heading not a thread post title: {lines[0]}")
             continue
@@ -111,7 +119,8 @@ def provenance(md: str, body: str, slug: str) -> None:
             for sent in re.split(r"(?<=[.!?]) +", flat(unit)):
                 if len(sent) < 26:
                     continue
-                if sent in pool or any(sent.startswith(a) or a.startswith(sent) for a in allowed):
+                bare = sent.rstrip(' .\u2026')
+                if sent in pool or bare in exact or sent in exact or any(sent.startswith(a) or a.startswith(sent) for a in allowed):
                     continue
                 bad.append(sent)
     if bad:
@@ -160,22 +169,35 @@ def build(slug: str) -> None:
 
     cjk = sorted({c for c in doc if "　" <= c <= "鿿" or "！" <= c <= "･"})
     if cjk:
-        raise SystemExit(f"{slug}: LINKEDIN.md must be English-only; found CJK: {''.join(cjk)}")
+        raise SystemExit(f"{slug}: ARTICLE.md must be English-only; found CJK: {''.join(cjk)}")
 
     missing = sorted({f for f in used if not (here / f).exists()})
-    (here / "LINKEDIN.md").write_text(doc)
+    (here / "ARTICLE.md").write_text(doc)
+
+    # The post: a short standalone that links to the article. Same provenance rules apply.
+    post = fenced_after(md, "Post")
+    if not post:
+        raise SystemExit(f"{slug}: no ``` block under **Post** — the article needs a post to carry it.")
+    provenance(md, post, slug + " (post)")
+    pcjk = sorted({c for c in post if "\u3000" <= c <= "\u9fff" or "\uff01" <= c <= "\uff65"})
+    if pcjk:
+        raise SystemExit(f"{slug}: POST.md must be English-only; found CJK: {''.join(pcjk)}")
+    (here / "POST.md").write_text(
+        "<!-- GENERATED from README.md by ../make_package.py. Do not edit by hand. -->\n\n"
+        + post.rstrip() + "\n")
 
     packed = 0
     with zipfile.ZipFile(here / "linkedin.zip", "w", zipfile.ZIP_DEFLATED) as z:
-        z.write(here / "LINKEDIN.md", "LINKEDIN.md")
+        z.write(here / "ARTICLE.md", "ARTICLE.md")
+        z.write(here / "POST.md", "POST.md")
         for f in dict.fromkeys(used):                  # keep article order, drop repeats
             if (here / f).exists():
                 z.write(here / f, f)                   # follows the symlink, stores the bytes
                 packed += 1
 
     mb = (here / "linkedin.zip").stat().st_size / 1e6
-    print(f"{slug}: LINKEDIN.md ({len(body.split())} words, {len(inline)} inline figures) "
-          f"+ linkedin.zip ({packed} images, {mb:.1f} MB)")
+    print(f"{slug}: ARTICLE.md ({len(body.split())} words, {len(inline)} figures) + "
+          f"POST.md ({len(post.split())} words) + linkedin.zip ({packed} images, {mb:.1f} MB)")
     if missing:
         raise SystemExit(f"{slug}: {len(missing)} image(s) referenced but not on disk — the zip is "
                          f"incomplete: {', '.join(missing)}")

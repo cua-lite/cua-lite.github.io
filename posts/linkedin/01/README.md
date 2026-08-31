@@ -144,16 +144,19 @@ LinkedIn 多出来的两块（VM 税细节、13 模型 parity）插在贡献之�
 
 | 位置 | 文件 | 来源 | 744px 列下渲染高 |
 |---|---|---|---|
-| 封面 | `assets/00-cover.png` | 站点社交卡 `assets/og.png` | 391px |
-| 🗂️ 格式 | `assets/03-data.png` | `red/01` 同名图 | 1181px |
-| 📊 评测 | `assets/04-eval.png` | 同上 | 1350px |
-| 📦 沙盒 | `assets/02-sandboxes.png` | 同上 | 653px |
-| 🏋️ 训练 | `assets/05-train.png` | 同上 | 1054px |
+| 封面 | `assets/cover.png` | 站点社交卡 `assets/og.png` | 391px |
+| 🗂️ 格式 | `assets/data.png` | `red/01` 同名图 | 1181px |
+| 📊 评测 | `assets/eval.png` | 同上 | 1350px |
+| 📦 沙盒 | `assets/sandboxes.png` | 同上 | 653px |
+| 🏋️ 训练 | `assets/train.png` | 同上 | 1054px |
 
-> **表的顺序 = 正文的顺序,不是文件名的顺序。** 文件名 `02-/03-/04-/05-` 编的是**主页**四支柱的
-> 位置(`#sandboxes` / `#data` / `#benchmarks` / `#train`),`red/01/capture_sections.py` 按主页锚点
-> 截的。本文按 `twitter/01` 的叙事重排后,图跟着各自的小节走,文件名不动 —— 名字是出处,不是次序。
-> 「One framework」一节没有图:主页没有对应的 section,不要为了配平硬塞一张。
+> **资产按主题命名，不按位置编号。** 原来叫 `00-cover / 02-sandboxes / 03-data / 04-eval /
+> 05-train` —— 那串数字编的是**主页**四支柱的位置（`red/01/capture_sections.py` 按主页锚点截的），
+> 本文按 `twitter/01` 的叙事重排后就对不上了：正文里图的顺序是 03 → 04 → 02 → 05。
+> **数字前缀每次重排都会烂，而且会悄悄让所有散文引用失效** —— 这条教训 `twitter/01` 已经吃过一次
+> （素材重命名后，接缝表和「犯过的错」里所有按编号的引用全部指错）。软链现在叫
+> `cover / data / eval / sandboxes / train`；目标文件保留 `red/01` 的原名，出处不丢。
+> `🔁 框架`那一节没有图，因为主页没有对应 section —— 也正因为如此它被删了（见下）。
 
 > **封面必须横版。** LinkedIn article 的封面位按 ~16:9 居中裁切，`01b-cover.png` 是 2160×2880 的
 > 3:4 竖版，放上去三行 bullet 和三台设备只会活下来一条。小红书 feed 是竖的所以那张在那边完美 ——
@@ -177,43 +180,77 @@ thread 01 已经做过的决定同源 —— 顾问那条 engagement optimizatio
 - 图里印的是站点原文 `GRPO and beyond`，正文写的是 `GRPO, GSPO and beyond`（沿用 `twitter/01`）。
   站点当初刻意没加 GSPO。要统一就改正文，不要为此重截图。
 
+
 ## Deviations
 
 **每一句不逐字来自 `twitter/01` 或博客的话，都必须列在这里，带理由。** `make_package.py` 的
-`provenance()` 会强制这一点 —— 不是警告，是构建失败。
+`provenance()` 强制这一点 —— 不是警告，是构建失败。判据：**形式**（小标题样式、列表符号、段落长度、
+钩子、结尾形状、emoji）可以按 LinkedIn 参考改；**内容**（顺序、措辞、论证）只能改 `twitter/01`，两边一起变。
 
-为什么要这条：原来的做法是量「逐字率」然后收工。**那个数在整节被重排、小标题被改写时照样好看** ——
-它只数句子，不看结构和出处。2026-08-30 因此漏过四次内容级改写（五个小标题、一节的叙事顺序、
-一句自造的结尾、四处顺手改的措辞），每一次当时都有听上去很有道理的理由，没有一次被记下来。
+### 作者本人改写的导语与收尾（2026-08-30，Google Doc 往返）
 
-**判据：改下游之前先分清形式还是内容。** 形式 = 小标题样式、列表符号、段落长度、有没有致谢节、
-钩子、结尾形状、emoji —— 可以按 LinkedIn 参考改。内容 = 顺序、措辞、论证 —— **只能改
-`twitter/01`，两边一起变**。
+这篇以 **Dawn Song 的名义**发（末句「my PhD student Zhanhui Zhou」），所以导语和收尾是作者自己的语域，
+不是 thread 的搬运。以下各句 thread 里没有对应物：
 
-### 钩子（article 专属装置，thread 没有对应物）
+- `Introducing CUA-Lite - an open platform for computer-use agents.` —— 回到 thread post 1 的钩子形状，
+  但 article 有 H1 标题在上面。作者取舍：宁可重复，也要第一行就点名。
+- `Agents - the models and the scaffolding that drives them` —— `scaffolding`（thread 用 `harness`）。
+- `Every agent ships with its own implementation, often in a separate repo, so there is no unified way to run them all.`
+- `Every environment exposes its own interface and action space, often requiring an expensive VM sandbox for each verifiable task.`
+- `Traces come in incompatible formats.`
+- `And without common standards across the stack, every project ends up rebuilding its own tooling for eval, SFT, and RL.`
+  以上四句是碎片化段的作者版：比 thread 更短，四句仍一一对应 1️⃣–4️⃣。
+- `10+ CUAs, including GPT, Claude, Gemini, Qwen, Muse-Glimmer, UI-TARS` —— **⚠️ `Muse-Glimmer` 在主干里不存在**
+  作者确认它存在，只是还在另一个分支，会随后合并 —— **`factory.py` 与站点当前 0 命中是预期的，
+  不要再当成事实错误报上来。**
+- `Optional VM-free sandboxes with 30K+ verifiable tasks for training` —— 句尾加了 `for training`。
+- 小标题 `🏋️ SFT and RL, any open agent` —— thread 是 `SFT & RL`；作者在 article 里用 `and`。
+- `Led by Berkeley RDI (rdi.berkeley.edu), our goal is for CUA-Lite to become a community-driven,
+  open-source ecosystem for computer-use agents.` —— 机构归属，thread 没有。
+- `Huge thanks to my PhD student Zhanhui Zhou for spearheading the project!` —— 署名句，article 专属。
 
-- `There are more computer-use agents than ever, and almost nothing is shared between them.`
-- `So how do you tell which one is actually better - or train the next one on what they have all already done?`
+- 小标题 `📦 VM-free sandboxes, with verifiable tasks` —— `📦` 由 thread 的 posts 7+8 合并，
+  两条的标题各自只盖一半（post 7 `VM-free OS(World) at Scale` 只讲 OSWorld，post 8
+  `Sandboxes & verifiable tasks` 不含 VM-free）。这一条是两者的词合成的，是「小标题必须逐字沿用
+  thread 帖标题」的**唯一例外**。
 
-X 的 post 1 本身就是钩子；article 有真 H1 标题在上面，正文第一句本来空转。三篇参考都靠它换第一屏，
-且都把产品名压到第二段之后。**钩子里不许出现 CUA-Lite，也不许剧透后面四条碎片化。**
+### 结构上作者定的三件（与 thread 不同，不是漂移）
 
-### 合并小节的标题
+- **链接移到文末**（原来在导语末尾）。三篇参考都只有文末一处链接块，这一版跟了参考。
+- **`🔁 One unified framework` 那节删除** —— 它是唯一没有配图的一节，讲的东西导语的
+  `CUA-Lite unifies the stack:` 四条已经说完。**没有资产 = 没有独立存在的理由。**
+- **不带致谢节** —— 三篇参考里 How We Broke 也没有。代价见「注记」。
 
-- `VM-free sandboxes, with verifiable tasks` —— `📦` 由 posts 7+8 合并，两条的标题各自只盖一半
-  （post 7 `VM-free OS(World) at Scale` 只讲 OSWorld，post 8 `Sandboxes & verifiable tasks` 不含 VM-free）。
-  这一条是两者的词合成的，是「小标题必须逐字沿用 thread 帖标题」的**唯一例外**。
 
-### 结尾（参考的「→ 链接」形式）
+### Post = `twitter/01` 的 post 1，四处最小改动
 
-- `Contribute today: bring an environment (sandbox + tasks + verifier), traces, or an agent - and plug it into CUA-Lite → Site: https://cua-lite.github.io · Code: https://github.com/cua-lite/cua-lite`
+**post 不是新写的稿子，是 post 1 原样搬过来。**（作者 2026-08-30 定：「主要还是参考 twitter 第一个
+thread 就行；然后适当做一些 minimal 调整」。）我曾按 Dawn Song 那两条参考重写过一版 222 词的
+—— 那是把「参考格式」又做成了「重写内容」，同一个错犯第二次。**参考决定形状，不决定文字。**
 
-句子本身是 post 10 原话，只把句尾的 `! 🚀` 换成 `→` 接链接 —— ALE 的
-`Come test your agent on ALE → Website: …` 就是这个形状。
+逐字比对，只有四处不同：
+
+- 去掉 `🧵` —— 那是 X 的 thread 信号（「下面还有」），LinkedIn 上没有下文。
+- `Our goal is …` → `Led by Berkeley RDI, our goal is …` —— 机构归属，**位置不动**（仍在 CTA 之前，
+  和 post 1 一样；曾把它缀到 CTA 之后，愿景和邀请就倒过来了）。
+- `Led by Berkeley RDI, our goal is for CUA-Lite to become a community-driven, open-source ecosystem for computer-use agents.`
+- 末尾加链接：四个项目链接**和 post 2 同序同标签**（Site / Code / Data / Leaderboard），
+  再单起一行 `Article: [TODO: link to the article]`。
+  **占位符必须是 `[TODO: …]`，不能放一个能打开的临时 URL。** 我原来填的是
+  `blog/why-cua-lite/` —— 那是个真能打开的地址，最容易就这么发出去而没人发现它本该被替换。
+  另外 LinkedIn 的卡片取**最后一个 URL**：`[TODO]` 不是 URL，所以卡片来自 Leaderboard 那条
+  （和 post 2 刻意选的一样）；填上 article 链接后卡片会变成 article 自己的。
+- 末尾加 `Huge thanks to my PhD student Zhanhui Zhou for spearheading the project!` —— 署名句。
+
+**长度**：310 词，Dawn Song 那两条实测是 316 / 279 —— 在区间内。两条都**没有 hashtag、没有 @、
+链接一律在末尾**，本条一致。
+⚠️ **`Full write-up` 现在指向 `blog/why-cua-lite/`。article 发布后要换成它自己的 LinkedIn URL。**
 
 
 ## Pre-flight
 
+0. **`POST.md` 里的 `Article: [TODO: link to the article]` 必须先发 article、拿到它的 LinkedIn URL 再填。**
+   顺序是：先发 article → 复制它的链接 → 填进 README 的 **Post** 块 → 重跑生成器 → 再发 post。
 1. **发布前把 `SFT and RL any agent` 的限定语核一遍。** 本文写的是 `any open agent` —— 闭权重模型
    不能微调或强化，站点代码里 `AGENTS.filter(a => !a.api)` 强制着这一点。thread 与站点上仍有几处
    漏了 `open`，不要从那些地方回抄。
@@ -225,6 +262,53 @@ X 的 post 1 本身就是钩子；article 有真 H1 标题在上面，正文第�
 
 ---
 
+**Post**
+
+```
+Introducing CUA-Lite — an open platform for computer-use agents.
+
+Training and benchmarking CUAs (Computer-Use Agents) requires four core pieces:
+
+1 · Agents — the models and the harness that drives them
+2 · Environments — runtime/sandboxes for agents to interact with, tasks & verifiers/graders
+3 · Traces — records of agent trajectories
+4 · Frameworks — to evaluate, SFT & RL-train agents
+
+Today, all four are fragmented.
+
+Every agent ships its own official implementation in its own repo, so there is no one place to run them all. Every environment exposes its own interface and action space, and often needs a full VM for every verifiable task. Agent traces come in incompatible formats, so one agent's rollouts can't train another. And because none of it is standardized, every project ends up rebuilding its own eval, SFT, and RL framework.
+
+CUA-Lite unifies the stack:
+→ One standardized interface & action space for agents and environments
+→ One standardized format for agent traces
+→ One framework for evaluation, SFT & RL
+→ Across desktop, browser & mobile
+
+And open resources plug straight in, creating the largest open collection of CUA agents, environments and traces, all in a unified format:
+🤖 10+ CUAs, including GPT, Claude, Gemini, Qwen & UI-TARS
+🌐 15+ benchmarks, including OSWorld, WebArena & AndroidWorld
+⚡ Optional VM-free sandboxes with 30K+ verifiable tasks
+📚 10+ trace datasets, freely available on Hugging Face, including public datasets converted into the standardized format and fresh rollouts from frontier CUAs
+
+Led by Berkeley RDI, our goal is for CUA-Lite to become a community-driven, open-source ecosystem for computer-use agents.
+
+Join the community and contribute today: bring an environment (runtime/sandbox + tasks + verifier), traces, or an agent, and plug it into CUA-Lite!
+
+Site: https://cua-lite.github.io
+Code: https://github.com/cua-lite/cua-lite
+Data: https://huggingface.co/cua-lite
+Leaderboard: https://cua-lite.github.io/#benchmarks
+
+Article: [TODO: link to the article]
+
+Huge thanks to my PhD student Zhanhui Zhou for spearheading the project!
+```
+
+> **写给谁、多长** —— 参考 Dawn Song 的两条实测：ExploitGym 316 词、Vero 279 词，**都没有 hashtag、
+> 没有 @，链接一律在末尾**。Vero 用 `•` 列要点，ExploitGym 是纯散文。本条 ~250 词，取 Vero 的形状：
+> 钩子 → 我们发布了什么 → `•` 四条具体数字 → 归属与 CTA → 链接。
+> **Post 不是 article 的摘要，是它的引子** —— 每条要点都给一个数字，读者不点进去也拿到了东西。
+
 ## The article
 
 **Title**
@@ -233,7 +317,7 @@ X 的 post 1 本身就是钩子；article 有真 H1 标题在上面，正文第�
 Introducing CUA-Lite: An Open Platform for Computer-Use Agents
 ```
 
-**Cover** `assets/00-cover.png`
+**Cover** `assets/cover.png`
 
 > **封面必须是横版。** LinkedIn article 的封面位按 ~16:9 居中裁切，`01b-cover.png` 是 2160×2880 的
 > 3:4 竖版，放上去三行 bullet 和三台设备只会活下来一条。小红书 feed 是竖的所以那张在那边完美 ——
@@ -243,24 +327,20 @@ Introducing CUA-Lite: An Open Platform for Computer-Use Agents
 **Body**
 
 ```
-There are more computer-use agents than ever, and almost nothing is shared between them.
-
-So how do you tell which one is actually better — or train the next one on what they have all
-already done?
+Introducing CUA-Lite — an open platform for computer-use agents.
 
 Training and benchmarking CUAs (Computer-Use Agents) requires four core pieces:
 
-1 · Agents — the models and the harness that drives them
-2 · Environments — runtime/sandboxes for agents to interact with, tasks & verifiers/graders
-3 · Traces — records of agent trajectories
-4 · Frameworks — to evaluate, SFT & RL-train agents
+1️⃣ Agents — the models and the scaffolding that drives them
+2️⃣ Environments — runtime/sandboxes for agents to interact with, tasks & verifiers/graders
+3️⃣ Traces — records of agent trajectories
+4️⃣ Frameworks — to evaluate, SFT & RL-train agents
 
-Today, all four are fragmented. Every agent ships its own official implementation in its own repo,
-so there is no one place to run them all. Every environment exposes its own interface and action
-space, and often needs a full VM for every verifiable task.
-
-Agent traces come in incompatible formats, so one agent's rollouts can't train another. And because
-none of it is standardized, every project ends up rebuilding its own eval, SFT, and RL framework.
+Every agent ships with its own implementation, often in a separate repo, so there is no unified
+way to run them all. Every environment exposes its own interface and action space, often requiring
+an expensive VM sandbox for each verifiable task. Traces come in incompatible formats. And without
+common standards across the stack, every project ends up rebuilding its own tooling for eval, SFT,
+and RL.
 
 CUA-Lite unifies the stack:
 
@@ -272,19 +352,11 @@ CUA-Lite unifies the stack:
 And open resources plug straight in, creating the largest open collection of CUA agents,
 environments and traces, all in a unified format:
 
-🤖 10+ CUAs, including GPT, Claude, Gemini, Qwen & UI-TARS
+🤖 10+ CUAs, including GPT, Claude, Gemini, Qwen, Muse-Glimmer, UI-TARS
 🌐 15+ benchmarks, including OSWorld, WebArena & AndroidWorld
-⚡ Optional VM-free sandboxes with 30K+ verifiable tasks
+⚡ Optional VM-free sandboxes with 30K+ verifiable tasks for training
 📚 10+ trace datasets, freely available on Hugging Face, including public datasets converted into
    the standardized format and fresh rollouts from frontier CUAs
-
-Our goal is for CUA-Lite to become a community-driven, open-source ecosystem for computer-use
-agents.
-
-Site: https://cua-lite.github.io
-Code: https://github.com/cua-lite/cua-lite
-Data: https://huggingface.co/cua-lite
-Leaderboard: https://cua-lite.github.io/#benchmarks
 
 
 ## 🗂️ One schema, any dataset, any agent
@@ -296,7 +368,9 @@ CUA-Lite has 10+ datasets on Hugging Face in LiteSample — public SFT datasets 
 alongside fresh rollouts from frontier CUAs. A lightweight model adapter then transforms each
 LiteSample into the exact training format each model expects.
 
-[assets/03-data.png]
+The result: one agent's rollouts can train any other agent.
+
+[assets/data.png]
 
 
 ## 📊 One command, any benchmark
@@ -312,7 +386,7 @@ leaderboard is live, with every score on it a run we did ourselves.
 One command evaluates any agent on any benchmark: set --model-id (plus its agent config) and
 --env-id for the benchmark — and run.
 
-[assets/04-eval.png]
+[assets/eval.png]
 
 
 ## 📦 VM-free sandboxes, with verifiable tasks
@@ -341,22 +415,29 @@ Four sandbox families share this foundation today, each re-hosting or extending 
 → Lite.CUAGym: browser + desktop tasks across mock sites and real apps
 → Lite.CUAWorld: 40 professional applications across ~25 expert domains
 
-[assets/02-sandboxes.png]
+[assets/sandboxes.png]
 
 
-## 🏋️ SFT & RL, any open agent
+## 🏋️ SFT and RL, any open agent
 
 SFT on CUA-Lite's public rollout data, then RL in its environments — GRPO, GSPO, and beyond, built
 on Slime. Train any open agent on any data, in any environment.
 
-[assets/05-train.png]
+[assets/train.png]
 
 
-CUA-Lite is just getting started.
+Led by Berkeley RDI (rdi.berkeley.edu), our goal is for CUA-Lite to become a community-driven,
+open-source ecosystem for computer-use agents.
 
-Contribute today: bring an environment (sandbox + tasks + verifier), traces, or an agent — and plug
-it into CUA-Lite →
-Site: https://cua-lite.github.io · Code: https://github.com/cua-lite/cua-lite
+Join the community and contribute today: bring an environment (runtime/sandbox + tasks + verifier),
+traces, or an agent, and plug it into CUA-Lite!
+
+Site: https://cua-lite.github.io
+Code: https://github.com/cua-lite/cua-lite
+Data: https://huggingface.co/cua-lite
+Leaderboard: https://cua-lite.github.io/#benchmarks
+
+Huge thanks to my PhD student Zhanhui Zhou for spearheading the project!
 ```
 
 ## 注记
@@ -367,7 +448,7 @@ Site: https://cua-lite.github.io · Code: https://github.com/cua-lite/cua-lite
 **叙事顺序与 `twitter/01` 一致：框架先行，开放资源随后**（2026-08-30 对齐）。三样东西是
 `environments (sandbox, tasks, verifier)` / `traces` / `framework`，三个 gap 按**回答的顺序**列
 （framework → traces → sandboxes），五个小节也按这个顺序：
-`🔁 框架 → 🗂️ 格式 → 📊 榜单 → 📦 沙盒 → 🏋️ SFT/RL`。
+`🗂️ 格式 → 📊 榜单 → 📦 沙盒 → 🏋️ SFT/RL`（`🔁 框架`那节已删，见下）。
 理由取自 `twitter/01`：这条文案的真实诉求是招贡献者，而**没有接口就没法贡献环境，没有格式就没法贡献轨迹** ——
 所以先给让生态成立的那层，沙盒和轨迹是这层「接进开放资源」的两个例子。
 代价照抄那边的记录：最硬的证据（13 模型 parity、footprint）从第一节退到第四节，

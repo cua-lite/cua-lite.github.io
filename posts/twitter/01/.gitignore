@@ -5,3 +5,4 @@
 #   uv run python posts/twitter/make_package.py
 TWITTER.md
 twitter.zip
+assets.zip
